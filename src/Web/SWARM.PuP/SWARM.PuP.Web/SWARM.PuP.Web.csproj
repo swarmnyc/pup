@@ -177,7 +177,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Compoments\Mango.cs" />
+    <Compile Include="Components\Mango.cs" />
+    <Compile Include="Components\WebHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -191,6 +192,11 @@
     <Compile Include="Models\PuPIdentityContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\PuPOAuthProvider.cs" />
+    <Compile Include="Services\IChatService.cs" />
+    <Compile Include="Services\Quickblox\QuickbloxChatService.cs" />
+    <Compile Include="Services\Quickblox\QuickbloxHttpHelper.cs" />
+    <Compile Include="Services\Quickblox\QuickbloxRequestTypes.cs" />
+    <Compile Include="Services\Quickblox\QuickbloxModels.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -253,7 +259,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Services\" />
     <Folder Include="Views\Game\" />
   </ItemGroup>
   <ItemGroup>
