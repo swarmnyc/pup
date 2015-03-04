@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -11,7 +10,9 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
+using Owin;
 using SWARM.PuP.Web.Models;
+using SWARM.PuP.Web.Services;
 
 namespace SWARM.PuP.Web
 {
@@ -36,14 +37,17 @@ namespace SWARM.PuP.Web
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
     public class PuPUserManager : UserManager<PuPUser>
     {
-        public PuPUserManager(IUserStore<PuPUser> store)
-            : base(store)
+        private IChatService chatService;
+        
+        private PuPUserManager(UserStore<PuPUser> store, IChatService chatService) : base(store)
         {
+            this.chatService = chatService;
         }
 
-        public static PuPUserManager Create(IdentityFactoryOptions<PuPUserManager> options, IOwinContext context) 
+        public static PuPUserManager Create(IdentityFactoryOptions<PuPUserManager> options, IOwinContext context)
         {
-            var manager = new PuPUserManager(new UserStore<PuPUser>(context.Get<PuPIdentityContext>()));
+            IChatService chatService = context.Solve<IChatService>();
+            var manager = new PuPUserManager(new UserStore<PuPUser>(context.Get<PuPIdentityContext>()), chatService);
             // Configure validation logic for usernames
             manager.UserValidator = new UserValidator<PuPUser>(manager)
             {
@@ -86,6 +90,12 @@ namespace SWARM.PuP.Web
                     new DataProtectorTokenProvider<PuPUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
+        }
+
+        public override Task<IdentityResult> CreateAsync(PuPUser user)
+        {
+            this.chatService.CreateUser(user);
+            return base.CreateAsync(user);
         }
     }
 

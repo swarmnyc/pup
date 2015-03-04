@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -79,11 +82,21 @@ namespace SWARM.PuP.Web
             //   appId: "",
             //   appSecret: "");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "578384702984-46bacfg5kiijb4jd4sudgr3astl4s9ta.apps.googleusercontent.com",
+                ClientSecret = "8TCjqO28mlhrk1Y0MiuUY7_T",
+                Provider = new GoogleOAuth2AuthenticationProvider()
+                {
+                    OnAuthenticated = (context) =>
+                    {
+                       context.Identity.AddClaim(new Claim("AccessToken", context.AccessToken));
+                       return Task.FromResult<Object>(null);
+                    }
+
+                }
+                
+            });
         }
     }
 }

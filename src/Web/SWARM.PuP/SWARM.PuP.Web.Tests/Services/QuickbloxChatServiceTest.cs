@@ -22,18 +22,19 @@ namespace SWARM.PuP.Web.Tests.Services
             try
             {
                 QuickbloxChatService s = new QuickbloxChatService();
-                var r = s.CreateUser(new PuPUser()
+                var puPUser = new PuPUser()
                 {
                     UserName = "Test",
                     Email = "Test@swarmnyc.com"
-                });
+                };
+                s.CreateUser(puPUser);
 
-                Console.Write(r);
+                Assert.IsNull(puPUser.ChatId);
             }
             catch (WebException e)
             {
                 var error = e.Response.ReadAll();
-                Console.Write(error);
+                Assert.Fail(error);
             }
         }
     }

@@ -6,7 +6,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
 {
     public class QuickbloxChatService : IChatService
     {
-        public string CreateUser(PuPUser user)
+        public void CreateUser(PuPUser user)
         {
             var request = QuickbloxHttpHelper.Create(QuickbloxRequestTypes.CreateUser, "POST");
             request.Write(new
@@ -21,7 +21,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
 
             var result = request.GetResponse().Read<CreateUserResult>();
 
-            return result.user.id.ToString();
+            user.ChatId = result.user.id.ToString();
         }
     }
 }

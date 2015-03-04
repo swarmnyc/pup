@@ -9,6 +9,6 @@ namespace SWARM.PuP.Web.Services
 {
     internal interface IChatService
     {
-        string CreateUser(PuPUser user);
+        void CreateUser(PuPUser user);
     }
 }
