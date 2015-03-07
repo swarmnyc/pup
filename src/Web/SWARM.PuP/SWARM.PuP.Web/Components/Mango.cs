@@ -25,97 +25,95 @@ namespace Mango
     /// wrapper repository class that serves your objects to the MongoDB
     /// </summary>
     /// 
-    public abstract class MangoRepository<T> where T : MangoModel
+    public abstract class MangoService<T> : IMangoService<T> where T : MangoModel
     {
-        private MongoCollection<T> collection;
-
-        public MangoRepository() { }
-
-        public MangoRepository(string collectionName)
+        protected MangoService()
         {
-            this.collection = MongoHelper.GetCollection<T>(collectionName);
+            this.Collection = MongoHelper.GetCollection<T>(typeof(T).Name);
+            }
+
+        protected MangoService(string collectionName)
+        {
+            this.Collection = MongoHelper.GetCollection<T>(collectionName);
         }
 
-        public MongoCollection<T> Collection
+        public MongoCollection<T> Collection { get; private set; }
+
+        public virtual  T GetById(string id)
         {
-            get { return this.collection; }
+            return this.Collection.FindOneByIdAs<T>(id);
         }
 
-        public T GetById(string id)
+        public virtual T GetSingle(Expression<Func<T, bool>> criteria)
         {
-            return this.collection.FindOneByIdAs<T>(id);
+            return this.Collection.AsQueryable<T>().Where(criteria).Single();
         }
 
-        public T GetSingle(Expression<Func<T, bool>> criteria)
+        public virtual IQueryable<T> Get(Expression<Func<T, bool>> criteria)
         {
-            return this.collection.AsQueryable<T>().Where(criteria).Single();
+            return this.Collection.AsQueryable<T>().Where(criteria);
         }
 
-        public IQueryable<T> Get(Expression<Func<T, bool>> criteria)
+        public virtual IQueryable<T> All()
         {
-            return this.collection.AsQueryable<T>().Where(criteria);
+            return this.Collection.AsQueryable<T>();
         }
 
-        public IQueryable<T> All()
+        public virtual T Add(T entity)
         {
-            return this.collection.AsQueryable<T>();
-        }
-
-        public T Add(T entity)
-        {
-            this.collection.Insert<T>(entity);
+            this.Collection.Insert<T>(entity);
             return entity;
         }
 
-        public IEnumerable<T> Add(IEnumerable<T> entities)
+        public virtual IEnumerable<T> Add(IEnumerable<T> entities)
         {
-            this.collection.InsertBatch<T>(entities);
+            this.Collection.InsertBatch<T>(entities);
             return entities;
         }
 
-        public T Update(T entity)
+        public virtual T Update(T entity)
         {
-            this.collection.Save<T>(entity);
+            this.Collection.Save<T>(entity);
             return entity;
         }
 
-        public IEnumerable<T> Update(IEnumerable<T> entities)
+        public virtual IEnumerable<T> Update(IEnumerable<T> entities)
         {
             foreach (T entity in entities)
-                this.collection.Save<T>(entity);
+                this.Collection.Save<T>(entity);
 
             return entities;
         }
 
-        public void Delete(string id)
+        public virtual void Delete(string id)
         {
-            this.collection.Remove(Query.EQ("_id", new ObjectId(id)));
+            this.Collection.Remove(Query.EQ("_id", new ObjectId(id)));
         }
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             this.Delete(entity.Id.ToString());
         }
 
-        public void Delete(Expression<Func<T, bool>> criteria)
+        public virtual void Delete(Expression<Func<T, bool>> criteria)
         {
-            foreach (T entity in this.collection.AsQueryable<T>().Where(criteria))
+            foreach (T entity in this.Collection.AsQueryable<T>().Where(criteria))
                 this.Delete(entity.Id.ToString());
         }
 
-        public void DeleteAll()
+        public virtual void DeleteAll()
         {
-            this.collection.RemoveAll();
+            this.Collection.RemoveAll();
         }
 
-        public long Count()
+        public virtual long Count()
         {
-            return this.collection.Count();
+            return this.Collection.Count();
         }
 
-        public bool Exists(Expression<Func<T, bool>> criteria)
+        public virtual bool Exists(Expression<Func<T, bool>> criteria)
         {
-            return this.collection.AsQueryable<T>().Any(criteria);
+            return this.Collection.AsQueryable<T>().Any(criteria);
         }
     }
 

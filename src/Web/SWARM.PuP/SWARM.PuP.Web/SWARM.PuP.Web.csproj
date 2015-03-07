@@ -49,8 +49,14 @@
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.3.1\lib\net40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac.Integration.WebApi">
+      <HintPath>..\packages\Autofac.WebApi5.3.0.0-rc1\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
+    </Reference>
     <Reference Include="DotNetDoodle.Owin.Dependencies">
       <HintPath>..\packages\DotNetDoodle.Owin.Dependencies.0.3.0-pre01\lib\net45\DotNetDoodle.Owin.Dependencies.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetDoodle.Owin.Dependencies.Adapters.WebApi">
+      <HintPath>..\packages\DotNetDoodle.Owin.Dependencies.Adapters.WebApi.0.3.0-pre01\lib\net45\DotNetDoodle.Owin.Dependencies.Adapters.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="DotNetDoodle.Owin.Dependencies.Autofac">
       <HintPath>..\packages\DotNetDoodle.Owin.Dependencies.Autofac.0.3.0-pre01\lib\net45\DotNetDoodle.Owin.Dependencies.Autofac.dll</HintPath>
@@ -173,6 +179,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\AccountController.cs" />
+    <Compile Include="ApiControllers\GameController.cs" />
+    <Compile Include="Components\IMangoService.cs" />
+    <Compile Include="Models\ChatRoomType.cs" />
+    <Compile Include="Services\GameService.cs" />
+    <Compile Include="Services\IGameService.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -181,7 +192,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Components\Mango.cs" />
     <Compile Include="Components\OwinIoCExtensions.cs" />
-    <Compile Include="Components\WebHelper.cs" />
+    <Compile Include="Components\WebApiHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -189,6 +200,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Game.cs" />
+    <Compile Include="Models\GamePlatfrom.cs" />
     <Compile Include="ViewModes\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="ViewModes\ManageViewModels.cs" />
@@ -198,7 +211,7 @@
     <Compile Include="Services\IChatService.cs" />
     <Compile Include="Services\Quickblox\QuickbloxChatService.cs" />
     <Compile Include="Services\Quickblox\QuickbloxHttpHelper.cs" />
-    <Compile Include="Services\Quickblox\QuickbloxRequestTypes.cs" />
+    <Compile Include="Services\Quickblox\QuickbloxApiTypes.cs" />
     <Compile Include="Services\Quickblox\QuickbloxModels.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

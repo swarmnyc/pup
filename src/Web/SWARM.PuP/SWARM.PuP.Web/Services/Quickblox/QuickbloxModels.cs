@@ -47,4 +47,39 @@ namespace SWARM.PuP.Web.Services.Quickblox
         public object user_tags { get; set; }
     }
 
+
+    public class QuickbloxRoom
+    {
+        public string _id { get; set; }
+        public object last_message { get; set; }
+        public object last_message_date_sent { get; set; }
+        public object last_message_user_id { get; set; }
+        public string name { get; set; }
+        public object photo { get; set; }
+        public int[] occupants_ids { get; set; }
+        public int type { get; set; }
+        public string xmpp_room_jid { get; set; }
+        public int unread_messages_count { get; set; }
+    }
+
+
+    public class QuickbloxMessage
+    {
+        public string _id { get; set; }
+        public string age { get; set; }
+        public QuickbloxAttachment[] attachments { get; set; }
+        public string chat_dialog_id { get; set; }
+        public int date_sent { get; set; }
+        public string message { get; set; }
+        public int recipient_id { get; set; }
+        public int sender_id { get; set; }
+    }
+
+    public class QuickbloxAttachment
+    {
+        public string id { get; set; }
+        public string type { get; set; }
+    }
+
+
 }

@@ -3,11 +3,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Helpers;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace System.Net
 {
-    public static class WebHelper
+    public static class WebApiHelper
     {
+        static WebApiHelper()
+        {
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                Formatting = Formatting.None,
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+        }
+
         public static void Write(this WebRequest request, string content)
         {
             using (var writer = new StreamWriter(request.GetRequestStream()))
@@ -20,7 +32,8 @@ namespace System.Net
         {
             using (var writer = new StreamWriter(request.GetRequestStream()))
             {
-                writer.Write(Json.Encode(obj));
+                
+                writer.Write(JsonConvert.SerializeObject(obj));
             }
         }
 
@@ -28,7 +41,7 @@ namespace System.Net
         {
             using (var writer = new StreamReader(response.GetResponseStream()))
             {
-                return Json.Decode<T>(writer.ReadToEnd());
+                return JsonConvert.DeserializeObject<T>(writer.ReadToEnd());
             }
         }
 
@@ -38,6 +51,12 @@ namespace System.Net
             {
                 return writer.ReadToEnd();
             }
+        }
+
+        public static T Json<T>(this WebRequest request, object obj)
+        {
+            request.Write(obj);
+            return request.GetResponse().Read<T>();
         }
     }
 }

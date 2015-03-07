@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
@@ -14,6 +15,9 @@ namespace SWARM.PuP.Web.Services.Quickblox
         private static readonly Random Random = new Random();
         private static readonly Uri BaseUri = new Uri("https://api.quickblox.com/");
         private static Session _session;
+        private static string User = "WadeHuang"; 
+        private static string UserEmail ="wade@swarmnyc.com";
+        private static string UserPassword= "swarmnyc";
         private const string ApplicationId = "20103";
         private const string AuthKey = "gXa5zW9K5wdTuCV";
         private const string AuthSecret = "YGabpebTkW2Q9r6";
@@ -49,26 +53,23 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     return;
                 }
 
-                WebRequest request = WebRequest.CreateHttp(new Uri(BaseUri, QuickbloxRequestTypes.CreateSession));
+                WebRequest request = WebRequest.CreateHttp(new Uri(BaseUri, QuickbloxApiTypes.Session));
                 request.Headers.Add("QuickBlox-REST-API-Version", "0.1.0");
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
                 string nonce = GenerateNonce();
                 string timestamp = GenerateTimeStamp();
-
-                request.Write(new
+                
+                var result = request.Json<SessionResult>(new
                 {
-                    application_id = "20103",
-                    auth_key = "gXa5zW9K5wdTuCV",
+                    application_id = ApplicationId,
+                    auth_key = AuthKey,
                     timestamp = timestamp,
                     nonce = nonce,
-                    signature = GenerateAuthMsg(nonce, timestamp)
+                    signature = GenerateAuthMsg(nonce, timestamp),
+                    user = new { login = User, email = UserEmail, password = UserPassword }
                 });
-
-                var response = request.GetResponse();
-                
-                var result = response.Read<SessionResult>();
 
                 _session = result.session;
             }
@@ -88,12 +89,20 @@ namespace SWARM.PuP.Web.Services.Quickblox
         private static String GenerateAuthMsg(string nonce, string timestamp)
         {
 
-            String[] messsage = {
+            List<string> messsage = new List<string>() {
                 "application_id=" + ApplicationId,
                 "auth_key=" + AuthKey,
                 "nonce=" + nonce,
                 "timestamp=" + timestamp,
             };
+
+            if (User != null)
+            {
+                messsage.Add("user[login]=" + User);
+                messsage.Add("user[email]=" + UserEmail);
+                messsage.Add("user[password]=" + UserPassword);
+            }
+
             string mes = string.Join("&", messsage.OrderBy(m => m).ToArray());
 
             StringBuilder sb = new StringBuilder();

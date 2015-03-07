@@ -37,5 +37,21 @@ namespace SWARM.PuP.Web.Tests.Services
                 Assert.Fail(error);
             }
         }
+
+        [TestMethod]
+        public void SendMessageTest()
+        {
+            try
+            {
+                QuickbloxChatService s = new QuickbloxChatService();
+                
+                s.SendMessage("54fa237d535c12ab5f0721c3", "Hello!!");
+            }
+            catch (WebException e)
+            {
+                var error = e.Response.ReadAll();
+                Assert.Fail(error);
+            }
+        }
     }
 }
