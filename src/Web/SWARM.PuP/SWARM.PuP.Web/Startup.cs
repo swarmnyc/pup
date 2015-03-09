@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using System.Web.Http;
+using System.Web.Mvc;
 using Autofac;
+using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
-using DotNetDoodle.Owin;
-using DotNetDoodle.Owin.Dependencies.Autofac;
 
 using Microsoft.Owin;
 using Owin;
@@ -17,23 +17,7 @@ namespace SWARM.PuP.Web
     {
         public void Configuration(IAppBuilder app)
         {
-            app.UseAutofacContainer(RegisterServices())
-               .UseWebApiWithContainer(GlobalConfiguration.Configuration);
             ConfigureAuth(app);
-        }
-
-        public IContainer RegisterServices()
-        {
-            ContainerBuilder builder = new ContainerBuilder();
-
-            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
-            builder.RegisterOwinApplicationContainer();
-
-            builder.RegisterType<QuickbloxChatService>()
-                   .As<IChatService>()
-                   .InstancePerLifetimeScope();
-
-            return builder.Build();
         }
     }
 }

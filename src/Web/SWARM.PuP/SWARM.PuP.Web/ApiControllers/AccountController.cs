@@ -22,7 +22,7 @@ namespace SWARM.PuP.Web.ApiControllers
 {
     [Authorize]
     [RoutePrefix("api/Account")]
-    public class AccountController : ApiController
+    public class OldAccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
         private PuPUserManager _userManager;

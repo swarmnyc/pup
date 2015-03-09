@@ -43,14 +43,15 @@ namespace SWARM.PuP.Web
                         validateInterval: TimeSpan.FromDays(30),
                         regenerateIdentity: (manager, user) => manager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie))
                 }
-            });            
+            });     
+                   
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Configure the application for OAuth based flow
-            PublicClientId = "pup";
+            PublicClientId = "self";
             OAuthOptions = new OAuthAuthorizationServerOptions
             {
-                TokenEndpointPath = new PathString("/Token"),
+                TokenEndpointPath = new PathString("/OAuth/Token"),
                 Provider = new PuPOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(30),
@@ -86,6 +87,7 @@ namespace SWARM.PuP.Web
             {
                 ClientId = "578384702984-46bacfg5kiijb4jd4sudgr3astl4s9ta.apps.googleusercontent.com",
                 ClientSecret = "8TCjqO28mlhrk1Y0MiuUY7_T",
+                CallbackPath = new PathString("/OAuth/GoogleCallback"),
                 Provider = new GoogleOAuth2AuthenticationProvider()
                 {
                     OnAuthenticated = (context) =>

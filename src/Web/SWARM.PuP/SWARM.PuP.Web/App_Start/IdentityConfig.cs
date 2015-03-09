@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using AspNet.Identity.MongoDB;
+using Autofac;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -45,8 +46,8 @@ namespace SWARM.PuP.Web
         }
 
         public static PuPUserManager Create(IdentityFactoryOptions<PuPUserManager> options, IOwinContext context)
-        {
-            IChatService chatService = context.Solve<IChatService>();
+        {   
+            IChatService chatService = PuPApplication.Container.Resolve<IChatService>();
             var manager = new PuPUserManager(new UserStore<PuPUser>(context.Get<PuPIdentityContext>()), chatService);
             // Configure validation logic for usernames
             manager.UserValidator = new UserValidator<PuPUser>(manager)
