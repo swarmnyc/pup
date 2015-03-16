@@ -8,7 +8,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using SWARM.PuP.Web.Models;
 
-namespace SWARM.PuP.Web.Providers
+namespace SWARM.PuP.Web.Auth
 {
     public class PuPOAuthProvider : OAuthAuthorizationServerProvider
     {
@@ -39,7 +39,7 @@ namespace SWARM.PuP.Web.Providers
             ClaimsIdentity oAuthIdentity = await userManager.CreateIdentityAsync(user, OAuthDefaults.AuthenticationType);
             ClaimsIdentity cookiesIdentity = await userManager.CreateIdentityAsync(user, CookieAuthenticationDefaults.AuthenticationType);
 
-            AuthenticationProperties properties = CreateProperties(user.UserName);
+            AuthenticationProperties properties = CreateProperties(user);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
@@ -81,11 +81,11 @@ namespace SWARM.PuP.Web.Providers
             return Task.FromResult<object>(null);
         }
 
-        public static AuthenticationProperties CreateProperties(string userName)
+        public static AuthenticationProperties CreateProperties(PuPUser user)
         {
             IDictionary<string, string> data = new Dictionary<string, string>
             {
-                { "userName", userName }
+                { "userId", user.Id }
             };
             return new AuthenticationProperties(data);
         }

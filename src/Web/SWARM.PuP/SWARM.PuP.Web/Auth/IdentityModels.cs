@@ -9,5 +9,7 @@ namespace SWARM.PuP.Web.Models
     public class PuPUser : IdentityUser
     {
         public string ChatId { get; set; }
+        public string DisplayName { get; set; }
+        public string PictureUrl { get; set; }
     }
 }

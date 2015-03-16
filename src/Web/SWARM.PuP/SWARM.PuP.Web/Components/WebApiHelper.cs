@@ -58,5 +58,10 @@ namespace System.Net
             request.Write(obj);
             return request.GetResponse().Read<T>();
         }
+
+        public static T Json<T>(this WebRequest request)
+        {
+            return request.GetResponse().Read<T>();
+        }
     }
 }

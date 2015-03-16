@@ -2,26 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Mango;
+using MongoDB;
 
 namespace SWARM.PuP.Web.Models
 {
-    public class Game : MangoModel
+    public class Game : MongoModel
     {
-        private List<GamePlatfrom> _platforms;
-        private List<string> _tags;
+        private IList<GamePlatform> _platforms;
+        private IList<string> _tags;
 
         public string Name { get; set; }
 
-        public string ChatRoomId { get; set; }
+        public string PictureUrl { get; set; }
 
-        public List<GamePlatfrom> Platforms
+        public IList<GamePlatform> Platforms
         {
-            get { return _platforms ?? new List<GamePlatfrom>(); }
+            get { return _platforms ?? new List<GamePlatform>(); }
             set { _platforms = value; }
         }
 
-        public List<string> Tags
+        public IList<string> Tags
         {
             get { return _tags ?? new List<string>(); }
             set { _tags = value; }

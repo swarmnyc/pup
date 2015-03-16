@@ -183,9 +183,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\AccountController.cs" />
+    <Compile Include="QueryFilters\BaseFilter.cs" />
+    <Compile Include="QueryFilters\GameFilter.cs" />
+    <Compile Include="ApiControllers\LobbyController.cs" />
+    <Compile Include="ApiControllers\OldAccountController.cs" />
     <Compile Include="ApiControllers\GameController.cs" />
-    <Compile Include="Components\IMangoService.cs" />
+    <Compile Include="Components\IMongoService.cs" />
+    <Compile Include="Components\JsonContent.cs" />
+    <Compile Include="Components\Linq.cs" />
     <Compile Include="Models\ChatRoomType.cs" />
+    <Compile Include="Models\Lobby.cs" />
+    <Compile Include="Models\PlayStyle.cs" />
+    <Compile Include="Models\SkillLevel.cs" />
+    <Compile Include="QueryFilters\LobbyFilter.cs" />
     <Compile Include="Services\GameService.cs" />
     <Compile Include="Services\IGameService.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -194,7 +204,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Components\Mango.cs" />
+    <Compile Include="Components\MongoDB.cs" />
     <Compile Include="Components\WebApiHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\GameController.cs" />
@@ -204,7 +214,15 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Game.cs" />
-    <Compile Include="Models\GamePlatfrom.cs" />
+    <Compile Include="Models\GamePlatform.cs" />
+    <Compile Include="Services\ILobbyService.cs" />
+    <Compile Include="Services\LobbyService.cs" />
+    <Compile Include="Services\Quickblox\CreateUserResult.cs" />
+    <Compile Include="Services\Quickblox\QuickbloxAttachment.cs" />
+    <Compile Include="Services\Quickblox\QuickbloxMessage.cs" />
+    <Compile Include="Services\Quickblox\QuickbloxRoom.cs" />
+    <Compile Include="Services\Quickblox\QuickbloxUser.cs" />
+    <Compile Include="Services\Quickblox\Session.cs" />
     <Compile Include="ViewModes\AccountViewModels.cs" />
     <Compile Include="Auth\IdentityModels.cs" />
     <Compile Include="ViewModes\ManageViewModels.cs" />
@@ -215,7 +233,7 @@
     <Compile Include="Services\Quickblox\QuickbloxChatService.cs" />
     <Compile Include="Services\Quickblox\QuickbloxHttpHelper.cs" />
     <Compile Include="Services\Quickblox\QuickbloxApiTypes.cs" />
-    <Compile Include="Services\Quickblox\QuickbloxModels.cs" />
+    <Compile Include="Services\Quickblox\SessionResult.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -233,6 +251,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Properties\PublishProfiles\SWARMPuP.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />

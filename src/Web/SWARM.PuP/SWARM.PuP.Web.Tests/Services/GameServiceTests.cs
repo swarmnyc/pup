@@ -30,12 +30,11 @@ namespace SWARM.PuP.Web.Services.Tests
             Game game = _gameService.Add(new Game()
             {
                 Name = "Test",
-                Platforms = new List<GamePlatfrom>() { GamePlatfrom.PC, GamePlatfrom.PS },
+                Platforms = new List<GamePlatform>() { GamePlatform.Windows, GamePlatform.PS3 },
                 Tags = new List<string>() { "Shooting", "Action"}
             });
 
-            Assert.IsNotNull(game.Id);
-            Assert.IsNotNull(game.ChatRoomId);
+            Assert.IsNotNull(game.Id);            
         }
     }
 }

@@ -10,7 +10,7 @@ using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
 using SWARM.PuP.Web.Models;
-using SWARM.PuP.Web.Providers;
+using SWARM.PuP.Web.Auth;
 
 namespace SWARM.PuP.Web
 {
@@ -51,9 +51,9 @@ namespace SWARM.PuP.Web
             PublicClientId = "self";
             OAuthOptions = new OAuthAuthorizationServerOptions
             {
-                TokenEndpointPath = new PathString("/OAuth/Token"),
+                TokenEndpointPath = new PathString("/Login"),
                 Provider = new PuPOAuthProvider(PublicClientId),
-                AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
+                //AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(30),
                 AllowInsecureHttp = true
             };

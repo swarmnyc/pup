@@ -9,13 +9,13 @@ using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
 
-namespace Mango
+namespace MongoDB
 {
     /// <summary>
     /// class to wrap up your objects for Mongo Happiness
     /// </summary>
     [BsonIgnoreExtraElements(Inherited = true)]
-    public abstract class MangoModel
+    public abstract class MongoModel
     {
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
@@ -25,14 +25,14 @@ namespace Mango
     /// wrapper repository class that serves your objects to the MongoDB
     /// </summary>
     /// 
-    public abstract class MangoService<T> : IMangoService<T> where T : MangoModel
+    public abstract class MongoService<T> : IMongoService<T> where T : MongoModel
     {
-        protected MangoService()
+        protected MongoService()
         {
             this.Collection = MongoHelper.GetCollection<T>(typeof(T).Name);
             }
 
-        protected MangoService(string collectionName)
+        protected MongoService(string collectionName)
         {
             this.Collection = MongoHelper.GetCollection<T>(collectionName);
         }
@@ -58,17 +58,17 @@ namespace Mango
         {
             return this.Collection.AsQueryable<T>();
         }
-
+   
         public virtual T Add(T entity)
         {
             this.Collection.Insert<T>(entity);
             return entity;
         }
 
-        public virtual IEnumerable<T> Add(IEnumerable<T> entities)
+        public virtual IEnumerable<T> Add(IEnumerable<T> lobbies)
         {
-            this.Collection.InsertBatch<T>(entities);
-            return entities;
+            this.Collection.InsertBatch<T>(lobbies);
+            return lobbies;
         }
 
         public virtual T Update(T entity)
@@ -120,11 +120,11 @@ namespace Mango
     /// <summary>
     /// class that spawns MonogDatabase and MongoCollection objects
     /// </summary>
-    internal static class MongoHelper
+    public static class MongoHelper
     {
         private static MongoDatabase _database;
 
-        private static MongoDatabase GetDatabase()
+        public static MongoDatabase GetDatabase()
         {
             if (_database == null)
             {

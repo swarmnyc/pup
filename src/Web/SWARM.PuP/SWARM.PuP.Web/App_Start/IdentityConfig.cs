@@ -38,10 +38,12 @@ namespace SWARM.PuP.Web
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
     public class PuPUserManager : UserManager<PuPUser>
     {
+        public static PuPUserManager Instance { get; private set; }
         private IChatService chatService;
         
         private PuPUserManager(UserStore<PuPUser> store, IChatService chatService) : base(store)
         {
+            Instance = this;
             this.chatService = chatService;
         }
 
