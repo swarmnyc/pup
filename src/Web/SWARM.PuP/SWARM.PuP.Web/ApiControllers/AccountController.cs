@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace SWARM.PuP.Web.ApiControllers
         //Login used the default owin handler which is setted in ~/App_Start/Startup.Auth.cs
 
         [HttpPost]
-        [Route("~/ExternalLogin")]
+        [Route("~/api/ExternalLogin")]
         public async Task<IHttpActionResult> ExternalLogin(LoginOrSignupViewModel model)
         {
             if (model == null || string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Provider) ||
@@ -35,7 +36,9 @@ namespace SWARM.PuP.Web.ApiControllers
                         WebRequest.Create("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + model.Token);
                     var googleUser = request.Json<GoogleUserInfo>();
 
-                    user = await PuPUserManager.Instance.FindAsync(new UserLoginInfo(model.Provider, googleUser.id));
+                    //TODO: if password users want to change external login they can't.
+                    //Now the idea is if pass the google auth, then we assume the email is vaild 
+                    user = await PuPUserManager.Instance.FindByEmailAsync(model.Email);
 
                     if (user == null)
                     {
@@ -68,8 +71,7 @@ namespace SWARM.PuP.Web.ApiControllers
 
             var properties = PuPOAuthProvider.CreateProperties(user);
             var ticket = new AuthenticationTicket(oAuthIdentity, properties);
-
-            ticket.Properties.IsPersistent = true;
+            ticket.Properties.ExpiresUtc = new DateTimeOffset(DateTime.Now.AddMilliseconds(Startup.OAuthOptions.AccessTokenExpireTimeSpan.Milliseconds));
 
             var accessToken = Startup.OAuthOptions.AccessTokenFormat.Protect(ticket);
 
@@ -77,7 +79,10 @@ namespace SWARM.PuP.Web.ApiControllers
 
             response.Content = new JsonContent(new
             {
-                access_token = accessToken
+                userId = user.Id,
+                access_token = accessToken,
+                token_type = "bearer",
+                expire_in = Startup.OAuthOptions.AccessTokenExpireTimeSpan.TotalMilliseconds
             });
 
             response.Headers.CacheControl = new CacheControlHeaderValue

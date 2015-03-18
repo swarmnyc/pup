@@ -47,11 +47,11 @@ namespace SWARM.PuP.Web
                    
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
-            // Configure the application for OAuth based flow
-            PublicClientId = "self";
+            //Configure the application for OAuth based flow
+            PublicClientId = "PuP";
             OAuthOptions = new OAuthAuthorizationServerOptions
             {
-                TokenEndpointPath = new PathString("/Login"),
+                TokenEndpointPath = new PathString("/api/Login"),
                 Provider = new PuPOAuthProvider(PublicClientId),
                 //AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(30),

@@ -27,7 +27,7 @@ namespace SWARM.PuP.Web.Auth
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
             var userManager = context.OwinContext.GetUserManager<PuPUserManager>();
-
+            
             PuPUser user = await userManager.FindAsync(context.UserName, context.Password);
 
             if (user == null)

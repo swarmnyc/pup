@@ -11,6 +11,7 @@ using SWARM.PuP.Web.Services;
 
 namespace SWARM.PuP.Web.ApiControllers
 {
+    [Authorize]
     public class GameController : ApiController
     {
         private readonly IGameService _gameService;
