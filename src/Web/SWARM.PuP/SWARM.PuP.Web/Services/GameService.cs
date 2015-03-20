@@ -1,13 +1,13 @@
 using System;
 using System.Linq;
-using MongoDB;
+using System.Linq.Expressions;
 using MongoDB.Driver.Linq;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
 
 namespace SWARM.PuP.Web.Services
 {
-    public class GameService : MongoService<Game>, IGameService
+    public class GameService : BaseService<Game>, IGameService
     {
         public GameService() : base("Games")
         {
@@ -15,7 +15,7 @@ namespace SWARM.PuP.Web.Services
 
         public IQueryable<Game> Filter(GameFilter filter)
         {
-            var query = this.All();
+            var query = All();
 
             filter = filter ?? new GameFilter();
 
@@ -29,9 +29,23 @@ namespace SWARM.PuP.Web.Services
                 query = query.Where(x => x.Platforms.ContainsAny(filter.Platforms));
             }
 
-            query = filter.DoOrderQuery(query);
+            query = DoOrderQuery(query, filter);
 
             return query;
+        }
+
+        protected override Expression<Func<Game, object>> GetOrderExpression(BaseFilter filter)
+        {
+            if (string.IsNullOrWhiteSpace(filter.Order))
+            {
+                return (Game x) => x.Name;
+            }
+            switch (filter.Order.ToLower())
+            {
+                case "name":
+                default:
+                    return (Game x) => x.Name;
+            }
         }
     }
 }

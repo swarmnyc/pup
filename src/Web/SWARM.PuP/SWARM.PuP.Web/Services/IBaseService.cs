@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using MongoDB;
 
-namespace MongoDB
+namespace SWARM.PuP.Web.Services
 {
-    public interface IMongoService<T> where T : MongoModel
+    public interface IBaseService<T> where T : MongoModel
     {
         T GetById(string id);
         T GetSingle(Expression<Func<T, bool>> criteria);

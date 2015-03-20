@@ -183,7 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\AccountController.cs" />
-    <Compile Include="Components\MongoService.cs" />
+    <Compile Include="Services\BaseService.cs" />
     <Compile Include="Components\SystemExtenions.cs" />
     <Compile Include="Models\UserTag.cs" />
     <Compile Include="QueryFilters\BaseFilter.cs" />
@@ -191,7 +191,7 @@
     <Compile Include="ApiControllers\LobbyController.cs" />
     <Compile Include="ApiControllers\OldAccountController.cs" />
     <Compile Include="ApiControllers\GameController.cs" />
-    <Compile Include="Components\IMongoService.cs" />
+    <Compile Include="Services\IBaseService.cs" />
     <Compile Include="Components\JsonContent.cs" />
     <Compile Include="Components\WhereBuilder.cs" />
     <Compile Include="Models\ChatRoomType.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB;
+using MongoDB.Bson;
 using SWARM.PuP.Web.ApiControllers;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
@@ -24,8 +25,8 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
                 Platforms = new List<GamePlatform>() { GamePlatform.Windows, GamePlatform.Xbox360 }
             });
 
-            Console.Write(result.ToMongoQueryText());
-            
+            Console.WriteLine(result.ToMongoQueryText());
+            Console.WriteLine(result.ToJson());
             Assert.IsTrue(result.Any());
         }
     }

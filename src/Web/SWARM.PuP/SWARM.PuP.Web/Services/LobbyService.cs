@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MongoDB;
+using System.Linq.Expressions;
 using MongoDB.Driver.Linq;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
 
 namespace SWARM.PuP.Web.Services
 {
-    public class LobbyService : MongoService<Lobby>, ILobbyService
+    public class LobbyService : BaseService<Lobby>, ILobbyService
     {
         private readonly IChatService _chatService;
 
@@ -36,7 +36,7 @@ namespace SWARM.PuP.Web.Services
 
         public IQueryable<Lobby> Filter(LobbyFilter filter)
         {
-            var query = this.All();
+            var query = All();
 
             filter = filter ?? new LobbyFilter();
 
@@ -60,9 +60,27 @@ namespace SWARM.PuP.Web.Services
                 query = query.Where(x => x.Platforms.ContainsAny(filter.Platforms));
             }
 
-            query = filter.DoOrderQuery(query);
+            query = DoOrderQuery(query, filter);
 
             return query;
+        }
+
+        protected override Expression<Func<Lobby, object>> GetOrderExpression(BaseFilter filter)
+        {
+            if (string.IsNullOrWhiteSpace(filter.Order))
+            {
+                return (Lobby x) => x.StartTimeUtc;
+            }
+            switch (filter.Order.ToLower())
+            {
+                case "name":
+                    return (Lobby x) => x.Name;
+                case "popular":
+                    return (Lobby x) => x.UserIds.Count;
+                case "starttime":
+                default:
+                    return (Lobby x) => x.StartTimeUtc;
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using SWARM.PuP.Web.Models;
 
 namespace SWARM.PuP.Web.Services.Quickblox
@@ -18,7 +17,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     password = "swarmnyc",
                     email = user.Email
                 }
-            }); 
+            });
 
             user.ChatId = result.user.id.ToString();
         }
@@ -29,7 +28,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
 
             return request.Json<QuickbloxRoom>(new
             {
-                type = (int)type,
+                type = (int) type,
                 name = roomName
             })._id;
         }

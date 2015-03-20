@@ -4,6 +4,7 @@ using System.Linq;
 using Autofac;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB;
+using MongoDB.Bson;
 using SWARM.PuP.Web.ApiControllers;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
@@ -35,7 +36,8 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
                 PlayStyles = new[] { PlayStyle.Casual }
             });
 
-            Console.Write(result.ToMongoQueryText());
+            Console.WriteLine(result.ToMongoQueryText());
+            Console.WriteLine(result.ToJson());
 
             Assert.IsTrue(result.Any());
         }
