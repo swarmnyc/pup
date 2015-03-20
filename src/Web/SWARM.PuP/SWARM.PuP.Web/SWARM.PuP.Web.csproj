@@ -15,7 +15,7 @@
     <AssemblyName>SWARM.PuP.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -183,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\AccountController.cs" />
+    <Compile Include="Models\UserTag.cs" />
     <Compile Include="QueryFilters\BaseFilter.cs" />
     <Compile Include="QueryFilters\GameFilter.cs" />
     <Compile Include="ApiControllers\LobbyController.cs" />
@@ -224,7 +225,7 @@
     <Compile Include="Services\Quickblox\QuickbloxUser.cs" />
     <Compile Include="Services\Quickblox\Session.cs" />
     <Compile Include="ViewModes\AccountViewModels.cs" />
-    <Compile Include="Auth\IdentityModels.cs" />
+    <Compile Include="Models\PuPUser.cs" />
     <Compile Include="ViewModes\ManageViewModels.cs" />
     <Compile Include="Auth\PuPIdentityContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -328,7 +329,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>1726</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/</IISUrl>
+          <IISUrl>http://localhost:1726/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

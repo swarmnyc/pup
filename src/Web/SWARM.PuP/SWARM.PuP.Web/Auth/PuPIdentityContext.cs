@@ -17,8 +17,8 @@ namespace SWARM.PuP.Web.Models
 
         public static PuPIdentityContext Create()
         {
-            var users = MongoHelper.GetCollection<IdentityUser>("Users");
-            var roles = MongoHelper.GetCollection<IdentityRole>("Roles");
+            var users = MongoHelper.GetCollection<IdentityUser>("User");
+            var roles = MongoHelper.GetCollection<IdentityRole>("Role");
             return new PuPIdentityContext(users, roles);
         }
     }

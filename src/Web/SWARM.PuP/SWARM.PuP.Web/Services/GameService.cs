@@ -9,7 +9,7 @@ namespace SWARM.PuP.Web.Services
 {
     public class GameService : MongoService<Game>, IGameService
     {
-        public GameService()
+        public GameService() : base("Games")
         {
         }
 

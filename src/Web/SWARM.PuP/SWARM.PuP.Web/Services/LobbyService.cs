@@ -12,7 +12,7 @@ namespace SWARM.PuP.Web.Services
     {
         private readonly IChatService _chatService;
 
-        public LobbyService(IChatService chatService)
+        public LobbyService(IChatService chatService) : base("Lobbies")
         {
             _chatService = chatService;
         }
