@@ -1,14 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SWARM.PuP.Web.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Autofac;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SWARM.PuP.Web.Models;
+using SWARM.PuP.Web.Services;
 
-namespace SWARM.PuP.Web.Services.Tests
+namespace SWARM.PuP.Web.Tests.Services
 {
     [TestClass()]
     public class GameServiceTests
@@ -17,24 +13,23 @@ namespace SWARM.PuP.Web.Services.Tests
 
         public GameServiceTests()
         {
-            ContainerBuilder builder = new ContainerBuilder();
-            builder.RegisterAssemblyTypes(typeof(IChatService).Assembly).Where(x => x.FullName.EndsWith("Service")).AsImplementedInterfaces();
-
-            IContainer ioc = builder.Build();
+            IContainer ioc = TestHelper.GetContainer();
             _gameService = ioc.Resolve<IGameService>();
         }
 
+
+
         [TestMethod()]
-        public void AddTest()
+        public void GameService_Add_Test()
         {
             Game game = _gameService.Add(new Game()
             {
                 Name = "Test",
                 Platforms = new List<GamePlatform>() { GamePlatform.Windows, GamePlatform.PS3 },
-                Tags = new List<string>() { "Shooting", "Action"}
+                Tags = new List<string>() { "Shooting", "Action" }
             });
 
-            Assert.IsNotNull(game.Id);            
+            Assert.IsNotNull(game.Id);
         }
     }
 }

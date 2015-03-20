@@ -37,12 +37,22 @@ namespace SWARM.PuP.Web.Services
         public IQueryable<Lobby> Filter(LobbyFilter filter)
         {
             var query = this.All();
-            
+
             filter = filter ?? new LobbyFilter();
 
             if (!string.IsNullOrWhiteSpace(filter.Search))
             {
                 query = query.Where(x => x.Name.ToLower().Contains(filter.Search));
+            }
+
+            if (!filter.PlayStyles.IsNullOrEmpty())
+            {
+                query = query.Where(x => x.PlayStyle.In(filter.PlayStyles));
+            }
+
+            if (!filter.SkillLevels.IsNullOrEmpty())
+            {
+                query = query.Where(x => x.SkillLevel.In(filter.SkillLevels));
             }
 
             if (!filter.Platforms.IsNullOrEmpty())

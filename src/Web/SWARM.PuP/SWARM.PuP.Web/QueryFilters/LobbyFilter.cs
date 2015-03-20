@@ -15,6 +15,9 @@ namespace SWARM.PuP.Web.QueryFilters
         }
 
         public IList<GamePlatform> Platforms { get; set; }
+        public IList<PlayStyle> PlayStyles { get; set; }
+
+        public IList<SkillLevel> SkillLevels { get; set; }
 
         protected override Expression<Func<Lobby, object>> GetOrderExpression()
         {

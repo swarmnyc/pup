@@ -25,23 +25,23 @@ namespace SWARM.PuP.Web.QueryFilters
 
         protected abstract Expression<Func<T, object>> GetOrderExpression(); 
 
-        internal virtual IQueryable<T> DoOrderQuery(IQueryable<T> collection)
+        internal virtual IQueryable<T> DoOrderQuery(IQueryable<T> query)
         {
             if (PageIndex != 0)
             {
-                collection = collection.Skip(PageIndex * PageSize);
+                query = query.Skip(PageIndex * PageSize);
             }
 
             if (OrderDirection == ListSortDirection.Ascending)
             {
-                collection = collection.OrderBy(GetOrderExpression());
+                query = query.OrderBy(GetOrderExpression());
             }
             else
             {
-                collection = collection.OrderByDescending(GetOrderExpression());
+                query = query.OrderByDescending(GetOrderExpression());
             }
 
-            return collection.Take(PageSize);
+            return query.Take(PageSize);
         }
     }
 }

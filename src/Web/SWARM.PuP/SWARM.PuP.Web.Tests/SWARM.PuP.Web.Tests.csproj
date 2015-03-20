@@ -108,11 +108,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\GameControllerTests.cs" />
+    <Compile Include="ApiControllers\LobbyControllerTests.cs" />
     <Compile Include="Services\GameServiceTests.cs" />
     <Compile Include="Services\LobbyServiceTests.cs" />
     <Compile Include="Services\QuickbloxChatServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
+    <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

@@ -1,14 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SWARM.PuP.Web.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SWARM.PuP.Web.Models;
+using SWARM.PuP.Web.Services;
 using SWARM.PuP.Web.Services.Quickblox;
 
-namespace SWARM.PuP.Web.Services.Tests
+namespace SWARM.PuP.Web.Tests.Services
 {
     [TestClass()]
     public class LobbyServiceTests

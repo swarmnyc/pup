@@ -1,24 +1,22 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB;
 using SWARM.PuP.Web.ApiControllers;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
 using SWARM.PuP.Web.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SWARM.PuP.Web.ApiControllers.Tests
+namespace SWARM.PuP.Web.Tests.ApiControllers
 {
     [TestClass()]
     public class GameControllerTests
     {
         [TestMethod()]
-        public void GameController_GetsTest()
+        public void GameController_Filter_Test()
         {
-            var gameService = new GameService(); //TODO : Change to Mock
+            var gameService = new GameService();
             var controller = new GameController(gameService);
             var result = controller.Get(new GameFilter()
             {
@@ -28,7 +26,6 @@ namespace SWARM.PuP.Web.ApiControllers.Tests
 
             Console.Write(result.ToMongoQueryText());
             
-            Assert.IsNotNull(result);
             Assert.IsTrue(result.Any());
         }
     }

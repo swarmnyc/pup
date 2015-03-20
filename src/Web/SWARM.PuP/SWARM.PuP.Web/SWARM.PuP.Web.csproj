@@ -15,7 +15,7 @@
     <AssemblyName>SWARM.PuP.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -183,6 +183,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\AccountController.cs" />
+    <Compile Include="Components\MongoService.cs" />
+    <Compile Include="Components\SystemExtenions.cs" />
     <Compile Include="Models\UserTag.cs" />
     <Compile Include="QueryFilters\BaseFilter.cs" />
     <Compile Include="QueryFilters\GameFilter.cs" />
@@ -191,7 +193,7 @@
     <Compile Include="ApiControllers\GameController.cs" />
     <Compile Include="Components\IMongoService.cs" />
     <Compile Include="Components\JsonContent.cs" />
-    <Compile Include="Components\Linq.cs" />
+    <Compile Include="Components\WhereBuilder.cs" />
     <Compile Include="Models\ChatRoomType.cs" />
     <Compile Include="Models\Lobby.cs" />
     <Compile Include="Models\PlayStyle.cs" />
@@ -205,7 +207,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Components\MongoDB.cs" />
+    <Compile Include="Components\MongoHelper.cs" />
     <Compile Include="Components\WebApiHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\GameController.cs" />
@@ -329,7 +331,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>1726</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:1726/</IISUrl>
+          <IISUrl>http://localhost/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
