@@ -95,10 +95,25 @@ namespace SWARM.PuP.Web
             return manager;
         }
 
-        public override Task<IdentityResult> CreateAsync(PuPUser user)
+        public async override Task<IdentityResult> CreateAsync(PuPUser user)
         {
-            this.chatService.CreateUser(user);
-            return base.CreateAsync(user);
+            var result = await base.CreateAsync(user);
+            if (result.Succeeded)
+            {
+                try
+                {
+                    this.chatService.CreateUser(user);
+                    this.Update(user);
+                }
+                catch (Exception exception)
+                {
+                    this.Delete(user);
+                    result = new IdentityResult(exception.Message);
+                }
+                
+            }
+            
+            return result;
         }
     }
 

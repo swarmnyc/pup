@@ -19,8 +19,8 @@ namespace SWARM.PuP.Web.Services.Quickblox
         private static readonly Random Random = new Random();
         private static readonly Uri BaseUri = new Uri("https://api.quickblox.com/");
         private static Session _session;
-        private static readonly string User = "WadeHuang";
-        private static readonly string UserEmail = "wade@swarmnyc.com";
+        private static readonly string User = "5510546b60635b20e83e06b3";
+        //private static readonly string UserEmail = "wade@swarmnyc.com";
         private static readonly string UserPassword = "swarmnyc";
 
         internal static WebRequest Create(string api, string method)
@@ -67,7 +67,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     timestamp,
                     nonce,
                     signature = GenerateAuthMsg(nonce, timestamp),
-                    user = new {login = User, email = UserEmail, password = UserPassword}
+                    user = new {login = User,/* email = UserEmail,*/ password = UserPassword}
                 });
 
                 _session = result.session;
@@ -98,7 +98,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
             if (User != null)
             {
                 messsage.Add("user[login]=" + User);
-                messsage.Add("user[email]=" + UserEmail);
+                //messsage.Add("user[email]=" + UserEmail);
                 messsage.Add("user[password]=" + UserPassword);
             }
 

@@ -45,7 +45,7 @@ namespace SWARM.PuP.Web.Tests.Services
             {
                 QuickbloxChatService s = new QuickbloxChatService();
                 
-                s.SendMessage("54fa237d535c12ab5f0721c3", "Hello!!");
+                s.SendMessage("550cd690535c12ad7c0046aa", "Yayaya!!");
             }
             catch (WebException e)
             {

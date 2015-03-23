@@ -13,7 +13,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
             {
                 user = new
                 {
-                    login = user.UserName,
+                    login = user.Id,
                     password = "swarmnyc",
                     email = user.Email
                 }
@@ -28,7 +28,8 @@ namespace SWARM.PuP.Web.Services.Quickblox
 
             return request.Json<QuickbloxRoom>(new
             {
-                type = (int) type,
+                //type = type == ChatRoomType.Public ? 2 : 3,
+                type = (int)type,
                 name = roomName
             })._id;
         }

@@ -6,8 +6,8 @@ namespace SWARM.PuP.Web.Models
 {
     public class Lobby : Game
     {
-        private IList<string> _userIds
-            ;
+        private IList<string> _userIds;
+
         public string GameId { get; set; }
 
         public string Description { get; set; }

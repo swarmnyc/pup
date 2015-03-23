@@ -71,7 +71,7 @@ namespace SWARM.PuP.Web.ApiControllers
 
             var properties = PuPOAuthProvider.CreateProperties(user);
             var ticket = new AuthenticationTicket(oAuthIdentity, properties);
-            ticket.Properties.ExpiresUtc = new DateTimeOffset(DateTime.Now.AddMilliseconds(Startup.OAuthOptions.AccessTokenExpireTimeSpan.Milliseconds));
+            ticket.Properties.ExpiresUtc = new DateTimeOffset(DateTime.Now.AddMilliseconds(Startup.OAuthOptions.AccessTokenExpireTimeSpan.TotalMilliseconds));
 
             var accessToken = Startup.OAuthOptions.AccessTokenFormat.Protect(ticket);
 
@@ -80,9 +80,10 @@ namespace SWARM.PuP.Web.ApiControllers
             response.Content = new JsonContent(new
             {
                 userId = user.Id,
+                //userChatId = user.ChatId,
                 access_token = accessToken,
                 token_type = "bearer",
-                expire_in = Startup.OAuthOptions.AccessTokenExpireTimeSpan.TotalMilliseconds
+                expires_in = Startup.OAuthOptions.AccessTokenExpireTimeSpan.TotalMilliseconds
             });
 
             response.Headers.CacheControl = new CacheControlHeaderValue

@@ -16,10 +16,10 @@ namespace SWARM.PuP.Web.Tests.Services
             var lobby = service.Add(new Lobby()
             {
                 GameId = "test",
-                Name = "test",
-                PlayStyle = PlayStyle.Casual,
+                Name = "Test 2",
+                PlayStyle = PlayStyle.Serious,
                 StartTimeUtc = DateTime.UtcNow.AddHours(1),
-                SkillLevel = SkillLevel.Newbie,
+                SkillLevel = SkillLevel.Pro,
                 Description = "Test"
             });
 
