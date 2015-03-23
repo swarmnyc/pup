@@ -5,8 +5,13 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public final  class Utility {
+    static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
     private Utility(){
     }
 
@@ -19,5 +24,9 @@ public final  class Utility {
         }
 
         return new JSONObject(new String(bos.toByteArray(), "UTF-8"));
+    }
+
+    public static Date getDateFromJsonString(String value) throws Exception {
+        return sdf.parse(value.substring(0,value.length()-1) + "+00");
     }
 }

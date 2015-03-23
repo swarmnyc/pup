@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="PuP_API_Url">http://192.168.16.146/api/</string>
+    <string name="PuP_API_Url">http://192.168.16.229/api/</string>
+    <string name="QB_APP_ID">20103</string>
+    <string name="QB_APP_KEY">gXa5zW9K5wdTuCV</string>
+    <string name="QB_APP_SECRET">YGabpebTkW2Q9r6</string>
+    <string name="QB_APP_DEFAULT_USER">5510546b60635b20e83e06b3</string>
+    <string name="QB_APP_PW">swarmnyc</string>
 </resources>

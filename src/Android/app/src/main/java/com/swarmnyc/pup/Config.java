@@ -11,6 +11,7 @@ public class Config {
     private static Context context;
     private static Hashtable<Object, Object> resources;
     private static boolean isLoggedin;
+    private static String userEmail;
 
     public static void init(Context context) {
         Config.context = context;
@@ -25,7 +26,7 @@ public class Config {
     }
 
     public static String getUserToken() {
-        long timeSpan = data.getLong("access_token_expire_in", 0) - System.currentTimeMillis();
+        long timeSpan = data.getLong("access_token_expires_in", 0) - System.currentTimeMillis();
         if (timeSpan > 0) {
             return data.getString("access_token", null);
         } else {
@@ -38,8 +39,10 @@ public class Config {
 
         isLoggedin = true;
         editor.putString("user_id", userId);
+        //editor.putString("user_chatId", charId);
+        //editor.putString("user_email", email);
         editor.putString("access_token", token);
-        editor.putLong("access_token_expire_in", System.currentTimeMillis() + expireIn);
+        editor.putLong("access_token_expires_in", System.currentTimeMillis() + expireIn);
 
         editor.apply();
     }
@@ -49,8 +52,11 @@ public class Config {
         SharedPreferences.Editor editor = data.edit();
 
         isLoggedin = false;
+
         editor.remove("user_id");
-        editor.remove("access_token_expire_in");
+        //editor.remove("user_email");
+        //editor.remove("user_chatId");
+        editor.remove("access_token_expires_in");
         editor.remove("access_token");
 
         editor.apply();
@@ -70,4 +76,11 @@ public class Config {
         return getConfigString(id);
     }
 
+    public static String getUserId() {
+        return data.getString("user_id", null);
+    }
+
+//    public static String getUserEmail() {
+//        return data.getString("user_email", null);
+//    }
 }

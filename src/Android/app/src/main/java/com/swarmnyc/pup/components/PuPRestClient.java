@@ -17,10 +17,8 @@ public final class PuPRestClient {
 
     public static RequestHandle get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         ensureHeaders();
-
         return client.get(getAbsoluteUrl(url), params, responseHandler);
     }
-
 
     public static RequestHandle post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         ensureHeaders();

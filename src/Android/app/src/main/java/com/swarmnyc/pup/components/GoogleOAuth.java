@@ -4,11 +4,14 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.swarmnyc.pup.activities.AuthActivity;
+
+import org.w3c.dom.Text;
 
 public final class GoogleOAuth {
     private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
@@ -46,10 +49,11 @@ public final class GoogleOAuth {
             final AuthActivity activity = (AuthActivity)params[0];
             GoogleAuthTaskResult result = null;
             String email = (String)params[1];
+            result = new GoogleAuthTaskResult();
+            result.activity = activity;
             try {
                 String token = GoogleAuthUtil.getToken(activity, email, SCOPE);
-                result = new GoogleAuthTaskResult();
-                result.activity = activity;
+
                 result.email = email;
                 result.token = token;
             } catch (Exception e) {
@@ -61,7 +65,7 @@ public final class GoogleOAuth {
 
         @Override
         protected void onPostExecute(final GoogleAuthTaskResult result) {
-            if (result==null){
+            if (TextUtils.isEmpty(result.email)){
                 Toast.makeText(result.activity, "Login failed", Toast.LENGTH_SHORT).show();
             }else{
                 try {
