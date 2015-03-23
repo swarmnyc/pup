@@ -18,6 +18,7 @@ import com.quickblox.chat.QBGroupChat;
 import com.quickblox.chat.exception.QBChatException;
 import com.quickblox.chat.listeners.QBMessageListener;
 import com.quickblox.chat.listeners.QBMessageListenerImpl;
+import com.quickblox.chat.model.QBAttachment;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.QBEntityCallbackImpl;
@@ -26,6 +27,7 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.components.ChatService;
 import com.swarmnyc.pup.models.Lobby;
 
+import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
@@ -83,8 +85,10 @@ public class LobbyActivity extends ActionBarActivity {
                 QBChatMessage chatMessage = new QBChatMessage();
 
                 chatMessage.setBody(messageText.getText().toString());
-                chatMessage.setProperty("save_to_history", "1");
+                //chatMessage.setProperty("save_to_history", "1");
                 chatMessage.setDateSent(new Date().getTime()/1000);
+                chatMessage.addAttachment(new QBAttachment());
+                chatMessage.setSaveToHistory(true);
                 chat.sendMessage(chatMessage);
                 messageText.setText("");
             } catch (XMPPException e) {

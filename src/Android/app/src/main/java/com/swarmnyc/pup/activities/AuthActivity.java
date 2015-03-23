@@ -3,12 +3,12 @@ package com.swarmnyc.pup.activities;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.*;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.components.GoogleOAuth;
-import com.swarmnyc.pup.fragments.*;
+import com.swarmnyc.pup.fragments.LoginFragment;
 
 
 public class AuthActivity extends ActionBarActivity {
@@ -52,12 +52,11 @@ public class AuthActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == GoogleOAuth.REQUEST_CODE_GOOGLE_AUTH){
+        if (requestCode == GoogleOAuth.REQUEST_CODE_GOOGLE_AUTH) {
             GoogleOAuth.handleResult(this, resultCode, data);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-
     }
 
     public void finishAuth() {

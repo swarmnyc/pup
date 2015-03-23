@@ -1,0 +1,136 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.swarmnyc.pup.ui.fragment.FragmentSignUp" android:padding="16dp">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Holy Monkeys. Thanks for signing up! We're in beta right now and would love to hear your feedback"
+            android:id="@+id/textView"
+            android:layout_marginBottom="8dp"
+            />
+
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:hint="email@email.com"
+            android:layout_marginBottom="8dp"
+            android:id="@+id/txt_email" android:layout_gravity="center_horizontal"/>
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:hint="password"
+            android:layout_marginBottom="8dp"
+            android:id="@+id/txt_password"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Select your gaming system"
+            android:layout_marginBottom="8dp"
+            />
+
+    <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+
+        <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/btn_pc"
+                    android:text="STEAM/PC"
+                    style="@style/GamingSystemButton" android:layout_height="wrap_content"/>
+
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/btn_xbox_360"
+                    android:text="XBOX 360"
+                    style="@style/GamingSystemButton"
+                      android:layout_gravity="center|fill" android:layout_height="wrap_content"/>
+
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_column="2"
+
+                    android:id="@+id/btn_xbox_one"
+                    android:text="XBOX ONE"
+                    style="@style/GamingSystemButton"
+
+                     android:layout_gravity="center|fill" android:layout_height="wrap_content"/>
+        </TableRow>
+
+        <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/btn_ps3" android:layout_gravity="center|fill"
+                    style="@style/GamingSystemButton"
+                    android:text="PS3" android:layout_height="wrap_content"/>
+
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/btn_ps4" android:layout_gravity="center|fill"
+
+                    style="@style/GamingSystemButton"
+                    android:text="PS4" android:layout_height="wrap_content"/>
+
+            <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/btn_wii_u" android:layout_gravity="center|fill"
+
+                    style="@style/GamingSystemButton"
+                    android:text="Wii U" android:layout_height="wrap_content"/>
+        </TableRow>
+    </TableLayout>
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="gamer tag"
+            android:layout_marginBottom="8dp"
+            android:id="@+id/txt_gamer_tag"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="You only need one system to get started. You can always add other systems form teh settings menu"
+            />
+
+    <Button
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+
+            android:id="@+id/btn_sign_up"
+
+            style="@style/ActionButton"
+            android:text="SIGN UP" android:layout_height="wrap_content"/>
+
+</LinearLayout>

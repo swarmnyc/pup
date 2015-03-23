@@ -27,4 +27,5 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.5'
     compile files('libs/quickblox-android-sdk-core-2.1.1.jar')
     compile files('libs/quickblox-android-sdk-chat-2.1.1.jar')
+    compile files('libs/quickblox-android-sdk-messages-2.1.1.jar')
 }

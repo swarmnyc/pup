@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:orientation="vertical"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.swarmnyc.pup.ui.fragment.FragmentLobbyList">
+
+    <EditText
+            android:id="@+id/txt_edit_game"
+            android:hint="FILTER"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:drawableRight="@android:drawable/ic_menu_sort_by_size"/>
+
+
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_lobby"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent" android:layout_height="match_parent"/>
+
+</LinearLayout>

@@ -6,16 +6,26 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.google.android.gms.drive.internal.m;
 import com.swarmnyc.pup.Config;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.components.ChatService;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
 
 public class MainActivity extends ActionBarActivity {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = MainActivity.class.getSimpleName();
     public static final int REQUEST_RESULT_CODE_RELOAD = 735623;
     public static final int REQUEST_CODE_AUTH = 2884;
+    private static MainActivity instance;
+    public MainActivity(){
+        instance = this;
+    }
+
+    public static MainActivity getInstance(){
+        return instance;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,5 +91,9 @@ public class MainActivity extends ActionBarActivity {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public void retrieveMessage(final String message) {
+
     }
 }

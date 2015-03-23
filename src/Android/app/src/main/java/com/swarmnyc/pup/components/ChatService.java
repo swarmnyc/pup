@@ -85,6 +85,7 @@ public class ChatService {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        new PlayServicesHelper(context);
                         QBRequestGetBuilder customObjectRequestBuilder = new QBRequestGetBuilder();
                         customObjectRequestBuilder.setPagesLimit(100);
 

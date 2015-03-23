@@ -1,0 +1,30 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="GamingSystemButton">
+        <item name="android:background">@drawable/button_border</item>
+        <item name="android:textColor">@color/toggle_button_foreground</item>
+    </style>
+
+    <style name="ExpandButton">
+        <item name="android:background">@color/pup_orange</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ActionButton">
+        <item name="android:background">@color/pup_aqua</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="MenuButton">
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">@color/pup_aqua</item>
+    </style>
+
+</resources>
