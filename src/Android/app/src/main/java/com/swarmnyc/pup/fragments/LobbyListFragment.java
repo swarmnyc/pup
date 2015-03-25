@@ -74,7 +74,7 @@ public class LobbyListFragment extends Fragment {
             }
         });
 
-        createLobbyButton.setVisibility(Config.isLoggedIn() ? View.VISIBLE : View.INVISIBLE);
+        createLobbyButton.setVisibility(Config.isLoggedIn() ? View.VISIBLE : View.GONE);
 
         reloadData();
 

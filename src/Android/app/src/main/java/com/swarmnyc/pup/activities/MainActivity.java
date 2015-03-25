@@ -6,12 +6,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.google.android.gms.drive.internal.m;
 import com.swarmnyc.pup.Config;
 import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.components.ChatService;
+import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
 
 public class MainActivity extends ActionBarActivity {
@@ -37,7 +35,7 @@ public class MainActivity extends ActionBarActivity {
                     .commit();
         }
 
-        ChatService.login(this);
+        ChatService.getInstance().login(this);
     }
 
     @Override
@@ -79,7 +77,7 @@ public class MainActivity extends ActionBarActivity {
     private void reload() {
         changeFragment(new LobbyListFragment());
         invalidateOptionsMenu();
-        ChatService.login(this);
+        ChatService.getInstance().login(this);
     }
 
     @Override

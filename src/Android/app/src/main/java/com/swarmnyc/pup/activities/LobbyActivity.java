@@ -18,16 +18,18 @@ import com.quickblox.chat.QBGroupChat;
 import com.quickblox.chat.exception.QBChatException;
 import com.quickblox.chat.listeners.QBMessageListener;
 import com.quickblox.chat.listeners.QBMessageListenerImpl;
-import com.quickblox.chat.model.QBAttachment;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.core.request.QBRequestGetBuilder;
+import com.swarmnyc.pup.Config;
 import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.components.ChatService;
+import com.swarmnyc.pup.chat.ChatMessage;
+import com.swarmnyc.pup.chat.ChatMessageListener;
+import com.swarmnyc.pup.chat.ChatRoomService;
+import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.models.Lobby;
 
-import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
@@ -40,10 +42,10 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-
 public class LobbyActivity extends ActionBarActivity {
-
+    private ArrayAdapter<String> messageAdapter;
     private Lobby lobby;
+    private ChatRoomService chatRoom;
 
     @InjectView(R.id.text_message)
     EditText messageText;
@@ -53,10 +55,6 @@ public class LobbyActivity extends ActionBarActivity {
 
     @InjectView(R.id.btn_submit)
     Button sendMessageButton;
-
-    ArrayAdapter<String> messageAdapter;
-    QBGroupChat chat;
-    QBDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,105 +70,44 @@ public class LobbyActivity extends ActionBarActivity {
         messageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         messageList.setAdapter(messageAdapter);
 
-        QBRequestGetBuilder customObjectRequestBuilder = new QBRequestGetBuilder();
-        customObjectRequestBuilder.setPagesLimit(100);
+        chatRoom = ChatService.getInstance().getChatRoom(lobby);
+        chatRoom.setMessageListener(new ChatMessageListener() {
+            @Override
+            public void receive(List<ChatMessage> messages) {
+                for (ChatMessage message : messages) {
+                    messageAdapter.add(message.getBody());
+                }
 
-        initialChat();
+                messageAdapter.notifyDataSetChanged();
+            }
+        });
+
+        if (Config.isLoggedIn()){
+            this.messageText.setVisibility(View.VISIBLE);
+            this.sendMessageButton.setVisibility(View.VISIBLE);
+        }else {
+            this.messageText.setVisibility(View.GONE);
+            this.sendMessageButton.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        chatRoom.login(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        chatRoom.leave();
     }
 
     @OnClick(R.id.btn_submit)
     void SendMessage() {
-        if (chat != null) {
-            try {
-                QBChatMessage chatMessage = new QBChatMessage();
-
-                chatMessage.setBody(messageText.getText().toString());
-                //chatMessage.setProperty("save_to_history", "1");
-                chatMessage.setDateSent(new Date().getTime()/1000);
-                chatMessage.setSaveToHistory(true);
-                chat.sendMessage(chatMessage);
-                messageText.setText("");
-            } catch (XMPPException e) {
-                e.printStackTrace();
-            } catch (SmackException.NotConnectedException e) {
-                e.printStackTrace();
-            }
-        }
+        chatRoom.SendMessage(messageText.getText().toString());
+        messageText.setText("");
     }
-
-    private void initialChat() {
-        dialog = ChatService.getDialog(lobby.getChatRoomId());
-        chat =  ChatService.Service.getGroupChatManager().createGroupChat(dialog.getRoomJid());
-
-        DiscussionHistory history = new DiscussionHistory();
-        history.setMaxStanzas(0);
-        chat.join(history, new QBEntityCallbackImpl() {
-            @Override
-            public void onSuccess() {
-                chat.addMessageListener(listener);
-                LobbyActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(LobbyActivity.this, "Ini OK", Toast.LENGTH_LONG).show();
-                        sendMessageButton.setVisibility(View.VISIBLE);
-
-                        loadChatHistory();
-                    }
-                });
-            }
-
-            @Override
-            public void onError(List list) {
-
-            }
-        });
-    }
-
-    QBMessageListener listener = new QBMessageListenerImpl<QBGroupChat>() {
-        @Override
-        public void processMessage(QBGroupChat groupChat,final QBChatMessage chatMessage) {
-            LobbyActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    messageAdapter.add(chatMessage.getBody());
-                    messageAdapter.notifyDataSetChanged();
-                }
-            });
-        }
-
-        @Override
-        public void processError(QBGroupChat groupChat, QBChatException error, QBChatMessage originMessage){
-
-        }
-    };
-
-    private void loadChatHistory(){
-        QBRequestGetBuilder customObjectRequestBuilder = new QBRequestGetBuilder();
-        customObjectRequestBuilder.setPagesLimit(100);
-        //customObjectRequestBuilder.sortDesc("date_sent");
-
-        QBChatService.getDialogMessages(dialog, customObjectRequestBuilder, new QBEntityCallbackImpl<ArrayList<QBChatMessage>>() {
-            @Override
-            public void onSuccess(final ArrayList<QBChatMessage> messages, Bundle args) {
-                LobbyActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (QBChatMessage message : messages) {
-                            messageAdapter.add(message.getBody());
-                        }
-                        messageAdapter.notifyDataSetChanged();
-                    }
-                });
-            }
-
-            @Override
-            public void onError(List<String> errors) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(LobbyActivity.this);
-                dialog.setMessage("load chat history errors: " + errors).create().show();
-            }
-        });
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -194,3 +131,4 @@ public class LobbyActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
