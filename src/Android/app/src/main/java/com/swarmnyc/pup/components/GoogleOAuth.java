@@ -11,8 +11,6 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.swarmnyc.pup.activities.AuthActivity;
 
-import org.w3c.dom.Text;
-
 public final class GoogleOAuth {
     private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
     public static final int REQUEST_CODE_GOOGLE_AUTH = 42884;
@@ -69,7 +67,7 @@ public final class GoogleOAuth {
                 Toast.makeText(result.activity, "Login failed", Toast.LENGTH_SHORT).show();
             }else{
                 try {
-                    PuPAuth.externalLogin("Google", result.email, result.token, new PuPAuth.LoginCallback() {
+                    PuPAuth.externalLogin("Google", result.email, result.token, new PuPAuth.AuthCallback() {
                         @Override
                         public void onFinished(boolean authResult) {
                             if (authResult){

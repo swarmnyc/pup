@@ -87,7 +87,6 @@ public class LobbyActivity extends ActionBarActivity {
                 chatMessage.setBody(messageText.getText().toString());
                 //chatMessage.setProperty("save_to_history", "1");
                 chatMessage.setDateSent(new Date().getTime()/1000);
-                chatMessage.addAttachment(new QBAttachment());
                 chatMessage.setSaveToHistory(true);
                 chat.sendMessage(chatMessage);
                 messageText.setText("");

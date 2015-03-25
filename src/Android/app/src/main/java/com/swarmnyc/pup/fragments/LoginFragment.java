@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.swarmnyc.pup.BuildConfig;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.activities.AuthActivity;
-import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.components.GoogleOAuth;
 import com.swarmnyc.pup.components.PuPAuth;
 
@@ -45,7 +44,7 @@ public class LoginFragment extends Fragment {
     @OnClick(R.id.btn_submit)
     public void onSubmitBtnClicked() {
         try {
-            PuPAuth.login(emailText.getText().toString(),passwordText.getText().toString(), new PuPAuth.LoginCallback() {
+            PuPAuth.login(emailText.getText().toString(),passwordText.getText().toString(), new PuPAuth.AuthCallback() {
                 @Override
                 public void onFinished(boolean result) {
                     if (result){
@@ -73,7 +72,7 @@ public class LoginFragment extends Fragment {
         ButterKnife.inject(this, view);
 
         if(BuildConfig.DEBUG){
-            emailText.setText("wadehuang36@gmail.com");
+            emailText.setText("test@swarmnyc.com");
             passwordText.setText("123456");
         }
 
