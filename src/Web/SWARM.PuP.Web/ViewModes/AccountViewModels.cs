@@ -110,7 +110,7 @@ namespace SWARM.PuP.Web.Models
         public string Email { get; set; }
     }
 
-    public class ExternalLoginViewModel
+    public class ExternalLogin2ViewModel
     {
         public string Name { get; set; }
 
@@ -126,7 +126,7 @@ namespace SWARM.PuP.Web.Models
         public string ExternalAccessToken { get; set; }
     }
 
-    public class UserInfoViewModel
+    public class UserInfo2ViewModel
     {
         public string Email { get; set; }
 
@@ -143,7 +143,7 @@ namespace SWARM.PuP.Web.Models
 
         public IEnumerable<UserLoginInfoViewModel> Logins { get; set; }
 
-        public IEnumerable<ExternalLoginViewModel> ExternalLoginProviders { get; set; }
+        public IEnumerable<ExternalLogin2ViewModel> ExternalLoginProviders { get; set; }
     }
 
     public class UserLoginInfoViewModel
@@ -162,5 +162,53 @@ namespace SWARM.PuP.Web.Models
         [Required]
         [Display(Name = "Provider key")]
         public string ProviderKey { get; set; }
+    }
+
+    public class UserInfoViewModel
+    {
+
+        public UserInfoViewModel(PuPUser user)
+        {
+            this.Id = user.Id;
+
+            this.DisplayName = user.DisplayName;
+
+            this.Email = user.Email;
+
+            this.Tags = user.Tags;
+        }
+
+        public string Id { get; set; }
+
+        public string Email { get; set; }
+
+        public string DisplayName { get; set; }
+
+        public string PictureUrl { get; set; }
+
+        public IEnumerable<UserTag> Tags { get; set; }
+    }
+
+    public class ExternalLoginViewModel
+    {
+        public string Token { get; set; }
+        public string Provider { get; set; }
+        public string Email { get; set; }
+    }
+
+    public class GoogleUserInfo
+    {
+        public string id;
+        public string name;
+        public string picture;
+    }
+
+    public class UserRegisterViewModel
+    {
+        public string UserName { get; set; }
+        public string PictureUrl { get; set; }
+        public string IdFromProvider { get; set; }
+        public string Provider { get; set; }
+        public string Email { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace SWARM.PuP.Web.Models
 {
     public class Lobby : Game
     {
-        private IList<string> _userIds;
+        private HashSet<string> _userIds;
 
         public string GameId { get; set; }
 
@@ -20,8 +20,9 @@ namespace SWARM.PuP.Web.Models
 
         public DateTime StartTimeUtc { get; set; }
 
-        public IList<string> UserIds {
-            get { return _userIds ?? new List<string>(); }
+        public HashSet<string> UserIds
+        {
+            get { return _userIds ?? (_userIds = new HashSet<string>()); }
             set { _userIds = value; }
         }
     }

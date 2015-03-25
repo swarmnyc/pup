@@ -14,6 +14,8 @@ namespace MongoDB
     {
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
+
+        public BsonTimestamp Timestamp { get; set; }
     }
 
     /// <summary>

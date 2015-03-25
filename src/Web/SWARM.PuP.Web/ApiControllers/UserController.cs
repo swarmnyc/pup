@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -12,14 +13,14 @@ using SWARM.PuP.Web.Models;
 
 namespace SWARM.PuP.Web.ApiControllers
 {
-    [RoutePrefix("api/Account")]
-    public class AccountController : ApiController
+    [RoutePrefix("api/User")]
+    public class UserController : ApiController
     {
         //Login used the default owin handler which is setted in ~/App_Start/Startup.Auth.cs
 
         [HttpPost]
         [Route("~/api/ExternalLogin")]
-        public async Task<IHttpActionResult> ExternalLogin(LoginOrSignupViewModel model)
+        public async Task<IHttpActionResult> ExternalLogin(ExternalLoginViewModel model)
         {
             if (model == null || string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Provider) ||
                 string.IsNullOrWhiteSpace(model.Token))
@@ -36,8 +37,6 @@ namespace SWARM.PuP.Web.ApiControllers
                         WebRequest.Create("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + model.Token);
                     var googleUser = request.Json<GoogleUserInfo>();
 
-                    //TODO: if password users want to change external login they can't.
-                    //Now the idea is if pass the google auth, then we assume the email is vaild 
                     user = await PuPUserManager.Instance.FindByEmailAsync(model.Email);
 
                     if (user == null)
@@ -80,7 +79,6 @@ namespace SWARM.PuP.Web.ApiControllers
             response.Content = new JsonContent(new
             {
                 userId = user.Id,
-                //userChatId = user.ChatId,
                 access_token = accessToken,
                 token_type = "bearer",
                 expires_in = Startup.OAuthOptions.AccessTokenExpireTimeSpan.TotalMilliseconds
@@ -91,6 +89,24 @@ namespace SWARM.PuP.Web.ApiControllers
                 NoCache = true
             };
             return ResponseMessage(response);
+        }
+
+        [Authorize]
+        public async Task<UserInfoViewModel> Get()
+        {
+            var user = await PuPUserManager.Instance.FindByNameAsync(User.Identity.Name);
+
+            return new UserInfoViewModel(user);
+        }
+
+        [Authorize,HttpDelete, Route("UserTag")]
+        public async Task<IHttpActionResult> UserTag(string tagId)
+        {
+            var user = await PuPUserManager.Instance.FindByNameAsync(User.Identity.Name);
+            user.Tags.Remove(user.Tags.First(x => x.Id == tagId));
+            await PuPUserManager.Instance.UpdateAsync(user);
+
+            return Ok();
         }
 
         private static async Task<PuPUser> CreateUser(UserRegisterViewModel userRegisterViewModel)
@@ -109,28 +125,5 @@ namespace SWARM.PuP.Web.ApiControllers
 
             return result.Succeeded ? pupUser : null;
         }
-    }
-
-    public class LoginOrSignupViewModel
-    {
-        public string Token { get; set; }
-        public string Provider { get; set; }
-        public string Email { get; set; }
-    }
-
-    public class GoogleUserInfo
-    {
-        public string id;
-        public string name;
-        public string picture;
-    }
-
-    public class UserRegisterViewModel
-    {
-        public string UserName { get; set; }
-        public string PictureUrl { get; set; }
-        public string IdFromProvider { get; set; }
-        public string Provider { get; set; }
-        public string Email { get; set; }
     }
 }

@@ -65,6 +65,22 @@ namespace SWARM.PuP.Web.Services
             return query;
         }
 
+        public void Join(string userId, string lobbyId)
+        {
+            Lobby lobby = this.GetById(lobbyId);
+            lobby.UserIds.Add(userId);
+
+            Update(lobby);
+        }
+
+        public void Leave(string userId, string lobbyId)
+        {
+            Lobby lobby = this.GetById(lobbyId);
+            lobby.UserIds.Remove(userId);
+
+            Update(lobby);
+        }
+
         protected override Expression<Func<Lobby, object>> GetOrderExpression(BaseFilter filter)
         {
             if (string.IsNullOrWhiteSpace(filter.Order))

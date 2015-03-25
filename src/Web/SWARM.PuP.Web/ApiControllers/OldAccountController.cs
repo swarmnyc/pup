@@ -55,11 +55,11 @@ namespace SWARM.PuP.Web.ApiControllers
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [Route("UserInfo")]
-        public UserInfoViewModel GetUserInfo()
+        public UserInfo2ViewModel GetUserInfo()
         {
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
-            return new UserInfoViewModel
+            return new UserInfo2ViewModel
             {
                 Email = User.Identity.GetUserName(),
                 HasRegistered = externalLogin == null,
@@ -281,10 +281,10 @@ namespace SWARM.PuP.Web.ApiControllers
         // GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
         [AllowAnonymous]
         [Route("ExternalLogins")]
-        public IEnumerable<ExternalLoginViewModel> GetExternalLogins(string returnUrl, bool generateState = false)
+        public IEnumerable<Models.ExternalLogin2ViewModel> GetExternalLogins(string returnUrl, bool generateState = false)
         {
             IEnumerable<AuthenticationDescription> descriptions = Authentication.GetExternalAuthenticationTypes();
-            List<ExternalLoginViewModel> logins = new List<ExternalLoginViewModel>();
+            List<Models.ExternalLogin2ViewModel> logins = new List<Models.ExternalLogin2ViewModel>();
 
             string state;
 
@@ -300,7 +300,7 @@ namespace SWARM.PuP.Web.ApiControllers
 
             foreach (AuthenticationDescription description in descriptions)
             {
-                ExternalLoginViewModel login = new ExternalLoginViewModel
+                Models.ExternalLogin2ViewModel login2 = new Models.ExternalLogin2ViewModel
                 {
                     Name = description.Caption,
                     Url = Url.Route("ExternalLogin", new
@@ -313,7 +313,7 @@ namespace SWARM.PuP.Web.ApiControllers
                     }),
                     State = state
                 };
-                logins.Add(login);
+                logins.Add(login2);
             }
 
             return logins;

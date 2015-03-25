@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
+using System.Security.Claims;
 using SWARM.PuP.Web.Models;
 
 namespace SWARM.PuP.Web.Services.Quickblox
@@ -15,11 +17,19 @@ namespace SWARM.PuP.Web.Services.Quickblox
                 {
                     login = user.Id,
                     password = "swarmnyc",
-                    email = user.Email
+                    email = user.Id + "@swarmnyc.com"
                 }
             });
 
-            user.ChatId = result.user.id.ToString();
+            user.Tags.Add(new UserTag(UserTagType.Application, "ChatId", result.user.id.ToString()));
+        }
+
+        public void DeleteUser(PuPUser user)
+        {
+            string chatId = user.Tags.First(x => x.Key == "ChatId").Value;
+            var request = QuickbloxHttpHelper.Create(string.Format(QuickbloxApiTypes.UserDelete, chatId), "DELETE");
+
+            request.GetResponse();
         }
 
         public string CreateRoom(ChatRoomType type, string roomName)

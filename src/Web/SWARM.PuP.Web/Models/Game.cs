@@ -17,13 +17,13 @@ namespace SWARM.PuP.Web.Models
 
         public IList<GamePlatform> Platforms
         {
-            get { return _platforms ?? new List<GamePlatform>(); }
+            get { return _platforms ?? (_platforms = new List<GamePlatform>()); }
             set { _platforms = value; }
         }
 
         public IList<string> Tags
         {
-            get { return _tags ?? new List<string>(); }
+            get { return _tags ?? (_tags = new List<string>()); }
             set { _tags = value; }
         }
     }

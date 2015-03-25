@@ -30,8 +30,8 @@ namespace SWARM.PuP.Web.Services
         public MongoCollection<T> Collection { get; }
 
         public virtual T GetById(string id)
-        {
-            return Collection.FindOneByIdAs<T>(id);
+        {   
+            return Collection.FindOneById(ObjectId.Parse(id));
         }
 
         public virtual T GetSingle(Expression<Func<T, bool>> criteria)

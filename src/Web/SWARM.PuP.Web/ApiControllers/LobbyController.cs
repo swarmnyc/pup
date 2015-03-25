@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
 using SWARM.PuP.Web.Services;
 
 namespace SWARM.PuP.Web.ApiControllers
 {
+    [RoutePrefix("api/Lobby")]
     public class LobbyController : ApiController
     {
         private readonly ILobbyService _lobbyService;
@@ -15,30 +17,48 @@ namespace SWARM.PuP.Web.ApiControllers
             _lobbyService = lobbyService;
         }
 
-        // GET: api/Lobby
         public IEnumerable<Lobby> Get([FromUri]LobbyFilter filter)
         {
             return _lobbyService.Filter(filter);
         }
 
-        // GET: api/Lobby/5
         public Lobby Get(string id)
         {
             return _lobbyService.GetById(id);
         }
 
-        // POST: api/Lobby
         [Authorize]
         public void Post(Lobby lobby)
         {
             _lobbyService.Add(lobby);
         }
 
-        // PUT: api/Lobby/5
         [Authorize]
         public void Put(Lobby lobby)
         {
+            var origin = _lobbyService.GetById(lobby.Id);
+            origin.PlayStyle = lobby.PlayStyle;
+            origin.SkillLevel = lobby.SkillLevel;
+            origin.StartTimeUtc = lobby.StartTimeUtc;
+            origin.Tags = lobby.Tags;
+
             _lobbyService.Update(lobby);
+        }
+
+        [Authorize, Route("Join/{lobbyId}")]
+        public IHttpActionResult Join(string lobbyId)
+        {   
+            _lobbyService.Join(User.Identity.GetUserId(), lobbyId);
+
+            return Ok();
+        }
+
+        [Authorize, Route("Leave/{lobbyId}")]
+        public IHttpActionResult Leave(string lobbyId)
+        {
+            _lobbyService.Leave(User.Identity.GetUserId(), lobbyId);
+
+            return Ok();
         }
     }
 }
