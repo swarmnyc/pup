@@ -16,7 +16,7 @@ namespace SWARM.PuP.Web.ApiControllers
     [RoutePrefix("api/User")]
     public class UserController : ApiController
     {
-        //Login used the default owin handler which is setted in ~/App_Start/Startup.Auth.cs
+        //UserLogin uses the default owin handler which is setted in ~/App_Start/Startup.Auth.cs
 
         [HttpPost]
         [Route("~/api/ExternalLogin")]
@@ -41,7 +41,7 @@ namespace SWARM.PuP.Web.ApiControllers
 
                     if (user == null)
                     {
-                        user = await CreateUser(new UserRegisterViewModel
+                        user = await CreateUserByExternalLogin(new UserRegisterViewModel
                         {
                             IdFromProvider = googleUser.id,
                             UserName = googleUser.name,
@@ -64,6 +64,69 @@ namespace SWARM.PuP.Web.ApiControllers
             {
                 return BadRequest();
             }
+
+            HttpResponseMessage response = await GenerateTokenResponse(user);
+            return ResponseMessage(response);
+        }
+
+
+        [Authorize]
+        public async Task<UserInfoViewModel> Get()
+        {
+            var user = await PuPUserManager.Instance.FindByNameAsync(User.Identity.Name);
+
+            return new UserInfoViewModel(user);
+        }
+
+        [AllowAnonymous]
+        [Route("Register")]
+        public async Task<IHttpActionResult> Register(RegisterViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = new PuPUser() { UserName = model.Email, Email = model.Email };
+
+            IdentityResult result = await PuPUserManager.Instance.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors.FirstOrDefault());
+            }
+
+            HttpResponseMessage response = await GenerateTokenResponse(user);
+            return ResponseMessage(response);
+        }
+
+        [Authorize, HttpPost, Route("UserTag")]
+        public async Task<IHttpActionResult> AddUserTag([FromBody]UserTag tag)
+        {
+            if (tag == null)
+            {
+                return BadRequest();
+            }
+
+            var user = await PuPUserManager.Instance.FindByIdAsync(User.Identity.GetUserId());
+            user.Tags.Add(tag);
+            await PuPUserManager.Instance.UpdateAsync(user);
+
+            return Ok(tag.Id);
+        }
+
+        [Authorize, HttpDelete, Route("UserTag/{tagId}")]
+        public async Task<IHttpActionResult> DeleteUserTag(string tagId)
+        {
+            var user = await PuPUserManager.Instance.FindByNameAsync(User.Identity.Name);
+            user.Tags.Remove(user.Tags.First(x => x.Id == tagId));
+            await PuPUserManager.Instance.UpdateAsync(user);
+
+            return Ok();
+        }
+
+        private async Task<HttpResponseMessage> GenerateTokenResponse(PuPUser user)
+        {
             var owin = ActionContext.Request.GetOwinContext();
             var oAuthIdentity =
                 await PuPUserManager.Instance.CreateIdentityAsync(user, OAuthDefaults.AuthenticationType);
@@ -88,28 +151,11 @@ namespace SWARM.PuP.Web.ApiControllers
             {
                 NoCache = true
             };
-            return ResponseMessage(response);
+            return response;
         }
 
-        [Authorize]
-        public async Task<UserInfoViewModel> Get()
-        {
-            var user = await PuPUserManager.Instance.FindByNameAsync(User.Identity.Name);
 
-            return new UserInfoViewModel(user);
-        }
-
-        [Authorize,HttpDelete, Route("UserTag")]
-        public async Task<IHttpActionResult> UserTag(string tagId)
-        {
-            var user = await PuPUserManager.Instance.FindByNameAsync(User.Identity.Name);
-            user.Tags.Remove(user.Tags.First(x => x.Id == tagId));
-            await PuPUserManager.Instance.UpdateAsync(user);
-
-            return Ok();
-        }
-
-        private static async Task<PuPUser> CreateUser(UserRegisterViewModel userRegisterViewModel)
+        private static async Task<PuPUser> CreateUserByExternalLogin(UserRegisterViewModel userRegisterViewModel)
         {
             var pupUser = new PuPUser
             {

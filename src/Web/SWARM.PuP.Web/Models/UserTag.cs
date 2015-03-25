@@ -6,6 +6,10 @@ namespace SWARM.PuP.Web.Models
     {
         private string _id;
 
+        public UserTag()
+        {
+        }
+
         public UserTag(UserTagType type, string key, string value)
         {
             this.Type = type;
