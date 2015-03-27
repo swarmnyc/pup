@@ -2,17 +2,16 @@
 
 namespace SWARM.PuP.Web.Models
 {
-    public class UserTag
+    public class PuPTag
     {
         private string _id;
 
-        public UserTag()
+        public PuPTag()
         {
         }
 
-        public UserTag(UserTagType type, string key, string value)
+        public PuPTag(string key, string value)
         {
-            this.Type = type;
             this.Key = key;
             this.Value = value;
         }
@@ -23,17 +22,8 @@ namespace SWARM.PuP.Web.Models
             set { _id = value; }
         }
 
-        public UserTagType Type { get; set; }
-
         public string Key { get; set; }
 
         public string Value { get; set; }
-    }
-
-    public enum UserTagType : int
-    {
-        Application = 0,
-        Platform = 1,
-        Game =2
     }
 }

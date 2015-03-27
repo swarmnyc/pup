@@ -184,9 +184,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\UserController.cs" />
+    <Compile Include="Models\PuPTaggable.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Components\SystemExtenions.cs" />
-    <Compile Include="Models\UserTag.cs" />
+    <Compile Include="Models\PuPTag.cs" />
     <Compile Include="QueryFilters\BaseFilter.cs" />
     <Compile Include="QueryFilters\GameFilter.cs" />
     <Compile Include="ApiControllers\LobbyController.cs" />

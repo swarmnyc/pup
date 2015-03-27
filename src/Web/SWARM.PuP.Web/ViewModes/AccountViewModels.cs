@@ -186,7 +186,7 @@ namespace SWARM.PuP.Web.Models
 
         public string PictureUrl { get; set; }
 
-        public IEnumerable<UserTag> Tags { get; set; }
+        public IEnumerable<PuPTag> Tags { get; set; }
     }
 
     public class ExternalLoginViewModel

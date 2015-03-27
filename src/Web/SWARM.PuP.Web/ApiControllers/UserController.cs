@@ -101,7 +101,7 @@ namespace SWARM.PuP.Web.ApiControllers
         }
 
         [Authorize, HttpPost, Route("UserTag")]
-        public async Task<IHttpActionResult> AddUserTag([FromBody]UserTag tag)
+        public async Task<IHttpActionResult> AddUserTag([FromBody]PuPTag tag)
         {
             if (tag == null)
             {

@@ -121,7 +121,6 @@
     <Compile Include="Services\LobbyServiceTests.cs" />
     <Compile Include="Services\QuickbloxChatServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +143,9 @@
       <Project>{E3BD3ED5-3389-4F6A-B1B2-89FB08217D05}</Project>
       <Name>SWARM.PuP.Web</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web.UI.WebControls;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SWARM.PuP.Web.Models;
@@ -20,10 +21,10 @@ namespace SWARM.PuP.Web.Tests.Services
         public void LobbyService_AddLobby_Test()
         {
             var chatService = new Mock<IChatService>();
-            chatService.Setup(x => x.CreateRoom(It.IsAny<ChatRoomType>(), It.IsAny<String>())).Returns(() =>
+            chatService.Setup(x => x.CreateRoomForLobby(It.IsAny<Lobby>())).Callback(new Action<Lobby>(x =>
             {
-                return "abc";
-            });
+                x.AddTag("ChatRoomId", "Test");
+            }));
 
             var service = new LobbyService(chatService.Object);
             var lobby = service.Add(new Lobby()
@@ -37,7 +38,7 @@ namespace SWARM.PuP.Web.Tests.Services
             });
 
             Assert.IsNotNull(lobby);
-            Assert.IsNotNull(lobby.ChatRoomId);
+            Assert.IsNotNull(lobby.GetTagValue("ChatRoomId"));
         }
     }
 }

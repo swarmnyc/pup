@@ -44,8 +44,8 @@ namespace SWARM.PuP.Web.Tests.Services
             try
             {
                 QuickbloxChatService s = new QuickbloxChatService();
-                
-                s.SendMessage("550cd690535c12ad7c0046aa", "Yayaya!!");
+
+                s.SendMessage(new Lobby() { Tags = new List<PuPTag>() { new PuPTag("ChatRoomId", "550cd690535c12ad7c0046aa") } }, "Yayaya!!");
             }
             catch (WebException e)
             {

@@ -8,6 +8,8 @@ namespace SWARM.PuP.Web.Services.Quickblox
 {
     public class QuickbloxChatService : IChatService
     {
+        private const string LobbyNameFormat = "Lobby:{0}";
+        private const string StringChatRoomId = "ChatRoomId";
 
         public void CreateUser(PuPUser user)
         {
@@ -34,19 +36,22 @@ namespace SWARM.PuP.Web.Services.Quickblox
             request.GetResponse();
         }
 
-        public string CreateRoom(ChatRoomType type, string roomName)
+        public void CreateRoomForLobby(Lobby lobby)
         {
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.Room, HttpMethod.Post);
 
-            return request.Json<QuickbloxRoom>(new
+            var charRoom = request.Json<QuickbloxRoom>(new
             {
-                type = (int)type,
-                name = roomName
-            })._id;
+                type = ChatRoomType.Group,
+                name = string.Format(LobbyNameFormat, lobby.Name)
+            });
+
+            lobby.UpdateTag(StringChatRoomId, charRoom._id);
         }
 
-        public void SendMessage(string roomId, string message)
+        public void SendMessage(Lobby lobby, string message)
         {
+            var roomId = lobby.GetTagValue(StringChatRoomId);
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.Message, HttpMethod.Post);
 
             request.Json<QuickbloxMessage>(new

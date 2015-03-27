@@ -27,7 +27,7 @@ namespace SWARM.PuP.Web.Tests.Services
             {
                 Name = "Test",
                 Platforms = new List<GamePlatform>() { GamePlatform.Windows, GamePlatform.PS3 },
-                Tags = new List<string>() { "Shooting", "Action" }
+                Tags = new List<PuPTag>() { new PuPTag("GameType", "Shooting") , new PuPTag("GameType", "Action") }
             });
 
             Assert.IsNotNull(game.Id);

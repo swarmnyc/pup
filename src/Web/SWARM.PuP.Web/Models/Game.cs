@@ -6,10 +6,9 @@ using MongoDB;
 
 namespace SWARM.PuP.Web.Models
 {
-    public class Game : MongoModel
+    public class Game : PuPTaggable
     {
         private IList<GamePlatform> _platforms;
-        private IList<string> _tags;
 
         public string Name { get; set; }
 
@@ -19,12 +18,6 @@ namespace SWARM.PuP.Web.Models
         {
             get { return _platforms ?? (_platforms = new List<GamePlatform>()); }
             set { _platforms = value; }
-        }
-
-        public IList<string> Tags
-        {
-            get { return _tags ?? (_tags = new List<string>()); }
-            set { _tags = value; }
         }
     }
 }

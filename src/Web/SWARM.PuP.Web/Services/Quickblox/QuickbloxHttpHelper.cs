@@ -52,12 +52,12 @@ namespace SWARM.PuP.Web.Services.Quickblox
 
         internal static string GetChatId(this PuPUser user)
         {
-            return user.GetTagValue(UserTagType.Application, String_ChatId);
+            return user.GetTagValue(String_ChatId);
         }
 
         internal static void SetChatId(this PuPUser user, string chatId)
         {
-            user.UpdateTag(UserTagType.Application, String_ChatId, chatId);
+            user.UpdateTag(String_ChatId, chatId);
         }
 
         private static bool IsNoSession()

@@ -16,8 +16,6 @@ namespace SWARM.PuP.Web.Models
 
         public SkillLevel SkillLevel { get; set; }
 
-        public string ChatRoomId { get; set; }
-
         public DateTime StartTimeUtc { get; set; }
 
         public HashSet<string> UserIds
