@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using SWARM.PuP.Web.Models;
 
@@ -7,17 +8,18 @@ namespace SWARM.PuP.Web.Services.Quickblox
 {
     public class QuickbloxChatService : IChatService
     {
+
         public void CreateUser(PuPUser user)
         {
-            var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.User, "POST");
+            var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.User, HttpMethod.Post);
 
             var result = request.Json<CreateUserResult>(new
             {
                 user = new
                 {
                     login = user.Id,
-                    password = "swarmnyc",
-                    email = user.Id + "@swarmnyc.com"
+                    password = QuickbloxHttpHelper.UserPassword,
+                    email = user.Id + QuickbloxHttpHelper.CompanyEmailDomin
                 }
             });
 
@@ -27,14 +29,14 @@ namespace SWARM.PuP.Web.Services.Quickblox
         public void DeleteUser(PuPUser user)
         {
             string chatId = user.Tags.First(x => x.Key == "ChatId").Value;
-            var request = QuickbloxHttpHelper.Create(string.Format(QuickbloxApiTypes.UserDelete, chatId), "DELETE");
+            var request = QuickbloxHttpHelper.Create(string.Format(QuickbloxApiTypes.UserDelete, chatId), HttpMethod.Delete);
 
             request.GetResponse();
         }
 
         public string CreateRoom(ChatRoomType type, string roomName)
         {
-            var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.Room, "POST");
+            var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.Room, HttpMethod.Post);
 
             return request.Json<QuickbloxRoom>(new
             {
@@ -46,7 +48,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
 
         public void SendMessage(string roomId, string message)
         {
-            var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.Message, "POST");
+            var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.Message, HttpMethod.Post);
 
             request.Json<QuickbloxMessage>(new
             {

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -9,21 +11,29 @@ namespace SWARM.PuP.Web.Services.Quickblox
 {
     internal static class QuickbloxHttpHelper
     {
-		//TODO: Move to config
-        private const string ApplicationId = "20103";
-        private const string AuthKey = "gXa5zW9K5wdTuCV";
-        private const string AuthSecret = "YGabpebTkW2Q9r6";
         private const int TimeOut = 19;
-        
+        private static readonly string ApplicationId;
+        private static readonly string AuthKey;
+        private static readonly string AuthSecret;
+        private static readonly string AdminUserId;
         private static readonly object LockObj = new object();
         private static readonly Random Random = new Random();
-        private static readonly Uri BaseUri = new Uri("https://api.quickblox.com/");
+        private static readonly Uri BaseUri ;
         private static Session _session;
-        private static readonly string User = "5510546b60635b20e83e06b3";
-        //private static readonly string UserEmail = "wade@swarmnyc.com";
-        private static readonly string UserPassword = "swarmnyc";
 
-        internal static WebRequest Create(string api, string method)
+        public const string UserPassword = "swarmnyc";
+        public const string CompanyEmailDomin = "@swarmnyc.com";
+
+        static QuickbloxHttpHelper()
+        {
+            ApplicationId = ConfigurationManager.AppSettings["Quickblox_ApplicationId"];
+            AuthKey = ConfigurationManager.AppSettings["Quickblox_AuthKey"];
+            AuthSecret = ConfigurationManager.AppSettings["Quickblox_AuthSecret"];
+            AdminUserId = ConfigurationManager.AppSettings["Quickblox_AdminUserId"];
+            BaseUri = new Uri(ConfigurationManager.AppSettings["Quickblox_ApiUrl"]);
+        }
+
+        internal static WebRequest Create(string api, HttpMethod method)
         {
             if (IsNoSession())
             {
@@ -34,7 +44,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
             request.Headers.Add("QB-Token", _session.token);
             request.Headers.Add("QuickBlox-REST-API-Version", "0.1.0");
             request.ContentType = "application/json";
-            request.Method = method;
+            request.Method = method.Method;
             return request;
         }
 
@@ -67,7 +77,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     timestamp,
                     nonce,
                     signature = GenerateAuthMsg(nonce, timestamp),
-                    user = new {login = User,/* email = UserEmail,*/ password = UserPassword}
+                    user = new {login = AdminUserId,/* email = UserEmail,*/ password = UserPassword}
                 });
 
                 _session = result.session;
@@ -95,9 +105,9 @@ namespace SWARM.PuP.Web.Services.Quickblox
                 "timestamp=" + timestamp
             };
 
-            if (User != null)
+            if (AdminUserId != null)
             {
-                messsage.Add("user[login]=" + User);
+                messsage.Add("user[login]=" + AdminUserId);
                 //messsage.Add("user[email]=" + UserEmail);
                 messsage.Add("user[password]=" + UserPassword);
             }
