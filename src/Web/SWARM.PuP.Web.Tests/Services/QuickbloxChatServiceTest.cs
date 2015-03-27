@@ -17,7 +17,7 @@ namespace SWARM.PuP.Web.Tests.Services
     public class QuickbloxChatServiceTest
     {
         [TestMethod]
-        public void QuickbloxChatService_CreateUser_Test()
+        public void Real_QuickbloxChatService_CreateUser_Test()
         {
             try
             {
@@ -39,7 +39,7 @@ namespace SWARM.PuP.Web.Tests.Services
         }
 
         [TestMethod]
-        public void QuickbloxChatService_SendMessage_Test()
+        public void Real_QuickbloxChatService_SendMessage_Test()
         {
             try
             {

@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using SWARM.PuP.Web.Models;
 
 namespace SWARM.PuP.Web.Services.Quickblox
 {
@@ -18,11 +19,12 @@ namespace SWARM.PuP.Web.Services.Quickblox
         private static readonly string AdminUserId;
         private static readonly object LockObj = new object();
         private static readonly Random Random = new Random();
-        private static readonly Uri BaseUri ;
+        private static readonly Uri BaseUri;
         private static Session _session;
 
         public const string UserPassword = "swarmnyc";
         public const string CompanyEmailDomin = "@swarmnyc.com";
+        private const string String_ChatId = "ChatId";
 
         static QuickbloxHttpHelper()
         {
@@ -46,6 +48,16 @@ namespace SWARM.PuP.Web.Services.Quickblox
             request.ContentType = "application/json";
             request.Method = method.Method;
             return request;
+        }
+
+        internal static string GetChatId(this PuPUser user)
+        {
+            return user.GetTagValue(UserTagType.Application, String_ChatId);
+        }
+
+        internal static void SetChatId(this PuPUser user, string chatId)
+        {
+            user.UpdateTag(UserTagType.Application, String_ChatId, chatId);
         }
 
         private static bool IsNoSession()
@@ -77,7 +89,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     timestamp,
                     nonce,
                     signature = GenerateAuthMsg(nonce, timestamp),
-                    user = new {login = AdminUserId,/* email = UserEmail,*/ password = UserPassword}
+                    user = new { login = AdminUserId,/* email = UserEmail,*/ password = UserPassword }
                 });
 
                 _session = result.session;

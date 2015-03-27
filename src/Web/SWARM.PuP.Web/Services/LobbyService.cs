@@ -10,6 +10,7 @@ namespace SWARM.PuP.Web.Services
 {
     public class LobbyService : BaseService<Lobby>, ILobbyService
     {
+        private const string LobbyNameFormat = "Lobby:{0}";
         private readonly IChatService _chatService;
 
         public LobbyService(IChatService chatService) : base("Lobbies")
@@ -19,7 +20,7 @@ namespace SWARM.PuP.Web.Services
 
         public override Lobby Add(Lobby lobby)
         {
-            lobby.ChatRoomId = _chatService.CreateRoom(ChatRoomType.Public, "Lobby:" + lobby.Name);
+            lobby.ChatRoomId = _chatService.CreateRoom(ChatRoomType.Group, string.Format(LobbyNameFormat, lobby.Name));
             return base.Add(lobby);
         }
 
@@ -28,7 +29,7 @@ namespace SWARM.PuP.Web.Services
             foreach (var lobby in lobbies)
             {
                 //TODO: Check it needs user;
-                lobby.ChatRoomId = _chatService.CreateRoom(ChatRoomType.Public, "Lobby:" + lobby.Name);
+                lobby.ChatRoomId = _chatService.CreateRoom(ChatRoomType.Public, string.Format(LobbyNameFormat, lobby.Name));
             }
 
             return base.Add(lobbies);

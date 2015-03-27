@@ -54,8 +54,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\mongocsharpdriver.1.10.0\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
+    <Reference Include="MongoDB.Embedded, Version=2.4.6.23000, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Embedded.2.4.6.23000\lib\net40\MongoDB.Embedded.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MongoDB.QueryHelper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MongoDB.QueryHelper.1.0.0\lib\MongoDB.QueryHelper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Moq, Version=4.2.1409.1722, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -122,6 +130,12 @@
   <ItemGroup>
     <None Include="..\SWARM.PuP.Web\setting.config">
       <Link>setting.config</Link>
+    </None>
+    <None Include="MockData\games.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MockData\lobbies.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

@@ -29,9 +29,10 @@ namespace MongoDB
         {
             if (_database == null)
             {
-                if (ConfigurationManager.ConnectionStrings.Count > 1)
+                if (ConfigurationManager.ConnectionStrings["DefaultConnection"] != null)
                 {
-                    var url = new MongoUrl(ConfigurationManager.ConnectionStrings[1].ConnectionString);
+                    //Create Database from ConnectionString
+                    var url = new MongoUrl(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
                     var client = new MongoClient(url);
                     _database = client.GetServer().GetDatabase(url.DatabaseName);
                 }
@@ -42,6 +43,11 @@ namespace MongoDB
             }
 
             return _database;
+        }
+
+        public static void SetDatabase(MongoDatabase database)
+        {
+            _database = database;
         }
 
         public static MongoCollection<T> GetCollection<T>(string collectionName)

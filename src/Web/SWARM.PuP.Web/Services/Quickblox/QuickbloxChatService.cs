@@ -23,12 +23,12 @@ namespace SWARM.PuP.Web.Services.Quickblox
                 }
             });
 
-            user.Tags.Add(new UserTag(UserTagType.Application, "ChatId", result.user.id.ToString()));
+            user.SetChatId(result.user.id.ToString());
         }
 
         public void DeleteUser(PuPUser user)
         {
-            string chatId = user.Tags.First(x => x.Key == "ChatId").Value;
+            string chatId = user.GetChatId();
             var request = QuickbloxHttpHelper.Create(string.Format(QuickbloxApiTypes.UserDelete, chatId), HttpMethod.Delete);
 
             request.GetResponse();
@@ -40,7 +40,6 @@ namespace SWARM.PuP.Web.Services.Quickblox
 
             return request.Json<QuickbloxRoom>(new
             {
-                //type = type == ChatRoomType.Public ? 2 : 3,
                 type = (int)type,
                 name = roomName
             })._id;

@@ -13,6 +13,7 @@ namespace SWARM.PuP.Web.Tests.Services
 
         public GameServiceTests()
         {
+            TestHelper.MockDatabase();
             IContainer ioc = TestHelper.GetContainer();
             _gameService = ioc.Resolve<IGameService>();
         }

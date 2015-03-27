@@ -2,8 +2,10 @@
 {
     public enum ChatRoomType : int 
     {
+        //Don't need to join
         Public=1,
-        Private=2,
+        //Needs join
+        Group=2,
         P2P=3
     }
 }

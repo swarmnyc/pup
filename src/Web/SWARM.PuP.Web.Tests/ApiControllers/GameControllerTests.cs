@@ -14,6 +14,11 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
     [TestClass()]
     public class GameControllerTests
     {
+        public GameControllerTests()
+        {
+            TestHelper.MockDatabase();
+        }
+
         [TestMethod()]
         public void GameController_Filter_Test()
         {

@@ -16,11 +16,11 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
     [TestClass()]
     public class LobbyControllerTests
     {
-
         private IContainer container;
 
         public LobbyControllerTests()
         {
+            TestHelper.MockDatabase();
             container = TestHelper.GetContainer();
         }
 
