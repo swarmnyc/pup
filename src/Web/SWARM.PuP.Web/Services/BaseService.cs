@@ -15,11 +15,12 @@ namespace SWARM.PuP.Web.Services
     /// <summary>
     ///     wrapper repository class that serves your objects to the MongoDB
     /// </summary>
-    public abstract class BaseService<T> : IBaseService<T> where T : MongoModel
+    public abstract class BaseService<T> : IBaseService<T>
+        where T : IMongoModel
     {
         protected BaseService()
         {
-            Collection = MongoHelper.GetCollection<T>(typeof (T).Name);
+            Collection = MongoHelper.GetCollection<T>(typeof(T).Name);
         }
 
         protected BaseService(string collectionName)
@@ -30,7 +31,7 @@ namespace SWARM.PuP.Web.Services
         public MongoCollection<T> Collection { get; }
 
         public virtual T GetById(string id)
-        {   
+        {
             return Collection.FindOneById(ObjectId.Parse(id));
         }
 
@@ -112,7 +113,7 @@ namespace SWARM.PuP.Web.Services
         {
             if (filter.PageIndex != 0)
             {
-                query = query.Skip(filter.PageIndex*filter.PageSize);
+                query = query.Skip(filter.PageIndex * filter.PageSize);
             }
 
             if (filter.OrderDirection == ListSortDirection.Ascending)

@@ -1,1 +1,33 @@
-[{"GameId":"54fa237d18d9ca29f09367d6","Description":null,"PlayStyle":2,"SkillLevel":1,"ChatRoomId":"55106da5535c12255e001d8a","StartTimeUtc":"2015-03-22T16:45:39.169Z","UserIds":[],"Name":"PushTest","PictureUrl":null,"Platforms":[],"Tags":[],"Id":"55105ce960635c20e8c11711","Timestamp":null},{"GameId":"test","Description":"Test","PlayStyle":1,"SkillLevel":3,"ChatRoomId":"550cd690535c12ad7c0046aa","StartTimeUtc":"2015-03-21T03:25:18.401Z","UserIds":["550cd69060635b3354c44cd8"],"Name":"Test 2","PictureUrl":null,"Platforms":[],"Tags":[],"Id":"550cd69060635b3354c44cd8","Timestamp":null},{"GameId":"54fa237d18d9ca29f09367d6","Description":null,"PlayStyle":1,"SkillLevel":1,"ChatRoomId":"55132045535c12226900e070","StartTimeUtc":"2015-03-22T16:45:39.169Z","UserIds":[],"Name":"Test 4","PictureUrl":null,"Platforms":[],"Tags":[],"Id":"5513204660635a2394c1b4f1","Timestamp":null}]
+[
+    {
+        "GameId": "54fa237d18d9ca29f09367d6",
+        "Description": null,
+        "PlayStyle": 2,
+        "SkillLevel": 1,
+        "QBChatRoomId": "55106da5535c12255e001d8a",
+        "StartTimeUtc": "2015-03-22T16:45:39.169Z",
+        "UserIds": [ "A", "B" ],
+        "Name": "PushTest",
+        "PictureUrl": null,
+        "Platforms": [ ],
+        "Tags": [ ],
+        "Id": "55105ce960635c20e8c11711",
+        "Timestamp": null
+    },
+    {
+        "GameId": "test",
+        "Description": "Test",
+        "PlayStyle": 1,
+        "SkillLevel": 3,
+        "QBChatRoomId": "550cd690535c12ad7c0046aa",
+        "StartTimeUtc": "2015-03-21T03:25:18.401Z",
+        "UserIds": [ "550cd69060635b3354c44cd8" ],
+        "Name": "Test 2",
+        "PictureUrl": null,
+        "Platforms": [ ],
+        "Tags": [ ],
+        "Id": "550cd69060635b3354c44cd8",
+        "Timestamp": null
+    },
+    { "GameId": "54fa237d18d9ca29f09367d6", "Description": null, "PlayStyle": 1, "SkillLevel": 1, "QBChatRoomId": "55132045535c12226900e070", "StartTimeUtc": "2015-03-22T16:45:39.169Z", "UserIds": [ ], "Name": "Test 4", "PictureUrl": null, "Platforms": [ ], "Tags": [ ], "Id": "5513204660635a2394c1b4f1", "Timestamp": null }
+]

@@ -42,6 +42,9 @@ namespace SWARM.PuP.Web.Tests
 
             json = File.ReadAllText("MockData\\lobbies.json");
             MongoHelper.GetCollection<Lobby>("Lobbies").InsertBatch(JsonConvert.DeserializeObject<List<Lobby>>(json));
+
+            json = File.ReadAllText("MockData\\users.json");
+            MongoHelper.GetCollection<Lobby>("Users").InsertBatch(JsonConvert.DeserializeObject<List<PuPUser>>(json));
         }
 
         [TestMethod]

@@ -28,9 +28,10 @@ namespace SWARM.PuP.Web.ApiControllers
         }
 
         [Authorize]
-        public void Post(Lobby lobby)
+        public Lobby Post(Lobby lobby)
         {
-            _lobbyService.Add(lobby);
+            lobby.UserIds.Add(User.Identity.GetUserId());
+            return _lobbyService.Add(lobby);
         }
 
         [Authorize]
@@ -48,7 +49,7 @@ namespace SWARM.PuP.Web.ApiControllers
         [Authorize, Route("Join/{lobbyId}")]
         public IHttpActionResult Join(string lobbyId)
         {   
-            _lobbyService.Join(User.Identity.GetUserId(), lobbyId);
+            _lobbyService.Join(lobbyId, User.Identity.GetUserId());
 
             return Ok();
         }
@@ -56,7 +57,7 @@ namespace SWARM.PuP.Web.ApiControllers
         [Authorize, Route("Leave/{lobbyId}")]
         public IHttpActionResult Leave(string lobbyId)
         {
-            _lobbyService.Leave(User.Identity.GetUserId(), lobbyId);
+            _lobbyService.Leave(lobbyId, User.Identity.GetUserId());
 
             return Ok();
         }

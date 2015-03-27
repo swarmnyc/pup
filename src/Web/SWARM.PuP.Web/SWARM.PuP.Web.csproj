@@ -221,6 +221,7 @@
     <Compile Include="Models\Game.cs" />
     <Compile Include="Models\GamePlatform.cs" />
     <Compile Include="Services\ILobbyService.cs" />
+    <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\LobbyService.cs" />
     <Compile Include="Services\Quickblox\CreateUserResult.cs" />
     <Compile Include="Services\Quickblox\QuickbloxAttachment.cs" />
@@ -228,6 +229,7 @@
     <Compile Include="Services\Quickblox\QuickbloxRoom.cs" />
     <Compile Include="Services\Quickblox\QuickbloxUser.cs" />
     <Compile Include="Services\Quickblox\Session.cs" />
+    <Compile Include="Services\UserService.cs" />
     <Compile Include="ViewModes\AccountViewModels.cs" />
     <Compile Include="Models\PuPUser.cs" />
     <Compile Include="ViewModes\ManageViewModels.cs" />

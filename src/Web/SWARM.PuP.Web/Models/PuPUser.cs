@@ -5,10 +5,11 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Identity.MongoDB;
 using Microsoft.AspNet.Identity;
+using MongoDB;
 
 namespace SWARM.PuP.Web.Models
 {
-    public class PuPUser : IdentityUser, IPuPTaggable
+    public class PuPUser : IdentityUser, IPuPTaggable, IMongoModel
     {
         private List<PuPTag> _tags;
 

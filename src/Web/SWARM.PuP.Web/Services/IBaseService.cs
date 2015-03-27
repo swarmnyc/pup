@@ -6,7 +6,7 @@ using MongoDB;
 
 namespace SWARM.PuP.Web.Services
 {
-    public interface IBaseService<T> where T : MongoModel
+    public interface IBaseService<T> where T : IMongoModel
     {
         T GetById(string id);
         T GetSingle(Expression<Func<T, bool>> criteria);

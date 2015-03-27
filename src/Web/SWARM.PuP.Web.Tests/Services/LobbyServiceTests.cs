@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.UI.WebControls;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -23,7 +24,7 @@ namespace SWARM.PuP.Web.Tests.Services
             var chatService = new Mock<IChatService>();
             chatService.Setup(x => x.CreateRoomForLobby(It.IsAny<Lobby>())).Callback(new Action<Lobby>(x =>
             {
-                x.AddTag("ChatRoomId", "Test");
+                x.AddTag(QuickbloxHttpHelper.Const_ChatRoomId, "Test");
             }));
 
             var service = new LobbyService(chatService.Object);
@@ -38,7 +39,31 @@ namespace SWARM.PuP.Web.Tests.Services
             });
 
             Assert.IsNotNull(lobby);
-            Assert.IsNotNull(lobby.GetTagValue("ChatRoomId"));
+            Assert.IsNotNull(lobby.GetTagValue(QuickbloxHttpHelper.Const_ChatRoomId));
+        }
+
+        [TestMethod()]
+        public void LobbyService_Leave_Test()
+        {
+            var chatService = new Mock<IChatService>();
+
+            var service = new LobbyService(chatService.Object);
+            var lobbyId = service.All().First().Id;
+            service.Leave(lobbyId, "B");
+
+            Assert.AreEqual(1, service.GetById(lobbyId).UserIds.Count);
+        }
+
+        [TestMethod()]
+        public void LobbyService_Join_Test()
+        {
+            var chatService = new Mock<IChatService>();
+
+            var service = new LobbyService(chatService.Object);
+            var lobbyId = service.All().First().Id;
+            service.Join(lobbyId, "C");
+
+            Assert.AreEqual(3, service.GetById(lobbyId).UserIds.Count);
         }
     }
 }

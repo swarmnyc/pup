@@ -6,14 +6,20 @@ using MongoDB.Driver;
 
 namespace MongoDB
 {
+
+    public interface IMongoModel
+    {
+        string Id { get; }
+    }
+
     /// <summary>
     /// class to wrap up your objects for Mongo Happiness
     /// </summary>
     [BsonIgnoreExtraElements(Inherited = true)]
-    public abstract class MongoModel
+    public abstract class MongoModel : IMongoModel
     {
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string Id { get; protected set; }
 
         public BsonTimestamp Timestamp { get; set; }
     }

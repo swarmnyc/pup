@@ -64,19 +64,21 @@ namespace SWARM.PuP.Web.Services
             return query;
         }
 
-        public void Join(string userId, string lobbyId)
+        public void Join(string lobbyId, string userId)
         {
             Lobby lobby = this.GetById(lobbyId);
             lobby.UserIds.Add(userId);
 
+            _chatService.JoinRoom(lobby, new String[] { userId });
             Update(lobby);
         }
 
-        public void Leave(string userId, string lobbyId)
+        public void Leave(string lobbyId, string userId)
         {
             Lobby lobby = this.GetById(lobbyId);
             lobby.UserIds.Remove(userId);
 
+            _chatService.LeaveRoom(lobby, new String[] { userId });
             Update(lobby);
         }
 

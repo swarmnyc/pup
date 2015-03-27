@@ -18,8 +18,6 @@ namespace SWARM.PuP.Web.Tests.Services
             _gameService = ioc.Resolve<IGameService>();
         }
 
-
-
         [TestMethod()]
         public void GameService_Add_Test()
         {

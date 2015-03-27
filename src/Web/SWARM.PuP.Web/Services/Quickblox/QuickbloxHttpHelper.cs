@@ -10,7 +10,7 @@ using SWARM.PuP.Web.Models;
 
 namespace SWARM.PuP.Web.Services.Quickblox
 {
-    internal static class QuickbloxHttpHelper
+    public static class QuickbloxHttpHelper
     {
         private const int TimeOut = 19;
         private static readonly string ApplicationId;
@@ -24,7 +24,9 @@ namespace SWARM.PuP.Web.Services.Quickblox
 
         public const string UserPassword = "swarmnyc";
         public const string CompanyEmailDomin = "@swarmnyc.com";
-        private const string String_ChatId = "ChatId";
+        public const string LobbyNameFormat = "Lobby:{0}";
+        public const string Const_ChatRoomId = "QBChatRoomId";
+        public const string Const_ChatId = "QBChatId";
 
         static QuickbloxHttpHelper()
         {
@@ -52,12 +54,12 @@ namespace SWARM.PuP.Web.Services.Quickblox
 
         internal static string GetChatId(this PuPUser user)
         {
-            return user.GetTagValue(String_ChatId);
+            return user.GetTagValue(Const_ChatId);
         }
 
         internal static void SetChatId(this PuPUser user, string chatId)
         {
-            user.UpdateTag(String_ChatId, chatId);
+            user.UpdateTag(Const_ChatId, chatId);
         }
 
         private static bool IsNoSession()
