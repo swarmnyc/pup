@@ -28,7 +28,7 @@ namespace SWARM.PuP.Web.Tests.Services
         {
             try
             {
-                QuickbloxChatService s = new QuickbloxChatService(new UserService());
+                QuickbloxChatService s = new QuickbloxChatService();
                 var puPUser = new PuPUser()
                 {
                     UserName = "Test",
@@ -51,11 +51,10 @@ namespace SWARM.PuP.Web.Tests.Services
             try
             {
                 var userService = new UserService();
-                QuickbloxChatService s = new QuickbloxChatService(new UserService());
-                s.CreateRoomForLobby(new Lobby()
+                QuickbloxChatService s = new QuickbloxChatService();
+                s.CreateRoomForLobby(userService.Collection.FindOne() , new Lobby()
                 {
-                    Name = "Test-" + DateTime.Now.ToString(CultureInfo.CurrentCulture),
-                    UserIds = new HashSet<string>(userService.All().Take(1).Select(x => x.Id))
+                    Name = "Test-" + DateTime.Now.ToString(CultureInfo.CurrentCulture)
                 });
 
             }
@@ -73,11 +72,11 @@ namespace SWARM.PuP.Web.Tests.Services
             try
             {
                 var userService = new UserService();
-                QuickbloxChatService s = new QuickbloxChatService(new UserService());
+                QuickbloxChatService s = new QuickbloxChatService();
                 Lobby lobby = new Lobby();
                 lobby.AddTag(QuickbloxHttpHelper.Const_ChatRoomId, "5515c344535c120576011113");
 
-                s.JoinRoom(lobby, userService.All().Skip(1).Select(x => x.Id));
+                s.JoinRoom(lobby, userService.All().Skip(1));
 
             }
             catch (WebException e)
@@ -94,11 +93,11 @@ namespace SWARM.PuP.Web.Tests.Services
             try
             {
                 var userService = new UserService();
-                QuickbloxChatService s = new QuickbloxChatService(new UserService());
+                QuickbloxChatService s = new QuickbloxChatService();
                 Lobby lobby = new Lobby();
                 lobby.AddTag(QuickbloxHttpHelper.Const_ChatRoomId, "5515c344535c120576011113");
 
-                s.LeaveRoom(lobby, userService.All().Skip(1).Select(x => x.Id));
+                s.LeaveRoom(lobby, userService.All().Skip(1));
 
             }
             catch (WebException e)
@@ -113,7 +112,7 @@ namespace SWARM.PuP.Web.Tests.Services
         {
             try
             {
-                QuickbloxChatService s = new QuickbloxChatService(new UserService());
+                QuickbloxChatService s = new QuickbloxChatService();
 
                 s.SendMessage(new Lobby()
                 {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using AspNet.Identity.MongoDB;
 using Autofac;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB;
@@ -8,6 +9,7 @@ using MongoDB.Bson;
 using MongoDB.Driver.Linq;
 using MongoDB.Embedded;
 using Newtonsoft.Json;
+using SWARM.PuP.Web.ApiControllers;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.Services;
 
@@ -16,10 +18,17 @@ namespace SWARM.PuP.Web.Tests
     [TestClass()]
     public class TestHelper
     {
+        public static void InitialUser()
+        {
+            PuPIdentityContext.Create();
+        }
+
         public static IContainer GetContainer(Action<ContainerBuilder> extraBinding = null)
         {
             ContainerBuilder builder = new ContainerBuilder();
             builder.RegisterAssemblyTypes(typeof(PuPUser).Assembly).Where(x => x.FullName.EndsWith("Service")).AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(typeof(PuPUser).Assembly).Where(x => x.FullName.EndsWith("Controller")).AsSelf();
+
             if (extraBinding != null)
             {
                 extraBinding(builder);

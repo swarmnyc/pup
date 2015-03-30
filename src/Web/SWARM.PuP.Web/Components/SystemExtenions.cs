@@ -1,4 +1,9 @@
 ﻿using System.Collections;
+using System.Security.Principal;
+using Microsoft.AspNet.Identity;
+using SWARM.PuP.Web;
+using SWARM.PuP.Web.Models;
+using SWARM.PuP.Web.Services;
 
 namespace System
 {
@@ -35,6 +40,11 @@ namespace System
                 return true;
 
             return false;
+        }
+
+        public static PuPUser Get(this IUserService service, IIdentity identity)
+        {
+            return service.GetById(identity.GetUserId());
         }
     }
 }

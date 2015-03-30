@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.AspNet.Identity;
 using MongoDB.Driver.Linq;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
@@ -17,20 +18,19 @@ namespace SWARM.PuP.Web.Services
             _chatService = chatService;
         }
 
-        public override Lobby Add(Lobby lobby)
+        public Lobby Add(PuPUser owner, Lobby lobby)
         {
-            _chatService.CreateRoomForLobby(lobby);
-            return base.Add(lobby);
-        }
-
-        public override IEnumerable<Lobby> Add(IEnumerable<Lobby> lobbies)
-        {
-            foreach (var lobby in lobbies)
+            lobby.Users.Add(new LobbyUserInfo()
             {
-                _chatService.CreateRoomForLobby(lobby);
-            }
+                Id = owner.Id,
+                IsOwner = true,
+                PictureUrl = owner.PictureUrl,
+                Name = owner.GetUserName(lobby.Platforms.First())
+            });
 
-            return base.Add(lobbies);
+            _chatService.CreateRoomForLobby(owner, lobby);
+
+            return base.Add(lobby);
         }
 
         public IQueryable<Lobby> Filter(LobbyFilter filter)
@@ -64,23 +64,31 @@ namespace SWARM.PuP.Web.Services
             return query;
         }
 
-        public void Join(string lobbyId, string userId)
+        public void Join(string lobbyId, PuPUser user)
         {
             Lobby lobby = this.GetById(lobbyId);
-            lobby.UserIds.Add(userId);
+            lobby.Users.Add(new LobbyUserInfo()
+            {
+                Id = user.Id,
+                PictureUrl = user.PictureUrl,
+                Name = user.GetUserName(lobby.Platforms.First())
+            });
 
-            _chatService.JoinRoom(lobby, new String[] { userId });
+            _chatService.JoinRoom(lobby, new PuPUser[] { user });
             Update(lobby);
         }
 
-        public void Leave(string lobbyId, string userId)
+        public void Leave(string lobbyId, PuPUser user)
         {
             Lobby lobby = this.GetById(lobbyId);
-            lobby.UserIds.Remove(userId);
+            var lobbyUser = lobby.Users.First(x => x.Id == user.Id);
+            lobbyUser.IsLeave = true;
 
-            _chatService.LeaveRoom(lobby, new String[] { userId });
+            _chatService.LeaveRoom(lobby, new PuPUser[] { user });
             Update(lobby);
         }
+
+       
 
         protected override Expression<Func<Lobby, object>> GetOrderExpression(BaseFilter filter)
         {
@@ -93,7 +101,7 @@ namespace SWARM.PuP.Web.Services
                 case "name":
                     return (Lobby x) => x.Name;
                 case "popular":
-                    return (Lobby x) => x.UserIds.Count;
+                    return (Lobby x) => x.Users.Count;
                 case "starttime":
                 default:
                     return (Lobby x) => x.StartTimeUtc;

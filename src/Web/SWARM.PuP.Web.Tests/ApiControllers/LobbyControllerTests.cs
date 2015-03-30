@@ -29,10 +29,10 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
             container = TestHelper.GetContainer((b) =>
             {
                 var chatService = new Mock<IChatService>();
-                chatService.Setup(x => x.CreateRoomForLobby(It.IsAny<Lobby>())).Callback(new Action<Lobby>(x =>
-                {
-                    x.AddTag(QuickbloxHttpHelper.Const_ChatRoomId, "Test");
-                }));
+                chatService.Setup(x =>
+                    x.CreateRoomForLobby(It.IsAny<PuPUser>(), It.IsAny<Lobby>()))
+                     .Callback(new Action<PuPUser, Lobby>((x, y) => { y.AddTag(QuickbloxHttpHelper.Const_ChatRoomId, "Test"); })
+                 );
 
                 b.RegisterInstance(chatService.Object).AsImplementedInterfaces();
             });
@@ -41,7 +41,7 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
         [TestMethod()]
         public void LobbyController_Filter_Test()
         {
-            LobbyController controller = new LobbyController(container.Resolve<ILobbyService>());
+            LobbyController controller = container.Resolve<LobbyController>();
             var result = controller.Get(new LobbyFilter()
             {
                 Order = "Name",
@@ -59,19 +59,23 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
         [TestMethod()]
         public void LobbyController_CreateLobby_Test()
         {
-            LobbyController controller = new LobbyController(container.Resolve<ILobbyService>());
-            controller.RequestContext.Principal = new GenericPrincipal(new ClaimsIdentity(new List<Claim>() { new Claim(ClaimTypes.NameIdentifier, "SWARM") }), null);
+            UserService userService = new UserService();
+            LobbyController controller = container.Resolve<LobbyController>();
+
+            controller.RequestContext.Principal = new GenericPrincipal(new ClaimsIdentity(new List<Claim>() { new Claim(ClaimTypes.NameIdentifier, userService.Collection.FindOne().Id) }), null);
+
             var lobby = controller.Post(new Lobby()
             {
                 GameId = "test",
                 Name = "Test 2",
                 PlayStyle = PlayStyle.Serious,
+                Platforms = new List<GamePlatform>() { GamePlatform.Xbox, GamePlatform.Wii },
                 StartTimeUtc = DateTime.UtcNow.AddHours(1),
                 SkillLevel = SkillLevel.Pro,
                 Description = "Test"
             });
 
-            Assert.IsTrue(lobby.UserIds.Count > 0);
+            Assert.AreEqual(1, lobby.Users.Count);
         }
     }
 }

@@ -1,10 +1,47 @@
 [
-    {
-        "UserName": "Swarm",
-        "Tags": [ { "Key": "QBChatId", "Value": "2399548" } ]
+    {   
+        "UserName": "wade@swarmnyc.com",        
+        "Email": "wade@swarmnyc.com",
+        "AccessFailedCount": 0,
+        "Roles": [ ],
+        "Logins": [
+            {
+                "LoginProvider": "google",
+                "ProviderKey": "107838616825760536731"
+            }
+        ],        
+        "Tags": [
+            {
+                "_id": "A",                
+                "Key": "QBChatId",
+                "Value": "2399548"
+            },
+            {
+                "_id": "B",                
+                "Key": "Name-Xbox",
+                "Value": "Wade"
+            }
+        ],
+        "DisplayName": "WadeHuang",
+        "PictureUrl": "https://lh6.googleusercontent.com/-2So9kCD3tgc/AAAAAAAAAAI/AAAAAAAAABE/MbYAPtuKWK8/photo.jpg"
     },
-    {
-        "UserName": "Tester",
-        "Tags": [ { "Key": "QBChatId", "Value": "2562915" } ]
+    {        
+        "UserName": "test@swarmnyc.com",     
+        "Email": "test@swarmnyc.com",                        
+        "DisplayName": "test",
+        "PictureUrl": null,
+        "Tags": [
+            {
+                "_id": "C",
+                "Type": 0,
+                "Key": "QBChatId",
+                "Value": "2626261"
+            },
+            {
+                "_id": "D",                
+                "Key": "Name-Xbox",
+                "Value": "test"
+            }
+        ]
     }
 ]

@@ -6,22 +6,22 @@ namespace SWARM.PuP.Web.Models
 {
     public class Lobby : Game
     {
-        private HashSet<string> _userIds;
+        private HashSet<LobbyUserInfo> _users;
 
         public string GameId { get; set; }
 
         public string Description { get; set; }
-
+        
         public PlayStyle PlayStyle { get; set; }
 
         public SkillLevel SkillLevel { get; set; }
 
         public DateTime StartTimeUtc { get; set; }
 
-        public HashSet<string> UserIds
+        public HashSet<LobbyUserInfo> Users
         {
-            get { return _userIds ?? (_userIds = new HashSet<string>()); }
-            set { _userIds = value; }
+            get { return _users ?? (_users = new HashSet<LobbyUserInfo>()); }
+            set { _users = value; }
         }
     }
 }

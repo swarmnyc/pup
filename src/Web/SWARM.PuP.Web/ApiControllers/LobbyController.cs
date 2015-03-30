@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using SWARM.PuP.Web.Models;
@@ -10,10 +12,12 @@ namespace SWARM.PuP.Web.ApiControllers
     [RoutePrefix("api/Lobby")]
     public class LobbyController : ApiController
     {
+        private readonly IUserService _userService;
         private readonly ILobbyService _lobbyService;
 
-        public LobbyController(ILobbyService lobbyService)
+        public LobbyController(IUserService userService, ILobbyService lobbyService)
         {
+            _userService = userService;
             _lobbyService = lobbyService;
         }
 
@@ -30,8 +34,7 @@ namespace SWARM.PuP.Web.ApiControllers
         [Authorize]
         public Lobby Post(Lobby lobby)
         {
-            lobby.UserIds.Add(User.Identity.GetUserId());
-            return _lobbyService.Add(lobby);
+            return _lobbyService.Add(_userService.Get(User.Identity), lobby);
         }
 
         [Authorize]
@@ -49,7 +52,7 @@ namespace SWARM.PuP.Web.ApiControllers
         [Authorize, Route("Join/{lobbyId}")]
         public IHttpActionResult Join(string lobbyId)
         {   
-            _lobbyService.Join(lobbyId, User.Identity.GetUserId());
+            _lobbyService.Join(lobbyId, _userService.Get(User.Identity));
 
             return Ok();
         }
@@ -57,7 +60,7 @@ namespace SWARM.PuP.Web.ApiControllers
         [Authorize, Route("Leave/{lobbyId}")]
         public IHttpActionResult Leave(string lobbyId)
         {
-            _lobbyService.Leave(lobbyId, User.Identity.GetUserId());
+            _lobbyService.Leave(lobbyId, _userService.Get(User.Identity));
 
             return Ok();
         }

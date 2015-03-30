@@ -8,7 +8,10 @@ namespace SWARM.PuP.Web.Services
     {
         IQueryable<Lobby> Filter(LobbyFilter filter);
 
-        void Join(string lobbyId, string userId);
-        void Leave(string lobbyId, string userId);
+        void Join(string lobbyId, PuPUser user);
+
+        void Leave(string lobbyId, PuPUser user);
+
+        Lobby Add(PuPUser owner, Lobby lobby);
     }
 }

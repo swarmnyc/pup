@@ -42,6 +42,7 @@ local.properties
 *.userosscache
 *.sln.docstates
 *.userprefs
+*.pubxml
 
 # Build results
 [Dd]ebug/

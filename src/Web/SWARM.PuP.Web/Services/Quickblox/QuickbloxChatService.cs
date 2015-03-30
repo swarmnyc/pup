@@ -11,13 +11,6 @@ namespace SWARM.PuP.Web.Services.Quickblox
 {
     public class QuickbloxChatService : IChatService
     {
-        private readonly IUserService _userService;
-
-        public QuickbloxChatService(IUserService userService)
-        {
-            _userService = userService;
-        }
-
         public void CreateUser(PuPUser user)
         {
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.User, HttpMethod.Post);
@@ -43,9 +36,9 @@ namespace SWARM.PuP.Web.Services.Quickblox
             request.GetResponse();
         }
 
-        public void CreateRoomForLobby(Lobby lobby)
+        public void CreateRoomForLobby(PuPUser owner, Lobby lobby)
         {
-            string[] chatUsersId = ConvertUser(lobby.UserIds);
+            string[] chatUsersId = new string[] { owner.GetChatId() };
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.Room, HttpMethod.Post);
 
             var charRoom = request.Json<QuickbloxRoom>(new
@@ -58,9 +51,9 @@ namespace SWARM.PuP.Web.Services.Quickblox
             lobby.UpdateTag(QuickbloxHttpHelper.Const_ChatRoomId, charRoom._id);
         }
 
-        public void JoinRoom(Lobby lobby, IEnumerable<string> users)
+        public void JoinRoom(Lobby lobby, IEnumerable<PuPUser> users)
         {
-            string[] chatUsersId = ConvertUser(users);
+            string[] chatUsersId = users.Select(x=>x.GetChatId()).ToArray();
 
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.RoomUpdate(lobby.GetTagValue(QuickbloxHttpHelper.Const_ChatRoomId)), HttpMethod.Put);
 
@@ -73,9 +66,9 @@ namespace SWARM.PuP.Web.Services.Quickblox
             });
         }
 
-        public void LeaveRoom(Lobby lobby, IEnumerable<string> users)
+        public void LeaveRoom(Lobby lobby, IEnumerable<PuPUser> users)
         {
-            string[] chatUsersId = ConvertUser(users);
+            string[] chatUsersId = users.Select(x => x.GetChatId()).ToArray();
 
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.RoomUpdate(lobby.GetTagValue(QuickbloxHttpHelper.Const_ChatRoomId)), HttpMethod.Put);
 
@@ -98,11 +91,6 @@ namespace SWARM.PuP.Web.Services.Quickblox
                 chat_dialog_id = roomId,
                 message
             });
-        }
-
-        private string[] ConvertUser(IEnumerable<string> userIds)
-        {
-            return _userService.Get(x => x.Id.In(userIds)).Select(x => x.GetChatId()).ToArray();
         }
     }
 }

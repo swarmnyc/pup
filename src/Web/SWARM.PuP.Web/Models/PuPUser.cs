@@ -22,5 +22,15 @@ namespace SWARM.PuP.Web.Models
             get { return _tags ?? (_tags = new List<PuPTag>()); }
             set { _tags = value; }
         }
+
+        public string GetUserName(GamePlatform platform)
+        {
+            return this.GetTagValue("Name" + platform.ToString()) ?? "No Name";
+        }
+
+        public void SetUserName(GamePlatform platform, string name)
+        {
+            this.UpdateTag("Name" + platform.ToString(), name);
+        }
     }
 }

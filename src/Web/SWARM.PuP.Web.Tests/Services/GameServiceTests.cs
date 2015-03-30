@@ -24,7 +24,7 @@ namespace SWARM.PuP.Web.Tests.Services
             Game game = _gameService.Add(new Game()
             {
                 Name = "Test",
-                Platforms = new List<GamePlatform>() { GamePlatform.Windows, GamePlatform.PS3 },
+                Platforms = new List<GamePlatform>() { GamePlatform.Windows, GamePlatform.PS },
                 Tags = new List<PuPTag>() { new PuPTag("GameType", "Shooting") , new PuPTag("GameType", "Action") }
             });
 
