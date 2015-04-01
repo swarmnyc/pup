@@ -52,6 +52,11 @@ namespace SWARM.PuP.Web.ViewModels
             get { return lobby.StartTimeUtc; }
         }
 
+        public IEnumerable<PuPTag> Tags
+        {
+            get { return lobby.Tags; }
+        }
+
         public static IEnumerable<LobbyViewModel> Load(IEnumerable<Lobby> lobbies)
         {
             foreach (var lobby in lobbies)
