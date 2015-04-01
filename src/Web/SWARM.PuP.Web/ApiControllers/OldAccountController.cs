@@ -17,6 +17,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using SWARM.PuP.Web.Auth;
 using SWARM.PuP.Web.Models;
+using SWARM.PuP.Web.ViewModels;
 
 namespace SWARM.PuP.Web.ApiControllers
 {
@@ -281,10 +282,10 @@ namespace SWARM.PuP.Web.ApiControllers
         // GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
         [AllowAnonymous]
         [Route("ExternalLogins")]
-        public IEnumerable<Models.ExternalLogin2ViewModel> GetExternalLogins(string returnUrl, bool generateState = false)
+        public IEnumerable<ExternalLogin2ViewModel> GetExternalLogins(string returnUrl, bool generateState = false)
         {
             IEnumerable<AuthenticationDescription> descriptions = Authentication.GetExternalAuthenticationTypes();
-            List<Models.ExternalLogin2ViewModel> logins = new List<Models.ExternalLogin2ViewModel>();
+            List<ExternalLogin2ViewModel> logins = new List<ExternalLogin2ViewModel>();
 
             string state;
 
@@ -300,7 +301,7 @@ namespace SWARM.PuP.Web.ApiControllers
 
             foreach (AuthenticationDescription description in descriptions)
             {
-                Models.ExternalLogin2ViewModel login2 = new Models.ExternalLogin2ViewModel
+                ExternalLogin2ViewModel login2 = new ExternalLogin2ViewModel
                 {
                     Name = description.Caption,
                     Url = Url.Route("ExternalLogin", new

@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using SWARM.PuP.Web.Models;
+using SWARM.PuP.Web.ViewModels;
 
 namespace SWARM.PuP.Web.Controllers
 {

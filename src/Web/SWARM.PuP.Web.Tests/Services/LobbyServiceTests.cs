@@ -36,7 +36,7 @@ namespace SWARM.PuP.Web.Tests.Services
                 GameId = "test",
                 Name = "Test 2",
                 PlayStyle = PlayStyle.Serious,
-                Platforms = new List<GamePlatform>() { GamePlatform.Xbox },
+                Platform = GamePlatform.Xbox360,
                 StartTimeUtc = DateTime.UtcNow.AddHours(1),
                 SkillLevel = SkillLevel.Pro,
                 Description = "Test"

@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
 using SWARM.PuP.Web.Services;
+using SWARM.PuP.Web.ViewModels;
 
 namespace SWARM.PuP.Web.ApiControllers
 {
@@ -21,9 +22,9 @@ namespace SWARM.PuP.Web.ApiControllers
             _lobbyService = lobbyService;
         }
 
-        public IEnumerable<Lobby> Get([FromUri]LobbyFilter filter)
+        public IEnumerable<LobbyViewModel> Get([FromUri]LobbyFilter filter)
         {
-            return _lobbyService.Filter(filter);
+            return LobbyViewModel.Load(_lobbyService.Filter(filter));
         }
 
         public Lobby Get(string id)

@@ -10,6 +10,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
 using SWARM.PuP.Web.Auth;
 using SWARM.PuP.Web.Models;
+using SWARM.PuP.Web.ViewModels;
 
 namespace SWARM.PuP.Web.ApiControllers
 {

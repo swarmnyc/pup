@@ -25,7 +25,7 @@ namespace SWARM.PuP.Web.Services
                 Id = owner.Id,
                 IsOwner = true,
                 PictureUrl = owner.PictureUrl,
-                Name = owner.GetUserName(lobby.Platforms.First())
+                Name = owner.GetUserName(lobby.Platform)
             });
 
             _chatService.CreateRoomForLobby(owner, lobby);
@@ -56,7 +56,7 @@ namespace SWARM.PuP.Web.Services
 
             if (!filter.Platforms.IsNullOrEmpty())
             {
-                query = query.Where(x => x.Platforms.ContainsAny(filter.Platforms));
+                query = query.Where(x => x.Platform.In(filter.Platforms));
             }
 
             query = DoOrderQuery(query, filter);
@@ -71,7 +71,7 @@ namespace SWARM.PuP.Web.Services
             {
                 Id = user.Id,
                 PictureUrl = user.PictureUrl,
-                Name = user.GetUserName(lobby.Platforms.First())
+                Name = user.GetUserName(lobby.Platform)
             });
 
             _chatService.JoinRoom(lobby, new PuPUser[] { user });

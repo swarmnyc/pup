@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -9,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB;
 using MongoDB.Bson;
 using Moq;
+using Newtonsoft.Json;
 using SWARM.PuP.Web.ApiControllers;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
@@ -49,9 +51,8 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
                 OrderDirection = ListSortDirection.Descending,
                 PlayStyles = new[] { PlayStyle.Casual }
             });
-
-            Console.WriteLine(result.ToMongoQueryText());
-            Console.WriteLine(result.ToJson());
+            
+            Debug.WriteLine(result.ToJson());
 
             Assert.IsTrue(result.Any());
         }
@@ -69,7 +70,7 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
                 GameId = "test",
                 Name = "Test 2",
                 PlayStyle = PlayStyle.Serious,
-                Platforms = new List<GamePlatform>() { GamePlatform.Xbox, GamePlatform.Wii },
+                Platform = GamePlatform.Xbox,
                 StartTimeUtc = DateTime.UtcNow.AddHours(1),
                 SkillLevel = SkillLevel.Pro,
                 Description = "Test"

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SWARM.PuP.Web.Models;
 
-namespace SWARM.PuP.Web.Models
+namespace SWARM.PuP.Web.ViewModels
 {
     public class ExternalLoginConfirmationViewModel
     {
