@@ -28,7 +28,7 @@ namespace SWARM.PuP.Web.Services
             Collection = MongoHelper.GetCollection<T>(collectionName);
         }
 
-        public MongoCollection<T> Collection { get; }
+        public MongoCollection<T> Collection { get; private set; }
 
         public virtual T GetById(string id)
         {
