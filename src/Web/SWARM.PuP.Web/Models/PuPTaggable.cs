@@ -43,7 +43,8 @@ namespace SWARM.PuP.Web.Models
 
         public static string GetTagValue(this IPuPTaggable taggable, string key)
         {
-            return taggable.Tags.FirstOrDefault(t => t.Key == key)?.Value;
+            var tag = taggable.Tags.FirstOrDefault(t => t.Key == key);
+            return tag == null ? null : tag.Value;
         }
 
         public static string[] GetTagValues(this IPuPTaggable taggable, string key)
