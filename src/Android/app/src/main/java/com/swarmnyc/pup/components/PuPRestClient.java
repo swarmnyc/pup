@@ -7,6 +7,7 @@ import com.loopj.android.http.RequestParams;
 import com.swarmnyc.pup.Config;
 import com.swarmnyc.pup.R;
 
+// TODO: Change to better Rest Library
 public final class PuPRestClient {
     private static final String BASE_URL = Config.getConfigString(R.string.PuP_API_Url);
 

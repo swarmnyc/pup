@@ -7,11 +7,13 @@ public abstract class ChatRoomService {
 
     public abstract void SendMessage(String message);
 
-    public abstract void login(Activity activity);
+    public abstract void login();
 
     public abstract void leave();
 
     public void setMessageListener(ChatMessageListener listener){
         this.listener = listener;
     }
+
+    public abstract void loadChatHistory();
 }

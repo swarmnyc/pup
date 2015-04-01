@@ -1,18 +1,13 @@
 package com.swarmnyc.pup.chat;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import com.quickblox.chat.QBChat;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBGroupChat;
 import com.quickblox.chat.exception.QBChatException;
 import com.quickblox.chat.listeners.QBMessageListener;
-import com.quickblox.chat.listeners.QBMessageListenerImpl;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.QBEntityCallbackImpl;
@@ -32,7 +27,8 @@ public class QuickbloxChatRoomService extends ChatRoomService {
     private QBDialog dialog;
     private Activity activity;
 
-    public QuickbloxChatRoomService(QBDialog dialog) {
+    public QuickbloxChatRoomService(Activity activity, QBDialog dialog) {
+        this.activity = activity;
         this.dialog = dialog;
     }
 
@@ -53,8 +49,9 @@ public class QuickbloxChatRoomService extends ChatRoomService {
     }
 
     @Override
-    public void login(final Activity activity) {
-        this.activity = activity;
+    public void login() {
+        if (chat != null && chat.isJoined())
+            return;
 
         chat = QBChatService.getInstance().getGroupChatManager().createGroupChat(dialog.getRoomJid());
 
@@ -91,13 +88,6 @@ public class QuickbloxChatRoomService extends ChatRoomService {
 
                     }
                 });
-
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadChatHistory();
-                    }
-                });
             }
 
             @Override
@@ -109,7 +99,8 @@ public class QuickbloxChatRoomService extends ChatRoomService {
     @Override
     public void leave() {
         try {
-            chat.leave();
+            if (chat != null && chat.isJoined())
+                chat.leave();
         } catch (XMPPException e) {
             e.printStackTrace();
         } catch (SmackException.NotConnectedException e) {
@@ -117,7 +108,8 @@ public class QuickbloxChatRoomService extends ChatRoomService {
         }
     }
 
-    private void loadChatHistory(){
+    @Override
+    public void loadChatHistory() {
         QBRequestGetBuilder customObjectRequestBuilder = new QBRequestGetBuilder();
         customObjectRequestBuilder.setPagesLimit(100);
         //customObjectRequestBuilder.sortDesc("date_sent");

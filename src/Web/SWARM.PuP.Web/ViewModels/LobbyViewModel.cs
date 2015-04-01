@@ -47,6 +47,11 @@ namespace SWARM.PuP.Web.ViewModels
             get { return lobby.SkillLevel; }
         }
 
+        public GamePlatform Platform
+        {
+            get { return lobby.Platform; }
+        }
+
         public DateTime StartTimeUtc
         {
             get { return lobby.StartTimeUtc; }

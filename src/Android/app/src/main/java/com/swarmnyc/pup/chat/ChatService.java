@@ -26,5 +26,5 @@ public abstract class ChatService {
 
     public abstract void login(Activity activity);
 
-    public abstract ChatRoomService getChatRoom(Lobby lobby);
+    public abstract ChatRoomService getChatRoom(Activity activity, Lobby lobby);
 }

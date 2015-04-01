@@ -10,14 +10,18 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
-public class Lobby extends Game {
+public class Lobby extends Taggable {
+
+    private String id;
+    private String name;
+    private String pictureUrl;
+    private GamePlatform platform;
     private String gameId;
-    private String chatRoomId;
     private String description;
     private Date startTimeUtc;
     private PlayStyle playStyle;
     private SkillLevel skillLevel;
-    private List<String> userIds;
+    private Hashtable<String, LobbyUserInfo> users;
 
     public Lobby() {
 
@@ -25,14 +29,27 @@ public class Lobby extends Game {
 
     public Lobby(JSONObject json) throws Exception {
         super(json);
-        setGameId(json.getString("gameId"));
-        setChatRoomId(json.getString("chatRoomId"));
-        setDescription(json.optString("description"));
+        id = json.getString("id");
+        name = json.getString("name");
+        pictureUrl = json.optString("pictureUrl");
 
-        setPlayStyle(PlayStyle.get(json.getInt("playStyle")));
-        setSkillLevel(SkillLevel.get(json.getInt("skillLevel")));
-        setStartTimeUtc(Utility.getDateFromJsonString(json.getString("startTimeUtc")));
-        //usersId;
+        gameId = json.getString("gameId");
+        description = json.optString("description");
+
+        playStyle = PlayStyle.get(json.getInt("playStyle"));
+        skillLevel = SkillLevel.get(json.getInt("skillLevel"));
+        startTimeUtc = Utility.getDateFromJsonString(json.getString("startTimeUtc"));
+        platform = GamePlatform.get(json.getInt("platform"));
+
+        users = LobbyUserInfo.FromJsonArray(json.optJSONArray("users"));
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getGameId() {
@@ -41,14 +58,6 @@ public class Lobby extends Game {
 
     public void setGameId(String gameId) {
         this.gameId = gameId;
-    }
-
-    public String getChatRoomId() {
-        return chatRoomId;
-    }
-
-    public void setChatRoomId(String chatRoomId) {
-        this.chatRoomId = chatRoomId;
     }
 
     public String getDescription() {
@@ -83,16 +92,9 @@ public class Lobby extends Game {
         this.skillLevel = skillLevel;
     }
 
-    public List<String> getUserIds() {
-        return userIds;
+    public Hashtable<String, LobbyUserInfo> getUsers() {
+        return users;
     }
-
-    public void setUserIds(List<String> userIds) {
-        this.userIds = userIds;
-    }
-
-    //TODO: Change to better code
-    public static Hashtable<String, Lobby> Lobbies = new Hashtable<>();
 
     public static List<Lobby> FromJsonArray(JSONArray json) throws Exception {
         List<Lobby> list = new ArrayList<>();
@@ -100,11 +102,9 @@ public class Lobby extends Game {
         for (int i = 0; i < json.length(); i++) {
             Lobby lobby = new Lobby(json.getJSONObject(i));
             list.add(lobby);
-            Lobbies.put(lobby.getId(), lobby);
         }
 
         return list;
     }
-
 
 }

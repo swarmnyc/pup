@@ -14,6 +14,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.components.PuPRestClient;
+import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.models.PlayStyle;
 import com.swarmnyc.pup.models.SkillLevel;
 
@@ -42,6 +43,9 @@ public class CreateLobbyActivity extends ActionBarActivity {
     @InjectView(R.id.spinner_skill_level)
     Spinner skillLevelSpinner;
 
+    @InjectView(R.id.spinner_platform)
+    Spinner platformSpinner;
+
     @OnClick(R.id.btn_submit)
     void onSubmitButtonClicked() {
         RequestParams data = new RequestParams();
@@ -49,6 +53,7 @@ public class CreateLobbyActivity extends ActionBarActivity {
         data.put("name", nameText.getText().toString());
         data.put("playStyle", PlayStyle.valueOf((String) playStyleSpinner.getSelectedItem()).getValue());
         data.put("skillLevel", SkillLevel.valueOf((String) skillLevelSpinner.getSelectedItem()).getValue());
+        data.put("platform", GamePlatform.valueOf((String) platformSpinner.getSelectedItem()).getValue());
         data.put("startTimeUtc", "2015-03-22T16:45:39.169Z");
 
         PuPRestClient.post("Lobby", data, new AsyncHttpResponseHandler() {
@@ -74,6 +79,20 @@ public class CreateLobbyActivity extends ActionBarActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+        // GamePlatform
+        List<String> gpList = new ArrayList<>();
+        for (GamePlatform gp : GamePlatform.values()) {
+            if(gp!= GamePlatform.Unknown){
+                gpList.add(gp.toString());
+            }
+        }
+
+        ArrayAdapter<String> gpDataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, gpList);
+        gpDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        platformSpinner.setAdapter(gpDataAdapter);
+
+        // PlayStyle
         List<String> psList = new ArrayList<>();
         for (PlayStyle ps : PlayStyle.values()) {
             psList.add(ps.toString());
@@ -83,6 +102,7 @@ public class CreateLobbyActivity extends ActionBarActivity {
         psDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         playStyleSpinner.setAdapter(psDataAdapter);
 
+        // SkillLevel
         List<String> slList = new ArrayList<>();
         for (SkillLevel ps : SkillLevel.values()) {
             slList.add(ps.toString());

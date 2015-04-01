@@ -15,11 +15,14 @@
     <EditText
         android:id="@+id/text_name"
         android:hint="Name"
-        android:text="Test 4"
+        android:text="Test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-
+    <Spinner
+        android:id="@+id/spinner_platform"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Spinner
         android:id="@+id/spinner_play_style"

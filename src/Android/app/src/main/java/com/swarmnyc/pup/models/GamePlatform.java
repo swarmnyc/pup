@@ -1,5 +1,11 @@
 package com.swarmnyc.pup.models;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public enum GamePlatform {
     Unknown (0),
     Windows (10),
@@ -58,5 +64,14 @@ public enum GamePlatform {
             default:
                 return Unknown;
         }
+    }
+
+    public static List<GamePlatform> FromJsonArray(JSONArray array) throws JSONException {
+        List<GamePlatform> platforms = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            platforms.add(GamePlatform.get(array.getInt(i)));
+        }
+
+        return platforms;
     }
 }

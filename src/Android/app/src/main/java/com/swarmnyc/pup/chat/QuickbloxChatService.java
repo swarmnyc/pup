@@ -31,9 +31,16 @@ public class QuickbloxChatService extends ChatService {
 
     @Override
     public void login(final Activity activity) {
+        if (qbChatService != null && qbChatService.isLoggedIn()) {
+            try {
+                qbChatService.logout();
+            } catch (SmackException.NotConnectedException e) {
+                e.printStackTrace();
+            }
+        }
         this.activity = activity;
 
-        QBChatService.setDebugEnabled(true);
+        //QBChatService.setDebugEnabled(true);
         QBSettings.getInstance().fastConfigInit(Config.getConfigString(R.string.QB_APP_ID), Config.getConfigString(R.string.QB_APP_KEY), Config.getConfigString(R.string.QB_APP_SECRET));
         if (!QBChatService.isInitialized()) {
             QBChatService.init(activity);
@@ -42,12 +49,10 @@ public class QuickbloxChatService extends ChatService {
         qbChatService = QBChatService.getInstance();
 
         final QBUser user = new QBUser();
-        if (Config.isLoggedIn()){
+        if (Config.isLoggedIn()) {
             user.setLogin(Config.getUserId());
             user.setPassword(Config.getConfigString(R.string.QB_APP_PW));
-        }
-        else
-        {
+        } else {
             user.setLogin(Config.getConfigString(R.string.QB_APP_DEFAULT_USER));
             user.setPassword(Config.getConfigString(R.string.QB_APP_PW));
         }
@@ -73,8 +78,8 @@ public class QuickbloxChatService extends ChatService {
     }
 
     @Override
-    public ChatRoomService getChatRoom(Lobby lobby) {
-        return new QuickbloxChatRoomService(dialogs.get(lobby.getChatRoomId()));
+    public ChatRoomService getChatRoom(Activity activity, Lobby lobby) {
+        return new QuickbloxChatRoomService(activity, dialogs.get(lobby.getTagValue("QBChatRoomId")));
     }
 
     private void loginChat(final Activity context, final QBUser user) {
