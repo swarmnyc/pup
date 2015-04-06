@@ -1,23 +1,40 @@
 package com.swarmnyc.pup.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public enum GamePlatform {
+    @SerializedName("0")
     Unknown (0),
+    @SerializedName("10")
     Windows (10),
+    @SerializedName("20")
     Mac (20),
+    @SerializedName("21")
     iOS (21),
+    @SerializedName("30")
     Xbox (30),
+    @SerializedName("31")
     Xbox360 (31),
+    @SerializedName("32")
     XboxOne (32),
+    @SerializedName("40")
     PS1 (40),
+    @SerializedName("41")
     PS2 (41),
+    @SerializedName("42")
     PS3 (42),
+    @SerializedName("43")
     PS4 (43),
+    @SerializedName("50")
     Wii (50),
+    @SerializedName("51")
     WiiU (51),
+    @SerializedName("60")
     Steam (60),
+    @SerializedName("70")
     Android (70);
 
     private final int value;

@@ -1,8 +1,13 @@
 package com.swarmnyc.pup.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public enum SkillLevel {
+    @SerializedName("1")
     Newbie (1),
+    @SerializedName("2")
     Intermediate (2),
+    @SerializedName("3")
     Pro(3);
 
     private final int value;

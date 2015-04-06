@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.swarmnyc.pup.Config;
 import com.swarmnyc.pup.LobbyService;
+import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.PuPCallback;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.chat.ChatMessage;
@@ -60,6 +61,7 @@ public class LobbyActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
         ButterKnife.inject(this);
+        PuPApplication.getInstance().getComponent().inject(this);
 
         Intent intent = getIntent();
         String lobbyId = intent.getExtras().getString("lobbyId");

@@ -1,23 +1,30 @@
 package com.swarmnyc.pup.models;
 
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Taggable {
-    private Hashtable<String, PuPTag> tags;
+    private List<PuPTag> tags;
 
     public Taggable() {
-        tags = new Hashtable<>();
+        tags = new ArrayList<>();
     }
 
-    /*public Taggable(JSONObject json) throws JSONException {
-        tags = PuPTag.FromJsonArray(json.getJSONArray("tags"));
-    }*/
+    public List<PuPTag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<PuPTag> tags) {
+        this.tags = tags;
+    }
 
     public String getTagValue(String key) {
-        if (tags.containsKey(key)) {
-            return tags.get(key).value;
-        } else {
-            return null;
+        for (PuPTag tag : tags) {
+            if (tag.key.equals(key)) {
+                return tag.value;
+            }
         }
+
+        return null;
     }
 }

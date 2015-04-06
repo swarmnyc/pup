@@ -1,8 +1,6 @@
 package com.swarmnyc.pup.models;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.List;
 
 public class Lobby extends Taggable {
@@ -16,31 +14,18 @@ public class Lobby extends Taggable {
     private Date startTimeUtc;
     private PlayStyle playStyle;
     private SkillLevel skillLevel;
-    private Hashtable<String, LobbyUserInfo> users;
+    private List<LobbyUserInfo> users;
 
     public Lobby() {
 
     }
 
-//    public Lobby(JSONObject json) throws Exception {
-//        super(json);
-//        id = json.getString("id");
-//        name = json.getString("name");
-//        pictureUrl = json.optString("pictureUrl");
-//
-//        gameId = json.getString("gameId");
-//        description = json.optString("description");
-//
-//        playStyle = PlayStyle.get(json.getInt("playStyle"));
-//        skillLevel = SkillLevel.get(json.getInt("skillLevel"));
-//        startTimeUtc = Utility.getDateFromJsonString(json.getString("startTimeUtc"));
-//        platform = GamePlatform.get(json.getInt("platform"));
-//
-//        users = LobbyUserInfo.FromJsonArray(json.optJSONArray("users"));
-//    }
-
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -99,20 +84,19 @@ public class Lobby extends Taggable {
         this.platform = platform;
     }
 
-    public Hashtable<String, LobbyUserInfo> getUsers() {
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
+
+    public List<LobbyUserInfo> getUsers() {
         return users;
     }
 
-    /*public static List<Lobby> FromJsonArray(JSONArray json) throws Exception {
-        List<Lobby> list = new ArrayList<>();
-
-        for (int i = 0; i < json.length(); i++) {
-            Lobby lobby = new Lobby(json.getJSONObject(i));
-            list.add(lobby);
-        }
-
-        return list;
-    }*/
-
-
+    public void setUsers(List<LobbyUserInfo> users) {
+        this.users = users;
+    }
 }

@@ -10,6 +10,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.swarmnyc.pup.LobbyService;
+import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.PuPCallback;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.models.GamePlatform;
@@ -72,10 +73,12 @@ public class CreateLobbyActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_lobby);
 
         ButterKnife.inject(this);
+        PuPApplication.getInstance().getComponent().inject(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
