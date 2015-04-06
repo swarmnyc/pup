@@ -7,23 +7,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.swarmnyc.pup.BuildConfig;
+import com.swarmnyc.pup.PuPCallback;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.UserService;
 import com.swarmnyc.pup.activities.AuthActivity;
 import com.swarmnyc.pup.components.GoogleOAuth;
-import com.swarmnyc.pup.components.PuPAuth;
+import com.swarmnyc.pup.viewmodels.UserLoginResult;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import retrofit.client.Response;
 
 public class LoginFragment extends Fragment {
     private AuthActivity activity;
 
     public LoginFragment() {
     }
+
+    @Inject
+    UserService userService;
 
     @InjectView(R.id.text_email)
     public EditText emailText;
@@ -43,20 +50,12 @@ public class LoginFragment extends Fragment {
 
     @OnClick(R.id.btn_submit)
     public void onSubmitBtnClicked() {
-        try {
-            PuPAuth.login(emailText.getText().toString(),passwordText.getText().toString(), new PuPAuth.AuthCallback() {
-                @Override
-                public void onFinished(boolean result) {
-                    if (result){
-                        activity.finishAuth();
-                    }else {
-                        Toast.makeText(activity, "Login Failed", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-        }catch (Exception e){
-            Toast.makeText(activity, "Login Failed", Toast.LENGTH_LONG).show();
-        }
+        userService.login(emailText.getText().toString(), passwordText.getText().toString(), new PuPCallback<UserLoginResult>() {
+            @Override
+            public void success(UserLoginResult userLoginResult, Response response) {
+                activity.finishAuth();
+            }
+        });
     }
 
     @Override
@@ -71,7 +70,7 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.inject(this, view);
 
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             emailText.setText("test@swarmnyc.com");
             passwordText.setText("123456");
         }
@@ -82,7 +81,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        this.activity =(AuthActivity) activity;
+        this.activity = (AuthActivity) activity;
     }
 
     @Override

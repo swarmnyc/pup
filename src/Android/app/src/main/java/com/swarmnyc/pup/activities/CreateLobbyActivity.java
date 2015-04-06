@@ -3,29 +3,31 @@ package com.swarmnyc.pup.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+import com.swarmnyc.pup.LobbyService;
+import com.swarmnyc.pup.PuPCallback;
 import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.components.PuPRestClient;
 import com.swarmnyc.pup.models.GamePlatform;
+import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.PlayStyle;
 import com.swarmnyc.pup.models.SkillLevel;
-
-import org.apache.http.Header;
+import com.swarmnyc.pup.viewmodels.CreateLobbyResult;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import retrofit.client.Response;
 
 public class CreateLobbyActivity extends ActionBarActivity {
 
@@ -46,26 +48,24 @@ public class CreateLobbyActivity extends ActionBarActivity {
     @InjectView(R.id.spinner_platform)
     Spinner platformSpinner;
 
+    @Inject
+    LobbyService lobbyService;
+
     @OnClick(R.id.btn_submit)
     void onSubmitButtonClicked() {
-        RequestParams data = new RequestParams();
-        data.put("gameId", gameIdText.getText().toString());
-        data.put("name", nameText.getText().toString());
-        data.put("playStyle", PlayStyle.valueOf((String) playStyleSpinner.getSelectedItem()).getValue());
-        data.put("skillLevel", SkillLevel.valueOf((String) skillLevelSpinner.getSelectedItem()).getValue());
-        data.put("platform", GamePlatform.valueOf((String) platformSpinner.getSelectedItem()).getValue());
-        data.put("startTimeUtc", "2015-03-22T16:45:39.169Z");
+        Lobby lobby = new Lobby();
+        lobby.setGameId(gameIdText.getText().toString());
+        lobby.setName(nameText.getText().toString());
+        lobby.setPlayStyle(PlayStyle.valueOf((String) playStyleSpinner.getSelectedItem()));
+        lobby.setSkillLevel(SkillLevel.valueOf((String) skillLevelSpinner.getSelectedItem()));
+        lobby.setPlatform(GamePlatform.valueOf((String) skillLevelSpinner.getSelectedItem()));
+        lobby.setStartTimeUtc(new Date());
 
-        PuPRestClient.post("Lobby", data, new AsyncHttpResponseHandler() {
+        lobbyService.create(lobby, new PuPCallback<CreateLobbyResult>() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            public void success(CreateLobbyResult createLobbyResult, Response response) {
                 CreateLobbyActivity.this.setResult(Activity.RESULT_OK);
                 CreateLobbyActivity.this.finish();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.e("Rest", "Create Lobby failed", error);
             }
         });
     }
@@ -83,7 +83,7 @@ public class CreateLobbyActivity extends ActionBarActivity {
         // GamePlatform
         List<String> gpList = new ArrayList<>();
         for (GamePlatform gp : GamePlatform.values()) {
-            if(gp!= GamePlatform.Unknown){
+            if (gp != GamePlatform.Unknown) {
                 gpList.add(gp.toString());
             }
         }

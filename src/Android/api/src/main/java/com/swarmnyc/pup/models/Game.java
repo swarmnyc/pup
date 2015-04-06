@@ -1,11 +1,5 @@
 package com.swarmnyc.pup.models;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 public class Game extends Taggable {
@@ -17,14 +11,14 @@ public class Game extends Taggable {
     public Game() {
     }
 
-    public Game(JSONObject json) throws JSONException {
+    /*public Game(JSONObject json) throws JSONException {
         super(json);
         id = json.getString("id");
         name = json.getString("name");
         pictureUrl = json.optString("pictureUrl");
         platforms = GamePlatform.FromJsonArray(json.getJSONArray("platforms"));
     }
-
+*/
     public String getId() {
         return id;
     }

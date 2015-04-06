@@ -1,10 +1,5 @@
 package com.swarmnyc.pup.models;
 
-import com.swarmnyc.pup.components.Utility;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
@@ -27,22 +22,22 @@ public class Lobby extends Taggable {
 
     }
 
-    public Lobby(JSONObject json) throws Exception {
-        super(json);
-        id = json.getString("id");
-        name = json.getString("name");
-        pictureUrl = json.optString("pictureUrl");
-
-        gameId = json.getString("gameId");
-        description = json.optString("description");
-
-        playStyle = PlayStyle.get(json.getInt("playStyle"));
-        skillLevel = SkillLevel.get(json.getInt("skillLevel"));
-        startTimeUtc = Utility.getDateFromJsonString(json.getString("startTimeUtc"));
-        platform = GamePlatform.get(json.getInt("platform"));
-
-        users = LobbyUserInfo.FromJsonArray(json.optJSONArray("users"));
-    }
+//    public Lobby(JSONObject json) throws Exception {
+//        super(json);
+//        id = json.getString("id");
+//        name = json.getString("name");
+//        pictureUrl = json.optString("pictureUrl");
+//
+//        gameId = json.getString("gameId");
+//        description = json.optString("description");
+//
+//        playStyle = PlayStyle.get(json.getInt("playStyle"));
+//        skillLevel = SkillLevel.get(json.getInt("skillLevel"));
+//        startTimeUtc = Utility.getDateFromJsonString(json.getString("startTimeUtc"));
+//        platform = GamePlatform.get(json.getInt("platform"));
+//
+//        users = LobbyUserInfo.FromJsonArray(json.optJSONArray("users"));
+//    }
 
     public String getId() {
         return id;
@@ -50,6 +45,10 @@ public class Lobby extends Taggable {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getGameId() {
@@ -92,11 +91,19 @@ public class Lobby extends Taggable {
         this.skillLevel = skillLevel;
     }
 
+    public GamePlatform getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(GamePlatform platform) {
+        this.platform = platform;
+    }
+
     public Hashtable<String, LobbyUserInfo> getUsers() {
         return users;
     }
 
-    public static List<Lobby> FromJsonArray(JSONArray json) throws Exception {
+    /*public static List<Lobby> FromJsonArray(JSONArray json) throws Exception {
         List<Lobby> list = new ArrayList<>();
 
         for (int i = 0; i < json.length(); i++) {
@@ -105,6 +112,7 @@ public class Lobby extends Taggable {
         }
 
         return list;
-    }
+    }*/
+
 
 }

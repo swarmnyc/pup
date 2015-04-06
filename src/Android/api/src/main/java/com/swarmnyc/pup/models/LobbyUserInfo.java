@@ -1,9 +1,5 @@
 package com.swarmnyc.pup.models;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Hashtable;
 
 public class LobbyUserInfo {
@@ -33,15 +29,15 @@ public class LobbyUserInfo {
         return isLeave;
     }
 
-    public LobbyUserInfo(JSONObject json) throws JSONException {
+    /*public LobbyUserInfo(JSONObject json) throws JSONException {
         id = json.getString("id");
         name = json.getString("name");
         pictureUrl = json.optString("pictureUrl");
         isOwner = json.getBoolean("isOwner");
         isLeave = json.getBoolean("isLeave");
-    }
+    }*/
 
-    public static Hashtable<String, LobbyUserInfo> FromJsonArray(JSONArray jsonArray) throws JSONException {
+    /*public static Hashtable<String, LobbyUserInfo> FromJsonArray(JSONArray jsonArray) throws JSONException {
         Hashtable<String, LobbyUserInfo> list = new Hashtable<>();
 
         if (jsonArray != null) {
@@ -52,5 +48,5 @@ public class LobbyUserInfo {
         }
 
         return list;
-    }
+    }*/
 }

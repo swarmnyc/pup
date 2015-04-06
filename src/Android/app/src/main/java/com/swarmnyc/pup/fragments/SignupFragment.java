@@ -10,20 +10,28 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.swarmnyc.pup.PuPCallback;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.UserService;
 import com.swarmnyc.pup.activities.AuthActivity;
 import com.swarmnyc.pup.components.GoogleOAuth;
-import com.swarmnyc.pup.components.PuPAuth;
+import com.swarmnyc.pup.viewmodels.UserRegisterResult;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import retrofit.client.Response;
 
 public class SignupFragment extends Fragment {
     private AuthActivity activity;
 
     public SignupFragment() {
     }
+
+    @Inject
+    UserService userService;
 
     @InjectView(R.id.text_email)
     EditText emailText;
@@ -38,20 +46,12 @@ public class SignupFragment extends Fragment {
 
     @OnClick(R.id.btn_submit)
     public void userRegister() {
-        try {
-            PuPAuth.register(emailText.getText().toString(), passwordText.getText().toString(), new PuPAuth.AuthCallback() {
-                @Override
-                public void onFinished(boolean result) {
-                    if (result) {
-                        activity.finishAuth();
-                    } else {
-                        Toast.makeText(activity, "Login Failed", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        userService.register(emailText.getText().toString(), passwordText.getText().toString(),new PuPCallback<UserRegisterResult>() {
+            @Override
+            public void success(UserRegisterResult userRegisterResult, Response response) {
+                activity.finishAuth();
+            }
+        });
     }
 
     @OnClick(R.id.btn_google_oauth)

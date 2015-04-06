@@ -12,27 +12,25 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 import com.swarmnyc.pup.Config;
+import com.swarmnyc.pup.LobbyService;
+import com.swarmnyc.pup.PuPCallback;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatMessageListener;
 import com.swarmnyc.pup.chat.ChatRoomService;
 import com.swarmnyc.pup.chat.ChatService;
-import com.swarmnyc.pup.components.PuPRestClient;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 
-import org.apache.http.Header;
-import org.json.JSONObject;
-
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import retrofit.client.Response;
 
 public class LobbyActivity extends ActionBarActivity {
     private ArrayAdapter<String> messageAdapter;
@@ -54,6 +52,9 @@ public class LobbyActivity extends ActionBarActivity {
     @InjectView(R.id.btn_join)
     Button joinButton;
 
+    @Inject
+    LobbyService lobbyService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,21 +74,12 @@ public class LobbyActivity extends ActionBarActivity {
         * If user doesn't join the lobby, show join button
         * Else show message kit.
         * */
-        RequestParams params = new RequestParams();
-        PuPRestClient.get("Lobby/" + lobbyId, null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    lobby = new Lobby(response);
-                    initializeLobby();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
 
+        lobbyService.get(lobbyId, new PuPCallback<Lobby>() {
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Toast.makeText(LobbyActivity.this, "Load Lobby Data Failed", Toast.LENGTH_LONG).show();
+            public void success(Lobby lobby, Response response) {
+                lobby = lobby;
+                initializeLobby();
             }
         });
     }
@@ -122,17 +114,11 @@ public class LobbyActivity extends ActionBarActivity {
 
     @OnClick(R.id.btn_join)
     void joinRoom() {
-        PuPRestClient.post("Lobby/Join/" + lobby.getId(), null, new AsyncHttpResponseHandler() {
+        lobbyService.leave(lobby.getId(), new PuPCallback() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            public void success(Object o, Response response) {
                 Toast.makeText(LobbyActivity.this, "Join Succeeded", Toast.LENGTH_LONG).show();
                 initializeLobby();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(LobbyActivity.this, "Join Failed", Toast.LENGTH_LONG).show();
-                error.printStackTrace();
             }
         });
     }
@@ -153,17 +139,11 @@ public class LobbyActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.menu_leave) {
-            PuPRestClient.post("Lobby/Leave/" + lobby.getId(), null, new AsyncHttpResponseHandler() {
+            lobbyService.leave(lobby.getId(), new PuPCallback() {
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                public void success(Object o, Response response) {
                     Toast.makeText(LobbyActivity.this, "Leave Succeeded", Toast.LENGTH_LONG).show();
                     LobbyActivity.this.finish();
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                    Toast.makeText(LobbyActivity.this, "Leave Failed", Toast.LENGTH_LONG).show();
-                    error.printStackTrace();
                 }
             });
             return true;

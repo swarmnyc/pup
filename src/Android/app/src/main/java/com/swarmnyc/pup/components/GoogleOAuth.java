@@ -67,16 +67,16 @@ public final class GoogleOAuth {
                 Toast.makeText(result.activity, "Login failed", Toast.LENGTH_SHORT).show();
             }else{
                 try {
-                    PuPAuth.externalLogin("Google", result.email, result.token, new PuPAuth.AuthCallback() {
-                        @Override
-                        public void onFinished(boolean authResult) {
-                            if (authResult){
-                                result.activity.finishAuth();
-                            } else {
-                                Toast.makeText(result.activity, "Login failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+//                    PuPAuth.externalLogin("Google", result.email, result.token, new PuPAuth.AuthCallback() {
+//                        @Override
+//                        public void onFinished(boolean authResult) {
+//                            if (authResult){
+//                                result.activity.finishAuth();
+//                            } else {
+//                                Toast.makeText(result.activity, "Login failed", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
                 } catch (Exception e) {
                     Toast.makeText(result.activity, "Login failed", Toast.LENGTH_SHORT).show();
                 }

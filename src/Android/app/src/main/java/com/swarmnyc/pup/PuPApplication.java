@@ -5,11 +5,15 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 public class PuPApplication extends Application {
-
     private static PuPApplication instance;
+    private PuPComponent component;
 
     public static PuPApplication getInstance() {
         return instance;
+    }
+
+    public PuPComponent getComponent() {
+        return component;
     }
 
     @Override
@@ -17,6 +21,8 @@ public class PuPApplication extends Application {
         super.onCreate();
         instance = this;
         Config.init(this);
+
+        this.component = Dagger_PuPComponent.builder().build();
     }
 
     public int getAppVersion() {

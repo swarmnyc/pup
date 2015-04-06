@@ -16,14 +16,16 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.swarmnyc.pup.Config;
+import com.swarmnyc.pup.LobbyService;
+import com.swarmnyc.pup.PuPApplication;
+import com.swarmnyc.pup.PuPCallback;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.activities.CreateLobbyActivity;
 import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
-import com.swarmnyc.pup.components.PuPRestClient;
 import com.swarmnyc.pup.models.Lobby;
+import com.swarmnyc.pup.viewmodels.LobbyFilter;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -31,9 +33,12 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import retrofit.client.Response;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -55,11 +60,17 @@ public class LobbyListFragment extends Fragment {
         this.startActivityForResult(new Intent(this.activity, CreateLobbyActivity.class), CreateLobbyActivity.REQUEST_CODE_CREATE_LOBBY);
     }
 
+    @Inject
+    LobbyService lobbyService;
+
     LayoutInflater inflater;
+
+    LobbyFilter filter = new LobbyFilter();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        PuPApplication.getInstance().getComponent().inject(this);
         View view = inflater.inflate(R.layout.fragment_lobby_list, container, false);
         ButterKnife.inject(this, view);
         setHasOptionsMenu(true);
@@ -82,36 +93,24 @@ public class LobbyListFragment extends Fragment {
     }
 
     private void reloadData() {
-        //TODO： Change to better code
-        PuPRestClient.get("Lobby", null, new JsonHttpResponseHandler() {
+        lobbyService.getList(filter, new PuPCallback<List<Lobby>>() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                try {
-                    List<Lobby> lobbies = Lobby.FromJsonArray(response);
-                    ArrayAdapter<Lobby> adapter = new ArrayAdapter<Lobby>(activity, android.R.layout.simple_list_item_1, lobbies) {
-                        @Override
-                        public View getView(int position, View convertView, ViewGroup parent) {
-                            if (convertView == null) {
-                                convertView = inflater.inflate(R.layout.item_lobby, null);
+            public void success(List<Lobby> lobbies, Response response) {
+                ArrayAdapter<Lobby> adapter = new ArrayAdapter<Lobby>(activity, android.R.layout.simple_list_item_1, lobbies) {
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        if (convertView == null) {
+                            convertView = inflater.inflate(R.layout.item_lobby, null);
 
-                                ((TextView) convertView.findViewById(R.id.text_name)).setText(this.getItem(position).getName());
-                                //((TextView) convertView.findViewById(R.id.text_start_time)).setText(this.getItem(position).getStartTime().toString());
-                            }
-
-                            return convertView;
+                            ((TextView) convertView.findViewById(R.id.text_name)).setText(this.getItem(position).getName());
+                            //((TextView) convertView.findViewById(R.id.text_start_time)).setText(this.getItem(position).getStartTime().toString());
                         }
-                    };
 
-                    lobbyListView.setAdapter(adapter);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+                        return convertView;
+                    }
+                };
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                Log.e("Rest", "Get Robby Faild", throwable);
+                lobbyListView.setAdapter(adapter);
             }
         });
     }

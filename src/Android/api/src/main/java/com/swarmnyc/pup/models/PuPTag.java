@@ -1,19 +1,13 @@
 package com.swarmnyc.pup.models;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Hashtable;
-
 public class PuPTag {
     String key;
     String value;
 
-    public PuPTag(JSONObject json) throws JSONException {
+    /*public PuPTag(JSONObject json) throws JSONException {
         key = json.getString("key");
         value = json.getString("value");
-    }
+    }*/
 
     public String getKey() {
         return key;
@@ -23,7 +17,7 @@ public class PuPTag {
         return value;
     }
 
-    public static Hashtable<String, PuPTag> FromJsonArray(JSONArray jsonArray) throws JSONException {
+    /*public static Hashtable<String, PuPTag> FromJsonArray(JSONArray jsonArray) throws JSONException {
         Hashtable<String, PuPTag> list = new Hashtable<>();
 
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -32,5 +26,5 @@ public class PuPTag {
         }
 
         return list;
-    }
+    }*/
 }
