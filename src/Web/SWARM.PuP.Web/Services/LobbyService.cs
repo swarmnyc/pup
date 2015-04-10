@@ -18,7 +18,7 @@ namespace SWARM.PuP.Web.Services
             _chatService = chatService;
         }
 
-        public Lobby Add(PuPUser owner, Lobby lobby)
+        public Lobby Add(Lobby lobby, PuPUser owner)
         {
             lobby.Users.Add(new LobbyUserInfo()
             {
@@ -83,6 +83,9 @@ namespace SWARM.PuP.Web.Services
             Lobby lobby = this.GetById(lobbyId);
             var lobbyUser = lobby.Users.First(x => x.Id == user.Id);
             lobbyUser.IsLeave = true;
+
+            //TODO: Change Ownership
+            lobbyUser.IsOwner = false;
 
             _chatService.LeaveRoom(lobby, new PuPUser[] { user });
             Update(lobby);

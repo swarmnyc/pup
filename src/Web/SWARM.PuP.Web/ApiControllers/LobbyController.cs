@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.ExceptionHandling;
+using System.Web.Http.Results;
 using Microsoft.AspNet.Identity;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
@@ -35,22 +37,24 @@ namespace SWARM.PuP.Web.ApiControllers
         [Authorize]
         public Lobby Post(Lobby lobby)
         {
-            return _lobbyService.Add(_userService.Get(User.Identity), lobby);
+            return _lobbyService.Add(lobby, _userService.Get(User.Identity));
         }
 
         [Authorize]
-        public void Put(Lobby lobby)
+        public IHttpActionResult Put(Lobby lobby)
         {
             var origin = _lobbyService.GetById(lobby.Id);
             origin.PlayStyle = lobby.PlayStyle;
             origin.SkillLevel = lobby.SkillLevel;
             origin.StartTimeUtc = lobby.StartTimeUtc;
-            origin.Tags = lobby.Tags;
+            //origin.Tags = lobby.Tags;
 
             _lobbyService.Update(lobby);
+
+            return Ok();
         }
 
-        [Authorize, Route("Join/{lobbyId}")]
+        [Authorize, Route("Join/{lobbyId}"), HttpPost]
         public IHttpActionResult Join(string lobbyId)
         {   
             _lobbyService.Join(lobbyId, _userService.Get(User.Identity));
@@ -58,7 +62,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        [Authorize, Route("Leave/{lobbyId}")]
+        [Authorize, Route("Leave/{lobbyId}"), HttpPost]
         public IHttpActionResult Leave(string lobbyId)
         {
             _lobbyService.Leave(lobbyId, _userService.Get(User.Identity));

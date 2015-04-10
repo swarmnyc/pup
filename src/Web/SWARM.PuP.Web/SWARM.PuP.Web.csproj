@@ -183,6 +183,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\ExceptionLoggerAttribute.cs" />
     <Compile Include="ViewModels\LobbyViewModel.cs" />
     <Compile Include="ApiControllers\UserController.cs" />
     <Compile Include="Models\PuPTaggable.cs" />
@@ -244,6 +245,7 @@
     <Compile Include="Services\Quickblox\QuickbloxApiTypes.cs" />
     <Compile Include="Services\Quickblox\SessionResult.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\OperationResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />

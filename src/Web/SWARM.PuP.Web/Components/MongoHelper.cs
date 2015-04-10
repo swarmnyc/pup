@@ -10,6 +10,9 @@ namespace MongoDB
     public interface IMongoModel
     {
         string Id { get; }
+
+        DateTime UpdatedAtUtc { get; set; }
+
     }
 
     /// <summary>
@@ -19,9 +22,9 @@ namespace MongoDB
     public abstract class MongoModel : IMongoModel
     {
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; protected set; }
+        public string Id { get; set; }
 
-        public BsonTimestamp Timestamp { get; set; }
+        public DateTime UpdatedAtUtc { get; set; }
     }
 
     /// <summary>

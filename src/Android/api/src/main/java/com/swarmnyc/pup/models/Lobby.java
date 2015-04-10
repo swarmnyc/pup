@@ -1,5 +1,7 @@
 package com.swarmnyc.pup.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 import java.util.List;
 
@@ -11,7 +13,9 @@ public class Lobby extends Taggable {
     private GamePlatform platform;
     private String gameId;
     private String description;
-    private Date startTimeUtc;
+
+    @SerializedName("startTimeUtc")
+    private Date startTime;
     private PlayStyle playStyle;
     private SkillLevel skillLevel;
     private List<LobbyUserInfo> users;
@@ -53,11 +57,11 @@ public class Lobby extends Taggable {
     }
 
     public Date getStartTime() {
-        return startTimeUtc;
+        return startTime;
     }
 
-    public void setStartTimeUtc(Date startTimeUtc) {
-        this.startTimeUtc = startTimeUtc;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
     public PlayStyle getPlayStyle() {

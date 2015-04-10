@@ -1,9 +1,7 @@
 package com.swarmnyc.pup;
 
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.internal.bind.DateTypeAdapter;
 
 import java.util.Date;
 
@@ -12,14 +10,14 @@ import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 
 public class TestHelper {
-    public static final String UserToken = "owaUfV1P1cRbuRhX9gb8YZ_P8Y_FK0TnK1ph1WagU0oYW7Pe_d3lRFukt6iGi5rrJj0H_ayN30qp_qNpzhQIKGel6Z0BT-j930NsTnP8pOoynI4Na4MBsw_i9sCmFqZ_VkEt_kRqBMCFsCrfAPYXnutZz6TSdVCP25wf_luLTH4ExTPsyl7wLDIWbxgKZ6-NuZGr3x0DMoK-lrrarXZPFFFZVGW_3CbMp_hDcXnoFVHCkasgPxO5SKBriE3IWi88JCV7DetoXxkTFDc-T_j_6iKRSfb1M6L194iChoMWGiVsbdvz56JvKo8ftlDz08GklkfuFKndAfmKYpMcdZIR015e9vhGfx7xPs7PIDPAX5UXJxNJNHWxg18kwqxAkR2sBO62sNeCittIoTEJ0iULm2Q1tDUdHqJZMK65ytqqGhsr0H84-X7UWjIaCilD4UKgH6MFcRFeyRwRUe_JE5A9e5YVu62PiijY2Hb0hRv34ps";
+    public static final String UserToken = "XW7yOdXrkYRCYj5CWWouYJX7uBGRXTFjmc5jJ3w9Zc96VOp6P2Qa8m8zky_aEjadWmkoH3NWMSb1AO3CFCdyKSU_zcXn6DJrBOSCFkbBGiE6brPmJQlZX_e7FFk80hwYWVfKGf-9tufxuPbJfVgIvpeRo-Sv5g_Xzl_cS-J66ueqX7noaeXA8meb1XeuJEZStkTe_bgC9pasWpp61WM0JGc1FnLrB9YeY0V_i3ur1gNnBk30ea_LJ9_mck1ZDzc-3SI3YNndpsn98QixsbLwxmKkshdskrDe0SUEgAASnKooxsYl9VbubgYM7Q_1FAcLIcJh1JNAQcb3kxF8pMogG-Z_B46S_l0nv3Xf-At0UrZ4shXwejIUsC6agoX2_5K-UrINA1ECzV_3y-GCVtpkymCxV-rNNCLP9caMPbkb-JCtL57vtqtCevNRpyo2Q05rNu8QxREGN8Sa9-NrfDKzxw";
     public static final String PUP_API_URL = "http://pup.azurewebsites.net/api/";
     private static RestAdapter restAdapter;
 
-    public static <T> T getService(Class<T> cla){
-        if (restAdapter==null){
+    public static <T> T getService(Class<T> cla) {
+        if (restAdapter == null) {
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Date.class, new DateTypeAdapter())
+                    .registerTypeAdapter(Date.class, new IsoDateTypeAdapter())
                     .create();
 
 
@@ -29,11 +27,12 @@ public class TestHelper {
                         @Override
                         public void intercept(RequestFacade request) {
                             request.addHeader("Authorization", "Bearer " + UserToken);
-
                         }
                     })
                     .setConverter(new GsonConverter(gson))
                     .build();
+
+            restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
         }
 
         return restAdapter.create(cla);

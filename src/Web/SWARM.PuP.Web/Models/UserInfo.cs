@@ -12,7 +12,14 @@ namespace SWARM.PuP.Web.Models
 
         public override bool Equals(object obj)
         {
-            return this.Id.Equals(obj);
+            if (obj is UserInfo)
+            {
+                return this.Id.Equals(((UserInfo)obj).Id);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public override int GetHashCode()

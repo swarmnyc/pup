@@ -31,7 +31,7 @@ namespace SWARM.PuP.Web.Tests.Services
 
             var userService = new UserService();
             var service = new LobbyService(chatService.Object);
-            var lobby = service.Add(userService.Collection.FindOne(), new Lobby()
+            var lobby = service.Add(new Lobby()
             {
                 GameId = "test",
                 Name = "Test 2",
@@ -40,7 +40,7 @@ namespace SWARM.PuP.Web.Tests.Services
                 StartTimeUtc = DateTime.UtcNow.AddHours(1),
                 SkillLevel = SkillLevel.Pro,
                 Description = "Test"
-            });
+            }, userService.Collection.FindOne());
 
             Assert.IsNotNull(lobby);
             Assert.IsNotNull(lobby.GetTagValue(QuickbloxHttpHelper.Const_ChatRoomId));
@@ -74,6 +74,8 @@ namespace SWARM.PuP.Web.Tests.Services
             service.Join(lobbyId, userService.GetSingle(x => x.DisplayName == "test"));
             Assert.AreEqual(1, service.GetById(lobbyId).Users.Count);
 
+            service.Join(lobbyId, userService.GetSingle(x => x.DisplayName == "WadeHuang"));
+            service.Join(lobbyId, userService.GetSingle(x => x.DisplayName == "WadeHuang"));
             service.Join(lobbyId, userService.GetSingle(x => x.DisplayName == "WadeHuang"));
 
             Assert.AreEqual(2, service.GetById(lobbyId).Users.Count);

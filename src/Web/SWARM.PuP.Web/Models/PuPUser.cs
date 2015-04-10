@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using AspNet.Identity.MongoDB;
-using Microsoft.AspNet.Identity;
 using MongoDB;
 
 namespace SWARM.PuP.Web.Models
@@ -25,12 +21,14 @@ namespace SWARM.PuP.Web.Models
 
         public string GetUserName(GamePlatform platform)
         {
-            return this.GetTagValue("Name" + platform.ToString()) ?? "No Name";
+            return this.GetTagValue("Name" + platform) ?? "No Name";
         }
 
         public void SetUserName(GamePlatform platform, string name)
         {
-            this.UpdateTag("Name" + platform.ToString(), name);
+            this.UpdateTag("Name" + platform, name);
         }
+
+        public DateTime UpdatedAtUtc { get; set; }
     }
 }

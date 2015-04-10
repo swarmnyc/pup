@@ -52,26 +52,36 @@ namespace SWARM.PuP.Web.Services
 
         public virtual T Add(T entity)
         {
+            entity.UpdatedAtUtc = DateTime.UtcNow;
             Collection.Insert<T>(entity);
             return entity;
         }
 
-        public virtual IEnumerable<T> Add(IEnumerable<T> lobbies)
+        public virtual IEnumerable<T> Add(IEnumerable<T> entities)
         {
-            Collection.InsertBatch<T>(lobbies);
-            return lobbies;
+            foreach (T entity in entities)
+            {
+                entity.UpdatedAtUtc = DateTime.UtcNow;
+            }
+
+            Collection.InsertBatch<T>(entities);
+            return entities;
         }
 
         public virtual T Update(T entity)
         {
+            entity.UpdatedAtUtc = DateTime.UtcNow;
             Collection.Save<T>(entity);
             return entity;
         }
 
         public virtual IEnumerable<T> Update(IEnumerable<T> entities)
         {
-            foreach (var entity in entities)
+            foreach (var entity in entities) {
+                entity.UpdatedAtUtc = DateTime.UtcNow;
+
                 Collection.Save<T>(entity);
+            }
 
             return entities;
         }

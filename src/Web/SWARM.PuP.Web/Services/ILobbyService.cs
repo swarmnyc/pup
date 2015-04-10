@@ -12,6 +12,6 @@ namespace SWARM.PuP.Web.Services
 
         void Leave(string lobbyId, PuPUser user);
 
-        Lobby Add(PuPUser owner, Lobby lobby);
+        Lobby Add(Lobby lobby, PuPUser owner);
     }
 }
