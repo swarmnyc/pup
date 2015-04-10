@@ -34,8 +34,6 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.fragment_container, new LobbyListFragment())
                     .commit();
         }
-
-        ChatService.getInstance().login(this);
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.swarmnyc.pup.Config;
 import com.swarmnyc.pup.LobbyService;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.PuPCallback;
+import com.swarmnyc.pup.PuPEmptyCallback;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatMessageListener;
@@ -116,9 +117,9 @@ public class LobbyActivity extends ActionBarActivity {
 
     @OnClick(R.id.btn_join)
     void joinRoom() {
-        lobbyService.leave(lobby.getId(), new PuPCallback() {
+        lobbyService.join(lobby.getId(), new PuPEmptyCallback() {
             @Override
-            public void success(Object o, Response response) {
+            public void success(Response response) {
                 Toast.makeText(LobbyActivity.this, "Join Succeeded", Toast.LENGTH_LONG).show();
                 initializeLobby();
             }
@@ -141,9 +142,9 @@ public class LobbyActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.menu_leave) {
-            lobbyService.leave(lobby.getId(), new PuPCallback() {
+            lobbyService.leave(lobby.getId(), new PuPEmptyCallback() {
                 @Override
-                public void success(Object o, Response response) {
+                public void success(Response response) {
                     Toast.makeText(LobbyActivity.this, "Leave Succeeded", Toast.LENGTH_LONG).show();
                     LobbyActivity.this.finish();
                 }
@@ -172,7 +173,7 @@ public class LobbyActivity extends ActionBarActivity {
         }
 
         if (Config.isLoggedIn()) {
-            LobbyUserInfo user = lobby.getUsers().get(Config.getUserId());
+            LobbyUserInfo user = lobby.getUser(Config.getUserId());
             if (user == null || user.getIsLeave()) {
                 this.joinButton.setVisibility(View.VISIBLE);
             } else {

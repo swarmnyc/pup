@@ -22,7 +22,7 @@ public class PuPApplication extends Application {
         instance = this;
         Config.init(this);
 
-        this.component = Dagger_PuPComponent.builder().build();
+        this.component = DaggerPuPComponent.builder().build();
     }
 
     public int getAppVersion() {

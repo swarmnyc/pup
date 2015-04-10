@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,10 +25,6 @@ import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.viewmodels.LobbyFilter;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -93,7 +88,7 @@ public class LobbyListFragment extends Fragment {
     }
 
     private void reloadData() {
-        lobbyService.getList(filter, new PuPCallback<List<Lobby>>() {
+        lobbyService.getList(null, new PuPCallback<List<Lobby>>() {
             @Override
             public void success(List<Lobby> lobbies, Response response) {
                 ArrayAdapter<Lobby> adapter = new ArrayAdapter<Lobby>(activity, android.R.layout.simple_list_item_1, lobbies) {

@@ -13,7 +13,9 @@ import com.quickblox.core.QBSettings;
 import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.model.QBUser;
 import com.swarmnyc.pup.Config;
+import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.components.ChatServiceLoggedInEvent;
 import com.swarmnyc.pup.components.PlayServicesHelper;
 import com.swarmnyc.pup.models.Lobby;
 
@@ -107,6 +109,8 @@ public class QuickbloxChatService extends ChatService {
                                 }
                             }
                         });
+
+                        EventBus.getBus().post(new ChatServiceLoggedInEvent());
                     }
                 });
             }

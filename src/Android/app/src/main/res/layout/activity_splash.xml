@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.swarmnyc.pup.activities.SplashActivity">
+
+    <ImageView
+        android:id="@+id/pup_logo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/pup_logo"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="logo" />
+
+    <TextView
+        android:layout_below="@id/pup_logo"
+        android:layout_width="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Looking for group? So are we." />
+</RelativeLayout>

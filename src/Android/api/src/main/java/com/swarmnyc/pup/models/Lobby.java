@@ -103,4 +103,13 @@ public class Lobby extends Taggable {
     public void setUsers(List<LobbyUserInfo> users) {
         this.users = users;
     }
+
+    public LobbyUserInfo getUser(String userId) {
+        for (LobbyUserInfo user : users) {
+            if (user.id.equals(userId))
+                return user;
+        }
+
+        return null;
+    }
 }

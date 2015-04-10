@@ -17,7 +17,6 @@ import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.PlayStyle;
 import com.swarmnyc.pup.models.SkillLevel;
-import com.swarmnyc.pup.viewmodels.CreateLobbyResult;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,9 +61,9 @@ public class CreateLobbyActivity extends ActionBarActivity {
         lobby.setPlatform(GamePlatform.valueOf((String) skillLevelSpinner.getSelectedItem()));
         lobby.setStartTime(new Date());
 
-        lobbyService.create(lobby, new PuPCallback<CreateLobbyResult>() {
+        lobbyService.create(lobby, new PuPCallback<Lobby>() {
             @Override
-            public void success(CreateLobbyResult createLobbyResult, Response response) {
+            public void success(Lobby lobby, Response response) {
                 CreateLobbyActivity.this.setResult(Activity.RESULT_OK);
                 CreateLobbyActivity.this.finish();
             }
