@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.AspNet.Identity;
+using MongoDB;
 using MongoDB.Driver.Linq;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
@@ -59,6 +60,9 @@ namespace SWARM.PuP.Web.Services
                 query = query.Where(x => x.Platform.In(filter.Platforms));
             }
 
+            // TODO: filter disactived Lobby
+            query = query.Where(x => x.State == ModelState.Actived);
+
             query = DoOrderQuery(query, filter);
 
             return query;
@@ -84,14 +88,27 @@ namespace SWARM.PuP.Web.Services
             var lobbyUser = lobby.Users.First(x => x.Id == user.Id);
             lobbyUser.IsLeave = true;
 
-            //TODO: Change Ownership
+            if (lobbyUser.IsOwner)
+            {
+                // Change Ownership, choose the first one.
+                var newOwner = lobby.Users.FirstOrDefault(x => !x.IsLeave && !x.IsOwner);
+                if (newOwner == null)
+                {
+                    lobby.State = ModelState.Disactived;
+                }
+                else
+                {
+                    newOwner.IsOwner = true;
+                }
+            }
+
             lobbyUser.IsOwner = false;
 
             _chatService.LeaveRoom(lobby, new PuPUser[] { user });
             Update(lobby);
         }
 
-       
+
 
         protected override Expression<Func<Lobby, object>> GetOrderExpression(BaseFilter filter)
         {

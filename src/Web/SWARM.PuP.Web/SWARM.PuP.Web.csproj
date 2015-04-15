@@ -184,6 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\ExceptionLoggerAttribute.cs" />
+    <Compile Include="Components\ModelState.cs" />
     <Compile Include="ViewModels\LobbyViewModel.cs" />
     <Compile Include="ApiControllers\UserController.cs" />
     <Compile Include="Models\PuPTaggable.cs" />

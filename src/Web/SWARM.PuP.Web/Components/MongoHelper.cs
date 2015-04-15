@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Configuration;
+using System.Web.Http.ModelBinding;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
 namespace MongoDB
 {
-
     public interface IMongoModel
     {
         string Id { get; }
@@ -25,6 +25,8 @@ namespace MongoDB
         public string Id { get; set; }
 
         public DateTime UpdatedAtUtc { get; set; }
+
+        public ModelState State { get; set; }
     }
 
     /// <summary>

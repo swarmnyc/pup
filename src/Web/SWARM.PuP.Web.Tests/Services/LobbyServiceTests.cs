@@ -80,5 +80,29 @@ namespace SWARM.PuP.Web.Tests.Services
 
             Assert.AreEqual(2, service.GetById(lobbyId).Users.Count);
         }
+
+        [TestMethod()]
+        public void LobbyService_Leave_ChangeOwnShip_Test()
+        {
+            var chatService = new Mock<IChatService>();
+            var userService = new UserService();
+            var service = new LobbyService(chatService.Object);
+            var lobby = service.Add(new Lobby()
+            {
+                GameId = "test",
+                Name = "Test 2",
+                PlayStyle = PlayStyle.Serious,
+                Platform = GamePlatform.Xbox360,
+                StartTimeUtc = DateTime.UtcNow.AddHours(1),
+                SkillLevel = SkillLevel.Pro,
+                Description = "Test"
+            }, userService.GetSingle(x => x.DisplayName == "test"));
+
+            service.Join(lobby.Id, userService.GetSingle(x => x.DisplayName == "WadeHuang"));
+
+            service.Leave(lobby.Id, userService.GetSingle(x => x.DisplayName == "test"));
+
+            Assert.AreEqual(userService.GetSingle(x => x.DisplayName == "WadeHuang").Id, service.GetById(lobby.Id).Users.First(x => x.IsOwner).Id);
+        }
     }
 }
