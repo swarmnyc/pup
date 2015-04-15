@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\GameControllerTests.cs" />
+    <Compile Include="ApiControllers\UserControllerTests.cs" />
     <Compile Include="ApiControllers\LobbyControllerTests.cs" />
     <Compile Include="Services\GameServiceTests.cs" />
     <Compile Include="Services\LobbyServiceTests.cs" />

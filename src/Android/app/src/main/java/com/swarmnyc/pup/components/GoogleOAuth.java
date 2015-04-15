@@ -11,6 +11,8 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.swarmnyc.pup.activities.AuthActivity;
 
+import org.apache.http.protocol.RequestUserAgent;
+
 public final class GoogleOAuth {
     private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
     public static final int REQUEST_CODE_GOOGLE_AUTH = 42884;
@@ -19,6 +21,7 @@ public final class GoogleOAuth {
 
     }
 
+
     public static void startGetAccount(Activity activity){
         Intent intent = AccountPicker.newChooseAccountIntent(null, null,
                 new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, false, null, null, null, null);
@@ -26,7 +29,7 @@ public final class GoogleOAuth {
         activity.startActivityForResult(intent, REQUEST_CODE_GOOGLE_AUTH);
     }
 
-    public static void handleResult(Activity activity, int resultCode, Intent data) {
+    public static void handleResult(AuthActivity activity, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
            String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
            AuthTask task = new AuthTask();
@@ -63,24 +66,7 @@ public final class GoogleOAuth {
 
         @Override
         protected void onPostExecute(final GoogleAuthTaskResult result) {
-            if (TextUtils.isEmpty(result.email)){
-                Toast.makeText(result.activity, "Login failed", Toast.LENGTH_SHORT).show();
-            }else{
-                try {
-//                    PuPAuth.externalLogin("Google", result.email, result.token, new PuPAuth.AuthCallback() {
-//                        @Override
-//                        public void onFinished(boolean authResult) {
-//                            if (authResult){
-//                                result.activity.finishAuth();
-//                            } else {
-//                                Toast.makeText(result.activity, "Login failed", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-                } catch (Exception e) {
-                    Toast.makeText(result.activity, "Login failed", Toast.LENGTH_SHORT).show();
-                }
-            }
+            result.activity.externalLogin("Google", result.email, result.token);
         }
     }
 }

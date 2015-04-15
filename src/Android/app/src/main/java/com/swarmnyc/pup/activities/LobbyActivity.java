@@ -18,6 +18,7 @@ import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.PuPCallback;
 import com.swarmnyc.pup.PuPEmptyCallback;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatMessageListener;
 import com.swarmnyc.pup.chat.ChatRoomService;
@@ -172,8 +173,8 @@ public class LobbyActivity extends ActionBarActivity {
             chatRoom.loadChatHistory();
         }
 
-        if (Config.isLoggedIn()) {
-            LobbyUserInfo user = lobby.getUser(Config.getUserId());
+        if (User.isLoggedIn()) {
+            LobbyUserInfo user = lobby.getUser(User.current.getId());
             if (user == null || user.getIsLeave()) {
                 this.joinButton.setVisibility(View.VISIBLE);
             } else {

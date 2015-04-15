@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net.Http;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json;
@@ -22,6 +23,9 @@ namespace SWARM.PuP.Web
                 new CamelCasePropertyNamesContractResolver();
             config.Formatters.JsonFormatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             config.Formatters.JsonFormatter.SerializerSettings.DateFormatString = "yyyy-MM-ddTHH:mm:ssZ";
+
+            JsonContent.Settings = config.Formatters.JsonFormatter.SerializerSettings;
+
             // Web API routes
             config.MapHttpAttributeRoutes();
 

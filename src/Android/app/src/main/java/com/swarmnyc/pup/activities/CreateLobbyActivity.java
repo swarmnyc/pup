@@ -58,7 +58,7 @@ public class CreateLobbyActivity extends ActionBarActivity {
         lobby.setName(nameText.getText().toString());
         lobby.setPlayStyle(PlayStyle.valueOf((String) playStyleSpinner.getSelectedItem()));
         lobby.setSkillLevel(SkillLevel.valueOf((String) skillLevelSpinner.getSelectedItem()));
-        lobby.setPlatform(GamePlatform.valueOf((String) skillLevelSpinner.getSelectedItem()));
+        lobby.setPlatform(GamePlatform.valueOf((String) platformSpinner.getSelectedItem()));
         lobby.setStartTime(new Date());
 
         lobbyService.create(lobby, new PuPCallback<Lobby>() {

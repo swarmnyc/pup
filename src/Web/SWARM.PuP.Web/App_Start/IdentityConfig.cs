@@ -97,6 +97,7 @@ namespace SWARM.PuP.Web
 
         public async override Task<IdentityResult> CreateAsync(PuPUser user)
         {
+            user.UpdatedAtUtc = DateTime.UtcNow;
             var result = await base.CreateAsync(user);
             if (result.Succeeded)
             {

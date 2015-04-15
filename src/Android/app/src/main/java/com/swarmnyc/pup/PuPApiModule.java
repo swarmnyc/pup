@@ -27,8 +27,8 @@ public class PuPApiModule {
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade request) {
-                        if (Config.isLoggedIn()) {
-                            request.addHeader("Authorization", "Bearer " + Config.getUserToken());
+                        if (User.isLoggedIn()) {
+                            request.addHeader("Authorization", "Bearer " + User.current.getAccessToken());
                         }
                     }
                 })

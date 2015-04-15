@@ -39,7 +39,7 @@ public class SplashActivity extends Activity {
             int size = (int) (this.getWindow().getDecorView().getMeasuredWidth() * 0.7);
             logoImage.getLayoutParams().width = size;
             logoImage.getLayoutParams().height = size;
-            ((RelativeLayout.LayoutParams) logoImage.getLayoutParams()).setMargins(0, (int) (this.getWindow().getDecorView().getMeasuredHeight() * 0.1), 0, 0);
+            ((RelativeLayout.LayoutParams) logoImage.getLayoutParams()).setMargins(0, (int) (size * 0.1), 0, 0);
 
             ChatService.getInstance().login(this);
         }

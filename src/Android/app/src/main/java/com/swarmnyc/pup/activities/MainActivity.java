@@ -7,8 +7,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.swarmnyc.pup.Config;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
 
@@ -39,7 +39,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if (Config.isLoggedIn()) {
+        if (User.isLoggedIn()) {
             getMenuInflater().inflate(R.menu.menu_main_user, menu);
         } else {
             getMenuInflater().inflate(R.menu.menu_main_guest, menu);
@@ -52,7 +52,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_logoff:
-                Config.removeUser();
+                User.Logout();
                 reload();
                 return true;
             case R.id.menu_login:

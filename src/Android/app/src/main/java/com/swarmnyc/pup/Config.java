@@ -4,61 +4,44 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.swarmnyc.pup.models.LoggedInUser;
+
 import java.util.Hashtable;
 
 public class Config {
     private static SharedPreferences data;
     private static Context context;
     private static Hashtable<Object, Object> resources;
-    private static boolean isLoggedin;
-    private static String userEmail;
 
     public static void init(Context context) {
         Config.context = context;
         Config.data = context.getSharedPreferences("Config", Context.MODE_MULTI_PROCESS);
         Config.resources = new Hashtable<>();
-
-        isLoggedin = !TextUtils.isEmpty(getUserToken());
     }
 
-    public static boolean isLoggedIn() {
-        return isLoggedin;
+    public static String getString(String key) {
+        return data.getString(key, null);
     }
 
-    public static String getUserToken() {
-        long timeSpan = data.getLong("access_token_expires_in", 0) - System.currentTimeMillis();
-        if (timeSpan > 0) {
-            return data.getString("access_token", null);
-        } else {
-            return null;
-        }
+    public static Long getLong(String key) {
+        return data.getLong(key, 0);
     }
 
-    public static void setUser(String userId, String token, long expireIn) {
+    public static void setString(String key, String value) {
         SharedPreferences.Editor editor = data.edit();
-
-        isLoggedin = true;
-        editor.putString("user_id", userId);
-        //editor.putString("user_chatId", charId);
-        //editor.putString("user_email", email);
-        editor.putString("access_token", token);
-        editor.putLong("access_token_expires_in", System.currentTimeMillis() + expireIn);
-
+        editor.putString(key, value);
         editor.apply();
     }
 
-
-    public static void removeUser() {
+    public static void setLong(String key, long value) {
         SharedPreferences.Editor editor = data.edit();
+        editor.putLong(key, value);
+        editor.apply();
+    }
 
-        isLoggedin = false;
-
-        editor.remove("user_id");
-        //editor.remove("user_email");
-        //editor.remove("user_chatId");
-        editor.remove("access_token_expires_in");
-        editor.remove("access_token");
-
+    public static void remove(String key) {
+        SharedPreferences.Editor editor = data.edit();
+        editor.remove(key);
         editor.apply();
     }
 
@@ -75,12 +58,4 @@ public class Config {
 
         return getConfigString(id);
     }
-
-    public static String getUserId() {
-        return data.getString("user_id", null);
-    }
-
-//    public static String getUserEmail() {
-//        return data.getString("user_email", null);
-//    }
 }

@@ -212,4 +212,18 @@ namespace SWARM.PuP.Web.ViewModels
         public string Provider { get; set; }
         public string Email { get; set; }
     }
+
+    public class UserLoggedInViewModel : UserInfoViewModel
+    {
+        public UserLoggedInViewModel(PuPUser user) : base(user)
+        {
+
+        }
+
+        public string AccessToken { get; set; }
+
+        public string TokenType { get; set; }
+
+        public long ExpiresIn { get; set; }
+    }
 }

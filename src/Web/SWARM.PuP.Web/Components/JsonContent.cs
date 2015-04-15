@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Newtonsoft.Json;
 
 namespace System.Net.Http
@@ -9,6 +10,7 @@ namespace System.Net.Http
     public class JsonContent : HttpContent
     {
         private readonly object _value;
+        public static JsonSerializerSettings Settings { get; set; }
 
         public JsonContent(object value)
         {
@@ -21,7 +23,7 @@ namespace System.Net.Http
         {
             using (var writer = new StreamWriter(stream))
             {
-                return writer.WriteAsync(JsonConvert.SerializeObject(_value));
+                return writer.WriteAsync(JsonConvert.SerializeObject(_value, Settings));
             }
         }
 

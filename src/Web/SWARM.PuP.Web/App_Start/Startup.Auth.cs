@@ -51,10 +51,10 @@ namespace SWARM.PuP.Web
             PublicClientId = "PuP";
             OAuthOptions = new OAuthAuthorizationServerOptions
             {
-                TokenEndpointPath = new PathString("/api/Login"),
+                //TokenEndpointPath = new PathString("/api/Login"),
                 Provider = new PuPOAuthProvider(PublicClientId),
                 //AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(30),
+                AccessTokenExpireTimeSpan = TimeSpan.FromDays(365),
                 AllowInsecureHttp = true
             };
 

@@ -15,6 +15,7 @@ import com.quickblox.users.model.QBUser;
 import com.swarmnyc.pup.Config;
 import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.components.ChatServiceLoggedInEvent;
 import com.swarmnyc.pup.components.PlayServicesHelper;
 import com.swarmnyc.pup.models.Lobby;
@@ -51,8 +52,8 @@ public class QuickbloxChatService extends ChatService {
         qbChatService = QBChatService.getInstance();
 
         final QBUser user = new QBUser();
-        if (Config.isLoggedIn()) {
-            user.setLogin(Config.getUserId());
+        if (User.isLoggedIn()) {
+            user.setLogin(User.current.getId());
             user.setPassword(Config.getConfigString(R.string.QB_APP_PW));
         } else {
             user.setLogin(Config.getConfigString(R.string.QB_APP_DEFAULT_USER));

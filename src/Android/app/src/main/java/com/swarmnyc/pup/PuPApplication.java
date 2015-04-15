@@ -21,6 +21,7 @@ public class PuPApplication extends Application {
         super.onCreate();
         instance = this;
         Config.init(this);
+        User.init();
 
         this.component = DaggerPuPComponent.builder().build();
     }

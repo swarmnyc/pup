@@ -13,6 +13,7 @@ import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.core.request.QBRequestGetBuilder;
 import com.swarmnyc.pup.Config;
+import com.swarmnyc.pup.User;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -37,7 +38,7 @@ public class QuickbloxChatRoomService extends ChatRoomService {
         try {
             QBChatMessage chatMessage = new QBChatMessage();
             chatMessage.setBody(message);
-            chatMessage.setProperty("userId", Config.getUserId());
+            chatMessage.setProperty("userId", User.current.getId());
             chatMessage.setDateSent(new Date().getTime() / 1000);
             chatMessage.setSaveToHistory(true);
             chat.sendMessage(chatMessage);

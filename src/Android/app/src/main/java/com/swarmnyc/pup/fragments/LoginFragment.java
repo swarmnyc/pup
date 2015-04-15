@@ -1,26 +1,31 @@
 package com.swarmnyc.pup.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
+
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.swarmnyc.pup.BuildConfig;
+import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.PuPCallback;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.UserService;
 import com.swarmnyc.pup.activities.AuthActivity;
 import com.swarmnyc.pup.components.GoogleOAuth;
-import com.swarmnyc.pup.viewmodels.UserLoginResult;
+import com.swarmnyc.pup.models.LoggedInUser;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class LoginFragment extends Fragment {
@@ -50,17 +55,19 @@ public class LoginFragment extends Fragment {
 
     @OnClick(R.id.btn_submit)
     public void onSubmitBtnClicked() {
-        userService.login(emailText.getText().toString(), passwordText.getText().toString(), new PuPCallback<UserLoginResult>() {
+        userService.login(emailText.getText().toString(), passwordText.getText().toString(), new PuPCallback<LoggedInUser>() {
             @Override
-            public void success(UserLoginResult userLoginResult, Response response) {
+            public void success(LoggedInUser user, Response response) {
+                User.login(user);
                 activity.finishAuth();
             }
-        });
-    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                Toast.makeText(LoginFragment.this.activity, "Login Failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -69,10 +76,11 @@ public class LoginFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.inject(this, view);
+        PuPApplication.getInstance().getComponent().inject(this);
 
         if (BuildConfig.DEBUG) {
-            emailText.setText("test@swarmnyc.com");
-            passwordText.setText("123456");
+            emailText.setText("hello@swarmnyc.com");
+            passwordText.setText("Abc1234");
         }
 
         return view;

@@ -20,6 +20,7 @@ import com.swarmnyc.pup.LobbyService;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.PuPCallback;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.activities.CreateLobbyActivity;
 import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
@@ -35,9 +36,6 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.client.Response;
 
-/**
- * A simple {@link android.support.v4.app.Fragment} subclass.
- */
 public class LobbyListFragment extends Fragment {
     private MainActivity activity;
 
@@ -80,7 +78,7 @@ public class LobbyListFragment extends Fragment {
             }
         });
 
-        createLobbyButton.setVisibility(Config.isLoggedIn() ? View.VISIBLE : View.GONE);
+        createLobbyButton.setVisibility(User.isLoggedIn() ? View.VISIBLE : View.GONE);
 
         reloadData();
 
