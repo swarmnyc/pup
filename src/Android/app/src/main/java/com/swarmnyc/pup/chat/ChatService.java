@@ -17,14 +17,8 @@ import org.jivesoftware.smack.SmackException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ChatService {
-    private static ChatService instance = new QuickbloxChatService();
+public interface ChatService {
+    public void login(Activity activity);
 
-    public static ChatService getInstance() {
-        return instance;
-    }
-
-    public abstract void login(Activity activity);
-
-    public abstract ChatRoomService getChatRoom(Activity activity, Lobby lobby);
+    public ChatRoomService getChatRoom(Activity activity, Lobby lobby);
 }

@@ -58,6 +58,9 @@ public class LobbyActivity extends ActionBarActivity {
     @Inject
     LobbyService lobbyService;
 
+    @Inject
+    ChatService chatService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,7 +161,7 @@ public class LobbyActivity extends ActionBarActivity {
 
     private void initializeLobby() {
         if (chatRoom == null) {
-            chatRoom = ChatService.getInstance().getChatRoom(this, lobby);
+            chatRoom = chatService.getChatRoom(this, lobby);
             chatRoom.setMessageListener(new ChatMessageListener() {
                 @Override
                 public void receive(List<ChatMessage> messages) {

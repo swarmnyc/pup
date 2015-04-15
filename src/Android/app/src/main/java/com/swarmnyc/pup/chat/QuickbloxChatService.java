@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-public class QuickbloxChatService extends ChatService {
+public class QuickbloxChatService implements ChatService {
     private Hashtable<String, QBDialog> dialogs = new Hashtable<>();
 
     private QBChatService qbChatService;

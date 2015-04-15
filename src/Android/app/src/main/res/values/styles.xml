@@ -8,4 +8,10 @@
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="MainTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="windowActionModeOverlay">true</item>
+    </style>
 </resources>

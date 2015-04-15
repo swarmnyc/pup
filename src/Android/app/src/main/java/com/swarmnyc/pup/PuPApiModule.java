@@ -2,6 +2,9 @@ package com.swarmnyc.pup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.swarmnyc.pup.chat.ChatService;
+import com.swarmnyc.pup.chat.MockChatService;
+import com.swarmnyc.pup.chat.QuickbloxChatService;
 
 import java.util.Date;
 
@@ -46,5 +49,12 @@ public class PuPApiModule {
     @Singleton
     public LobbyService provideLobbyService() {
         return restAdapter.create(LobbyService.class);
+    }
+
+    @Provides
+    @Singleton
+    public ChatService provideChatService() {
+        return new MockChatService();
+        //return new QuickbloxChatService();
     }
 }
