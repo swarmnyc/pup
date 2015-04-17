@@ -2,9 +2,12 @@ package com.swarmnyc.pup.fragments;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,116 +15,274 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
-
-import com.swarmnyc.pup.Config;
-import com.swarmnyc.pup.LobbyService;
-import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.PuPCallback;
-import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.User;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
+import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.activities.CreateLobbyActivity;
 import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.models.Lobby;
+import com.swarmnyc.pup.view.LobbyListItemView;
 import com.swarmnyc.pup.viewmodels.LobbyFilter;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
 import retrofit.client.Response;
 
-public class LobbyListFragment extends Fragment {
-    private MainActivity activity;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
-    public LobbyListFragment() {
-    }
+public class LobbyListFragment extends Fragment
+{
+	private MainActivity        activity;
+	private LobbyAdapter        m_lobbyAdapter;
+	private LinearLayoutManager mLayoutManager;
 
-    @InjectView(R.id.list_lobby)
-    public ListView lobbyListView;
+	public LobbyListFragment()
+	{
+	}
 
-    @InjectView(R.id.btn_create_lobby)
-    public Button createLobbyButton;
+	@InjectView( R.id.list_lobby ) public RecyclerView m_lobbyRecyclerView;
 
-    @OnClick(R.id.btn_create_lobby)
-    public void onCreateLobbyButtonClicked() {
-        this.startActivityForResult(new Intent(this.activity, CreateLobbyActivity.class), CreateLobbyActivity.REQUEST_CODE_CREATE_LOBBY);
-    }
+	@InjectView( R.id.btn_create_lobby ) public Button createLobbyButton;
 
-    @Inject
-    LobbyService lobbyService;
+	@OnClick( R.id.btn_create_lobby ) public void onCreateLobbyButtonClicked()
+	{
+		this.startActivityForResult(
+			new Intent( this.activity, CreateLobbyActivity.class ), CreateLobbyActivity.REQUEST_CODE_CREATE_LOBBY
+		);
+	}
 
-    LayoutInflater inflater;
+	@Inject LobbyService lobbyService;
 
-    LobbyFilter filter = new LobbyFilter();
+	LayoutInflater inflater;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        PuPApplication.getInstance().getComponent().inject(this);
-        View view = inflater.inflate(R.layout.fragment_lobby_list, container, false);
-        ButterKnife.inject(this, view);
-        setHasOptionsMenu(true);
-        this.inflater = inflater;
-        lobbyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Lobby lobby = (Lobby) parent.getAdapter().getItem(position);
-                Intent intent = new Intent(LobbyListFragment.this.activity, LobbyActivity.class);
-                intent.putExtra("lobbyId", lobby.getId());
-                LobbyListFragment.this.activity.startActivity(intent);
-            }
-        });
+	LobbyFilter filter = new LobbyFilter();
 
-        createLobbyButton.setVisibility(User.isLoggedIn() ? View.VISIBLE : View.GONE);
+	@Override public View onCreateView(
+		LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
+	)
+	{
+		PuPApplication.getInstance().getComponent().inject( this );
+		View view = inflater.inflate( R.layout.fragment_lobby_list, container, false );
+		ButterKnife.inject( this, view );
+		setHasOptionsMenu( true );
 
-        reloadData();
+		this.inflater = inflater;
+		/*m_lobbyRecyclerView.setOnItemClickListener(
+			new AdapterView.OnItemClickListener()
+			{
+				@Override public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+				{
+					Lobby lobby = (Lobby) parent.getAdapter().getItem( position );
+					Intent intent = new Intent( LobbyListFragment.this.activity, LobbyActivity.class );
+					intent.putExtra( "lobbyId", lobby.getId() );
+					LobbyListFragment.this.activity.startActivity( intent );
+				}
+			}
+		);*/
 
-        return view;
-    }
+		createLobbyButton.setVisibility( User.isLoggedIn() ? View.VISIBLE : View.GONE );
 
-    private void reloadData() {
-        lobbyService.getList(null, new PuPCallback<List<Lobby>>() {
-            @Override
-            public void success(List<Lobby> lobbies, Response response) {
-                ArrayAdapter<Lobby> adapter = new ArrayAdapter<Lobby>(activity, android.R.layout.simple_list_item_1, lobbies) {
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
-                        if (convertView == null) {
-                            convertView = inflater.inflate(R.layout.item_lobby, null);
+		m_lobbyAdapter = new LobbyAdapter( getActivity() );
+		m_lobbyRecyclerView.setAdapter( m_lobbyAdapter );
 
-                            ((TextView) convertView.findViewById(R.id.text_name)).setText(this.getItem(position).getName());
-                            //((TextView) convertView.findViewById(R.id.text_start_time)).setText(this.getItem(position).getStartTime().toString());
-                        }
+		mLayoutManager = new LinearLayoutManager( getActivity() );
+		m_lobbyRecyclerView.setLayoutManager( mLayoutManager );
 
-                        return convertView;
-                    }
-                };
+		m_lobbyRecyclerView.setItemAnimator( new LobbyItemAnimator() );
 
-                lobbyListView.setAdapter(adapter);
-            }
-        });
-    }
+		reloadData();
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = (MainActivity) activity;
-    }
+		return view;
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_refresh:
-                reloadData();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+	@Override public void onStart()
+	{
+		reloadData();
+
+		super.onStart();
+	}
+
+
+	private void reloadData()
+	{
+		lobbyService.getList(
+			null, new PuPCallback<List<Lobby>>()
+			{
+				@Override public void success( List<Lobby> lobbies, Response response )
+				{
+
+					m_lobbyAdapter.setLobbies( lobbies );
+					/*ArrayAdapter<Lobby> adapter = new ArrayAdapter<Lobby>(
+						activity, android.R.layout.simple_list_item_1, lobbies
+					)
+					{
+						@Override public View getView( int position, View convertView, ViewGroup parent )
+						{
+							if ( convertView == null )
+							{
+								convertView = inflater.inflate( R.layout.item_lobby, null );
+
+								( (TextView) convertView.findViewById( R.id.text_name ) ).setText(
+									this.getItem(
+										position
+									).getName()
+								);
+								//((TextView) convertView.findViewById(R.id.text_start_time)).setText(this.getItem
+								// (position).getStartTime().toString());
+							}
+
+							return convertView;
+						}
+					};
+
+					m_lobbyRecyclerView.setAdapter( adapter );*/
+				}
+			}
+		);
+	}
+
+	@Override public void onAttach( Activity activity )
+	{
+		super.onAttach( activity );
+		this.activity = (MainActivity) activity;
+	}
+
+	@Override public boolean onOptionsItemSelected( MenuItem item )
+	{
+		switch ( item.getItemId() )
+		{
+			case R.id.menu_refresh:
+				reloadData();
+				return true;
+			default:
+				return super.onOptionsItemSelected( item );
+		}
+	}
+
+
+	private class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.ViewHolder>
+	{
+		private List<Lobby> m_lobbies = new ArrayList<Lobby>();
+		Context m_context;
+
+		private LobbyAdapter( final Context context )
+		{
+			m_context = context;
+		}
+
+		public void setLobbies( final List<Lobby> lobbies )
+		{
+			m_lobbies = lobbies;
+			notifyDataSetChanged();
+		}
+
+		public List<Lobby> getLobbies()
+		{
+			return m_lobbies;
+		}
+
+		// Provide a reference to the views for each data item
+		// Complex data items may need more than one view per item, and
+		// you provide access to all the views for a data item in a view holder
+		public class ViewHolder extends RecyclerView.ViewHolder
+		{
+			// each data item is just a string in this case
+			public LobbyListItemView m_lobbyListItemView;
+
+			public ViewHolder( LobbyListItemView v )
+			{
+				super( v );
+				m_lobbyListItemView = v;
+				m_lobbyListItemView.setOnClickListener(
+					new View.OnClickListener()
+					{
+						@Override public void onClick( final View v )
+						{
+//							m_navigationManager.showLobby( m_lobbyListItemView.getLobby() );
+						}
+					}
+				);
+			}
+		}
+
+		@Override public ViewHolder onCreateViewHolder(
+			final ViewGroup viewGroup, final int i
+		)
+		{
+			return new ViewHolder( new LobbyListItemView( m_context ) );
+		}
+
+		@Override public void onBindViewHolder( final ViewHolder viewHolder, final int i )
+		{
+			viewHolder.m_lobbyListItemView.setLobby( m_lobbies.get( i ) );
+		}
+
+		@Override public long getItemId( final int position )
+		{
+			return position;
+		}
+
+		@Override public int getItemCount()
+		{
+			return m_lobbies.size();
+		}
+
+
+	}
+
+	private static class LobbyItemAnimator extends RecyclerView.ItemAnimator
+	{
+		@Override public void runPendingAnimations()
+		{
+
+		}
+
+		@Override public boolean animateRemove(
+			final RecyclerView.ViewHolder viewHolder
+		)
+		{
+			return true;
+		}
+
+		@Override public boolean animateAdd( final RecyclerView.ViewHolder viewHolder )
+		{
+			return true;
+		}
+
+		@Override public boolean animateMove(
+			final RecyclerView.ViewHolder viewHolder, final int i, final int i2, final int i3, final int i4
+		)
+		{
+			return false;
+		}
+
+		@Override public boolean animateChange(
+			final RecyclerView.ViewHolder viewHolder,
+			final RecyclerView.ViewHolder viewHolder2,
+			final int i,
+			final int i2,
+			final int i3,
+			final int i4
+		)
+		{
+			return false;
+		}
+
+		@Override public void endAnimation( final RecyclerView.ViewHolder viewHolder )
+		{
+
+		}
+
+		@Override public void endAnimations()
+		{
+
+		}
+
+		@Override public boolean isRunning()
+		{
+			return false;
+		}
+	}
 }

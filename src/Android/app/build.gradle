@@ -23,7 +23,7 @@ android {
 dependencies {
     provided 'com.google.dagger:dagger-compiler:2.0'
     provided 'org.glassfish:javax.annotation:10.0-b28'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':api')
     compile files('libs/quickblox-android-sdk-core-2.1.1.jar')
     compile files('libs/quickblox-android-sdk-chat-2.1.1.jar')
@@ -33,4 +33,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.google.android.gms:play-services:7.0.0'
     compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.android.support:recyclerview-v7:22.0.0'
+    compile 'com.android.support:cardview-v7:22.0.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
