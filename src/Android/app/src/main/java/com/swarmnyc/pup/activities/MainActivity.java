@@ -6,12 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,21 +19,41 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
+import com.swarmnyc.pup.fragments.MyChatsFragment;
+import com.swarmnyc.pup.fragments.SettingsFragment;
+import com.uservoice.uservoicesdk.UserVoice;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class MainActivity extends ActionBarActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final int REQUEST_RESULT_CODE_RELOAD = 735623;
     public static final int REQUEST_CODE_AUTH = 2884;
     private static MainActivity instance;
+
+    @Inject
+    ChatService chatService;
+
+    @InjectView(R.id.drawer_list)
+    ListView mDrawerListView;
+
+    @InjectView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+
+    @InjectView(R.id.btn_logout)
+    View logoutButton;
+
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
+
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerListView;
 
     public MainActivity() {
         instance = this;
@@ -46,20 +63,23 @@ public class MainActivity extends ActionBarActivity {
         return instance;
     }
 
-    @Inject
-    ChatService chatService;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ButterKnife.inject(this);
         PuPApplication.getInstance().getComponent().inject(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mDrawerListView = (ListView) this.findViewById(R.id.drawer_list);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User.Logout();
+                reinitialize();
+            }
+        });
 
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -67,8 +87,6 @@ public class MainActivity extends ActionBarActivity {
                 selectItem(position);
             }
         });
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
@@ -95,12 +113,12 @@ public class MainActivity extends ActionBarActivity {
     private void initializeDrawer() {
         List<String> list = new ArrayList<>();
         // TODO:Move to resource, or better implement
-        if (User.isLoggedIn()){
+        if (User.isLoggedIn()) {
+            list.add("My Chats");
+            list.add("All Lobbies");
+        } else {
             list.add("My Chats");
             list.add("Register");
-        }else{
-            list.add("All Lobbies");
-            list.add("My Chats");
         }
 
         list.add("Feedback");
@@ -112,49 +130,49 @@ public class MainActivity extends ActionBarActivity {
                 android.R.id.text1,
                 list));
 
-        selectItem(0);
+        //mDrawerListView.setSelection(User.isLoggedIn() ? 1 : 0);
+
+        int position = User.isLoggedIn() ? 1 : 0;
+        selectItem(position); // TODO: The event doesn't launch.
+        mDrawerListView.setItemChecked(position, true);
+
+        logoutButton.setVisibility(User.isLoggedIn() ? View.VISIBLE : View.GONE);
     }
 
     public void selectItem(int position) {
-        Fragment fragment = new LobbyListFragment();
+        Fragment fragment = null;
 
         switch (position) {
-
+            case 0:
+                if (User.isLoggedIn()) {
+                    fragment = new MyChatsFragment();
+                } else {
+                    fragment = new LobbyListFragment();
+                }
+                break;
+            case 1:
+                if (User.isLoggedIn()) {
+                    fragment = new LobbyListFragment();
+                } else {
+                    startActivityForResult(new Intent(this, AuthActivity.class), REQUEST_CODE_AUTH);
+                }
+                break;
+            case 2:
+                UserVoice.launchUserVoice(this);
+                break;
+            case 3:
+                fragment = new SettingsFragment();
+                break;
         }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        if (User.isLoggedIn()) {
-            getMenuInflater().inflate(R.menu.menu_main_user, menu);
-        } else {
-            getMenuInflater().inflate(R.menu.menu_main_guest, menu);
+        if (fragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commitAllowingStateLoss();
         }
 
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_logoff:
-                User.Logout();
-                reload();
-                return true;
-            case R.id.menu_login:
-                this.startActivityForResult(new Intent(this, AuthActivity.class), REQUEST_CODE_AUTH);
-                return true;
-            case R.id.menu_profile:
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        mDrawerLayout.closeDrawers();
     }
 
     public void changeFragment(Fragment fragment) {
@@ -164,16 +182,16 @@ public class MainActivity extends ActionBarActivity {
                 .commitAllowingStateLoss();
     }
 
-    private void reload() {
+    private void reinitialize() {
         changeFragment(new LobbyListFragment());
-        invalidateOptionsMenu();
+        initializeDrawer();
         chatService.login(this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_AUTH && resultCode == REQUEST_RESULT_CODE_RELOAD) {
-            reload();
+            reinitialize();
         } else if (requestCode == CreateLobbyActivity.REQUEST_CODE_CREATE_LOBBY && resultCode == RESULT_OK) {
             //startActivity(new Intent(this));
         } else {
