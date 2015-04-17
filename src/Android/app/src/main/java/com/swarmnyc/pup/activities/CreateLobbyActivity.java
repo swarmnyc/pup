@@ -79,7 +79,7 @@ public class CreateLobbyActivity extends ActionBarActivity {
         ButterKnife.inject(this);
         PuPApplication.getInstance().getComponent().inject(this);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         // GamePlatform

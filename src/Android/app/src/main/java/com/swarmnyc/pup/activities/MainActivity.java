@@ -1,6 +1,7 @@
 package com.swarmnyc.pup.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.swarmnyc.pup.BuildConfig;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
@@ -65,13 +67,17 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.activity_main );
 
-        ButterKnife.inject(this);
-        PuPApplication.getInstance().getComponent().inject(this);
+        ButterKnife.inject( this );
+        PuPApplication.getInstance().getComponent().inject( this );
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar( toolbar );
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+           toolbar.setElevation( 2 );
+        }
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override

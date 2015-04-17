@@ -15,10 +15,17 @@
 
     <Button
             android:id="@+id/btn_create_lobby"
-            android:text="+"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:text="@string/button_add"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="@dimen/text_large"
+            android:background="@drawable/bg_round_orange"
+            android:layout_width="@dimen/button_hover_size"
+            android:layout_height="@dimen/button_hover_size"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true" android:layout_margin="32dp"/>
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/margin_2x"/>
 
 </RelativeLayout>

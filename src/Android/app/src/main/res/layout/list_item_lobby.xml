@@ -17,6 +17,7 @@
     <LinearLayout
             android:layout_toRightOf="@id/img_game"
             android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
             android:layout_width="match_parent" android:layout_height="96dp" android:orientation="vertical">
 
 
@@ -92,6 +93,6 @@
     <View
             android:id="@+id/seperator2"
             android:layout_below="@id/layout_lobby_info"
-            android:layout_width="match_parent" android:layout_height="1px" android:background="@android:color/darker_gray" />
+            android:layout_width="match_parent" android:layout_height="1dp" android:background="@android:color/darker_gray" />
 
 </RelativeLayout>
