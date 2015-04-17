@@ -64,9 +64,8 @@ public class LobbyListItemView extends RelativeLayout
 
 		if ( StringUtils.isNotEmpty( lobby.getPictureUrl() ))
 		{
-			Picasso.with( getContext() ).load( lobby.getPictureUrl() ).centerCrop().fit().into( m_gameImage );
+			Picasso.with( getContext() ).load( lobby.getThumbnailPictureUrl() ).centerCrop().fit().into( m_gameImage );
 		}
-
 
 		m_gameName.setText( lobby.getName() );
 		m_gameTime.setText( DateUtils.getRelativeTimeSpanString( getContext(), lobby.getStartTime().getTime() ) );

@@ -1,27 +1,20 @@
 package com.swarmnyc.pup.models;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.Date;
 import java.util.List;
 
 public class Game extends Taggable {
-    private String id;
+
     private String name;
     private String pictureUrl;
+    private String thumbnailPictureUrl;
+    private String description;
     private List<GamePlatform> platforms;
-
-    public Game() {
-    }
-
-    /*public Game(JSONObject json) throws JSONException {
-        super(json);
-        id = json.getString("id");
-        name = json.getString("name");
-        pictureUrl = json.optString("pictureUrl");
-        platforms = GamePlatform.FromJsonArray(json.getJSONArray("platforms"));
-    }
-*/
-    public String getId() {
-        return id;
-    }
+    private List<String> gameTypes;
+    @SerializedName("releaseDateUtc")
+    private Date releaseDate;
 
     public String getName() {
         return name;
@@ -45,5 +38,37 @@ public class Game extends Taggable {
 
     public void setPlatforms(List<GamePlatform> platforms) {
         this.platforms = platforms;
+    }
+
+    public String getThumbnailPictureUrl() {
+        return thumbnailPictureUrl;
+    }
+
+    public void setThumbnailPictureUrl(String thumbnailPictureUrl) {
+        this.thumbnailPictureUrl = thumbnailPictureUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public List<String> getGameTypes() {
+        return gameTypes;
+    }
+
+    public void setGameTypes(List<String> gameTypes) {
+        this.gameTypes = gameTypes;
     }
 }

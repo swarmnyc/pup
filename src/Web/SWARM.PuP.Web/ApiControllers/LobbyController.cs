@@ -17,11 +17,13 @@ namespace SWARM.PuP.Web.ApiControllers
     {
         private readonly IUserService _userService;
         private readonly ILobbyService _lobbyService;
+        private readonly IGameService _gameService;
 
-        public LobbyController(IUserService userService, ILobbyService lobbyService)
+        public LobbyController(IUserService userService, ILobbyService lobbyService, IGameService gameService)
         {
             _userService = userService;
             _lobbyService = lobbyService;
+            _gameService = gameService;
         }
 
         public IEnumerable<LobbyViewModel> Get([FromUri]LobbyFilter filter)
@@ -37,6 +39,11 @@ namespace SWARM.PuP.Web.ApiControllers
         [Authorize]
         public Lobby Post(Lobby lobby)
         {
+            var game = _gameService.GetById(lobby.Id);
+            lobby.Name = game.Name;
+            lobby.PictureUrl = game.PictureUrl;
+            lobby.ThumbnailPictureUrl = game.ThumbnailPictureUrl;
+
             return _lobbyService.Add(lobby, _userService.Get(User.Identity));
         }
 
