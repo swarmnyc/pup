@@ -149,19 +149,6 @@ public class LobbyListFragment extends Fragment
 		this.activity = (MainActivity) activity;
 	}
 
-	@Override public boolean onOptionsItemSelected( MenuItem item )
-	{
-		switch ( item.getItemId() )
-		{
-			case R.id.menu_refresh:
-				reloadData();
-				return true;
-			default:
-				return super.onOptionsItemSelected( item );
-		}
-	}
-
-
 	private class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.ViewHolder>
 	{
 		private List<Lobby> m_lobbies = new ArrayList<Lobby>();
