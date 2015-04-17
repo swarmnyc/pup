@@ -2,6 +2,7 @@ package com.swarmnyc.pup;
 
 import com.google.gson.Gson;
 import com.quickblox.core.helper.StringUtils;
+import com.swarmnyc.pup.events.UserlogoutEvent;
 import com.swarmnyc.pup.models.LoggedInUser;
 
 public class User {
@@ -33,6 +34,8 @@ public class User {
         User.current = null;
 
         Config.remove(KEY_USER_EXPIRES);
+
+        EventBus.getBus().post(new UserlogoutEvent());
     }
 
     public static boolean isLoggedIn() {

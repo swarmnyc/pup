@@ -1,4 +1,4 @@
-package com.swarmnyc.pup.components;
+package com.swarmnyc.pup.events;
 
 public class ChatServiceLoggedInEvent {
 }
