@@ -5,4 +5,5 @@
     <color name="pup_aqua_border">#2b9a9a</color>
     <color name="pup_grey_bg">#f1f1f1</color>
     <color name="border">#bcbcbc</color>
+    <color name="white">#FFFFFF</color>
 </resources>
