@@ -130,6 +130,7 @@
   <ItemGroup>
     <None Include="..\SWARM.PuP.Web\setting.config">
       <Link>setting.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="MockData\users.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

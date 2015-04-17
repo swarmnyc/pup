@@ -1,21 +1,22 @@
-﻿namespace SWARM.PuP.Web.Models
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace SWARM.PuP.Web.Models
 {
-    public enum GamePlatform : int
+    public enum GamePlatform
     {
-        Unknown = 0,
-        Windows = 10,
-        Mac = 20,
-        iOS = 21,
-        Xbox = 30,
-        Xbox360 = 31,
-        XboxOne = 32,
-        PS1 = 40,
-        PS2 = 41,
-        PS3 = 42,
-        PS4 = 43,
-        Wii = 50,
-        WiiU = 51,
-        Steam = 60,
-        Android = 70
+        PC,
+        Steam,
+        Xbox,
+        Xbox360,
+        XboxOne,
+        PS,
+        PS2,
+        PS3,
+        PS4,
+        Wii,
+        WiiU,
+        iOS,
+        Android
     }
 }

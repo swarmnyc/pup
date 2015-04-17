@@ -1,8 +1,8 @@
 ﻿namespace SWARM.PuP.Web.Models
 {
-    public enum PlayStyle : int
+    public enum PlayStyle
     {
-        Serious = 1,
-        Casual = 2
+        Serious,
+        Casual
     }
 }

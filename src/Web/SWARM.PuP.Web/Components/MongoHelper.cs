@@ -2,8 +2,12 @@
 using System.Configuration;
 using System.Web.Http.ModelBinding;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Bson.Serialization.Options;
 using MongoDB.Driver;
+using SWARM.PuP.Web.Models;
 
 namespace MongoDB
 {
@@ -26,6 +30,7 @@ namespace MongoDB
 
         public DateTime UpdatedAtUtc { get; set; }
 
+        [BsonRepresentation(BsonType.String)]
         public ModelState State { get; set; }
     }
 

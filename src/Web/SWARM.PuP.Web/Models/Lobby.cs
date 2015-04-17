@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using MongoDB;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace SWARM.PuP.Web.Models
 {
@@ -14,12 +16,17 @@ namespace SWARM.PuP.Web.Models
 
         public string PictureUrl { get; set; }
 
+        public string ThumbnailPictureUrl { get; set; }
+
         public string Description { get; set; }
 
+        [BsonRepresentation(BsonType.String)]
         public GamePlatform Platform { get; set; }
-        
+
+        [BsonRepresentation(BsonType.String)]
         public PlayStyle PlayStyle { get; set; }
 
+        [BsonRepresentation(BsonType.String)]
         public SkillLevel SkillLevel { get; set; }
 
         public DateTime StartTimeUtc { get; set; }

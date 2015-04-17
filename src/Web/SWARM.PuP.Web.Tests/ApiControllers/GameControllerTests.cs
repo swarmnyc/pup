@@ -27,7 +27,7 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
             var result = controller.Get(new GameFilter()
             {
                 Search = "Di",
-                Platforms = new List<GamePlatform>() { GamePlatform.Windows, GamePlatform.Xbox}
+                Platforms = new List<GamePlatform>() { GamePlatform.PC, GamePlatform.Xbox}
             });
 
             Console.WriteLine(result.ToMongoQueryText());
