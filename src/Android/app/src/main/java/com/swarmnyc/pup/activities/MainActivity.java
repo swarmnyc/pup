@@ -22,12 +22,13 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
-import com.swarmnyc.pup.fragments.MainNavigationDrawerFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
-public class MainActivity extends ActionBarActivity
-{
+public class MainActivity extends ActionBarActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final int REQUEST_RESULT_CODE_RELOAD = 735623;
     public static final int REQUEST_CODE_AUTH = 2884;
@@ -37,11 +38,11 @@ public class MainActivity extends ActionBarActivity
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
 
-    public MainActivity(){
+    public MainActivity() {
         instance = this;
     }
 
-    public static MainActivity getInstance(){
+    public static MainActivity getInstance() {
         return instance;
     }
 
@@ -55,10 +56,10 @@ public class MainActivity extends ActionBarActivity
 
         PuPApplication.getInstance().getComponent().inject(this);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mDrawerListView = (ListView)this.findViewById(R.id.drawer_list);
+        mDrawerListView = (ListView) this.findViewById(R.id.drawer_list);
 
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -67,26 +68,16 @@ public class MainActivity extends ActionBarActivity
             }
         });
 
-//        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-//                this,
-//                android.R.layout.simple_list_item_activated_1,
-//                android.R.id.text1,
-//                new String[]{
-//                        getString(R.string.title_section1),
-//                        getString(R.string.title_section2),
-//                        getString(R.string.title_section3),
-//                }));
-
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         mDrawerToggle = new ActionBarDrawerToggle(
-                this,                    /* host Activity */
-                mDrawerLayout,                    /* DrawerLayout object */
+                this,
+                mDrawerLayout,
                 toolbar,
-                R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
-                R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
         );
 
         mDrawerLayout.post(new Runnable() {
@@ -98,13 +89,36 @@ public class MainActivity extends ActionBarActivity
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        initializeDrawer();
+    }
+
+    private void initializeDrawer() {
+        List<String> list = new ArrayList<>();
+        // TODO:Move to resource, or better implement
+        if (User.isLoggedIn()){
+            list.add("My Chats");
+            list.add("Register");
+        }else{
+            list.add("All Lobbies");
+            list.add("My Chats");
+        }
+
+        list.add("Feedback");
+        list.add("Settings");
+
+        mDrawerListView.setAdapter(new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_activated_1,
+                android.R.id.text1,
+                list));
+
         selectItem(0);
     }
 
     public void selectItem(int position) {
         Fragment fragment = new LobbyListFragment();
 
-        switch (position){
+        switch (position) {
 
         }
 
