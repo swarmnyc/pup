@@ -60,10 +60,10 @@ namespace SWARM.PuP.Web.Tests.Services
 
                 if (game.WIIU == "Y")
                     p.Add(GamePlatform.WiiU);
-
+                
                 DateTime? date = null;
                 if (!string.IsNullOrWhiteSpace(game.dateReleased))
-                    date = DateTime.Parse(game.dateReleased);
+                    date = DateTime.Parse(game.dateReleased).AddHours(-4);
 
                 _gameService.Add(new Game()
                 {
@@ -73,7 +73,7 @@ namespace SWARM.PuP.Web.Tests.Services
                     PictureUrl = game.imageURL,
                     ThumbnailPictureUrl = game.imageURL,
                     Description = game.description,
-                    ReleaseDate = date,
+                    ReleaseDateUtc = date,
                 });
             }
         }

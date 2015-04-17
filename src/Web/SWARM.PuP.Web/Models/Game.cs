@@ -19,8 +19,8 @@ namespace SWARM.PuP.Web.Models
         public string PictureUrl { get; set; }
 
         public string Description { get; set; }
-
-        public DateTime? ReleaseDate { get; set; }
+        
+        public DateTime? ReleaseDateUtc { get; set; }
 
         public string[] GameTypes { get; set; }
 

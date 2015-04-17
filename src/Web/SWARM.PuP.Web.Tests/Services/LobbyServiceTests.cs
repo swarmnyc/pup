@@ -16,7 +16,7 @@ namespace SWARM.PuP.Web.Tests.Services
     {
         public LobbyServiceTests()
         {
-            //TestHelper.MockDatabase();
+            TestHelper.MockDatabase();
         }
 
         [TestMethod()]
