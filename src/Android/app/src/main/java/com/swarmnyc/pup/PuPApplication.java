@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import com.uservoice.uservoicesdk.UserVoice;
+
 public class PuPApplication extends Application {
     private static PuPApplication instance;
     private PuPComponent component;
@@ -24,6 +26,10 @@ public class PuPApplication extends Application {
         User.init();
 
         this.component = DaggerPuPComponent.builder().build();
+
+        com.uservoice.uservoicesdk.Config config = new  com.uservoice.uservoicesdk.Config("swarmnyc.uservoice.com");
+        config.setForumId(272754);
+        UserVoice.init(config, this);
     }
 
     public int getAppVersion() {
