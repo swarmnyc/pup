@@ -71,8 +71,8 @@ public class LobbyListItemView extends RelativeLayout
 		m_gameName.setText( lobby.getName() );
 		m_gameTime.setText( DateUtils.getRelativeTimeSpanString( getContext(), lobby.getStartTime().getTime() ) );
 		m_description.setText( lobby.getDescription() );
-		m_platform.setText( lobby.getPlatform().name() );
-		m_gamerStyle.setText( lobby.getPlayStyle().name());
+//		m_platform.setText( lobby.getPlatform().name() );
+//		m_gamerStyle.setText( lobby.getPlayStyle().name());
 	}
 
 	public Lobby getLobby()
