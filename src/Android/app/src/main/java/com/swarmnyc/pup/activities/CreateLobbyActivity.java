@@ -85,9 +85,7 @@ public class CreateLobbyActivity extends ActionBarActivity {
         // GamePlatform
         List<String> gpList = new ArrayList<>();
         for (GamePlatform gp : GamePlatform.values()) {
-            if (gp != GamePlatform.Unknown) {
                 gpList.add(gp.toString());
-            }
         }
 
         ArrayAdapter<String> gpDataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, gpList);

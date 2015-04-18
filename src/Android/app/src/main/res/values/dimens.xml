@@ -7,4 +7,5 @@
     <dimen name="margin_2x">32dp</dimen>
     <dimen name="text_large">24sp</dimen>
     <dimen name="btn_plus_size">36sp</dimen>
+    <dimen name="padding_main">16dp</dimen>
 </resources>

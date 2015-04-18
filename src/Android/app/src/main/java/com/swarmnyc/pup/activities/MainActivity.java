@@ -15,10 +15,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.swarmnyc.pup.BuildConfig;
-import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.User;
+import com.swarmnyc.pup.*;
+import com.squareup.otto.Subscribe;
+import com.swarmnyc.pup.events.UserlogoutEvent;
 import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
 import com.swarmnyc.pup.fragments.MyChatsFragment;
@@ -48,14 +47,14 @@ public class MainActivity extends ActionBarActivity {
     @InjectView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
-    @InjectView(R.id.btn_logout)
-    View logoutButton;
-
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
 
-    private ActionBarDrawerToggle mDrawerToggle;
+    @InjectView(R.id.drawer_menu_contrainer)
+    View drawerMenuContainer;
 
+    private ActionBarDrawerToggle mDrawerToggle;
+    private boolean alreadyInitialize;
 
     public MainActivity() {
         instance = this;
@@ -73,19 +72,14 @@ public class MainActivity extends ActionBarActivity {
         ButterKnife.inject( this );
         PuPApplication.getInstance().getComponent().inject( this );
 
+        EventBus.getBus().register( this );
+
+
         setSupportActionBar( toolbar );
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
            toolbar.setElevation( 2 );
         }
-
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                User.Logout();
-                reinitialize();
-            }
-        });
 
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -116,6 +110,16 @@ public class MainActivity extends ActionBarActivity {
         initializeDrawer();
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if (!alreadyInitialize) {
+            alreadyInitialize = true;
+            drawerMenuContainer.getLayoutParams().width = (int) (this.getWindow().getDecorView().getWidth() * 0.90);
+        }
+    }
+
     private void initializeDrawer() {
         List<String> list = new ArrayList<>();
         // TODO:Move to resource, or better implement
@@ -132,17 +136,13 @@ public class MainActivity extends ActionBarActivity {
 
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 this,
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
+                R.layout.item_drawer_menu,
+                R.id.text_name,
                 list));
-
-        //mDrawerListView.setSelection(User.isLoggedIn() ? 1 : 0);
 
         int position = User.isLoggedIn() ? 1 : 0;
         selectItem(position); // TODO: The event doesn't launch.
         mDrawerListView.setItemChecked(position, true);
-
-        logoutButton.setVisibility(User.isLoggedIn() ? View.VISIBLE : View.GONE);
     }
 
     public void selectItem(int position) {
@@ -181,15 +181,7 @@ public class MainActivity extends ActionBarActivity {
         mDrawerLayout.closeDrawers();
     }
 
-    public void changeFragment(Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commitAllowingStateLoss();
-    }
-
     private void reinitialize() {
-        changeFragment(new LobbyListFragment());
         initializeDrawer();
         chatService.login(this);
     }
@@ -207,5 +199,10 @@ public class MainActivity extends ActionBarActivity {
 
     public void retrieveMessage(final String message) {
 
+    }
+
+    @Subscribe
+    public void postLogout(UserlogoutEvent event) {
+        reinitialize();
     }
 }

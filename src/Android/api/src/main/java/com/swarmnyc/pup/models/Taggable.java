@@ -4,10 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Taggable {
+    private String id;
+
     private List<PuPTag> tags;
 
     public Taggable() {
         tags = new ArrayList<>();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public List<PuPTag> getTags() {

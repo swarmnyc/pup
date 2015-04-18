@@ -112,32 +112,7 @@ public class LobbyListFragment extends Fragment
 			{
 				@Override public void success( List<Lobby> lobbies, Response response )
 				{
-
 					m_lobbyAdapter.setLobbies( lobbies );
-					/*ArrayAdapter<Lobby> adapter = new ArrayAdapter<Lobby>(
-						activity, android.R.layout.simple_list_item_1, lobbies
-					)
-					{
-						@Override public View getView( int position, View convertView, ViewGroup parent )
-						{
-							if ( convertView == null )
-							{
-								convertView = inflater.inflate( R.layout.item_lobby, null );
-
-								( (TextView) convertView.findViewById( R.id.text_name ) ).setText(
-									this.getItem(
-										position
-									).getName()
-								);
-								//((TextView) convertView.findViewById(R.id.text_start_time)).setText(this.getItem
-								// (position).getStartTime().toString());
-							}
-
-							return convertView;
-						}
-					};
-
-					m_lobbyRecyclerView.setAdapter( adapter );*/
 				}
 			}
 		);
@@ -151,7 +126,7 @@ public class LobbyListFragment extends Fragment
 
 	private class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.ViewHolder>
 	{
-		private List<Lobby> m_lobbies = new ArrayList<Lobby>();
+		private List<Lobby> m_lobbies = new ArrayList<>();
 		Context m_context;
 
 		private LobbyAdapter( final Context context )

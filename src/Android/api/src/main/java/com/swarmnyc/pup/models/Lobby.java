@@ -6,14 +6,12 @@ import java.util.Date;
 import java.util.List;
 
 public class Lobby extends Taggable {
-
-    private String id;
     private String name;
     private String pictureUrl;
+    private String thumbnailPictureUrl;
     private GamePlatform platform;
     private String gameId;
     private String description;
-
     @SerializedName("startTimeUtc")
     private Date startTime;
     private PlayStyle playStyle;
@@ -22,14 +20,6 @@ public class Lobby extends Taggable {
 
     public Lobby() {
 
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -111,5 +101,13 @@ public class Lobby extends Taggable {
         }
 
         return null;
+    }
+
+    public String getThumbnailPictureUrl() {
+        return thumbnailPictureUrl;
+    }
+
+    public void setThumbnailPictureUrl(String thumbnailPictureUrl) {
+        this.thumbnailPictureUrl = thumbnailPictureUrl;
     }
 }

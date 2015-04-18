@@ -17,7 +17,6 @@ namespace SWARM.PuP.Web.Tests.Services
         public LobbyServiceTests()
         {
             TestHelper.MockDatabase();
-
         }
 
         [TestMethod()]
@@ -103,6 +102,30 @@ namespace SWARM.PuP.Web.Tests.Services
             service.Leave(lobby.Id, userService.GetSingle(x => x.DisplayName == "test"));
 
             Assert.AreEqual(userService.GetSingle(x => x.DisplayName == "WadeHuang").Id, service.GetById(lobby.Id).Users.First(x => x.IsOwner).Id);
+        }
+
+        [TestMethod()]
+        public void Real_LobbyService_AddLobbys_Test()
+        {
+            var gameService = new GameService();
+            var userService = new UserService();
+            var service = new LobbyService(new QuickbloxChatService());
+
+            foreach (var game in gameService.All().Take(5))
+            {
+                var lobby = service.Add(new Lobby()
+                {
+                    GameId = game.Id,
+                    Name = game.Name,
+                    PlayStyle = PlayStyle.Serious,
+                    Platform = game.Platforms.First(),
+                    PictureUrl = game.PictureUrl,
+                    ThumbnailPictureUrl = game.ThumbnailPictureUrl,
+                    StartTimeUtc = DateTime.UtcNow.AddHours(1),
+                    SkillLevel = SkillLevel.Pro,
+                    Description = "Let's play it"
+                }, userService.Collection.FindOne());
+            }
         }
     }
 }

@@ -32,6 +32,12 @@ namespace SWARM.PuP.Web.ViewModels
             get { return lobby.PictureUrl; }
         }
 
+        public string ThumbnailPictureUrl
+        {
+            get { return lobby.ThumbnailPictureUrl; }
+        }
+
+
         public string Description
         {
             get { return lobby.Description; }

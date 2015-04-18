@@ -11,7 +11,7 @@ import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.chat.ChatService;
-import com.swarmnyc.pup.components.ChatServiceLoggedInEvent;
+import com.swarmnyc.pup.events.ChatServiceLoggedInEvent;
 
 import javax.inject.Inject;
 
