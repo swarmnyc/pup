@@ -2,7 +2,9 @@ package com.swarmnyc.pup.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -11,7 +13,9 @@ import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.chat.ChatService;
+import com.swarmnyc.pup.components.Consts;
 import com.swarmnyc.pup.events.ChatServiceLoggedInEvent;
+import com.uservoice.uservoicesdk.UserVoice;
 
 import javax.inject.Inject;
 
@@ -23,7 +27,6 @@ public class SplashActivity extends Activity {
 
     @InjectView(R.id.pup_logo)
     ImageView logoImage;
-    private boolean alreadInitialized;
 
     @Inject
     ChatService chatService;
@@ -36,21 +39,23 @@ public class SplashActivity extends Activity {
         PuPApplication.getInstance().getComponent().inject(this);
 
         EventBus.getBus().register(this);
-    }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
+        Display display = getWindowManager().getDefaultDisplay();
+        Point windowSize = new Point();
+        display.getSize(windowSize);
+        Consts.windowWidth = windowSize.x;
+        Consts.windowHeight = windowSize.y;
 
-        if (!alreadInitialized) {
-            alreadInitialized = true;
-            int size = (int) (this.getWindow().getDecorView().getMeasuredWidth() * 0.7);
-            logoImage.getLayoutParams().width = size;
-            logoImage.getLayoutParams().height = size;
-            ((RelativeLayout.LayoutParams) logoImage.getLayoutParams()).setMargins(0, (int) (size * 0.1), 0, 0);
+        int size = (int) (Consts.windowWidth * 0.7);
+        logoImage.getLayoutParams().width = size;
+        logoImage.getLayoutParams().height = size;
+        ((RelativeLayout.LayoutParams) logoImage.getLayoutParams()).setMargins(0, (int) (size * 0.1), 0, 0);
 
-            chatService.login(this);
-        }
+        chatService.login(this);
+
+        com.uservoice.uservoicesdk.Config config = new  com.uservoice.uservoicesdk.Config("swarmnyc.uservoice.com");
+        config.setForumId(272754);
+        UserVoice.init(config, this);
     }
 
     @Subscribe

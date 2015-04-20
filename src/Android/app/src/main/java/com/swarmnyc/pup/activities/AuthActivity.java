@@ -96,7 +96,7 @@ public class AuthActivity extends ActionBarActivity {
     }
 
     public void finishAuth() {
-        setResult(MainActivity.REQUEST_RESULT_CODE_RELOAD);
+        //setResult(MainActivity.REQUEST_RESULT_CODE_RELOAD);
         this.finish();
     }
 }

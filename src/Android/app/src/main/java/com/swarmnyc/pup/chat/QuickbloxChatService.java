@@ -12,12 +12,15 @@ import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.core.QBSettings;
 import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.model.QBUser;
+import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.Config;
 import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
+import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.events.ChatServiceLoggedInEvent;
 import com.swarmnyc.pup.components.PlayServicesHelper;
+import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.Lobby;
 
 import org.jivesoftware.smack.SmackException;
@@ -30,7 +33,10 @@ public class QuickbloxChatService implements ChatService {
     private Hashtable<String, QBDialog> dialogs = new Hashtable<>();
 
     private QBChatService qbChatService;
-    private Activity activity;
+
+    public QuickbloxChatService() {
+        EventBus.getBus().register(this);
+    }
 
     @Override
     public void login(final Activity activity) {
@@ -41,7 +47,6 @@ public class QuickbloxChatService implements ChatService {
                 e.printStackTrace();
             }
         }
-        this.activity = activity;
 
         //QBChatService.setDebugEnabled(true);
         QBSettings.getInstance().fastConfigInit(Config.getConfigString(R.string.QB_APP_ID), Config.getConfigString(R.string.QB_APP_KEY), Config.getConfigString(R.string.QB_APP_SECRET));
@@ -121,5 +126,10 @@ public class QuickbloxChatService implements ChatService {
                 Log.e("ChatService", list.get(0).toString());
             }
         });
+    }
+
+    @Subscribe
+    public void postUserChanged(UserChangedEvent event) {
+        login(MainActivity.getInstance());
     }
 }

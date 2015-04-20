@@ -2,6 +2,7 @@ package com.swarmnyc.pup.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ import com.swarmnyc.pup.LobbyService;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.PuPCallback;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.fragments.CreateLobbyGameFilterFragment;
 import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.PlayStyle;
@@ -39,11 +41,15 @@ public class CreateLobbyActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_lobby);
 
         ButterKnife.inject(this);
         PuPApplication.getInstance().getComponent().inject(this);
+//getSupportFragmentManager().popBackStack("A",);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, new CreateLobbyGameFilterFragment())
+                .commit();
     }
 }

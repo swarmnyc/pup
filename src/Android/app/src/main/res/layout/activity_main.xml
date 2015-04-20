@@ -25,5 +25,10 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-    <include layout="@layout/drawer_main" />
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:id="@+id/main_drawer_fragment"
+        android:name="com.swarmnyc.pup.fragments.MainDrawerFragment"/>
 </android.support.v4.widget.DrawerLayout>

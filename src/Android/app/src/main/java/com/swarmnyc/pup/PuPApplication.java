@@ -3,7 +3,10 @@ package com.swarmnyc.pup;
 import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
+import android.view.Display;
 
+import com.swarmnyc.pup.components.*;
 import com.uservoice.uservoicesdk.UserVoice;
 
 public class PuPApplication extends Application {
@@ -26,10 +29,6 @@ public class PuPApplication extends Application {
         User.init();
 
         this.component = DaggerPuPComponent.builder().build();
-
-        com.uservoice.uservoicesdk.Config config = new  com.uservoice.uservoicesdk.Config("swarmnyc.uservoice.com");
-        config.setForumId(272754);
-        UserVoice.init(config, this);
     }
 
     public int getAppVersion() {

@@ -19,5 +19,8 @@ public interface GameService {
     void getList(@QueryMap Map<String, String> filter, Callback<List<Game>> callback);
 
     @GET("/Game/{GameId}")
-    void get(@Path("GameId") String gameId, Callback<Game> Lobby);
+    void get(@Path("GameId") String gameId, Callback<Game> callback);
+
+    @GET("/Game/Popular")
+    void getPupularGames(Callback<Game> callback);
 }

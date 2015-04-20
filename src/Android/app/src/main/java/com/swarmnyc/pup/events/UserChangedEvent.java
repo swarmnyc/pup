@@ -1,4 +1,4 @@
 package com.swarmnyc.pup.events;
 
-public class UserlogoutEvent {
+public class UserChangedEvent {
 }
