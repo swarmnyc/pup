@@ -13,4 +13,12 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="button_add">+</string>
+    <string name="signup_slogan">Holy Guacamole, Batman!\nYou\'re about to sign up for the best app on\nearth.</string>
+    <string name="hint_email">cats@cats.com</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_tos">By signing up you agree to the <a href="http://www.google.com">TOS</a> and <a href="http://www.google.com">Privacy policy</a> outlined in these links.</string>
+    <string name="hint_join1"><b>Join in</b></string>
+    <string name="hint_join2"><b>(This is so exciting, isn\'t it?)</b></string>
+    <string name="hint_login"><b>Already registered? <a href="login">Login here.</a></b></string>
+    <string name="hint_singup">We \'re still in alpha and would love to hear you feedback,\nso chat with us up when you get the chance.</string>
 </resources>
