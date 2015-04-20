@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.swarmnyc.pup.GameService;
 import com.swarmnyc.pup.PuPApplication;
+import com.swarmnyc.pup.activities.MainActivity;
 
 import javax.inject.Inject;
 
@@ -20,7 +21,7 @@ public class CreateLobbyGameFilterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         PuPApplication.getInstance().getComponent().inject(this);
-
+        MainActivity.getInstance().hideToolbar();
         return view;
     }
 }

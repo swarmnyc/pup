@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.view.View;
 
 import com.swarmnyc.pup.*;
 import com.squareup.otto.Subscribe;
@@ -26,6 +27,9 @@ import butterknife.InjectView;
 
 public class MainActivity extends ActionBarActivity {
     private static MainActivity instance;
+
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
 
     public MainActivity() {
         instance = this;
@@ -49,5 +53,13 @@ public class MainActivity extends ActionBarActivity {
 
     public void retrieveMessage(final String message) {
 
+    }
+
+    public void hideToolbar() {
+        toolbar.setVisibility(View.GONE);
+    }
+
+    public void showToolbar() {
+        toolbar.setVisibility(View.VISIBLE);
     }
 }

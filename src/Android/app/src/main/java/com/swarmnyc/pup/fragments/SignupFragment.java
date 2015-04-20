@@ -14,7 +14,9 @@ import com.swarmnyc.pup.PuPCallback;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.UserService;
 import com.swarmnyc.pup.activities.AuthActivity;
+import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.components.GoogleOAuth;
+import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.viewmodels.UserRegisterResult;
 
 import javax.inject.Inject;
@@ -25,11 +27,6 @@ import butterknife.OnClick;
 import retrofit.client.Response;
 
 public class SignupFragment extends Fragment {
-    private AuthActivity activity;
-
-    public SignupFragment() {
-    }
-
     @Inject
     UserService userService;
 
@@ -41,7 +38,7 @@ public class SignupFragment extends Fragment {
 
     @OnClick(R.id.btn_switch)
     public void switchFragment() {
-        activity.changeFragment(new LoginFragment());
+        Navigator.To(new LoginFragment());
     }
 
     @OnClick(R.id.btn_submit)
@@ -49,28 +46,17 @@ public class SignupFragment extends Fragment {
         userService.register(emailText.getText().toString(), passwordText.getText().toString(),new PuPCallback<UserRegisterResult>() {
             @Override
             public void success(UserRegisterResult userRegisterResult, Response response) {
-                activity.finishAuth();
+                Navigator.To(new LobbyListFragment());
             }
         });
-    }
-
-    @OnClick(R.id.btn_google_oauth)
-    public void googleOAuth() {
-        GoogleOAuth.startGetAccount(activity);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        MainActivity.getInstance().hideToolbar();
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
         ButterKnife.inject(this, view);
-
         return view;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = (AuthActivity) activity;
     }
 }

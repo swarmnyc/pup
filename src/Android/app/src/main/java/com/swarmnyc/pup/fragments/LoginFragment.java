@@ -17,6 +17,7 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.UserService;
 import com.swarmnyc.pup.activities.AuthActivity;
+import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.components.GoogleOAuth;
 import com.swarmnyc.pup.models.LoggedInUser;
 
@@ -73,7 +74,7 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        MainActivity.getInstance().hideToolbar();
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.inject(this, view);
         PuPApplication.getInstance().getComponent().inject(this);

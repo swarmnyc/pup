@@ -63,6 +63,7 @@ public class LobbyListFragment extends Fragment
 		LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
 	)
 	{
+        MainActivity.getInstance().showToolbar();
 		PuPApplication.getInstance().getComponent().inject( this );
 		View view = inflater.inflate( R.layout.fragment_lobby_list, container, false );
 		ButterKnife.inject( this, view );

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.activities.MainActivity;
 
 public class MyChatsFragment extends Fragment {
 
@@ -23,6 +24,7 @@ public class MyChatsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        MainActivity.getInstance().showToolbar();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_my_chats, container, false);
     }

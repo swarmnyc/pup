@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class MainDrawerFragment extends Fragment {
-    int currentSelection;
+    int currentSelection = -1;
 
     @InjectView(R.id.drawer_contrainer)
     View drawerMenuContainer;
@@ -47,7 +47,6 @@ public class MainDrawerFragment extends Fragment {
 
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout drawerLayout;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -111,7 +110,7 @@ public class MainDrawerFragment extends Fragment {
             list.add("My Chats");
             list.add("All Lobbies");
         } else {
-            list.add("My Chats");
+            list.add("All Lobbies");
             list.add("Register");
         }
 
@@ -147,7 +146,7 @@ public class MainDrawerFragment extends Fragment {
                     if (User.isLoggedIn()) {
                         fragment = new LobbyListFragment();
                     } else {
-                        //startActivityForResult(new Intent(this, AuthActivity.class), REQUEST_CODE_AUTH);
+                        fragment = new SignupFragment();
                     }
                     break;
                 case 2:
