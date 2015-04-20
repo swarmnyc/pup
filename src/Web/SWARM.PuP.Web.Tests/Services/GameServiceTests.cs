@@ -38,7 +38,7 @@ namespace SWARM.PuP.Web.Tests.Services
         [TestMethod()]
         public void Real_GameService_Adds_Test()
         {
-            IEnumerable<GameSource> list = JsonConvert.DeserializeObject<IEnumerable<GameSource>>(File.ReadAllText(@"D:\Downloads\games.json"));
+            IEnumerable<GameSource> list = JsonConvert.DeserializeObject<IEnumerable<GameSource>>(File.ReadAllText(@"..\..\MockData\import_games2.json"));
 
             foreach (var game in list)
             {

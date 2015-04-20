@@ -24,6 +24,8 @@ namespace SWARM.PuP.Web.Models
 
         public string[] GameTypes { get; set; }
 
+        public int Rank { get; set; }
+
         [BsonRepresentation(BsonType.String)]
         public IList<GamePlatform> Platforms
         {

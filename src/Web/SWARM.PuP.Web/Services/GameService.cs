@@ -36,12 +36,10 @@ namespace SWARM.PuP.Web.Services
 
         protected override Expression<Func<Game, object>> GetOrderExpression(BaseFilter filter)
         {
-            if (string.IsNullOrWhiteSpace(filter.Order))
+            switch ((filter.Order ?? "").ToLower())
             {
-                return (Game x) => x.Name;
-            }
-            switch (filter.Order.ToLower())
-            {
+                case "rank":
+                    return (Game x) => x.Rank;
                 case "name":
                 default:
                     return (Game x) => x.Name;

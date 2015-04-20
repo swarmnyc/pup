@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -11,6 +12,7 @@ using SWARM.PuP.Web.Services;
 
 namespace SWARM.PuP.Web.ApiControllers
 {
+    [RoutePrefix("api/Game")]
     public class GameController : ApiController
     {
         private readonly IGameService _gameService;
@@ -30,6 +32,18 @@ namespace SWARM.PuP.Web.ApiControllers
         public Game Get(string id)
         {
             return _gameService.GetById(id);
+        }
+
+        [Route("Popular"), HttpGet]
+        public IEnumerable<Game> Popular()
+        {
+            //TODO: A Job to compute Games' Rank
+            return _gameService.Filter(new GameFilter()
+            {
+                Order = "Rank",
+                OrderDirection = ListSortDirection.Descending,
+                PageSize = 5
+            });
         }
     }
 }

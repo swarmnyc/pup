@@ -13,6 +13,7 @@ public class Game extends Taggable {
     private String description;
     private List<GamePlatform> platforms;
     private List<String> gameTypes;
+    private int rank;
     @SerializedName("releaseDateUtc")
     private Date releaseDate;
 
@@ -70,5 +71,13 @@ public class Game extends Taggable {
 
     public void setGameTypes(List<String> gameTypes) {
         this.gameTypes = gameTypes;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 }

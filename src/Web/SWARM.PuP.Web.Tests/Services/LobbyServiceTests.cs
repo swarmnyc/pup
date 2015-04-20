@@ -111,13 +111,13 @@ namespace SWARM.PuP.Web.Tests.Services
             var userService = new UserService();
             var service = new LobbyService(new QuickbloxChatService());
 
-            foreach (var game in gameService.All().Take(5))
+            foreach (var game in gameService.All().OrderBy(x => x.Id).Take(10))
             {
                 var lobby = service.Add(new Lobby()
                 {
                     GameId = game.Id,
                     Name = game.Name,
-                    PlayStyle = PlayStyle.Serious,
+                    PlayStyle = PlayStyle.Casual,
                     Platform = game.Platforms.First(),
                     PictureUrl = game.PictureUrl,
                     ThumbnailPictureUrl = game.ThumbnailPictureUrl,

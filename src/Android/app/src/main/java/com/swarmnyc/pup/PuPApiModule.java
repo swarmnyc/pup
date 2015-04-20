@@ -53,6 +53,12 @@ public class PuPApiModule {
 
     @Provides
     @Singleton
+    public GameService provideGameService() {
+        return restAdapter.create(GameService.class);
+    }
+
+    @Provides
+    @Singleton
     public ChatService provideChatService() {
         return new MockChatService();
         //return new QuickbloxChatService();
