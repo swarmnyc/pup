@@ -62,4 +62,9 @@ public class MainActivity extends ActionBarActivity {
     public void showToolbar() {
         toolbar.setVisibility(View.VISIBLE);
     }
+
+    public Toolbar getToolbar()
+    {
+        return toolbar;
+    }
 }
