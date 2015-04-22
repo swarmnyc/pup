@@ -11,4 +11,5 @@
     <dimen name="margin_normal">16dp</dimen>
     <dimen name="padding_half">16dp</dimen>
     <dimen name="padding_small">4dp</dimen>
+    <dimen name="text_label">12sp</dimen>
 </resources>

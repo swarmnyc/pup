@@ -21,4 +21,12 @@
     <string name="hint_join2"><b>(This is so exciting, isn\'t it?)</b></string>
     <string name="hint_login"><b>Already registered? <a href="login">Login here.</a></b></string>
     <string name="hint_singup">We \'re still in alpha and would love to hear you feedback,\nso chat with us up when you get the chance.</string>
+    <string name="hint_search_games">Search games</string>
+    <string name="label_select_preferred_system">SELECT PREFERRED SYSTEM</string>
+    <string name="label_ps3">PS3</string>
+    <string name="label_ps4">PS4</string>
+    <string name="label_steam">STEAM</string>
+    <string name="label_xbox_one">XBOX ONE</string>
+    <string name="label_xbox_360">XBOX 360</string>
+    <string name="label_pc">PC</string>
 </resources>

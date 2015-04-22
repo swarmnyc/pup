@@ -32,6 +32,11 @@
         <item name="android:textColorPrimary">@color/pup_aqua</item>
         <item name="android:textStyle">bold</item>
     </style>
-    
 
-    </resources>
+    <style name="SelectButton">
+        <item name="android:background">@drawable/bg_select_button</item>
+        <item name="android:textColor">@color/text_select_button</item>
+    </style>
+
+
+</resources>

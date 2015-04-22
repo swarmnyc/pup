@@ -8,12 +8,12 @@
         >
 
 
-
     <android.support.v7.widget.RecyclerView
             android:id="@+id/list_lobby"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"/>
 
 
     <com.swarmnyc.pup.view.MultipleOrientationSlidingDrawer
@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             app:handle="@+id/img_top_drawer_handle"
-            app:content="@+id/layout_fitler"
+            app:content="@+id/layout_filter"
             app:orientation="top"
             android:background="@android:color/transparent"
             >
@@ -29,10 +29,12 @@
         <ImageView
                 android:id="@+id/img_top_drawer_handle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:src="@drawable/drawer_shadow"/>
+                android:layout_height="10dp"
+                android:src="@drawable/drawer_shadow"
+                android:background="@color/pup_aqua"/>
 
         <LinearLayout
-                android:id="@+id/layout_fitler"
+                android:id="@+id/layout_filter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -40,16 +42,31 @@
             <EditText
                     android:id="@+id/txt_game_serach"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_search_games"
+                    android:layout_margin="@dimen/margin_normal"
+                    />
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_select_preferred_system"
+                    android:textSize="@dimen/text_label"
+                    android:textColor="@color/pup_orange"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    />
+
+            <com.swarmnyc.pup.view.SystemSelectView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+            </com.swarmnyc.pup.view.SystemSelectView>
+
         </LinearLayout>
 
 
-
-
-
     </com.swarmnyc.pup.view.MultipleOrientationSlidingDrawer>
-
-
 
 
     <Button

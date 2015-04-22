@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="pup_orange_dark">#d15a12</color>
     <color name="pup_orange">#f16a22</color>
     <color name="pup_aqua">#49c1c3</color>
     <color name="pup_aqua_border">#2b9a9a</color>
     <color name="pup_grey_bg">#f1f1f1</color>
     <color name="border">#bcbcbc</color>
     <color name="white">#FFFFFF</color>
+    <color name="text">#F333</color>
+    <color name="text_disabled">#F888</color>
 </resources>
