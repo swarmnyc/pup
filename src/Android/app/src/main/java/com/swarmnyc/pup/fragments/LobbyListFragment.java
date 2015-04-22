@@ -21,6 +21,7 @@ import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.PuPCallback;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.activities.CreateLobbyActivity;
+import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.components.AnimationEndListener;
 import com.swarmnyc.pup.components.AnimationStartListener;
@@ -252,17 +253,20 @@ public class LobbyListFragment extends Fragment
 			// each data item is just a string in this case
 			public LobbyListItemView m_lobbyListItemView;
 
-			public ViewHolder( LobbyListItemView v )
+			public ViewHolder( final LobbyListItemView lobbyListItemView )
 			{
-				super( v );
-				m_lobbyListItemView = v;
+				super( lobbyListItemView );
+				m_lobbyListItemView = lobbyListItemView;
 				m_lobbyListItemView.setOnClickListener(
 					new View.OnClickListener()
 					{
 						@Override public void onClick( final View v )
 						{
-							//							m_navigationManager.showLobby( m_lobbyListItemView.getLobby
-							// () );
+
+							Lobby lobby = (Lobby) lobbyListItemView.getLobby();
+							Intent intent = new Intent( LobbyListFragment.this.activity, LobbyActivity.class );
+							intent.putExtra( "lobbyId", lobby.getId() );
+							LobbyListFragment.this.activity.startActivity( intent );
 						}
 					}
 				);
