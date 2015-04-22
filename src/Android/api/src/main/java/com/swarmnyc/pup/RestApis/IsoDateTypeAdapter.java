@@ -1,4 +1,4 @@
-package com.swarmnyc.pup;
+package com.swarmnyc.pup.RestApis;
 
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;

@@ -12,10 +12,10 @@ import android.widget.Toast;
 
 import com.swarmnyc.pup.BuildConfig;
 import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.PuPCallback;
+import com.swarmnyc.pup.RestApis.PuPRestApiCallback;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
-import com.swarmnyc.pup.UserService;
+import com.swarmnyc.pup.RestApis.UserRestApi;
 import com.swarmnyc.pup.activities.AuthActivity;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.components.GoogleOAuth;
@@ -36,7 +36,7 @@ public class LoginFragment extends Fragment {
     }
 
     @Inject
-    UserService userService;
+    UserRestApi userRestApi;
 
     @InjectView(R.id.text_email)
     public EditText emailText;
@@ -56,7 +56,7 @@ public class LoginFragment extends Fragment {
 
     @OnClick(R.id.btn_submit)
     public void onSubmitBtnClicked() {
-        userService.login(emailText.getText().toString(), passwordText.getText().toString(), new PuPCallback<LoggedInUser>() {
+        userRestApi.login(emailText.getText().toString(), passwordText.getText().toString(), new PuPRestApiCallback<LoggedInUser>() {
             @Override
             public void success(LoggedInUser user, Response response) {
                 User.login(user);

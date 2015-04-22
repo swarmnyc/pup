@@ -9,19 +9,17 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.swarmnyc.pup.*;
+import com.swarmnyc.pup.RestApis.LobbyRestApi;
+import com.swarmnyc.pup.RestApis.PuPRestApiCallback;
 import com.swarmnyc.pup.activities.CreateLobbyActivity;
-import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.LobbyListItemView;
@@ -53,7 +51,8 @@ public class LobbyListFragment extends Fragment
 		);
 	}
 
-	@Inject LobbyService lobbyService;
+	@Inject
+    LobbyRestApi lobbyRestApi;
 
 	LayoutInflater inflater;
 
@@ -108,8 +107,8 @@ public class LobbyListFragment extends Fragment
 
 	private void reloadData()
 	{
-		lobbyService.getList(
-			null, new PuPCallback<List<Lobby>>()
+		lobbyRestApi.getList(
+			null, new PuPRestApiCallback<List<Lobby>>()
 			{
 				@Override public void success( List<Lobby> lobbies, Response response )
 				{

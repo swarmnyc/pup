@@ -12,11 +12,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.swarmnyc.pup.Config;
-import com.swarmnyc.pup.LobbyService;
+import com.swarmnyc.pup.RestApis.LobbyRestApi;
 import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.PuPCallback;
-import com.swarmnyc.pup.PuPEmptyCallback;
+import com.swarmnyc.pup.RestApis.PuPRestApiCallback;
+import com.swarmnyc.pup.RestApis.PuPEmptyRestApiCallback;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.chat.ChatMessage;
@@ -56,7 +55,7 @@ public class LobbyActivity extends ActionBarActivity {
     Button joinButton;
 
     @Inject
-    LobbyService lobbyService;
+    LobbyRestApi lobbyRestApi;
 
     @Inject
     ChatService chatService;
@@ -82,7 +81,7 @@ public class LobbyActivity extends ActionBarActivity {
         * Else show message kit.
         * */
 
-        lobbyService.get(lobbyId, new PuPCallback<Lobby>() {
+        lobbyRestApi.get(lobbyId, new PuPRestApiCallback<Lobby>() {
             @Override
             public void success(Lobby lobby, Response response) {
                 lobby = lobby;
@@ -121,7 +120,7 @@ public class LobbyActivity extends ActionBarActivity {
 
     @OnClick(R.id.btn_join)
     void joinRoom() {
-        lobbyService.join(lobby.getId(), new PuPEmptyCallback() {
+        lobbyRestApi.join(lobby.getId(), new PuPEmptyRestApiCallback() {
             @Override
             public void success(Response response) {
                 Toast.makeText(LobbyActivity.this, "Join Succeeded", Toast.LENGTH_LONG).show();
@@ -146,7 +145,7 @@ public class LobbyActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.menu_leave) {
-            lobbyService.leave(lobby.getId(), new PuPEmptyCallback() {
+            lobbyRestApi.leave(lobby.getId(), new PuPEmptyRestApiCallback() {
                 @Override
                 public void success(Response response) {
                     Toast.makeText(LobbyActivity.this, "Leave Succeeded", Toast.LENGTH_LONG).show();

@@ -9,10 +9,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.PuPCallback;
+import com.swarmnyc.pup.RestApis.PuPRestApiCallback;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
-import com.swarmnyc.pup.UserService;
+import com.swarmnyc.pup.RestApis.UserRestApi;
 import com.swarmnyc.pup.components.GoogleOAuth;
 import com.swarmnyc.pup.fragments.LoginFragment;
 import com.swarmnyc.pup.models.LoggedInUser;
@@ -30,7 +30,7 @@ public class AuthActivity extends ActionBarActivity {
     }
 
     @Inject
-    UserService userService;
+    UserRestApi userRestApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,7 @@ public class AuthActivity extends ActionBarActivity {
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
         } else {
-            userService.externalLogin(provider, email, token, new PuPCallback<LoggedInUser>() {
+            userRestApi.externalLogin(provider, email, token, new PuPRestApiCallback<LoggedInUser>() {
                 @Override
                 public void success(LoggedInUser loggedInUser, Response response) {
                     User.login(loggedInUser);

@@ -1,31 +1,20 @@
 package com.swarmnyc.pup.fragments;
 
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannedString;
-import android.text.method.LinkMovementMethod;
-import android.text.method.MovementMethod;
 import android.text.style.URLSpan;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.swarmnyc.pup.PuPCallback;
+import com.swarmnyc.pup.RestApis.PuPRestApiCallback;
 import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.UserService;
-import com.swarmnyc.pup.activities.AuthActivity;
+import com.swarmnyc.pup.RestApis.UserRestApi;
 import com.swarmnyc.pup.activities.MainActivity;
-import com.swarmnyc.pup.components.GoogleOAuth;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.viewmodels.UserRegisterResult;
 
@@ -38,7 +27,7 @@ import retrofit.client.Response;
 
 public class SignupFragment extends Fragment {
     @Inject
-    UserService userService;
+    UserRestApi userRestApi;
 
     @InjectView(R.id.text_email)
     EditText emailText;
@@ -52,7 +41,7 @@ public class SignupFragment extends Fragment {
     @OnClick(R.id.btn_join)
     public void userRegister() {
         if (tosCheckbox.isChecked()) {
-            userService.register(emailText.getText().toString(), passwordText.getText().toString(), new PuPCallback<UserRegisterResult>() {
+            userRestApi.register(emailText.getText().toString(), passwordText.getText().toString(), new PuPRestApiCallback<UserRegisterResult>() {
                 @Override
                 public void success(UserRegisterResult userRegisterResult, Response response) {
                     Navigator.To(new LobbyListFragment());

@@ -1,8 +1,5 @@
 package com.swarmnyc.pup;
 
-/**
- * Created by somya on 4/17/15.
- */
 public class StringUtils
 {
 

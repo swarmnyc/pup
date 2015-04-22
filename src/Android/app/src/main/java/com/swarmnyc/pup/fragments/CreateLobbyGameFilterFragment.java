@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.swarmnyc.pup.GameService;
+import com.swarmnyc.pup.RestApis.GameRestApi;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.activities.MainActivity;
 
@@ -15,7 +15,7 @@ import javax.inject.Inject;
 
 public class CreateLobbyGameFilterFragment extends Fragment {
     @Inject
-    GameService gameService;
+    GameRestApi gameRestApi;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

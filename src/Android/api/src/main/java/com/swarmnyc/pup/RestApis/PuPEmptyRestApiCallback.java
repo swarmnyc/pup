@@ -1,8 +1,8 @@
-package com.swarmnyc.pup;
+package com.swarmnyc.pup.RestApis;
 
 import retrofit.client.Response;
 
-public abstract class PuPEmptyCallback extends PuPCallback<String> {
+public abstract class PuPEmptyRestApiCallback extends PuPRestApiCallback<String> {
 
     public abstract void success(Response response);
 
