@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import com.swarmnyc.pup.RestApis.GameRestApi;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.Services.GameService;
 import com.swarmnyc.pup.fragments.CreateLobbyGameFilterFragment;
 
 import javax.inject.Inject;
@@ -17,7 +18,7 @@ public class CreateLobbyActivity extends ActionBarActivity {
     public static int REQUEST_CODE_CREATE_LOBBY = 56229;
 
     @Inject
-    GameRestApi gameRestApi;
+    GameService gameService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

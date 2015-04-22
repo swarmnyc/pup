@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.swarmnyc.pup.BuildConfig;
 import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.RestApis.PuPRestApiCallback;
+import com.swarmnyc.pup.RestApis.RestApiCallback;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.RestApis.UserRestApi;
@@ -56,7 +56,7 @@ public class LoginFragment extends Fragment {
 
     @OnClick(R.id.btn_submit)
     public void onSubmitBtnClicked() {
-        userRestApi.login(emailText.getText().toString(), passwordText.getText().toString(), new PuPRestApiCallback<LoggedInUser>() {
+        userRestApi.login(emailText.getText().toString(), passwordText.getText().toString(), new RestApiCallback<LoggedInUser>() {
             @Override
             public void success(LoggedInUser user, Response response) {
                 User.login(user);

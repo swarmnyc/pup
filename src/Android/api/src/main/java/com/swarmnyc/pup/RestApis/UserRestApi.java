@@ -12,11 +12,11 @@ public interface UserRestApi {
 
     @FormUrlEncoded
     @POST("/Login")
-    void login(@Field("email") String email, @Field("password") String password, PuPRestApiCallback<LoggedInUser> callback);
+    void login(@Field("email") String email, @Field("password") String password, RestApiCallback<LoggedInUser> callback);
 
     @FormUrlEncoded
     @POST("/ExternalLogin")
-    void externalLogin(@Field("provider") String provider, @Field("email") String email, @Field("token") String token, PuPRestApiCallback<LoggedInUser> callback);
+    void externalLogin(@Field("provider") String provider, @Field("email") String email, @Field("token") String token, RestApiCallback<LoggedInUser> callback);
 
     @FormUrlEncoded
     @POST("/User/Register")

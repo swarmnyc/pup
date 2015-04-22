@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.swarmnyc.pup.RestApis.PuPRestApiCallback;
+import com.swarmnyc.pup.RestApis.RestApiCallback;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.RestApis.UserRestApi;
 import com.swarmnyc.pup.activities.MainActivity;
@@ -41,7 +41,7 @@ public class SignupFragment extends Fragment {
     @OnClick(R.id.btn_join)
     public void userRegister() {
         if (tosCheckbox.isChecked()) {
-            userRestApi.register(emailText.getText().toString(), passwordText.getText().toString(), new PuPRestApiCallback<UserRegisterResult>() {
+            userRestApi.register(emailText.getText().toString(), passwordText.getText().toString(), new RestApiCallback<UserRegisterResult>() {
                 @Override
                 public void success(UserRegisterResult userRegisterResult, Response response) {
                     Navigator.To(new LobbyListFragment());

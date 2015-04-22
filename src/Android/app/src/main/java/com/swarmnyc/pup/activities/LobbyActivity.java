@@ -12,11 +12,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.swarmnyc.pup.RestApis.LobbyRestApi;
 import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.RestApis.PuPRestApiCallback;
-import com.swarmnyc.pup.RestApis.PuPEmptyRestApiCallback;
+import com.swarmnyc.pup.RestApis.RestApiCallback;
+import com.swarmnyc.pup.RestApis.EmptyRestApiCallback;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.Services.LobbyService;
+import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatMessageListener;
@@ -26,6 +27,7 @@ import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -55,7 +57,7 @@ public class LobbyActivity extends ActionBarActivity {
     Button joinButton;
 
     @Inject
-    LobbyRestApi lobbyRestApi;
+    LobbyService lobbyService;
 
     @Inject
     ChatService chatService;
@@ -81,9 +83,9 @@ public class LobbyActivity extends ActionBarActivity {
         * Else show message kit.
         * */
 
-        lobbyRestApi.get(lobbyId, new PuPRestApiCallback<Lobby>() {
+        lobbyService.getLobby(lobbyId, new ServiceCallback<Lobby>() {
             @Override
-            public void success(Lobby lobby, Response response) {
+            public void success(Lobby lobby) {
                 lobby = lobby;
                 initializeLobby();
             }
@@ -120,9 +122,9 @@ public class LobbyActivity extends ActionBarActivity {
 
     @OnClick(R.id.btn_join)
     void joinRoom() {
-        lobbyRestApi.join(lobby.getId(), new PuPEmptyRestApiCallback() {
+        lobbyService.join(lobby.getId(), new ServiceCallback() {
             @Override
-            public void success(Response response) {
+            public void success(Object value) {
                 Toast.makeText(LobbyActivity.this, "Join Succeeded", Toast.LENGTH_LONG).show();
                 initializeLobby();
             }
@@ -145,9 +147,9 @@ public class LobbyActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.menu_leave) {
-            lobbyRestApi.leave(lobby.getId(), new PuPEmptyRestApiCallback() {
+            lobbyService.leave(lobby.getId(), new ServiceCallback() {
                 @Override
-                public void success(Response response) {
+                public void success(Object value) {
                     Toast.makeText(LobbyActivity.this, "Leave Succeeded", Toast.LENGTH_LONG).show();
                     LobbyActivity.this.finish();
                 }

@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.RestApis.PuPRestApiCallback;
+import com.swarmnyc.pup.RestApis.RestApiCallback;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.RestApis.UserRestApi;
@@ -79,7 +79,7 @@ public class AuthActivity extends ActionBarActivity {
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
         } else {
-            userRestApi.externalLogin(provider, email, token, new PuPRestApiCallback<LoggedInUser>() {
+            userRestApi.externalLogin(provider, email, token, new RestApiCallback<LoggedInUser>() {
                 @Override
                 public void success(LoggedInUser loggedInUser, Response response) {
                     User.login(loggedInUser);

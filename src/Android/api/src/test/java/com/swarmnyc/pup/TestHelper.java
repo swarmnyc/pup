@@ -15,7 +15,7 @@ public class TestHelper {
     public static final String PUP_API_URL = "http://pup.azurewebsites.net/api/";
     private static RestAdapter restAdapter;
 
-    public static <T> T getService(Class<T> cla) {
+    public static <T> T getRestApi(Class<T> cla) {
         if (restAdapter == null) {
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Date.class, new IsoDateTypeAdapter())
