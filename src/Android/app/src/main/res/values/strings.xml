@@ -29,4 +29,5 @@
     <string name="label_xbox_one">XBOX ONE</string>
     <string name="label_xbox_360">XBOX 360</string>
     <string name="label_pc">PC</string>
+    <string name="filter">Filter</string>
 </resources>
