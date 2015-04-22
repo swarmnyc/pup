@@ -39,4 +39,5 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.2.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.sothree.slidinguppanel:library:3.0.0'
 }
