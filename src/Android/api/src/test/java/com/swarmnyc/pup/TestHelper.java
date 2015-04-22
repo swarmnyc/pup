@@ -2,6 +2,7 @@ package com.swarmnyc.pup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.swarmnyc.pup.RestApis.IsoDateTypeAdapter;
 
 import java.util.Date;
 

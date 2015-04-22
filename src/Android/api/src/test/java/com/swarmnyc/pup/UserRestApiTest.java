@@ -1,29 +1,24 @@
 package com.swarmnyc.pup;
 
-import com.google.common.collect.ImmutableMap;
-import com.swarmnyc.pup.models.GamePlatform;
-import com.swarmnyc.pup.models.Lobby;
+import com.swarmnyc.pup.RestApis.PuPRestApiCallback;
+import com.swarmnyc.pup.RestApis.UserRestApi;
 import com.swarmnyc.pup.models.LoggedInUser;
-import com.swarmnyc.pup.models.PlayStyle;
-import com.swarmnyc.pup.models.SkillLevel;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import retrofit.client.Response;
 
-public class UserServiceTest {
+public class UserRestApiTest {
     @Test
     public void loginTest() throws Throwable {
-        UserService userService = TestHelper.getService(UserService.class);
+        UserRestApi userRestApi = TestHelper.getService(UserRestApi.class);
         final CountDownLatch signal = new CountDownLatch(1);
 
-        userService.login("hello@swarmnyc.com","Abc1234", new PuPCallback<LoggedInUser>() {
+        userRestApi.login("hello@swarmnyc.com","Abc1234", new PuPRestApiCallback<LoggedInUser>() {
             @Override
             public void success(LoggedInUser loggedInUser, Response response) {
                 signal.countDown();

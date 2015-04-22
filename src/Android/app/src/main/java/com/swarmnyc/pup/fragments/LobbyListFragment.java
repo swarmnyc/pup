@@ -16,10 +16,10 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.swarmnyc.pup.LobbyService;
 import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.PuPCallback;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.RestApis.LobbyRestApi;
+import com.swarmnyc.pup.RestApis.PuPRestApiCallback;
 import com.swarmnyc.pup.activities.CreateLobbyActivity;
 import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
@@ -57,7 +57,8 @@ public class LobbyListFragment extends Fragment
 		);
 	}
 
-	@Inject LobbyService lobbyService;
+	@Inject
+    LobbyRestApi lobbyRestApi;
 
 	LayoutInflater inflater;
 
@@ -177,8 +178,8 @@ public class LobbyListFragment extends Fragment
 
 	private void reloadData()
 	{
-		lobbyService.getList(
-			null, new PuPCallback<List<Lobby>>()
+		lobbyRestApi.getList(
+			null, new PuPRestApiCallback<List<Lobby>>()
 			{
 				@Override public void success( List<Lobby> lobbies, Response response )
 				{

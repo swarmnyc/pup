@@ -1,29 +1,28 @@
 package com.swarmnyc.pup;
 
 import com.google.common.collect.ImmutableMap;
+import com.swarmnyc.pup.RestApis.GameRestApi;
+import com.swarmnyc.pup.RestApis.LobbyRestApi;
+import com.swarmnyc.pup.RestApis.PuPRestApiCallback;
 import com.swarmnyc.pup.models.Game;
-import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.models.Lobby;
-import com.swarmnyc.pup.models.PlayStyle;
-import com.swarmnyc.pup.models.SkillLevel;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import retrofit.client.Response;
 
-public class GameServiceTest {
+public class GameRestApiTest {
     @Test
     public void getGamesTest() throws Throwable {
-        GameService lobbyService = TestHelper.getService(GameService.class);
+        GameRestApi restApi = TestHelper.getService(GameRestApi.class);
         final CountDownLatch signal = new CountDownLatch(1);
 
-        lobbyService.getList(ImmutableMap.of("PageIndex", "0"), new PuPCallback<List<Game>>() {
+        restApi.getList(ImmutableMap.of("PageIndex", "0"), new PuPRestApiCallback<List<Game>>() {
             @Override
             public void success(List<Game> games, Response response) {
                 signal.countDown();
@@ -36,10 +35,10 @@ public class GameServiceTest {
 
     @Test
     public void getGameTest() throws Throwable {
-        LobbyService lobbyService = TestHelper.getService(LobbyService.class);
+        LobbyRestApi restApi = TestHelper.getService(LobbyRestApi.class);
         final CountDownLatch signal = new CountDownLatch(1);
 
-        lobbyService.get("5527fffe8fdf837834067663", new PuPCallback<Lobby>() {
+        restApi.get("5527fffe8fdf837834067663", new PuPRestApiCallback<Lobby>() {
             @Override
             public void success(Lobby lobby, Response response) {
                 Assert.assertNotNull(lobby);

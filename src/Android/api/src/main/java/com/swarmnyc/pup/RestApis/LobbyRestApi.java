@@ -1,4 +1,4 @@
-package com.swarmnyc.pup;
+package com.swarmnyc.pup.RestApis;
 
 import com.swarmnyc.pup.models.Lobby;
 
@@ -13,7 +13,7 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
-public interface LobbyService {
+public interface LobbyRestApi {
     @GET("/Lobby")
     void getList(@QueryMap Map<String, String> filter, Callback<List<Lobby>> callback);
 
@@ -24,11 +24,11 @@ public interface LobbyService {
     void create(@Body Lobby lobby, Callback<Lobby> callback);
 
     @PUT("/Lobby")
-    void update(@Body Lobby lobby, PuPEmptyCallback callback);
+    void update(@Body Lobby lobby, PuPEmptyRestApiCallback callback);
 
     @POST("/Lobby/Join/{LobbyId}")
-    void join(@Path("LobbyId") String lobbyId, PuPEmptyCallback callback);
+    void join(@Path("LobbyId") String lobbyId, PuPEmptyRestApiCallback callback);
 
     @POST("/Lobby/Leave/{LobbyId}")
-    void leave(@Path("LobbyId") String lobbyId, PuPEmptyCallback callback);
+    void leave(@Path("LobbyId") String lobbyId, PuPEmptyRestApiCallback callback);
 }

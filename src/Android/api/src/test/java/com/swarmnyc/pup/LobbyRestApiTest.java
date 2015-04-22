@@ -1,6 +1,9 @@
 package com.swarmnyc.pup;
 
 import com.google.common.collect.ImmutableMap;
+import com.swarmnyc.pup.RestApis.LobbyRestApi;
+import com.swarmnyc.pup.RestApis.PuPRestApiCallback;
+import com.swarmnyc.pup.RestApis.PuPEmptyRestApiCallback;
 import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.PlayStyle;
@@ -16,13 +19,13 @@ import java.util.concurrent.TimeUnit;
 
 import retrofit.client.Response;
 
-public class LobbyServiceTest {
+public class LobbyRestApiTest {
     @Test
     public void getLobbiesTest() throws Throwable {
-        LobbyService lobbyService = TestHelper.getService(LobbyService.class);
+        LobbyRestApi lobbyRestApi = TestHelper.getService(LobbyRestApi.class);
         final CountDownLatch signal = new CountDownLatch(1);
 
-        lobbyService.getList(ImmutableMap.of("PageIndex", "0"), new PuPCallback<List<Lobby>>() {
+        lobbyRestApi.getList(ImmutableMap.of("PageIndex", "0"), new PuPRestApiCallback<List<Lobby>>() {
             @Override
             public void success(List<Lobby> lobbies, Response response) {
                 signal.countDown();
@@ -35,10 +38,10 @@ public class LobbyServiceTest {
 
     @Test
     public void getLobbyTest() throws Throwable {
-        LobbyService lobbyService = TestHelper.getService(LobbyService.class);
+        LobbyRestApi lobbyRestApi = TestHelper.getService(LobbyRestApi.class);
         final CountDownLatch signal = new CountDownLatch(1);
 
-        lobbyService.get("5527fffe8fdf837834067663", new PuPCallback<Lobby>() {
+        lobbyRestApi.get("5527fffe8fdf837834067663", new PuPRestApiCallback<Lobby>() {
             @Override
             public void success(Lobby lobby, Response response) {
                 Assert.assertNotNull(lobby);
@@ -52,7 +55,7 @@ public class LobbyServiceTest {
 
     @Test
     public void createLobbyTest() throws Throwable {
-        LobbyService lobbyService = TestHelper.getService(LobbyService.class);
+        LobbyRestApi lobbyRestApi = TestHelper.getService(LobbyRestApi.class);
         final CountDownLatch signal = new CountDownLatch(1);
 
         Lobby lobby = new Lobby();
@@ -63,7 +66,7 @@ public class LobbyServiceTest {
         lobby.setName("Title");
         lobby.setPlatform(GamePlatform.PS4);
         lobby.setSkillLevel(SkillLevel.Newbie);
-        lobbyService.create(lobby, new PuPCallback<Lobby>() {
+        lobbyRestApi.create(lobby, new PuPRestApiCallback<Lobby>() {
             @Override
             public void success(Lobby lobby, Response response) {
                 Assert.assertNotNull(lobby.getId());
@@ -77,7 +80,7 @@ public class LobbyServiceTest {
 
     @Test
     public void updateLobbyTest() throws Throwable {
-        LobbyService lobbyService = TestHelper.getService(LobbyService.class);
+        LobbyRestApi lobbyRestApi = TestHelper.getService(LobbyRestApi.class);
         final CountDownLatch signal = new CountDownLatch(1);
 
         Lobby lobby = new Lobby();
@@ -89,7 +92,7 @@ public class LobbyServiceTest {
         lobby.setName("Update");
         lobby.setPlatform(GamePlatform.PS4);
         lobby.setSkillLevel(SkillLevel.Newbie);
-        lobbyService.update(lobby, new PuPEmptyCallback() {
+        lobbyRestApi.update(lobby, new PuPEmptyRestApiCallback() {
             @Override
             public void success(Response response) {
                 signal.countDown();
@@ -102,10 +105,10 @@ public class LobbyServiceTest {
 
     @Test
     public void joinLobbyTest() throws Throwable {
-        LobbyService lobbyService = TestHelper.getService(LobbyService.class);
+        LobbyRestApi lobbyRestApi = TestHelper.getService(LobbyRestApi.class);
         final CountDownLatch signal = new CountDownLatch(1);
 
-        lobbyService.join("552800dc8fdf837834067666", new PuPEmptyCallback() {
+        lobbyRestApi.join("552800dc8fdf837834067666", new PuPEmptyRestApiCallback() {
             @Override
             public void success(Response response) {
                 signal.countDown();
@@ -118,10 +121,10 @@ public class LobbyServiceTest {
 
     @Test
     public void leaveLobbyTest() throws Throwable {
-        LobbyService lobbyService = TestHelper.getService(LobbyService.class);
+        LobbyRestApi lobbyRestApi = TestHelper.getService(LobbyRestApi.class);
         final CountDownLatch signal = new CountDownLatch(1);
 
-        lobbyService.leave("552824e18fdf84754c326f6f", new PuPEmptyCallback() {
+        lobbyRestApi.leave("552824e18fdf84754c326f6f", new PuPEmptyRestApiCallback() {
             @Override
             public void success(Response response) {
                 signal.countDown();

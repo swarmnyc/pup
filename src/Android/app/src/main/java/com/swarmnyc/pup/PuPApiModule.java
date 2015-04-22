@@ -2,9 +2,12 @@ package com.swarmnyc.pup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.swarmnyc.pup.RestApis.GameRestApi;
+import com.swarmnyc.pup.RestApis.IsoDateTypeAdapter;
+import com.swarmnyc.pup.RestApis.LobbyRestApi;
+import com.swarmnyc.pup.RestApis.UserRestApi;
 import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.chat.MockChatService;
-import com.swarmnyc.pup.chat.QuickbloxChatService;
 
 import java.util.Date;
 
@@ -41,20 +44,20 @@ public class PuPApiModule {
 
     @Provides
     @Singleton
-    public UserService provideUserService() {
-        return restAdapter.create(UserService.class);
+    public UserRestApi provideUserService() {
+        return restAdapter.create(UserRestApi.class);
     }
 
     @Provides
     @Singleton
-    public LobbyService provideLobbyService() {
-        return restAdapter.create(LobbyService.class);
+    public LobbyRestApi provideLobbyService() {
+        return restAdapter.create(LobbyRestApi.class);
     }
 
     @Provides
     @Singleton
-    public GameService provideGameService() {
-        return restAdapter.create(GameService.class);
+    public GameRestApi provideGameService() {
+        return restAdapter.create(GameRestApi.class);
     }
 
     @Provides

@@ -1,4 +1,4 @@
-package com.swarmnyc.pup;
+package com.swarmnyc.pup.RestApis;
 
 import com.swarmnyc.pup.models.Game;
 import com.swarmnyc.pup.models.Lobby;
@@ -14,7 +14,7 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
-public interface GameService {
+public interface GameRestApi {
     @GET("/Game")
     void getList(@QueryMap Map<String, String> filter, Callback<List<Game>> callback);
 
