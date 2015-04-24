@@ -74,11 +74,12 @@
                     android:layout_marginStart="@dimen/margin_normal"
                     />
 
-            <com.swarmnyc.pup.view.SystemSelectView
+            <com.swarmnyc.pup.view.GamePlatformSelectView
+                    android:id="@+id/view_platform_select"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-            </com.swarmnyc.pup.view.SystemSelectView>
+            </com.swarmnyc.pup.view.GamePlatformSelectView>
         </LinearLayout>
 
         <ImageView

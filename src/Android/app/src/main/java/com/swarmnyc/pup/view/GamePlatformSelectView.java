@@ -9,11 +9,15 @@ import android.widget.LinearLayout;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.models.GamePlatform;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TODO: document your custom view class.
  */
-public class SystemSelectView extends LinearLayout
+public class GamePlatformSelectView extends LinearLayout
 {
 
 	@InjectView( R.id.btn_pc )       Button m_pcButton;
@@ -25,20 +29,28 @@ public class SystemSelectView extends LinearLayout
 
 
 
+	public interface OnPlatformSelectionChangedListener
+	{
 
-	public SystemSelectView( Context context )
+		void onPlatformSelectionChanged();
+	}
+
+
+	private OnPlatformSelectionChangedListener m_platformSelectionChangedListener;
+
+	public GamePlatformSelectView( Context context )
 	{
 		super( context );
 		init( null, 0 );
 	}
 
-	public SystemSelectView( Context context, AttributeSet attrs )
+	public GamePlatformSelectView( Context context, AttributeSet attrs )
 	{
 		super( context, attrs );
 		init( attrs, 0 );
 	}
 
-	public SystemSelectView( Context context, AttributeSet attrs, int defStyle )
+	public GamePlatformSelectView( Context context, AttributeSet attrs, int defStyle )
 	{
 		super( context, attrs, defStyle );
 		init( attrs, defStyle );
@@ -61,28 +73,65 @@ public class SystemSelectView extends LinearLayout
 		m_xboxOneButton.setOnClickListener( systemOnClickListener );
 		m_ps3Button.setOnClickListener( systemOnClickListener );
 		m_ps4Button.setOnClickListener( systemOnClickListener );
+
+
 	}
 
+	public List<GamePlatform> getSelectedGamePlatforms()
+	{
+		final ArrayList<GamePlatform> gamePlatforms = new ArrayList<>();
+
+		if (m_pcButton.isSelected())
+		{
+			gamePlatforms.add( GamePlatform.PC );
+		}
+		if (m_steamButton.isSelected())
+		{
+			gamePlatforms.add( GamePlatform.Steam );
+		}
+		if (m_xbox360Button.isSelected())
+		{
+			gamePlatforms.add( GamePlatform.Xbox360 );
+		}
+		if (m_xboxOneButton.isSelected())
+		{
+			gamePlatforms.add( GamePlatform.XboxOne );
+		}
+		if (m_ps3Button.isSelected())
+		{
+			gamePlatforms.add( GamePlatform.PS3 );
+		}
+		if (m_ps4Button.isSelected())
+		{
+			gamePlatforms.add( GamePlatform.PS4 );
+		}
+
+		return gamePlatforms;
+
+	}
+
+	public OnPlatformSelectionChangedListener getPlatformSelectionChangedListener()
+	{
+		return m_platformSelectionChangedListener;
+	}
+
+	public void setPlatformSelectionChangedListener(
+		final OnPlatformSelectionChangedListener platformSelectionChangedListener
+	)
+	{
+		m_platformSelectionChangedListener = platformSelectionChangedListener;
+	}
 
 	private  class SystemOnClickListener implements OnClickListener
 	{
 		@Override public void onClick( final View v )
 		{
 
-			if (v.isSelected())
-			{
-				v.setSelected( false );
-			}
-			else
-			{
-				m_pcButton.setSelected( false );
-				m_steamButton.setSelected( false );
-				m_xbox360Button.setSelected( false );
-				m_xboxOneButton.setSelected( false );
-				m_ps3Button.setSelected( false );
-				m_ps4Button.setSelected( false );
+			v.setSelected( !v.isSelected() );
 
-				v.setSelected( true );
+			if (null != m_platformSelectionChangedListener )
+			{
+				m_platformSelectionChangedListener.onPlatformSelectionChanged();
 			}
 
 		}

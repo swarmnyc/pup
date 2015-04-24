@@ -10,6 +10,12 @@ import java.util.Map;
 public class GameFilter extends BaseFilter {
     HashSet<GamePlatform> platformList = new HashSet<>();
 
+
+    public void setPlatformList( final List<GamePlatform> platformList )
+    {
+        this.platformList.addAll(   platformList );
+    }
+
     public void addGamePlatform(GamePlatform platform) {
         platformList.add(platform);
     }
