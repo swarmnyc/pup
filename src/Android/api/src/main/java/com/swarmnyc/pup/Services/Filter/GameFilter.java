@@ -13,7 +13,8 @@ public class GameFilter extends BaseFilter {
 
     public void setPlatformList( final List<GamePlatform> platformList )
     {
-        this.platformList.addAll(   platformList );
+        this.platformList.clear();
+        this.platformList.addAll( platformList );
     }
 
     public void addGamePlatform(GamePlatform platform) {

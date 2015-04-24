@@ -1,4 +1,4 @@
-package com.swarmnyc.pup;
+package com.swarmnyc.pup.gcm;
 
 import android.app.Activity;
 import android.content.ComponentName;

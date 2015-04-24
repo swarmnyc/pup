@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
-public class Lobby extends Taggable {
+public class Lobby extends Taggable implements PicturedModel {
     private String name;
     private String pictureUrl;
     private String thumbnailPictureUrl;

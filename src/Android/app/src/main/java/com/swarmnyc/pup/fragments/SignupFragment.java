@@ -44,7 +44,7 @@ public class SignupFragment extends Fragment {
             userRestApi.register(emailText.getText().toString(), passwordText.getText().toString(), new RestApiCallback<UserRegisterResult>() {
                 @Override
                 public void success(UserRegisterResult userRegisterResult, Response response) {
-                    Navigator.To(new LobbyListFragment());
+                    Navigator.ToLobbyList();
                 }
             });
         }

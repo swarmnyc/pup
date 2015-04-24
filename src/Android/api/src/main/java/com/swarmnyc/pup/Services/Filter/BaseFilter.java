@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BaseFilter {
-    String search;
+    String search = "";
     int pageIndex = -1;
     int pageSize = -1;
     String order;
