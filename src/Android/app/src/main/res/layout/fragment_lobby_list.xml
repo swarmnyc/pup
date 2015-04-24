@@ -7,14 +7,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="top"
-        app:umanoPanelHeight="10dp"
-        app:umanoShadowHeight="4dp"
+        app:umanoPanelHeight="14dp"
+        app:umanoShadowHeight="0dp"
+
         >
 
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="com.swarmnyc.pup.ui.fragment.FragmentLobbyList"
+
 
             >
 
@@ -23,17 +25,16 @@
                 android:scrollbars="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="7dp"
                 />
 
-        <Button
+        <ImageButton
                 android:id="@+id/btn_create_lobby"
-                android:text="@string/button_add"
-                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ico_float_orange_add"
+                android:background="@android:color/transparent"
                 android:gravity="center"
-                android:background="@drawable/bg_round_orange"
-                android:textSize="@dimen/btn_plus_size"
-                android:layout_width="@dimen/button_hover_size"
-                android:layout_height="@dimen/button_hover_size"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
@@ -45,39 +46,49 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@android:color/transparent">
 
-
-        <EditText
-                android:id="@+id/txt_game_serach"
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_search_games"
-                android:layout_margin="@dimen/margin_normal"
-                android:lines="1"
-                />
+                android:orientation="vertical"
+                android:background="@android:color/white">
 
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/label_select_preferred_system"
-                android:textSize="@dimen/text_label"
-                android:textColor="@color/pup_orange"
-                android:layout_marginLeft="@dimen/margin_normal"
-                android:layout_marginStart="@dimen/margin_normal"
-                />
+            <EditText
+                    android:id="@+id/txt_game_serach"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_search_games"
+                    android:layout_margin="@dimen/margin_normal"
+                    android:lines="1"
+                    />
 
-        <com.swarmnyc.pup.view.SystemSelectView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_select_preferred_system"
+                    android:textSize="@dimen/text_label"
+                    android:textColor="@color/pup_orange"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    />
 
-        </com.swarmnyc.pup.view.SystemSelectView>
+            <com.swarmnyc.pup.view.SystemSelectView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+            </com.swarmnyc.pup.view.SystemSelectView>
+        </LinearLayout>
 
         <ImageView
                 android:id="@+id/img_top_drawer_handle"
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/pup_aqua"/>
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@drawable/bar_full_pull"
+                android:background="@android:color/transparent"
+                />
 
 
     </LinearLayout>

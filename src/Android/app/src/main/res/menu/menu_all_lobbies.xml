@@ -2,6 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" >
     <item android:id="@+id/menu_filter" android:title="@string/filter"
-          android:icon="@android:drawable/ic_menu_search"
+          android:icon="@drawable/ico_filter"
         app:showAsAction="always" />
 </menu>

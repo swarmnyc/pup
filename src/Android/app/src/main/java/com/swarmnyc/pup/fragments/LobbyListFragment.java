@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
+import android.widget.ImageButton;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -46,57 +47,54 @@ public class LobbyListFragment extends Fragment {
     public LobbyListFragment() {
     }
 
-    @InjectView(R.id.layout_sliding_panel)
-    public SlidingUpPanelLayout m_slidingPanel;
+    @InjectView( R.id.layout_sliding_panel ) public SlidingUpPanelLayout m_slidingPanel;
 
-    @InjectView(R.id.list_lobby)
-    public RecyclerView m_lobbyRecyclerView;
+    @InjectView( R.id.list_lobby ) public RecyclerView m_lobbyRecyclerView;
 
-    @InjectView(R.id.btn_create_lobby)
-    public Button m_createLobbyButton;
+    @InjectView( R.id.btn_create_lobby ) public ImageButton m_createLobbyButton;
 
-    @OnClick(R.id.btn_create_lobby)
-    public void onCreateLobbyButtonClicked() {
+    @OnClick( R.id.btn_create_lobby ) public void onCreateLobbyButtonClicked()
+    {
         this.startActivityForResult(
-                new Intent(this.activity, CreateLobbyActivity.class), CreateLobbyActivity.REQUEST_CODE_CREATE_LOBBY
+            new Intent( this.activity, CreateLobbyActivity.class ), CreateLobbyActivity.REQUEST_CODE_CREATE_LOBBY
         );
     }
 
-    @Inject
-    LobbyService lobbyService;
+    @Inject LobbyService lobbyService;
 
     LayoutInflater inflater;
 
     LobbyFilter filter = new LobbyFilter();
 
-    @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
-    ) {
+    @Override public View onCreateView(
+        LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
+    )
+    {
         MainActivity.getInstance().showToolbar();
-        PuPApplication.getInstance().getComponent().inject(this);
-        View view = inflater.inflate(R.layout.fragment_lobby_list, container, false);
-        ButterKnife.inject(this, view);
-        setHasOptionsMenu(true);
+        PuPApplication.getInstance().getComponent().inject( this );
+        View view = inflater.inflate( R.layout.fragment_lobby_list, container, false );
+        ButterKnife.inject( this, view );
+        setHasOptionsMenu( true );
 
 
-        m_slidingPanel.setOverlayed(true);
+        m_slidingPanel.setOverlayed( true );
 
         m_slidingPanel.setPanelSlideListener(
-                new SlidingUpPanelLayout.PanelSlideListener() {
-                    @Override
-                    public void onPanelSlide(final View view, final float v) {
+            new SlidingUpPanelLayout.PanelSlideListener()
+            {
+                @Override public void onPanelSlide( final View view, final float v )
+                {
 
-                    }
+                }
 
-                    @Override
-                    public void onPanelCollapsed(final View view) {
-                        final Animation animation = AnimationUtils.loadAnimation(
-                                getActivity(), R.anim.abc_grow_fade_in_from_bottom
-                        );
-                        m_createLobbyButton.startAnimation(animation);
-                        animation.setAnimationListener(
-                                new AnimationStartListener() {
+                @Override public void onPanelCollapsed( final View view )
+                {
+                    final Animation animation = AnimationUtils.loadAnimation(
+                        getActivity(), R.anim.abc_grow_fade_in_from_bottom
+                    );
+                    m_createLobbyButton.startAnimation( animation );
+                    animation.setAnimationListener(
+                        new AnimationStartListener() {
                                     @Override
                                     public void onAnimationStart(final Animation animation) {
                                         m_createLobbyButton.setVisibility(View.VISIBLE);
@@ -180,12 +178,13 @@ public class LobbyListFragment extends Fragment {
 
     private void reloadData() {
         lobbyService.getLobbies(
-                filter, new ServiceCallback<List<Lobby>>() {
-                    @Override
-                    public void success(List<Lobby> lobbies) {
-                        m_lobbyAdapter.setLobbies(lobbies);
-                    }
+            filter, new ServiceCallback<List<Lobby>>()
+            {
+                @Override public void success( List<Lobby> lobbies )
+                {
+                    m_lobbyAdapter.setLobbies( lobbies );
                 }
+            }
         );
     }
 
