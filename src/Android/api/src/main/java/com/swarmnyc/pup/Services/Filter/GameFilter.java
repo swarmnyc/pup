@@ -14,7 +14,7 @@ public class GameFilter extends BaseFilter {
         platformList.add(platform);
     }
 
-    public void remvoeGamePlatform(GamePlatform platform) {
+    public void removeGamePlatform( GamePlatform platform ) {
         platformList.remove(platform);
     }
 
