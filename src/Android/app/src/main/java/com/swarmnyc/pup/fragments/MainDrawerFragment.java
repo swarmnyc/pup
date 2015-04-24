@@ -132,33 +132,33 @@ public class MainDrawerFragment extends Fragment {
         if (position != currentSelection) {
 
             currentSelection = position;
-            Fragment fragment = null;
+            Class fragment = null;
 
             switch (position) {
                 case 0:
                     if (User.isLoggedIn()) {
-                        fragment = new MyChatsFragment();
+                        fragment = MyChatsFragment.class;
                     } else {
-                        fragment = new LobbyListFragment();
+                        fragment = LobbyListFragment.class;
                     }
                     break;
                 case 1:
                     if (User.isLoggedIn()) {
-                        fragment = new LobbyListFragment();
+                        fragment = LobbyListFragment.class;
                     } else {
-                        fragment = new SignupFragment();
+                        fragment = SignupFragment.class;
                     }
                     break;
                 case 2:
                     UserVoice.launchUserVoice(this.getActivity());
                     break;
                 case 3:
-                    fragment = new SettingsFragment();
+                    fragment = SettingsFragment.class;
                     break;
             }
 
             if (fragment != null) {
-                Navigator.To(fragment);
+                Navigator.To(fragment, null);
             }
         }
 

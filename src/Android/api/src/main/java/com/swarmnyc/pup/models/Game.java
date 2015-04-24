@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
-public class Game extends Taggable {
+public class Game extends Taggable implements PicturedModel {
 
     private String name;
     private String pictureUrl;
@@ -14,6 +14,7 @@ public class Game extends Taggable {
     private List<GamePlatform> platforms;
     private List<String> gameTypes;
     private int rank;
+
     @SerializedName("releaseDateUtc")
     private Date releaseDate;
 

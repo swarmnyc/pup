@@ -24,15 +24,13 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
-import com.swarmnyc.pup.activities.CreateLobbyActivity;
 import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.components.AnimationEndListener;
 import com.swarmnyc.pup.components.AnimationStartListener;
+import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.LobbyListItemView;
-
-import retrofit.client.Response;
 
 import javax.inject.Inject;
 
@@ -53,11 +51,9 @@ public class LobbyListFragment extends Fragment {
 
     @InjectView( R.id.btn_create_lobby ) public ImageButton m_createLobbyButton;
 
-    @OnClick( R.id.btn_create_lobby ) public void onCreateLobbyButtonClicked()
-    {
-        this.startActivityForResult(
-            new Intent( this.activity, CreateLobbyActivity.class ), CreateLobbyActivity.REQUEST_CODE_CREATE_LOBBY
-        );
+    @OnClick(R.id.btn_create_lobby)
+    public void onCreateLobbyButtonClicked() {
+        Navigator.ToCreateLobby();
     }
 
     @Inject LobbyService lobbyService;

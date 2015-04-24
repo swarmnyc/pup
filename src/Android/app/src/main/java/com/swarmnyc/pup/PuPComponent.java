@@ -5,7 +5,7 @@ import com.swarmnyc.pup.activities.CreateLobbyActivity;
 import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.activities.SplashActivity;
-import com.swarmnyc.pup.fragments.CreateLobbyGameFilterFragment;
+import com.swarmnyc.pup.fragments.CreateLobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
 import com.swarmnyc.pup.fragments.LoginFragment;
 
@@ -30,5 +30,5 @@ public interface PuPComponent {
 
     void inject(SplashActivity splashActivity);
 
-    void inject(CreateLobbyGameFilterFragment createLobbyGameFilterFragment);
+    void inject(CreateLobbyFragment createLobbyFragment);
 }

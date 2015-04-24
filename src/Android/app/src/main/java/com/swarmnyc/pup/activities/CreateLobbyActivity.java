@@ -3,11 +3,10 @@ package com.swarmnyc.pup.activities;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
-import com.swarmnyc.pup.RestApis.GameRestApi;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.GameService;
-import com.swarmnyc.pup.fragments.CreateLobbyGameFilterFragment;
+import com.swarmnyc.pup.fragments.CreateLobbyFragment;
 
 import javax.inject.Inject;
 
@@ -30,7 +29,7 @@ public class CreateLobbyActivity extends ActionBarActivity {
 //getSupportFragmentManager().popBackStack("A",);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, new CreateLobbyGameFilterFragment())
+                .replace(R.id.fragment_container, new CreateLobbyFragment())
                 .commit();
     }
 }
