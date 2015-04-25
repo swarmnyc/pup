@@ -10,20 +10,29 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.Services.Filter.GameFilter;
 import com.swarmnyc.pup.Services.Filter.LobbyFilter;
+import com.swarmnyc.pup.Services.GameService;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
+import com.swarmnyc.pup.StringUtils;
 import com.swarmnyc.pup.activities.CreateLobbyActivity;
 import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
+import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
+import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.Navigator;
+import com.swarmnyc.pup.models.Game;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
 import com.swarmnyc.pup.view.LobbyListItemView;
@@ -38,11 +47,16 @@ public class LobbyListFragment extends Fragment
 	private LobbyAdapter        m_lobbyAdapter;
 	private LinearLayoutManager mLayoutManager;
 	private LobbyFilter m_lobbyFilter = new LobbyFilter();
+	private GameFilter  m_gameFilter  = new GameFilter();
+	private AutoCompleteForPicturedModelAdapter<Game> gameAdapter;
+	private Game                                      selectedGame;
 
 	public LobbyListFragment()
 	{
 	}
 
+	@Inject                                         GameService          gameService;
+	@InjectView( R.id.txt_game_serach ) public      AutoCompleteTextView m_gameSearch;
 	@InjectView( R.id.layout_sliding_panel ) public SlidingUpPanelLayout m_slidingPanel;
 
 	@InjectView( R.id.list_lobby ) public RecyclerView m_lobbyRecyclerView;
@@ -50,16 +64,17 @@ public class LobbyListFragment extends Fragment
 	@InjectView( R.id.btn_create_lobby ) public     ImageButton            m_createLobbyButton;
 	@InjectView( R.id.view_platform_select ) public GamePlatformSelectView m_gamePlatformSelectView;
 
-//	@OnClick( R.id.btn_create_lobby ) public void onCreateLobbyButtonClicked()
-//	{
-//		this.startActivityForResult(
-//			new Intent( this.activity, CreateLobbyActivity.class ), CreateLobbyActivity.REQUEST_CODE_CREATE_LOBBY
-//		);
-//	}
-//
-//	@OnClick( R.id.btn_create_lobby ) public void onCreateLobbyButtonClicked ( ) {
-//		Navigator.ToCreateLobby();
-//	}
+	//	@OnClick( R.id.btn_create_lobby ) public void onCreateLobbyButtonClicked()
+	//	{
+	//		this.startActivityForResult(
+	//			new Intent( this.activity, CreateLobbyActivity.class ), CreateLobbyActivity.REQUEST_CODE_CREATE_LOBBY
+	//		);
+	//	}
+	//
+	@OnClick( R.id.btn_create_lobby ) public void onCreateLobbyButtonClicked()
+	{
+		Navigator.ToCreateLobby();
+	}
 
 	@Inject LobbyService lobbyService;
 
@@ -84,6 +99,41 @@ public class LobbyListFragment extends Fragment
 
 					m_lobbyFilter.setPlatformList( m_gamePlatformSelectView.getSelectedGamePlatforms() );
 					reloadData();
+				}
+			}
+		);
+
+		gameAdapter = new AutoCompleteForPicturedModelAdapter<Game>( this.getActivity() );
+
+		gameAdapter.setSearchAction(
+			new Action<CharSequence>()
+			{
+				@Override public void call( CharSequence constraint )
+				{
+					m_gameFilter.setSearch( constraint.toString() );
+					gameService.getGames(
+						m_gameFilter, new ServiceCallback<List<Game>>()
+						{
+							@Override public void success( List<Game> value )
+							{
+								gameAdapter.finishSearch( value );
+							}
+						}
+					);
+				}
+			}
+		);
+
+		m_gameSearch.setAdapter( gameAdapter );
+
+		m_gameSearch.setOnItemClickListener(
+			new AdapterView.OnItemClickListener()
+			{
+				@Override public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+				{
+					selectedGame = gameAdapter.getItem( position );
+					m_lobbyFilter.setGame( selectedGame );
+
 				}
 			}
 		);

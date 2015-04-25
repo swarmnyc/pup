@@ -46,9 +46,9 @@ public class Navigator {
                         .commit();
             }
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            Log.e( "Navigator", "Error in To ([fragmentClass, bundle])", e );
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Log.e( "Navigator", "Error in To ([fragmentClass, bundle])", e );
         }
     }
 }
