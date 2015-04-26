@@ -28,6 +28,35 @@
                 android:layout_marginTop="7dp"
                 />
 
+        <RelativeLayout
+                android:id="@+id/layout_empty_results"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/margin_2x"
+                android:visibility="gone"
+                >
+                <ImageView
+                        android:id="@+id/img_pup"
+                        android:src="@drawable/pup_lg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        />
+                <TextView
+                        android:layout_below="@+id/img_pup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/msg_no_lobbies"
+                        android:gravity="center"
+                        android:layout_marginTop="@dimen/margin_2x"
+                        android:layout_marginBottom="@dimen/margin_2x"
+                        android:layout_marginLeft="104dp"
+                        android:layout_marginRight="104dp"/>
+
+        </RelativeLayout>
+
         <ImageButton
                 android:id="@+id/btn_create_lobby"
                 android:layout_width="wrap_content"

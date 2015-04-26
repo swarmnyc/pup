@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -17,7 +18,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.Filter.GameFilter;
@@ -25,13 +25,10 @@ import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.Services.GameService;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
-import com.swarmnyc.pup.StringUtils;
-import com.swarmnyc.pup.activities.CreateLobbyActivity;
 import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
-import com.swarmnyc.pup.components.Action;
-import com.swarmnyc.pup.components.Navigator;
+import com.swarmnyc.pup.components.*;
 import com.swarmnyc.pup.models.Game;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
@@ -63,6 +60,7 @@ public class LobbyListFragment extends Fragment
 
 	@InjectView( R.id.btn_create_lobby ) public     ImageButton            m_createLobbyButton;
 	@InjectView( R.id.view_platform_select ) public GamePlatformSelectView m_gamePlatformSelectView;
+	@InjectView( R.id.layout_empty_results ) public ViewGroup              m_emptyResults;
 
 	//	@OnClick( R.id.btn_create_lobby ) public void onCreateLobbyButtonClicked()
 	//	{
@@ -146,7 +144,7 @@ public class LobbyListFragment extends Fragment
 			{
 				@Override public void onPanelSlide( final View view, final float v )
 				{
-
+					Log.d( "LobbyListFragment", String.format( "onPanelSlide ([view, %f])",v));
 				}
 
 				@Override public void onPanelCollapsed( final View view )
@@ -209,6 +207,10 @@ public class LobbyListFragment extends Fragment
 	private void reloadData()
 	{
 		final ProgressDialog progressDialog = ProgressDialog.show( getActivity(), "", "Loading games", true, false );
+		if (m_emptyResults.getVisibility() == View.VISIBLE) // Hide empty results before loading
+		{
+			com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation( getActivity(), m_emptyResults );
+		}
 
 		lobbyService.getLobbies(
 			m_lobbyFilter, new ServiceCallback<List<Lobby>>()
@@ -217,6 +219,13 @@ public class LobbyListFragment extends Fragment
 				{
 					m_lobbyAdapter.setLobbies( lobbies );
 					progressDialog.dismiss();
+					if (lobbies.size() == 0)
+					{
+						com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(
+							getActivity(),
+							m_emptyResults
+						);
+					}
 				}
 			}
 		);

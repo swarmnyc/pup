@@ -14,7 +14,7 @@ public class ViewAnimationUtils
 	public static void hideWithAnimation( final Context context, final View view )
 	{
 		final Animation animation = AnimationUtils.loadAnimation(
-			context, R.anim.abc_shrink_fade_out_from_bottom
+			context, R.anim.abc_fade_out
 		);
 		view.startAnimation(animation);
 		animation.setAnimationListener(
@@ -31,7 +31,7 @@ public class ViewAnimationUtils
 	public static void showWithAnimation( final Context context, final View view )
 	{
 		final Animation animation = AnimationUtils.loadAnimation(
-			context, R.anim.abc_grow_fade_in_from_bottom
+			context, R.anim.abc_fade_in
 		);
 		view.startAnimation( animation );
 		animation.setAnimationListener(
