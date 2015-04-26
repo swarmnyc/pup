@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
@@ -76,6 +77,8 @@ public class LobbyListFragment extends Fragment
 
 	@Inject LobbyService lobbyService;
 
+	float m_panelSize = 0.0f;
+
 	LayoutInflater inflater;
 
 
@@ -139,27 +142,41 @@ public class LobbyListFragment extends Fragment
 
 		m_slidingPanel.setOverlayed( true );
 
+
 		m_slidingPanel.setPanelSlideListener(
 			new SlidingUpPanelLayout.PanelSlideListener()
 			{
 				@Override public void onPanelSlide( final View view, final float v )
 				{
 					Log.d( "LobbyListFragment", String.format( "onPanelSlide ([view, %f])",v));
+
+					if (m_panelSize == 0 && v > 0)
+					{
+						com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(
+							getActivity(), m_createLobbyButton
+						);
+					}
+					else if (m_panelSize == 1.0 && v < 1.0f)
+					{
+						com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(
+							getActivity(), m_createLobbyButton
+						);
+
+					}
+					m_panelSize =v;
 				}
 
 				@Override public void onPanelCollapsed( final View view )
 				{
-					com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(
-						getActivity(), m_createLobbyButton
-					);
-
+					// Hide Keyboard
+					InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+						Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(m_gameSearch.getWindowToken(), 0);
 				}
 
 				@Override public void onPanelExpanded( final View view )
 				{
-					com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(
-						getActivity(), m_createLobbyButton
-					);
+
 				}
 
 

@@ -67,4 +67,13 @@ public class MainActivity extends ActionBarActivity {
     {
         return toolbar;
     }
+
+    @Override public void onBackPressed()
+    {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1)
+        {
+            this.finish();
+        }
+        super.onBackPressed();
+    }
 }
