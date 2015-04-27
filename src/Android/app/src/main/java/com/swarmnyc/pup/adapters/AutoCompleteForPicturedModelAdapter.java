@@ -40,18 +40,19 @@ public class AutoCompleteForPicturedModelAdapter<T extends PicturedModel> extend
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 			convertView = inflater.inflate( R.layout.item_auto_complete_picturedmodel, parent, false );
 
-			PicturedModel model = this.data.get( position );
-			if ( StringUtils.isNotEmpty( model.getThumbnailPictureUrl() ) )
-			{
-				Picasso.with( context )
-				       .load( model.getThumbnailPictureUrl() )
-				       .centerCrop()
-				       .fit()
-				       .into( ( (ImageView) convertView.findViewById( R.id.image_view ) ) );
-			}
 
-			( (TextView) convertView.findViewById( R.id.text_view ) ).setText( model.getName() );
 		}
+		PicturedModel model = this.data.get( position );
+		if ( StringUtils.isNotEmpty( model.getThumbnailPictureUrl() ) )
+		{
+			Picasso.with( context )
+			       .load( model.getThumbnailPictureUrl() )
+			       .centerCrop()
+			       .fit()
+			       .into( ( (ImageView) convertView.findViewById( R.id.image_view ) ) );
+		}
+
+		( (TextView) convertView.findViewById( R.id.text_view ) ).setText( model.getName() );
 		return convertView;
 	}
 
