@@ -102,6 +102,7 @@ public class LobbyListFragment extends Fragment
 				{
 
 					m_lobbyFilter.setPlatformList( m_gamePlatformSelectView.getSelectedGamePlatforms() );
+					m_slidingPanel.setPanelState( SlidingUpPanelLayout.PanelState.COLLAPSED );
 					reloadData();
 				}
 			}
@@ -138,6 +139,8 @@ public class LobbyListFragment extends Fragment
 					selectedGame = gameAdapter.getItem( position );
 					m_lobbyFilter.setGame( selectedGame );
 					reloadData();
+					hideKeyboard();
+					m_slidingPanel.setPanelState( SlidingUpPanelLayout.PanelState.COLLAPSED );
 
 				}
 			}
@@ -180,8 +183,6 @@ public class LobbyListFragment extends Fragment
 			{
 				@Override public void onPanelSlide( final View view, final float v )
 				{
-					Log.d( "LobbyListFragment", String.format( "onPanelSlide ([view, %f])", v ) );
-
 					if ( m_panelSize == 0 && v > 0 )
 					{
 						com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(
@@ -201,10 +202,7 @@ public class LobbyListFragment extends Fragment
 				@Override public void onPanelCollapsed( final View view )
 				{
 					// Hide Keyboard
-					InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-						Context.INPUT_METHOD_SERVICE
-					);
-					imm.hideSoftInputFromWindow( m_gameSearch.getWindowToken(), 0 );
+					hideKeyboard();
 				}
 
 				@Override public void onPanelExpanded( final View view )
@@ -242,6 +240,13 @@ public class LobbyListFragment extends Fragment
 
 
 		return view;
+	}
+
+	private void hideKeyboard()
+	{InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+		Context.INPUT_METHOD_SERVICE
+	);
+		imm.hideSoftInputFromWindow( m_gameSearch.getWindowToken(), 0 );
 	}
 
 	@Override public void onStart()
