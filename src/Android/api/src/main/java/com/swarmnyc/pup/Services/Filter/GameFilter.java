@@ -25,7 +25,7 @@ public class GameFilter extends BaseFilter {
         platformList.remove(platform);
     }
 
-    public HashSet<GamePlatform> getPlatformList() {
+    public HashSet<GamePlatform> getPlatforms() {
         return platformList;
     }
 

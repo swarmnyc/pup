@@ -2,6 +2,8 @@ package com.swarmnyc.pup.RestApis;
 
 import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.models.Lobby;
+import com.swarmnyc.pup.models.PlayStyle;
+import com.swarmnyc.pup.models.SkillLevel;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +19,11 @@ import retrofit.http.QueryMap;
 
 public interface LobbyRestApi {
     @GET("/Lobby")
-    void getLobbies(@QueryMap Map<String, Object> filter,@Query("Platforms") Iterable<GamePlatform> platforms, Callback<List<Lobby>> callback);
+    void getLobbies(@QueryMap Map<String, Object> filter,
+                    @Query("Platforms") Iterable<GamePlatform> platforms,
+                    @Query("SkillLevels") Iterable<SkillLevel> levels,
+                    @Query("PlayStyles") Iterable<PlayStyle> styles,
+                    Callback<List<Lobby>> callback);
 
     @GET("/Lobby/{LobbyId}")
     void get(@Path("LobbyId") String lobbyId, Callback<Lobby> Lobby);

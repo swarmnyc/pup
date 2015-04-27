@@ -132,4 +132,10 @@ public class QuickbloxChatService implements ChatService {
     public void postUserChanged(UserChangedEvent event) {
         login(MainActivity.getInstance());
     }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        EventBus.getBus().unregister(this);
+    }
 }

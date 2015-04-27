@@ -62,4 +62,10 @@ public class SplashActivity extends Activity {
     public void postChatServiceLoggedin(ChatServiceLoggedInEvent event) {
         startActivity(new Intent(this, MainActivity.class));
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getBus().unregister(this);
+    }
 }

@@ -1,12 +1,8 @@
 package com.swarmnyc.pup.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -23,8 +19,6 @@ import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
-import com.swarmnyc.pup.activities.AuthActivity;
-import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.components.Consts;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.events.UserChangedEvent;
@@ -168,5 +162,11 @@ public class MainDrawerFragment extends Fragment {
     @Subscribe
     public void postUserChanged(UserChangedEvent event) {
         initializeDrawer();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getBus().unregister(this);
     }
 }

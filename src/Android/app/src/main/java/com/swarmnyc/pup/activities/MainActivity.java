@@ -48,7 +48,6 @@ public class MainActivity extends ActionBarActivity {
         PuPApplication.getInstance().getComponent().inject(this);
         Navigator.init(this);
         EventBus.getBus().register( this );
-
     }
 
     public void retrieveMessage(final String message) {

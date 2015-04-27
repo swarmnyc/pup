@@ -19,9 +19,9 @@ public class GameServiceImpl implements GameService {
     @Override
     public void getGame(String gameId, final ServiceCallback callback) {
         assert gameId != null;
-        assert callback !=null;
+        assert callback != null;
 
-        gameRestApi.get(gameId,new RestApiCallback<Game>() {
+        gameRestApi.get(gameId, new RestApiCallback<Game>() {
             @Override
             public void success(Game game, Response response) {
                 callback.success(game);
@@ -30,9 +30,11 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void getGames(GameFilter filter, final ServiceCallback<List<Game>> callback){
+    public void getGames(GameFilter filter, final ServiceCallback<List<Game>> callback) {
+        if (filter == null)
+            filter = new GameFilter();
 
-        this.gameRestApi.getGames(filter == null ? null : filter.toMap(), filter.getPlatformList() , new RestApiCallback<List<Game>>() {
+        this.gameRestApi.getGames(filter.toMap(), filter.getPlatforms(), new RestApiCallback<List<Game>>() {
             @Override
             public void success(List<Game> games, Response response) {
                 callback.success(games);

@@ -45,6 +45,11 @@ namespace SWARM.PuP.Web.Services
                 query = query.Where(x => x.Name.ToLower().Contains(filter.Search));
             }
 
+            if (!string.IsNullOrWhiteSpace(filter.GameId))
+            {
+                query = query.Where(x => x.GameId == filter.GameId);
+            }
+
             if (!filter.PlayStyles.IsNullOrEmpty())
             {
                 query = query.Where(x => x.PlayStyle.In(filter.PlayStyles));

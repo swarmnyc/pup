@@ -1,9 +1,9 @@
 package com.swarmnyc.pup;
 
-import com.google.common.collect.ImmutableMap;
 import com.swarmnyc.pup.RestApis.LobbyRestApi;
 import com.swarmnyc.pup.RestApis.RestApiCallback;
 import com.swarmnyc.pup.RestApis.EmptyRestApiCallback;
+import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.PlayStyle;
@@ -25,7 +25,8 @@ public class LobbyRestApiTest {
         LobbyRestApi lobbyRestApi = TestHelper.getRestApi(LobbyRestApi.class);
         final CountDownLatch signal = new CountDownLatch(1);
 
-        lobbyRestApi.getLobbies(null, null, new RestApiCallback<List<Lobby>>() {
+        LobbyFilter filter=new LobbyFilter();
+        lobbyRestApi.getLobbies(filter.toMap(), filter.getPlatforms(), filter.getLevels(), filter.getStyles(), new RestApiCallback<List<Lobby>>() {
             @Override
             public void success(List<Lobby> lobbies, Response response) {
                 signal.countDown();

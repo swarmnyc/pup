@@ -12,6 +12,7 @@ namespace SWARM.PuP.Web.QueryFilters
             OrderDirection = ListSortDirection.Descending;
         }
 
+        public string GameId { get; set; }
         public IList<GamePlatform> Platforms { get; set; }
         public IList<PlayStyle> PlayStyles { get; set; }
         public IList<SkillLevel> SkillLevels { get; set; }
