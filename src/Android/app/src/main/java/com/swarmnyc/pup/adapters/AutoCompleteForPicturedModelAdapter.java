@@ -28,12 +28,14 @@ public class AutoCompleteForPicturedModelAdapter<T extends PicturedModel> extend
 		this.filter = new InternalFilter();
 	}
 
-	@Override public int getCount()
+	@Override
+	public int getCount()
 	{
 		return this.data.size();
 	}
 
-	@Override public View getView( int position, View convertView, ViewGroup parent )
+	@Override
+	public View getView( int position, View convertView, ViewGroup parent )
 	{
 		if ( convertView == null )
 		{
@@ -56,17 +58,20 @@ public class AutoCompleteForPicturedModelAdapter<T extends PicturedModel> extend
 		return convertView;
 	}
 
-	@Override public T getItem( int index )
+	@Override
+	public T getItem( int index )
 	{
 		return this.data.get( index );
 	}
 
-	@Override public long getItemId( int position )
+	@Override
+	public long getItemId( int position )
 	{
 		return position;
 	}
 
-	@Override public Filter getFilter()
+	@Override
+	public Filter getFilter()
 	{
 		return filter;
 	}
@@ -84,7 +89,8 @@ public class AutoCompleteForPicturedModelAdapter<T extends PicturedModel> extend
 
 	private class InternalFilter extends Filter
 	{
-		@Override protected FilterResults performFiltering( CharSequence constraint )
+		@Override
+		protected FilterResults performFiltering( CharSequence constraint )
 		{
 			if ( constraint != null )
 			{
@@ -95,12 +101,14 @@ public class AutoCompleteForPicturedModelAdapter<T extends PicturedModel> extend
 			return null;
 		}
 
-		@Override public CharSequence convertResultToString( Object resultValue )
+		@Override
+		public CharSequence convertResultToString( Object resultValue )
 		{
 			return ( (PicturedModel) resultValue ).getName();
 		}
 
-		@Override protected void publishResults( CharSequence constraint, FilterResults results )
+		@Override
+		protected void publishResults( CharSequence constraint, FilterResults results )
 		{
 			if ( constraint != null && results == null )
 			{
