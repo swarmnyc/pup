@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
@@ -29,7 +31,8 @@ import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
-import com.swarmnyc.pup.components.*;
+import com.swarmnyc.pup.components.Action;
+import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.models.Game;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
@@ -134,7 +137,36 @@ public class LobbyListFragment extends Fragment
 				{
 					selectedGame = gameAdapter.getItem( position );
 					m_lobbyFilter.setGame( selectedGame );
+					reloadData();
 
+				}
+			}
+		);
+
+		m_gameSearch.addTextChangedListener(
+			new TextWatcher()
+			{
+				@Override public void beforeTextChanged(
+					final CharSequence s, final int start, final int count, final int after
+				)
+				{
+
+				}
+
+				@Override public void onTextChanged(
+					final CharSequence s, final int start, final int before, final int count
+				)
+				{
+
+				}
+
+				@Override public void afterTextChanged( final Editable s )
+				{
+					if (s.length() == 0)
+					{
+						m_lobbyFilter.setGame( null );
+						reloadData();
+					}
 				}
 			}
 		);
@@ -148,30 +180,31 @@ public class LobbyListFragment extends Fragment
 			{
 				@Override public void onPanelSlide( final View view, final float v )
 				{
-					Log.d( "LobbyListFragment", String.format( "onPanelSlide ([view, %f])",v));
+					Log.d( "LobbyListFragment", String.format( "onPanelSlide ([view, %f])", v ) );
 
-					if (m_panelSize == 0 && v > 0)
+					if ( m_panelSize == 0 && v > 0 )
 					{
 						com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(
 							getActivity(), m_createLobbyButton
 						);
 					}
-					else if (m_panelSize == 1.0 && v < 1.0f)
+					else if ( m_panelSize == 1.0 && v < 1.0f )
 					{
 						com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(
 							getActivity(), m_createLobbyButton
 						);
 
 					}
-					m_panelSize =v;
+					m_panelSize = v;
 				}
 
 				@Override public void onPanelCollapsed( final View view )
 				{
 					// Hide Keyboard
-					InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
-						Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(m_gameSearch.getWindowToken(), 0);
+					InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+						Context.INPUT_METHOD_SERVICE
+					);
+					imm.hideSoftInputFromWindow( m_gameSearch.getWindowToken(), 0 );
 				}
 
 				@Override public void onPanelExpanded( final View view )
@@ -207,8 +240,6 @@ public class LobbyListFragment extends Fragment
 		mLayoutManager = new LinearLayoutManager( getActivity() );
 		m_lobbyRecyclerView.setLayoutManager( mLayoutManager );
 
-		m_lobbyRecyclerView.setItemAnimator( new LobbyItemAnimator() );
-
 
 		return view;
 	}
@@ -224,7 +255,7 @@ public class LobbyListFragment extends Fragment
 	private void reloadData()
 	{
 		final ProgressDialog progressDialog = ProgressDialog.show( getActivity(), "", "Loading games", true, false );
-		if (m_emptyResults.getVisibility() == View.VISIBLE) // Hide empty results before loading
+		if ( m_emptyResults.getVisibility() == View.VISIBLE ) // Hide empty results before loading
 		{
 			com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation( getActivity(), m_emptyResults );
 		}
@@ -236,11 +267,10 @@ public class LobbyListFragment extends Fragment
 				{
 					m_lobbyAdapter.setLobbies( lobbies );
 					progressDialog.dismiss();
-					if (lobbies.size() == 0)
+					if ( lobbies.size() == 0 )
 					{
 						com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(
-							getActivity(),
-							m_emptyResults
+							getActivity(), m_emptyResults
 						);
 					}
 				}
@@ -358,57 +388,4 @@ public class LobbyListFragment extends Fragment
 
 	}
 
-	private static class LobbyItemAnimator extends RecyclerView.ItemAnimator
-	{
-		@Override public void runPendingAnimations()
-		{
-
-		}
-
-		@Override public boolean animateRemove(
-			final RecyclerView.ViewHolder viewHolder
-		)
-		{
-			return true;
-		}
-
-		@Override public boolean animateAdd( final RecyclerView.ViewHolder viewHolder )
-		{
-			return true;
-		}
-
-		@Override public boolean animateMove(
-			final RecyclerView.ViewHolder viewHolder, final int i, final int i2, final int i3, final int i4
-		)
-		{
-			return false;
-		}
-
-		@Override public boolean animateChange(
-			final RecyclerView.ViewHolder viewHolder,
-			final RecyclerView.ViewHolder viewHolder2,
-			final int i,
-			final int i2,
-			final int i3,
-			final int i4
-		)
-		{
-			return false;
-		}
-
-		@Override public void endAnimation( final RecyclerView.ViewHolder viewHolder )
-		{
-
-		}
-
-		@Override public void endAnimations()
-		{
-
-		}
-
-		@Override public boolean isRunning()
-		{
-			return false;
-		}
-	}
 }
