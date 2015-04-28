@@ -12,4 +12,5 @@ public class StringUtils
 	{
 		return null == s || s.length() == 0;
 	}
+
 }
