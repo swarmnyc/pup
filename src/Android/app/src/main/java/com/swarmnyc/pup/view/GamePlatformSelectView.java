@@ -32,7 +32,7 @@ public class GamePlatformSelectView extends LinearLayout
 	public interface OnPlatformSelectionChangedListener
 	{
 
-		void onPlatformSelectionChanged();
+		void onPlatformSelectionChanged(final View v);
 	}
 
 
@@ -131,7 +131,7 @@ public class GamePlatformSelectView extends LinearLayout
 
 			if (null != m_platformSelectionChangedListener )
 			{
-				m_platformSelectionChangedListener.onPlatformSelectionChanged();
+				m_platformSelectionChangedListener.onPlatformSelectionChanged(v);
 			}
 
 		}

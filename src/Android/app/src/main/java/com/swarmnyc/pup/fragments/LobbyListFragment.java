@@ -7,11 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.ContentLoadingProgressBar;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -32,8 +34,10 @@ import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
 import com.swarmnyc.pup.components.Action;
+import com.swarmnyc.pup.components.GamePlatformUtils;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.models.Game;
+import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
 import com.swarmnyc.pup.view.LobbyListItemView;
@@ -98,11 +102,14 @@ public class LobbyListFragment extends Fragment
 		m_gamePlatformSelectView.setPlatformSelectionChangedListener(
 			new GamePlatformSelectView.OnPlatformSelectionChangedListener()
 			{
-				@Override public void onPlatformSelectionChanged()
+				@Override public void onPlatformSelectionChanged(final View v)
 				{
 
 					m_lobbyFilter.setPlatformList( m_gamePlatformSelectView.getSelectedGamePlatforms() );
-					m_slidingPanel.setPanelState( SlidingUpPanelLayout.PanelState.COLLAPSED );
+					if (v.isSelected()) // only collapse if something is selected.
+					{
+						m_slidingPanel.setPanelState( SlidingUpPanelLayout.PanelState.COLLAPSED );
+					}
 					reloadData();
 				}
 			}
@@ -259,7 +266,8 @@ public class LobbyListFragment extends Fragment
 
 	private void reloadData()
 	{
-		final ProgressDialog progressDialog = ProgressDialog.show( getActivity(), "", "Loading games", true, false );
+		final ContentLoadingProgressBar progressDialog = new ContentLoadingProgressBar( getActivity() );
+		progressDialog.show();
 		if ( m_emptyResults.getVisibility() == View.VISIBLE ) // Hide empty results before loading
 		{
 			com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation( getActivity(), m_emptyResults );
@@ -271,7 +279,7 @@ public class LobbyListFragment extends Fragment
 				@Override public void success( List<Lobby> lobbies )
 				{
 					m_lobbyAdapter.setLobbies( lobbies );
-					progressDialog.dismiss();
+					progressDialog.hide();
 					if ( lobbies.size() == 0 )
 					{
 						com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(
@@ -281,12 +289,47 @@ public class LobbyListFragment extends Fragment
 				}
 			}
 		);
+
+		updateTitle();
 	}
 
 	@Override public void onAttach( Activity activity )
 	{
 		super.onAttach( activity );
 		this.activity = (MainActivity) activity;
+
+
+		updateTitle();
+
+	}
+
+	private void updateTitle()
+	{
+		final String title = null == m_lobbyFilter.getGame() ?  "All Lobbies" : m_lobbyFilter.getGame().getName();
+		final ActionBar actionBar = ( (ActionBarActivity) getActivity() ).getSupportActionBar();
+		actionBar.setTitle( title );
+		actionBar.setSubtitle( null );
+
+		if (m_lobbyFilter.getPlatforms().size() > 0);
+		{
+			List<GamePlatform> platforms = new ArrayList<>( m_lobbyFilter.getPlatforms() );
+
+				StringBuilder stringBuilder = new StringBuilder(  );
+			for ( int i = 0; i < platforms.size(); i++ )
+			{
+				final GamePlatform platform = platforms.get( i );
+
+				if (i > 0)
+				{
+					stringBuilder.append( ", " );
+				}
+
+				stringBuilder.append( GamePlatformUtils.labelForPlatform( getActivity(), platform ) );
+
+			}
+			actionBar.setSubtitle( stringBuilder.toString() );
+		}
+
 	}
 
 
