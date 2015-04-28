@@ -33,5 +33,9 @@
     <string name="filter">Filter</string>
     <string name="msg_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
 
-
+    <string-array name="play_styles">
+        <item>CASUAL</item>
+        <item>NORMAL</item>
+        <item>HARD</item>
+    </string-array>
 </resources>
