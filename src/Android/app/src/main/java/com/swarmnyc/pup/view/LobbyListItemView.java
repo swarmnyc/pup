@@ -13,6 +13,7 @@ import butterknife.InjectView;
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.StringUtils;
+import com.swarmnyc.pup.components.GamePlatformUtils;
 import com.swarmnyc.pup.models.Lobby;
 
 /**
@@ -70,7 +71,7 @@ public class LobbyListItemView extends RelativeLayout
 		m_gameName.setText( lobby.getName() );
 		m_gameTime.setText( DateUtils.getRelativeTimeSpanString( getContext(), lobby.getStartTime().getTime() ) );
 		m_description.setText( lobby.getDescription() );
-		m_platform.setText( lobby.getPlatform().name() );
+		m_platform.setText( GamePlatformUtils.labelResIdForPlatform( lobby.getPlatform()) );
 		m_gamerStyle.setText( lobby.getPlayStyle().name());
 	}
 
