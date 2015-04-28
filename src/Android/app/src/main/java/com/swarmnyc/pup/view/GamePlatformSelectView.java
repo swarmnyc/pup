@@ -1,7 +1,10 @@
 package com.swarmnyc.pup.view;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +15,7 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.models.GamePlatform;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -107,7 +111,69 @@ public class GamePlatformSelectView extends LinearLayout
 		}
 
 		return gamePlatforms;
+	}
 
+	public void setSelectedGamePlatforms(final Collection<GamePlatform> platforms)
+	{
+		for ( GamePlatform platform : platforms )
+		{
+			switch ( platform )
+			{
+				case PC:
+					m_pcButton.setSelected( true );
+					break;
+				case Steam:
+					m_steamButton.setSelected( true );
+					break;
+				case Xbox360:
+					m_xbox360Button.setSelected( true );
+					break;
+				case XboxOne:
+					m_xboxOneButton.setSelected( true );
+					break;
+				case PS3:
+					m_ps3Button.setSelected( true );
+					break;
+				case PS4:
+					m_ps4Button.setSelected( true );
+					break;
+			}
+		}
+	}
+
+	@Override
+	protected void onRestoreInstanceState( final Parcelable state )
+	{
+		Log.d( "GamePlatformSelectView", String.format( "onRestoreInstanceState (%s)", state ) );
+		final Bundle bundle = (Bundle) state;
+		final ArrayList<Integer> selection = bundle.getIntegerArrayList( "selection" );
+
+		List<GamePlatform> platforms = new ArrayList<>(  );
+
+		for ( Integer integer : selection )
+		{
+			platforms.add( GamePlatform.values()[integer] );
+		}
+
+		setSelectedGamePlatforms( platforms );
+
+		super.onRestoreInstanceState( bundle.getParcelable( "super" ) );
+	}
+
+	@Override
+	protected Parcelable onSaveInstanceState()
+	{
+		final Parcelable parcelable = super.onSaveInstanceState();
+		Bundle bundle = new Bundle(  );
+		bundle.putParcelable( "super", parcelable );
+		final ArrayList<Integer> selectedGamePlatforms = new ArrayList<>(  );
+		for ( GamePlatform gamePlatform : getSelectedGamePlatforms() )
+		{
+			selectedGamePlatforms.add( gamePlatform.ordinal() );
+		}
+
+		bundle.putIntegerArrayList( "selection", selectedGamePlatforms );
+		return bundle;
 	}
 
 	public OnPlatformSelectionChangedListener getPlatformSelectionChangedListener()
