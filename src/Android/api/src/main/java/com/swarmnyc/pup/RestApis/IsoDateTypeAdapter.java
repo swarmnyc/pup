@@ -5,6 +5,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import com.swarmnyc.pup.StringUtils;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -18,8 +19,7 @@ public final class IsoDateTypeAdapter extends TypeAdapter<Date> {
     private final DateFormat iso8601Format;
 
     public IsoDateTypeAdapter() {
-        iso8601Format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
-        iso8601Format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        iso8601Format = StringUtils.iso8601Format;
     }
 
     @Override

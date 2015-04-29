@@ -1,36 +1,36 @@
 package com.swarmnyc.pup.Services.Filter;
 
+import com.swarmnyc.pup.StringUtils;
 import com.swarmnyc.pup.models.Game;
-import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.models.PlayStyle;
 import com.swarmnyc.pup.models.SkillLevel;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class LobbyFilter extends GameFilter {
-    private Game m_game;
-    private Set<SkillLevel> levels;
-    private Set<PlayStyle> styles;
+	private Game            game;
+	private Set<SkillLevel> levels;
+	private Set<PlayStyle>  styles;
+	private Date            startTime;
 
-    public LobbyFilter() {
-        this.levels = new HashSet<>();
-        this.styles = new HashSet<>();
+	public LobbyFilter()
+	{
+		this.levels = new HashSet<>();
+		this.styles = new HashSet<>();
 
-    }
+	}
 
-    public Game getGame() {
-        return m_game;
-    }
+	public Game getGame()
+	{
+		return  game;
+	}
 
-    public void setGame(final Game game) {
-        m_game = game;
-    }
+	public void setGame( final Game game )
+	{
+		this.game = game;
+	}
 
-    public void addSkillLevel(SkillLevel level) {
+	public void addSkillLevel( SkillLevel level) {
         levels.add(level);
     }
 
@@ -54,12 +54,26 @@ public class LobbyFilter extends GameFilter {
         return styles;
     }
 
+	public Date getStartTime()
+	{
+		return startTime;
+	}
+
+	public void setStartTime( final Date startTime )
+	{
+		this.startTime = startTime;
+	}
+
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> map = super.toMap();
-        if (m_game != null) {
-            map.put("gameId", m_game.getId());
+        if ( game != null) {
+            map.put("gameId",  game.getId());
         }
+
+	    if (startTime != null) {
+		    map.put( "startTimeUtc", StringUtils.toDateString( startTime ) );
+	    }
 
         return map;
     }

@@ -12,6 +12,7 @@ namespace SWARM.PuP.Web.Services
 {
     public class LobbyService : BaseService<Lobby>, ILobbyService
     {
+        private const int ShowTimeOffset = -15;
         private readonly IChatService _chatService;
 
         public LobbyService(IChatService chatService) : base("Lobbies")
@@ -65,7 +66,12 @@ namespace SWARM.PuP.Web.Services
                 query = query.Where(x => x.Platform.In(filter.Platforms));
             }
 
-            // TODO: filter disactived Lobby
+            if (!filter.StartTimeUtc.HasValue)
+            {
+                filter.StartTimeUtc = DateTime.UtcNow.AddMinutes(ShowTimeOffset);
+            }
+
+            query = query.Where(x => x.StartTimeUtc >= filter.StartTimeUtc);
             query = query.Where(x => x.State == ModelState.Actived);
 
             query = DoOrderQuery(query, filter);

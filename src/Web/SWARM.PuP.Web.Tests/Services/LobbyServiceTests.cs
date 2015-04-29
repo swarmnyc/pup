@@ -111,7 +111,8 @@ namespace SWARM.PuP.Web.Tests.Services
             var userService = new UserService();
             var service = new LobbyService(new QuickbloxChatService());
 
-            foreach (var game in gameService.All().OrderBy(x => x.Id).Take(10))
+            Random random=new Random();
+            foreach (var game in gameService.All().OrderBy(x => x.Id).Take(30))
             {
                 var lobby = service.Add(new Lobby()
                 {
@@ -121,7 +122,7 @@ namespace SWARM.PuP.Web.Tests.Services
                     Platform = game.Platforms.First(),
                     PictureUrl = game.PictureUrl,
                     ThumbnailPictureUrl = game.ThumbnailPictureUrl,
-                    StartTimeUtc = DateTime.UtcNow.AddHours(1),
+                    StartTimeUtc = DateTime.UtcNow.AddMinutes(random.Next(1,100)),
                     SkillLevel = SkillLevel.Pro,
                     Description = "Let's play it"
                 }, userService.Collection.FindOne());
