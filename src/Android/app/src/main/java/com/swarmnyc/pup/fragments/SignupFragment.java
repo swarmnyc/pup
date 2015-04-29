@@ -11,11 +11,14 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.RestApis.RestApiCallback;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.RestApis.UserRestApi;
+import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.components.Navigator;
+import com.swarmnyc.pup.models.LoggedInUser;
 import com.swarmnyc.pup.viewmodels.UserRegisterResult;
 
 import javax.inject.Inject;
@@ -25,47 +28,75 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import retrofit.client.Response;
 
-public class SignupFragment extends Fragment {
-    @Inject
-    UserRestApi userRestApi;
+public class SignupFragment extends Fragment
+{
+	@Inject
+	UserRestApi userRestApi;
 
-    @InjectView(R.id.text_email)
-    EditText emailText;
+	@InjectView(R.id.text_email)
+	EditText emailText;
 
-    @InjectView(R.id.text_password)
-    EditText passwordText;
+	@InjectView(R.id.text_password)
+	EditText passwordText;
 
-    @InjectView(R.id.checkbox_tos)
-    CheckBox tosCheckbox;
+	@InjectView(R.id.checkbox_tos)
+	CheckBox tosCheckbox;
 
-    @OnClick(R.id.btn_join)
-    public void userRegister() {
-        if (tosCheckbox.isChecked()) {
-            userRestApi.register(emailText.getText().toString(), passwordText.getText().toString(), new RestApiCallback<UserRegisterResult>() {
-                @Override
-                public void success(UserRegisterResult userRegisterResult, Response response) {
-                    Navigator.ToLobbyList();
-                }
-            });
-        }
-    }
+	@OnClick(R.id.btn_join)
+	public void userRegister()
+	{
+		if ( tosCheckbox.isChecked() )
+		{
+			userRestApi.register(
+				emailText.getText().toString(),
+				passwordText.getText().toString(),
+				new RestApiCallback<UserRegisterResult>()
+				{
+					@Override
+					public void success( UserRegisterResult userRegisterResult, Response response )
+					{
+						Navigator.ToLobbyList();
+					}
+				}
+			);
+		}
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        MainActivity.getInstance().hideToolbar();
-        View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
-        ButterKnife.inject(this, view);
+	@Override
+	public View onCreateView(
+		LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
+	)
+	{
+		MainActivity.getInstance().hideToolbar();
+		View view = inflater.inflate( R.layout.fragment_sign_up, container, false );
+		PuPApplication.getInstance().getComponent().inject( this );
+		ButterKnife.inject( this, view );
 
-        SpannedString ss = (SpannedString)tosCheckbox.getText();
-        URLSpan[] spans =  ss.getSpans(0,ss.length(), URLSpan.class);
-        for (URLSpan span : spans) {
-            int start=ss.getSpanStart(span);
-            int end=ss.getSpanEnd(span);
-            int flags=ss.getSpanFlags(span);
+		SpannedString ss = (SpannedString) tosCheckbox.getText();
+		URLSpan[] spans = ss.getSpans( 0, ss.length(), URLSpan.class );
+		for ( URLSpan span : spans )
+		{
+			int start = ss.getSpanStart( span );
+			int end = ss.getSpanEnd( span );
+			int flags = ss.getSpanFlags( span );
 
-        }
+		}
 
-        return view;
-    }
+		return view;
+	}
+
+	@OnClick( R.id.btn_join )
+	void onTest()
+	{
+		userRestApi.login(
+			"hello@swarmnyc.com", "swarmnyc", new RestApiCallback<LoggedInUser>()
+			{
+				@Override
+				public void success( final LoggedInUser loggedInUser, final Response response )
+				{
+					User.login( loggedInUser );
+				}
+			}
+		);
+	}
 }

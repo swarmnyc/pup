@@ -39,8 +39,12 @@ namespace SWARM.PuP.Web.ApiControllers
         [Authorize]
         public Lobby Post(Lobby lobby)
         {
-            var game = _gameService.GetById(lobby.Id);
-            lobby.Name = game.Name;
+            var game = _gameService.GetById(lobby.GameId);
+            if (String.IsNullOrWhiteSpace(lobby.Name))
+            {
+                lobby.Name = game.Name;
+            }
+
             lobby.PictureUrl = game.PictureUrl;
             lobby.ThumbnailPictureUrl = game.ThumbnailPictureUrl;
 

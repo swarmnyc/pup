@@ -69,7 +69,7 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
             {
                 GameId = "test",
                 Name = "Test 2",
-                PlayStyle = PlayStyle.Serious,
+                PlayStyle = PlayStyle.Casual,
                 Platform = GamePlatform.Xbox,
                 StartTimeUtc = DateTime.UtcNow.AddHours(1),
                 SkillLevel = SkillLevel.Pro,

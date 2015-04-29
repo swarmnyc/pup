@@ -30,143 +30,168 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainDrawerFragment extends Fragment {
-    int currentSelection = -1;
+public class MainDrawerFragment extends Fragment
+{
+	int currentSelection = -1;
 
-    @InjectView(R.id.drawer_contrainer)
-    View drawerMenuContainer;
+	@InjectView(R.id.drawer_contrainer)
+	View drawerMenuContainer;
 
-    @InjectView(R.id.drawer_list)
-    ListView drawerListView;
+	@InjectView(R.id.drawer_list)
+	ListView drawerListView;
 
-    private ActionBarDrawerToggle mDrawerToggle;
-    private DrawerLayout drawerLayout;
+	private ActionBarDrawerToggle mDrawerToggle;
+	private DrawerLayout          drawerLayout;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_drawer_main, container, false);
-        ButterKnife.inject(this, view);
+	@Override
+	public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
+	{
+		View view = inflater.inflate( R.layout.fragment_drawer_main, container, false );
+		ButterKnife.inject( this, view );
 
-        EventBus.getBus().register(this);
+		EventBus.getBus().register( this );
 
-        return view;
-    }
+		return view;
+	}
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+	@Override
+	public void onActivityCreated( Bundle savedInstanceState )
+	{
+		super.onActivityCreated( savedInstanceState );
 
-        drawerLayout = (DrawerLayout) this.getActivity().findViewById(R.id.drawer_layout);
-        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+		drawerLayout = (DrawerLayout) this.getActivity().findViewById( R.id.drawer_layout );
+		drawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
 
-        Toolbar toolbar = (Toolbar) this.getActivity().findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) this.getActivity().findViewById( R.id.toolbar );
 
-        ((ActionBarActivity) this.getActivity()).setSupportActionBar(toolbar);
+		( (ActionBarActivity) this.getActivity() ).setSupportActionBar( toolbar );
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            toolbar.setElevation(2);
-        }
+		if ( android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP )
+		{
+			toolbar.setElevation( 2 );
+		}
 
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this.getActivity(),
-                drawerLayout,
-                toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close
-        );
+		mDrawerToggle = new ActionBarDrawerToggle(
+			this.getActivity(), drawerLayout, toolbar, R.string.navigation_drawer_open,
+			R.string.navigation_drawer_close
+		);
 
-        drawerLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mDrawerToggle.syncState();
-            }
-        });
+		drawerLayout.post(
+			new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					mDrawerToggle.syncState();
+				}
+			}
+		);
 
-        drawerLayout.setDrawerListener(mDrawerToggle);
+		drawerLayout.setDrawerListener( mDrawerToggle );
 
-        drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
+		drawerListView.setOnItemClickListener(
+			new AdapterView.OnItemClickListener()
+			{
+				@Override
+				public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+				{
+					selectItem( position );
+				}
+			}
+		);
 
-        drawerMenuContainer.getLayoutParams().width = (int) (Consts.windowWidth * 0.90);
+		drawerMenuContainer.getLayoutParams().width = (int) ( Consts.windowWidth * 0.90 );
 
-        initializeDrawer();
-    }
+		initializeDrawer();
+	}
 
-    private void initializeDrawer() {
-        List<String> list = new ArrayList<>();
-        // TODO:Move to resource, or better implement
-        // TODO:Back button support;
-        if (User.isLoggedIn()) {
-            list.add("My Chats");
-            list.add("All Lobbies");
-        } else {
-            list.add("All Lobbies");
-            list.add("Register");
-        }
+	private void initializeDrawer()
+	{
+		List<String> list = new ArrayList<>();
+		// TODO:Move to resource, or better implement
+		// TODO:Back button support;
+		if ( User.isLoggedIn() )
+		{
+			list.add( "My Chats" );
+			list.add( "All Lobbies" );
+		}
+		else
+		{
+			list.add( "All Lobbies" );
+			list.add( "Register" );
+		}
 
-        list.add("Feedback");
-        list.add("Settings");
+		list.add( "Feedback" );
+		list.add( "Settings" );
 
-        drawerListView.setAdapter(new ArrayAdapter<String>(
-                this.getActivity(),
-                R.layout.item_drawer_menu,
-                R.id.text_name,
-                list));
+		drawerListView.setAdapter(
+			new ArrayAdapter<String>(
+				this.getActivity(), R.layout.item_drawer_menu, R.id.text_name, list
+			)
+		);
 
-        int position = User.isLoggedIn() ? 1 : 0;
-        selectItem(position);
-        drawerListView.setItemChecked(position, true);
-    }
+		int position = User.isLoggedIn() ? 1 : 0;
+		selectItem( position );
+		drawerListView.setItemChecked( position, true );
+	}
 
-    public void selectItem(int position) {
-        if (position != currentSelection) {
+	public void selectItem( int position )
+	{
+		if ( position != currentSelection )
+		{
 
-            currentSelection = position;
-            Class fragment = null;
+			currentSelection = position;
+			Class fragment = null;
 
-            switch (position) {
-                case 0:
-                    if (User.isLoggedIn()) {
-                        fragment = MyChatsFragment.class;
-                    } else {
-                        fragment = LobbyListFragment.class;
-                    }
-                    break;
-                case 1:
-                    if (User.isLoggedIn()) {
-                        fragment = LobbyListFragment.class;
-                    } else {
-                        fragment = SignupFragment.class;
-                    }
-                    break;
-                case 2:
-                    UserVoice.launchUserVoice(this.getActivity());
-                    break;
-                case 3:
-                    fragment = SettingsFragment.class;
-                    break;
-            }
+			switch ( position )
+			{
+				case 0:
+					if ( User.isLoggedIn() )
+					{
+						fragment = MyChatsFragment.class;
+					}
+					else
+					{
+						fragment = LobbyListFragment.class;
+					}
+					break;
+				case 1:
+					if ( User.isLoggedIn() )
+					{
+						fragment = LobbyListFragment.class;
+					}
+					else
+					{
+						fragment = SignupFragment.class;
+					}
+					break;
+				case 2:
+					UserVoice.launchUserVoice( this.getActivity() );
+					break;
+				case 3:
+					fragment = SettingsFragment.class;
+					break;
+			}
 
-            if (fragment != null) {
-                Navigator.To(fragment, null);
-            }
-        }
+			if ( fragment != null )
+			{
+				Navigator.To( fragment, null, true );
+			}
+		}
 
-        drawerLayout.closeDrawers();
-    }
+		drawerLayout.closeDrawers();
+	}
 
-    @Subscribe
-    public void postUserChanged(UserChangedEvent event) {
-        initializeDrawer();
-    }
+	@Subscribe
+	public void postUserChanged( UserChangedEvent event )
+	{
+		initializeDrawer();
+	}
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getBus().unregister(this);
-    }
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		EventBus.getBus().unregister( this );
+	}
 }

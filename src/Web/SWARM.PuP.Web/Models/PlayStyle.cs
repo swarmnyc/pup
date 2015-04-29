@@ -2,7 +2,8 @@
 {
     public enum PlayStyle
     {
-        Serious,
-        Casual
+        Casual,
+        Normal,
+        Hardcore,
     }
 }

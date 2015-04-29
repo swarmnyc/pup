@@ -5,5 +5,22 @@ import com.google.gson.annotations.SerializedName;
 public enum SkillLevel {
     Newbie,
     Intermediate,
-    Pro
+	L337,
+    Pro;
+
+	public static SkillLevel get( final int value )
+	{
+		switch ( value ){
+			case 0:
+				return Newbie;
+			case 1:
+				return Intermediate;
+			case 2:
+				return L337;
+			case 3:
+				return Pro;
+			default:
+				return Newbie;
+		}
+	}
 }

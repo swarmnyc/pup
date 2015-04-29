@@ -5,12 +5,11 @@
 
     <string name="title_activity_create_lobby">CreateLobbyActivity</string>
     <string name="title_activity_lobby">LobbyActivity</string>
-    <string name="title_activity_main_activity2">MainActivity2Activity</string>   
+    <string name="title_activity_main_activity2">MainActivity2Activity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-<!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="button_add">+</string>
     <string name="signup_slogan">Holy Guacamole, Batman!\nYou\'re about to sign up for the best app on\nearth.</string>
@@ -32,10 +31,13 @@
     <string name="label_other">Other</string>
     <string name="filter">Filter</string>
     <string name="msg_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
-
-    <string-array name="play_styles">
-        <item>CASUAL</item>
-        <item>NORMAL</item>
-        <item>HARD</item>
-    </string-array>
+    <string name="label_pick_a_platform"><b>PICK A SYSTEM</b>\n(Gamers must all use the same option to connect.)</string>
+    <string name="label_play_style">PLAY STYLE</string>
+    <string name="label_gamer_skill">GAMER SKILL</string>
+    <string name="label_date">When?</string>
+    <string name="label_time">What Time?</string>
+    <string name="label_description">DESCRIPTION</string>
+    <string name="hint_description">Let people know what you\'re looking for the region (or dungeon) name of the particular game you want to get through, you play style and whether this is a pvp or friendly server, etc.</string>
+    <string name="hint_game_name">The Secret World</string>
+    <string name="text_create_lobby">Create Lobby</string>
 </resources>

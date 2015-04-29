@@ -34,7 +34,7 @@ namespace SWARM.PuP.Web.Tests.Services
             {
                 GameId = "test",
                 Name = "Test 2",
-                PlayStyle = PlayStyle.Serious,
+                PlayStyle = PlayStyle.Casual,
                 Platform = GamePlatform.Xbox360,
                 StartTimeUtc = DateTime.UtcNow.AddHours(1),
                 SkillLevel = SkillLevel.Pro,
@@ -90,7 +90,7 @@ namespace SWARM.PuP.Web.Tests.Services
             {
                 GameId = "test",
                 Name = "Test 2",
-                PlayStyle = PlayStyle.Serious,
+                PlayStyle = PlayStyle.Normal,
                 Platform = GamePlatform.Xbox360,
                 StartTimeUtc = DateTime.UtcNow.AddHours(1),
                 SkillLevel = SkillLevel.Pro,

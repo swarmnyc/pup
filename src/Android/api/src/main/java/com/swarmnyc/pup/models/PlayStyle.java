@@ -3,6 +3,21 @@ package com.swarmnyc.pup.models;
 import com.google.gson.annotations.SerializedName;
 
 public enum PlayStyle {
-    Serious,
-    Casual
+    Casual,
+	Normal,
+	Hardcore;
+
+	public static PlayStyle get( final int value )
+	{
+		switch ( value ){
+			case 0:
+				return Casual;
+			case 1:
+				return Normal;
+			case 2:
+				return Hardcore;
+			default:
+				return Normal;
+		}
+	}
 }

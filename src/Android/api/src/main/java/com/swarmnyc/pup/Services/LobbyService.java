@@ -16,4 +16,6 @@ public interface LobbyService {
     void join(String id, ServiceCallback callback);
 
     void leave(String id, ServiceCallback callback);
+
+	void create( Lobby lobby, ServiceCallback<Lobby> callback );
 }

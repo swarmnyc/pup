@@ -5,11 +5,12 @@
     <dimen name="navigation_drawer_width">230dp</dimen>
     <dimen name="button_hover_size">56dp</dimen>
     <dimen name="margin_2x">32dp</dimen>
+    <dimen name="margin_normal">16dp</dimen>
+    <dimen name="margin_half">8dp</dimen>
     <dimen name="text_large">24sp</dimen>
     <dimen name="btn_plus_size">36sp</dimen>
     <dimen name="padding_normal">16dp</dimen>
-    <dimen name="margin_normal">16dp</dimen>
-    <dimen name="padding_half">16dp</dimen>
+    <dimen name="padding_half">8dp</dimen>
     <dimen name="padding_small">4dp</dimen>
     <dimen name="text_label">12sp</dimen>
     <dimen name="height_header_img">200dp</dimen>

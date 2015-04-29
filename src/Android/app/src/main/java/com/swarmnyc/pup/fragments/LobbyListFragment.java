@@ -2,7 +2,6 @@ package com.swarmnyc.pup.fragments;
 
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +21,6 @@ import android.widget.ImageButton;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.google.gson.Gson;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
@@ -45,7 +43,6 @@ import com.swarmnyc.pup.view.GamePlatformSelectView;
 import com.swarmnyc.pup.view.LobbyListItemView;
 
 import javax.inject.Inject;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,23 +55,32 @@ public class LobbyListFragment extends Fragment
 	private GameFilter  m_gameFilter  = new GameFilter();
 	private AutoCompleteForPicturedModelAdapter<Game> gameAdapter;
 
-	@Inject                                         GameService          gameService;
-	@InjectView( R.id.txt_game_serach ) public      AutoCompleteTextView m_gameSearch;
-	@InjectView( R.id.layout_sliding_panel ) public SlidingUpPanelLayout m_slidingPanel;
+	@Inject
+	       GameService          gameService;
+	@InjectView(R.id.txt_game_serach)
+	public AutoCompleteTextView m_gameSearch;
+	@InjectView(R.id.layout_sliding_panel)
+	public SlidingUpPanelLayout m_slidingPanel;
 
-	@InjectView( R.id.list_lobby ) public RecyclerView m_lobbyRecyclerView;
+	@InjectView(R.id.list_lobby)
+	public RecyclerView m_lobbyRecyclerView;
 
-	@InjectView( R.id.btn_create_lobby ) public     ImageButton            m_createLobbyButton;
-	@InjectView( R.id.view_platform_select ) public GamePlatformSelectView m_gamePlatformSelectView;
-	@InjectView( R.id.layout_empty_results ) public ViewGroup              m_emptyResults;
+	@InjectView(R.id.btn_create_lobby)
+	public ImageButton            m_createLobbyButton;
+	@InjectView(R.id.platform_select)
+	public GamePlatformSelectView m_gamePlatformSelectView;
+	@InjectView(R.id.layout_empty_results)
+	public ViewGroup              m_emptyResults;
 
 
-	@OnClick( R.id.btn_create_lobby ) public void onCreateLobbyButtonClicked()
+	@OnClick(R.id.btn_create_lobby)
+	public void onCreateLobbyButtonClicked()
 	{
 		Navigator.ToCreateLobby();
 	}
 
-	@Inject LobbyService lobbyService;
+	@Inject
+	LobbyService lobbyService;
 
 	float m_panelSize = 0.0f;
 
@@ -84,7 +90,8 @@ public class LobbyListFragment extends Fragment
 	{
 	}
 
-	@Override public void onAttach( Activity activity )
+	@Override
+	public void onAttach( Activity activity )
 	{
 		super.onAttach( activity );
 		this.activity = (MainActivity) activity;
@@ -95,7 +102,8 @@ public class LobbyListFragment extends Fragment
 	}
 
 
-	@Override public View onCreateView(
+	@Override
+	public View onCreateView(
 		LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
 	)
 	{
@@ -108,11 +116,12 @@ public class LobbyListFragment extends Fragment
 		m_gamePlatformSelectView.setPlatformSelectionChangedListener(
 			new GamePlatformSelectView.OnPlatformSelectionChangedListener()
 			{
-				@Override public void onPlatformSelectionChanged(final View v)
+				@Override
+				public void onPlatformSelectionChanged( final View v )
 				{
 
 					m_lobbyFilter.setPlatformList( m_gamePlatformSelectView.getSelectedGamePlatforms() );
-					if (v.isSelected()) // only collapse if something is selected.
+					if ( v.isSelected() ) // only collapse if something is selected.
 					{
 						m_slidingPanel.setPanelState( SlidingUpPanelLayout.PanelState.COLLAPSED );
 					}
@@ -126,13 +135,15 @@ public class LobbyListFragment extends Fragment
 		gameAdapter.setSearchAction(
 			new Action<CharSequence>()
 			{
-				@Override public void call( CharSequence constraint )
+				@Override
+				public void call( CharSequence constraint )
 				{
 					m_gameFilter.setSearch( constraint.toString() );
 					gameService.getGames(
 						m_gameFilter, new ServiceCallback<List<Game>>()
 						{
-							@Override public void success( List<Game> value )
+							@Override
+							public void success( List<Game> value )
 							{
 								gameAdapter.finishSearch( value );
 							}
@@ -147,7 +158,8 @@ public class LobbyListFragment extends Fragment
 		m_gameSearch.setOnItemClickListener(
 			new AdapterView.OnItemClickListener()
 			{
-				@Override public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+				@Override
+				public void onItemClick( AdapterView<?> parent, View view, int position, long id )
 				{
 					m_lobbyFilter.setGame( gameAdapter.getItem( position ) );
 
@@ -411,11 +423,7 @@ public class LobbyListFragment extends Fragment
 					{
 						@Override public void onClick( final View v )
 						{
-
-							Lobby lobby = (Lobby) lobbyListItemView.getLobby();
-							Intent intent = new Intent( LobbyListFragment.this.activity, LobbyActivity.class );
-							intent.putExtra( "lobbyId", lobby.getId() );
-							LobbyListFragment.this.activity.startActivity( intent );
+							Navigator.ToLobby(lobbyListItemView.getLobby().getId() );
 						}
 					}
 				);

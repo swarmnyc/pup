@@ -4,6 +4,7 @@
     {
         Newbie,
         Intermediate,
+        L337,
         Pro
     }
 }

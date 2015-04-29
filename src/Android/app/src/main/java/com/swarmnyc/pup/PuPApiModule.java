@@ -40,9 +40,10 @@ public class PuPApiModule {
                         if (User.isLoggedIn()) {
                             request.addHeader("Authorization", "Bearer " + User.current.getAccessToken());
                         }
-                    }
+                        }
                 })
-                .setConverter(new GsonConverter(gson))
+	            .setLogLevel( BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE )
+                .setConverter( new GsonConverter( gson ) )
                 .build();
     }
 

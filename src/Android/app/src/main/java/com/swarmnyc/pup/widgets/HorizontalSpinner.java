@@ -34,8 +34,9 @@ public class HorizontalSpinner extends HorizontalScrollView
 	private int            itemSelectedTextColor;
 	private List<TextView> itemViews;
 	private LinearLayout   itemContainer;
-	private int            selectedPosition;
-	private boolean        alreadyInitialized;
+
+	private int     selectedPosition;
+	private boolean alreadyInitialized;
 	private Handler stopHandler = new Handler()
 	{
 		@Override
@@ -47,6 +48,7 @@ public class HorizontalSpinner extends HorizontalScrollView
 			int position = x / itemWidth;
 
 			if ( x % itemWidth >= itemMiddleWidth ) { position++; }
+
 			setSelectedPosition( position );
 		}
 	};
@@ -67,11 +69,12 @@ public class HorizontalSpinner extends HorizontalScrollView
 	{
 		//TODO: Make configable
 		setHorizontalScrollBarEnabled( false );
+		setSmoothScrollingEnabled( true );
 		itemWidth = (int) TypedValue.applyDimension(
 			TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics()
 		);
 		itemHeight = (int) TypedValue.applyDimension(
-			TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics()
+			TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()
 		);
 
 		itemMiddleWidth = itemWidth / 2;
@@ -81,12 +84,6 @@ public class HorizontalSpinner extends HorizontalScrollView
 		itemTextColor = getResources().getColor( R.color.text_disabled );
 		itemSelectedTextColor = getResources().getColor( R.color.pup_aqua );
 		itemContainer = new LinearLayout( this.getContext() );
-		itemContainer.setPadding(
-			0, 0, 0, (int) TypedValue.applyDimension(
-				TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()
-			)
-		);
-
 		itemContainer.setLayoutParams(
 			new LayoutParams(
 				ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
@@ -95,6 +92,11 @@ public class HorizontalSpinner extends HorizontalScrollView
 		this.addView( itemContainer );
 
 		itemViews = new ArrayList<>();
+
+		if ( this.isInEditMode() )
+		{
+			setSource( new String[]{"Text 1", "Text 2", "Text 3"} );
+		}
 	}
 
 	public void setSource( String[] source )
@@ -115,6 +117,11 @@ public class HorizontalSpinner extends HorizontalScrollView
 			itemViews.add( tv );
 			itemContainer.addView( tv );
 		}
+	}
+
+	public int getSelectedPosition()
+	{
+		return selectedPosition;
 	}
 
 	public void setSelectedPosition( int position )
@@ -201,8 +208,20 @@ public class HorizontalSpinner extends HorizontalScrollView
 				view.setTextSize( this.itemTextSize * distancePercent );
 			}
 		}
-
 		stopHandler.removeMessages( 0 );
-		stopHandler.sendEmptyMessageDelayed( 0, 100 );
+		stopHandler.sendEmptyMessageDelayed( 0, 1000 );
+	}
+
+	@Override
+	public boolean onTouchEvent( final MotionEvent ev )
+	{
+		// Log.d( TAG, "MotionEvent" + ev );
+		stopHandler.removeMessages( 0 );
+		if ( ev.getAction() == MotionEvent.ACTION_UP )
+		{
+			stopHandler.sendEmptyMessageDelayed( 0, 100 );
+		}
+
+		return super.onTouchEvent( ev );
 	}
 }
