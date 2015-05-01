@@ -107,7 +107,8 @@
             <com.swarmnyc.pup.view.GamePlatformSelectView
                     android:id="@+id/platform_select"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    app:allowMultiSelect="true">
 
             </com.swarmnyc.pup.view.GamePlatformSelectView>
         </LinearLayout>

@@ -1,6 +1,7 @@
 package com.swarmnyc.pup.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -32,6 +33,8 @@ public class GamePlatformSelectView extends LinearLayout
 	@InjectView( R.id.btn_ps4 )      Button m_ps4Button;
 
 
+	private boolean m_allowMultiSelect = false;
+
 
 	public interface OnPlatformSelectionChangedListener
 	{
@@ -62,6 +65,19 @@ public class GamePlatformSelectView extends LinearLayout
 
 	private void init( AttributeSet attrs, int defStyle )
 	{
+
+		TypedArray a = getContext().obtainStyledAttributes( attrs, R.styleable.GamePlatformSelectView );
+
+		try
+		{
+			m_allowMultiSelect =  a.getBoolean( R.styleable.GamePlatformSelectView_allowMultiSelect, false );
+			String s  =  a.getString( R.styleable.GamePlatformSelectView_allowMultiSelect );
+		}
+		finally
+		{
+			a.recycle();
+		}
+
 		setOrientation( VERTICAL );
 
 		final LayoutInflater infalter = (LayoutInflater) getContext().getSystemService(
@@ -70,13 +86,14 @@ public class GamePlatformSelectView extends LinearLayout
 		final View view = infalter.inflate( R.layout.view_system_select, this, true );
 		ButterKnife.inject( this, view );
 
-		final SystemOnClickListener systemOnClickListener = new SystemOnClickListener();
-		m_pcButton.setOnClickListener( systemOnClickListener );
-		m_steamButton.setOnClickListener( systemOnClickListener );
-		m_xbox360Button.setOnClickListener( systemOnClickListener );
-		m_xboxOneButton.setOnClickListener( systemOnClickListener );
-		m_ps3Button.setOnClickListener( systemOnClickListener );
-		m_ps4Button.setOnClickListener( systemOnClickListener );
+		final OnClickListener onClickListener = m_allowMultiSelect ?  new MultiSelectOnClickListener() : new SingleSelectOnClickListener();
+
+		m_pcButton.setOnClickListener( onClickListener );
+		m_steamButton.setOnClickListener( onClickListener );
+		m_xbox360Button.setOnClickListener( onClickListener );
+		m_xboxOneButton.setOnClickListener( onClickListener );
+		m_ps3Button.setOnClickListener( onClickListener );
+		m_ps4Button.setOnClickListener( onClickListener );
 
 
 	}
@@ -188,12 +205,41 @@ public class GamePlatformSelectView extends LinearLayout
 		m_platformSelectionChangedListener = platformSelectionChangedListener;
 	}
 
-	private  class SystemOnClickListener implements OnClickListener
+	private  class MultiSelectOnClickListener implements OnClickListener
 	{
 		@Override public void onClick( final View v )
 		{
 
 			v.setSelected( !v.isSelected() );
+
+			if (null != m_platformSelectionChangedListener )
+			{
+				m_platformSelectionChangedListener.onPlatformSelectionChanged(v);
+			}
+
+		}
+	}
+
+	private  class SingleSelectOnClickListener implements OnClickListener
+	{
+		@Override public void onClick( final View v )
+		{
+
+			if (v.isSelected())
+			{
+				v.setSelected( false );
+			}
+			else
+			{
+				m_pcButton.setSelected( false );
+				m_steamButton.setSelected( false );
+				m_xbox360Button.setSelected( false );
+				m_xboxOneButton.setSelected( false );
+				m_ps3Button.setSelected( false );
+				m_ps4Button.setSelected( false );
+
+				v.setSelected( true );
+			}
 
 			if (null != m_platformSelectionChangedListener )
 			{

@@ -14,4 +14,8 @@
         <attr name="allowSingleTap" format="boolean" />
         <attr name="animateOnClick" format="boolean|color" />
     </declare-styleable>
+
+    <declare-styleable name="GamePlatformSelectView">
+        <attr name="allowMultiSelect" format="boolean"  />
+    </declare-styleable>
 </resources>
