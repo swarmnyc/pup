@@ -11,15 +11,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.*;
 
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.Typefaces;
 import com.swarmnyc.pup.User;
-import com.swarmnyc.pup.components.Consts;
+import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.uservoice.uservoicesdk.UserVoice;
@@ -34,10 +33,10 @@ public class MainDrawerFragment extends Fragment
 {
 	int currentSelection = -1;
 
-	@InjectView(R.id.drawer_contrainer)
+	@InjectView( R.id.drawer_contrainer )
 	View drawerMenuContainer;
 
-	@InjectView(R.id.drawer_list)
+	@InjectView( R.id.drawer_list )
 	ListView drawerListView;
 
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -72,8 +71,8 @@ public class MainDrawerFragment extends Fragment
 		}
 
 		mDrawerToggle = new ActionBarDrawerToggle(
-			this.getActivity(), drawerLayout, toolbar, R.string.navigation_drawer_open,
-			R.string.navigation_drawer_close
+			this.getActivity(), drawerLayout, toolbar, R.string.navigation_drawer_open, R.string
+			.navigation_drawer_close
 		);
 
 		drawerLayout.post(
@@ -113,26 +112,32 @@ public class MainDrawerFragment extends Fragment
 		if ( User.isLoggedIn() )
 		{
 			list.add( "My Chats" );
-			list.add( "All Lobbies" );
 		}
 		else
 		{
-			list.add( "All Lobbies" );
 			list.add( "Register" );
 		}
 
+		list.add( "Find a Game" );
 		list.add( "Feedback" );
 		list.add( "Settings" );
 
-		drawerListView.setAdapter(
-			new ArrayAdapter<String>(
-				this.getActivity(), R.layout.item_drawer_menu, R.id.text_name, list
-			)
-		);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+			this.getActivity(), R.layout.item_drawer_menu, R.id.text_name, list
+		)
+		{
+			@Override
+			public View getView( final int position, final View convertView, final ViewGroup parent )
+			{
+				TextView view = (TextView) super.getView( position, convertView, parent );
+				view.setTypeface( Typefaces.RobotoSlab );
+				return view;
+			}
+		};
+		drawerListView.setAdapter( adapter );
 
-		int position = User.isLoggedIn() ? 1 : 0;
-		selectItem( position );
-		drawerListView.setItemChecked( position, true );
+		selectItem( 1 );
+		drawerListView.setItemChecked( 1, true );
 	}
 
 	public void selectItem( int position )
@@ -194,4 +199,5 @@ public class MainDrawerFragment extends Fragment
 		super.onDestroy();
 		EventBus.getBus().unregister( this );
 	}
+
 }

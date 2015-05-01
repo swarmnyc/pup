@@ -1,9 +1,6 @@
 package com.swarmnyc.pup.widgets;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.nfc.Tag;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -11,7 +8,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -23,6 +19,9 @@ import java.util.List;
 
 public class HorizontalSpinner extends HorizontalScrollView
 {
+	private static final int SCROLL_HANDLER_SELECT = 0;
+	private static final int SCROLL_HANDLER_MOVE   = 1;
+
 	private static String TAG = HorizontalSpinner.class.getSimpleName();
 	private String[]       source;
 	private int            itemWidth;
@@ -37,26 +36,13 @@ public class HorizontalSpinner extends HorizontalScrollView
 
 	private int     selectedPosition;
 	private boolean alreadyInitialized;
-	private Handler stopHandler = new Handler()
-	{
-		@Override
-		public void handleMessage( final Message msg )
-		{
-			super.handleMessage( msg );
-
-			int x = HorizontalSpinner.this.getScrollX();
-			int position = x / itemWidth;
-
-			if ( x % itemWidth >= itemMiddleWidth ) { position++; }
-
-			setSelectedPosition( position );
-		}
-	};
+	private Handler scrollHandler;
 
 	public HorizontalSpinner( Context context )
 	{
 		super( context );
 		init();
+
 	}
 
 	public HorizontalSpinner( Context context, AttributeSet attrs )
@@ -82,7 +68,7 @@ public class HorizontalSpinner extends HorizontalScrollView
 		itemSelectedTextSize = itemTextSize * 2f;
 
 		itemTextColor = getResources().getColor( R.color.text_disabled );
-		itemSelectedTextColor = getResources().getColor( R.color.pup_aqua );
+		itemSelectedTextColor = getResources().getColor( R.color.pup_teal );
 		itemContainer = new LinearLayout( this.getContext() );
 		itemContainer.setLayoutParams(
 			new LayoutParams(
@@ -97,12 +83,50 @@ public class HorizontalSpinner extends HorizontalScrollView
 		{
 			setSource( new String[]{"Text 1", "Text 2", "Text 3"} );
 		}
+
+		scrollHandler = new Handler()
+		{
+			@Override
+			public void handleMessage( final Message msg )
+			{
+				super.handleMessage( msg );
+
+				int x = HorizontalSpinner.this.getScrollX();
+
+				if ( msg.what == SCROLL_HANDLER_SELECT )
+				{
+					int position = x / itemWidth;
+
+					if ( x % itemWidth >= itemMiddleWidth ) { position++; }
+
+					setSelectedPosition( position, true );
+				}
+				else if ( msg.what == SCROLL_HANDLER_MOVE )
+				{
+					int goal = ( selectedPosition * itemWidth ) - x;
+
+					if ( goal == 0 )
+					{
+						return;
+					}
+
+					if ( goal > 0 )
+					{
+						goal = Math.min( goal, 50 );
+					}
+					else
+					{
+						goal = Math.max( goal, -50 );
+					}
+					scrollBy( goal, 0 );
+					scrollHandler.sendEmptyMessageDelayed( SCROLL_HANDLER_MOVE, 50 );
+				}
+			}
+		};
 	}
 
 	public void setSource( String[] source )
 	{
-		//TODO: Make configable
-
 		if ( source == null ) { throw new IllegalArgumentException( "source" ); }
 
 		this.source = source;
@@ -126,31 +150,42 @@ public class HorizontalSpinner extends HorizontalScrollView
 
 	public void setSelectedPosition( int position )
 	{
+		setSelectedPosition( position, false );
+	}
+
+	public void setSelectedPosition( int position, boolean animation )
+	{
 		this.selectedPosition = position;
 		if ( !alreadyInitialized ) { return; }
 
-		for ( int i = 0; i < itemViews.size(); i++ )
+		if ( animation )
 		{
-			TextView itemView = itemViews.get( i );
-			if ( i == position )
-			{
-				itemView.setTextSize( itemSelectedTextSize );
-				itemView.setTextColor( itemSelectedTextColor );
-			}
-			else
-			{
-				itemView.setTextSize( itemTextSize );
-				itemView.setTextColor( itemTextColor );
-			}
+			scrollHandler.sendEmptyMessage( SCROLL_HANDLER_MOVE );
 		}
+		else
+		{
+			for ( int i = 0; i < itemViews.size(); i++ )
+			{
+				TextView itemView = itemViews.get( i );
+				if ( i == position )
+				{
+					itemView.setTextSize( itemSelectedTextSize );
+					itemView.setTextColor( itemSelectedTextColor );
+				}
+				else
+				{
+					itemView.setTextSize( itemTextSize );
+					itemView.setTextColor( itemTextColor );
+				}
+			}
 
-		int p = position * itemWidth;
-		this.scrollTo( p, 0 );
+			int p = position * itemWidth;
+			scrollTo( p, 0 );
+		}
 	}
 
 	protected void onLayout( final boolean changed, final int l, final int t, final int r, final int b )
 	{
-		super.onLayout( changed, l, t, r, b );
 		if ( !alreadyInitialized )
 		{
 			alreadyInitialized = true;
@@ -158,10 +193,10 @@ public class HorizontalSpinner extends HorizontalScrollView
 			final int margin = middlePoint - ( itemMiddleWidth );
 			itemContainer.setPadding( margin, 0, margin, 0 );
 
-			setSelectedPosition( this.selectedPosition );
+			setSelectedPosition( this.selectedPosition, true );
 		}
+		super.onLayout( changed, l, t, r, b );
 	}
-
 
 	@Override
 	protected void onScrollChanged( final int x, final int y, final int oldx, final int oldy )
@@ -208,18 +243,20 @@ public class HorizontalSpinner extends HorizontalScrollView
 				view.setTextSize( this.itemTextSize * distancePercent );
 			}
 		}
-		stopHandler.removeMessages( 0 );
-		stopHandler.sendEmptyMessageDelayed( 0, 1000 );
 	}
 
 	@Override
 	public boolean onTouchEvent( final MotionEvent ev )
 	{
 		// Log.d( TAG, "MotionEvent" + ev );
-		stopHandler.removeMessages( 0 );
+		scrollHandler.removeMessages( 0 );
 		if ( ev.getAction() == MotionEvent.ACTION_UP )
 		{
-			stopHandler.sendEmptyMessageDelayed( 0, 100 );
+			scrollHandler.sendEmptyMessageDelayed( 0, 100 );
+		}
+		else
+		{
+			scrollHandler.sendEmptyMessageDelayed( 0, 1000 );
 		}
 
 		return super.onTouchEvent( ev );

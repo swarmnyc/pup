@@ -84,7 +84,7 @@
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:gravity="center"
-                android:textColor="@color/pup_aqua"
+                android:textColor="@color/pup_teal"
                 android:textStyle="bold"
                 tools:text="17 mins"
                 android:layout_gravity="center_vertical"/>

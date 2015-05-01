@@ -13,7 +13,7 @@ import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.chat.ChatService;
-import com.swarmnyc.pup.components.Consts;
+import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.events.ChatServiceLoggedInEvent;
 import com.uservoice.uservoicesdk.UserVoice;
 

@@ -15,7 +15,7 @@ import android.view.View;
 import com.swarmnyc.pup.*;
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.components.*;
-import com.swarmnyc.pup.components.Consts;
+import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.fragments.MainDrawerFragment;

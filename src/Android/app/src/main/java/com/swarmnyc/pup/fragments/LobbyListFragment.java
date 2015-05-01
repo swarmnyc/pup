@@ -107,7 +107,7 @@ public class LobbyListFragment extends Fragment
 		LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
 	)
 	{
-		MainActivity.getInstance().showToolbar();
+
 		PuPApplication.getInstance().getComponent().inject( this );
 		View view = inflater.inflate( R.layout.fragment_lobby_list, container, false );
 		ButterKnife.inject( this, view );
@@ -254,7 +254,7 @@ public class LobbyListFragment extends Fragment
 		this.inflater = inflater;
 
 
-		//		m_createLobbyButton.setVisibility( User.isLoggedIn() ? View.VISIBLE : View.GONE ); Button should be
+		// m_createLobbyButton.setVisibility( User.isLoggedIn() ? View.VISIBLE : View.GONE ); Button should be
 		// visile aciton should be different.
 
 		m_lobbyAdapter = new LobbyAdapter( getActivity() );
@@ -282,6 +282,7 @@ public class LobbyListFragment extends Fragment
 
 	@Override public void onStart()
 	{
+		MainActivity.getInstance().showToolbar();
 		reloadData();
 
 		super.onStart();
