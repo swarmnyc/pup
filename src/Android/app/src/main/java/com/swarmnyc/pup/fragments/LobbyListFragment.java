@@ -282,7 +282,6 @@ public class LobbyListFragment extends Fragment
 
 	@Override public void onStart()
 	{
-		MainActivity.getInstance().showToolbar();
 		reloadData();
 
 		super.onStart();

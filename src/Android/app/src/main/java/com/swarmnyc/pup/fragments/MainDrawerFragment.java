@@ -144,7 +144,6 @@ public class MainDrawerFragment extends Fragment
 	{
 		if ( position != currentSelection )
 		{
-
 			currentSelection = position;
 			Class fragment = null;
 
@@ -157,18 +156,11 @@ public class MainDrawerFragment extends Fragment
 					}
 					else
 					{
-						fragment = LobbyListFragment.class;
+						fragment = SignupFragment.class;
 					}
 					break;
 				case 1:
-					if ( User.isLoggedIn() )
-					{
-						fragment = LobbyListFragment.class;
-					}
-					else
-					{
-						fragment = SignupFragment.class;
-					}
+					fragment = LobbyListFragment.class;
 					break;
 				case 2:
 					UserVoice.launchUserVoice( this.getActivity() );

@@ -209,6 +209,20 @@ public class CreateLobbyFragment extends Fragment
 	}
 
 	@Override
+	public void onStart()
+	{
+		super.onStart();
+		MainActivity.getInstance().hideToolbar();
+	}
+
+	@Override
+	public void onStop()
+	{
+		super.onStop();
+		MainActivity.getInstance().showToolbar();
+	}
+
+	@Override
 	public void onDateSet( final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth )
 	{
 		customDateTime = true;

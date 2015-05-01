@@ -25,54 +25,52 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainActivity extends ActionBarActivity {
-    private static MainActivity instance;
+public class MainActivity extends ActionBarActivity
+{
+	private static MainActivity instance;
 
-    @InjectView(R.id.toolbar)
-    Toolbar toolbar;
+	@InjectView( R.id.toolbar )
+	Toolbar toolbar;
 
-    public MainActivity() {
-        instance = this;
-    }
+	public MainActivity()
+	{
+		instance = this;
+	}
 
-    public static MainActivity getInstance() {
-        return instance;
-    }
+	public static MainActivity getInstance()
+	{
+		return instance;
+	}
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_main );
+	@Override
+	protected void onCreate( Bundle savedInstanceState )
+	{
+		super.onCreate( savedInstanceState );
+		setContentView( R.layout.activity_main );
 
-        ButterKnife.inject( this );
-        PuPApplication.getInstance().getComponent().inject(this);
-        Navigator.init(this);
-        EventBus.getBus().register( this );
-    }
+		ButterKnife.inject( this );
+		PuPApplication.getInstance().getComponent().inject( this );
+		Navigator.init( this );
+		EventBus.getBus().register( this );
+	}
 
-    public void retrieveMessage(final String message) {
+	public void retrieveMessage( final String message )
+	{
 
-    }
+	}
 
-    public void hideToolbar() {
-        toolbar.setVisibility(View.GONE);
-    }
+	public void hideToolbar()
+	{
+		toolbar.setVisibility( View.GONE );
+	}
 
-    public void showToolbar() {
-        toolbar.setVisibility(View.VISIBLE);
-    }
+	public void showToolbar()
+	{
+		toolbar.setVisibility( View.VISIBLE );
+	}
 
-    public Toolbar getToolbar()
-    {
-        return toolbar;
-    }
-
-    @Override public void onBackPressed()
-    {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1)
-        {
-            this.finish();
-        }
-        super.onBackPressed();
-    }
+	public Toolbar getToolbar()
+	{
+		return toolbar;
+	}
 }

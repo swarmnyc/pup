@@ -17,9 +17,23 @@ public class Navigator
 {
 	private static FragmentActivity activity;
 
-	public static void init( FragmentActivity activity )
+	public static void init( final FragmentActivity activity )
 	{
 		Navigator.activity = activity;
+
+		activity.getSupportFragmentManager().addOnBackStackChangedListener(
+			new FragmentManager.OnBackStackChangedListener()
+			{
+				@Override
+				public void onBackStackChanged()
+				{
+					if ( activity.getSupportFragmentManager().getBackStackEntryCount() == 0 )
+					{
+						activity.finish();
+					}
+				}
+			}
+		);
 	}
 
 	public static void ToCreateLobby()
@@ -36,7 +50,14 @@ public class Navigator
 	{
 		Bundle bundle = new Bundle();
 		bundle.putString( LobbyFragment.LOBBY_ID, id );
+		popOnce();
 		To( LobbyFragment.class, bundle, true );
+	}
+
+	private static void popOnce()
+	{
+		FragmentManager fragmentManager = activity.getSupportFragmentManager();
+		fragmentManager.popBackStack();
 	}
 
 	public static <T extends Fragment> void To(
@@ -56,10 +77,9 @@ public class Navigator
 				T fragment = fragmentClass.newInstance();
 				fragment.setArguments( bundle );
 				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				fragmentTransaction.add( R.id.fragment_container, fragment );
+				fragmentTransaction.replace( R.id.fragment_container, fragment, tag );
 				if ( backable )
 				{
-					//TODO: there is a problem if fragment is no backable
 					fragmentTransaction.addToBackStack( tag );
 				}
 
