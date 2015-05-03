@@ -31,6 +31,7 @@ public class TestHelper {
                         }
                     })
                     .setConverter(new GsonConverter(gson))
+
                     .build();
 
             restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
