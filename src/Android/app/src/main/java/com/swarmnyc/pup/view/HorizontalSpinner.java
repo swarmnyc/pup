@@ -1,8 +1,12 @@
 package com.swarmnyc.pup.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -13,6 +17,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.components.Typefaces;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +28,7 @@ public class HorizontalSpinner extends HorizontalScrollView
 	private static final int SCROLL_HANDLER_MOVE   = 1;
 
 	private static String TAG = HorizontalSpinner.class.getSimpleName();
+	private Typeface       itemTypeface;
 	private String[]       source;
 	private int            itemWidth;
 	private int            itemMiddleWidth;
@@ -37,6 +43,7 @@ public class HorizontalSpinner extends HorizontalScrollView
 	private int     selectedPosition;
 	private boolean alreadyInitialized;
 	private Handler scrollHandler;
+	private float   itemSizeGap;
 
 	public HorizontalSpinner( Context context )
 	{
@@ -48,27 +55,62 @@ public class HorizontalSpinner extends HorizontalScrollView
 	public HorizontalSpinner( Context context, AttributeSet attrs )
 	{
 		super( context, attrs );
+
+		if ( isInEditMode() )
+		{
+			this.setMinimumHeight( 100 );
+			return;
+		}
+
+		TypedArray typedArray = context.obtainStyledAttributes( attrs, R.styleable.HorizontalSpinner );
+
+		if ( typedArray.hasValue( R.styleable.HorizontalSpinner_itemColor ) )
+		{ itemTextColor = typedArray.getColor( R.styleable.HorizontalSpinner_itemColor, 0 ); }
+
+		if ( typedArray.hasValue( R.styleable.HorizontalSpinner_itemSelectColor ) )
+		{ itemSelectedTextColor = typedArray.getColor( R.styleable.HorizontalSpinner_itemSelectColor, 0 ); }
+
+		if ( typedArray.hasValue( R.styleable.HorizontalSpinner_itemTextSize ) )
+		{ itemTextSize = typedArray.getDimension( R.styleable.HorizontalSpinner_itemTextSize, 0 ); }
+
+		if ( typedArray.hasValue( R.styleable.HorizontalSpinner_itemSelectTextSize ) )
+		{ itemSelectedTextSize = typedArray.getDimension( R.styleable.HorizontalSpinner_itemSelectTextSize, 0 ); }
+
+		if ( !isInEditMode() && typedArray.hasValue( R.styleable.HorizontalSpinner_itemTextFont ) )
+		{
+			String font = typedArray.getString( R.styleable.HorizontalSpinner_itemTextFont );
+			itemTypeface = Typefaces.get( font );
+		}
 		init();
 	}
 
 	private void init()
 	{
-		//TODO: Make configable
 		setHorizontalScrollBarEnabled( false );
 		setSmoothScrollingEnabled( true );
-		itemWidth = (int) TypedValue.applyDimension(
-			TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics()
-		);
-		itemHeight = (int) TypedValue.applyDimension(
-			TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()
-		);
 
-		itemMiddleWidth = itemWidth / 2;
-		itemTextSize = TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_SP, 6, getResources().getDisplayMetrics() );
-		itemSelectedTextSize = itemTextSize * 2f;
+		if ( itemTextSize == 0 )
+		{
+			itemTextSize = TypedValue.applyDimension(
+				TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()
+			);
+		}
 
-		itemTextColor = getResources().getColor( R.color.text_disabled );
-		itemSelectedTextColor = getResources().getColor( R.color.pup_teal );
+		if ( itemSelectedTextSize == 0 )
+		{
+			itemSelectedTextSize = itemTextSize * 2f;
+		}
+
+		if ( itemTextColor == 0 )
+		{
+			itemTextColor = getResources().getColor( R.color.text_disabled );
+		}
+
+		if ( itemSelectedTextColor == 0 )
+		{
+			itemSelectedTextColor = getResources().getColor( R.color.pup_teal );
+		}
+
 		itemContainer = new LinearLayout( this.getContext() );
 		itemContainer.setLayoutParams(
 			new LayoutParams(
@@ -112,14 +154,14 @@ public class HorizontalSpinner extends HorizontalScrollView
 
 					if ( goal > 0 )
 					{
-						goal = Math.min( goal, 50 );
+						goal = Math.min( goal, 20 );
 					}
 					else
 					{
-						goal = Math.max( goal, -50 );
+						goal = Math.max( goal, -20 );
 					}
 					scrollBy( goal, 0 );
-					scrollHandler.sendEmptyMessageDelayed( SCROLL_HANDLER_MOVE, 50 );
+					scrollHandler.sendEmptyMessage( SCROLL_HANDLER_MOVE );
 				}
 			}
 		};
@@ -128,8 +170,31 @@ public class HorizontalSpinner extends HorizontalScrollView
 	public void setSource( String[] source )
 	{
 		if ( source == null ) { throw new IllegalArgumentException( "source" ); }
-
 		this.source = source;
+
+		this.itemViews.clear();
+		this.itemContainer.removeAllViews();
+
+		TextPaint tp = new TextPaint();
+		tp.setTextSize( itemSelectedTextSize );
+		if ( itemTypeface != null )
+		{
+			tp.setTypeface( itemTypeface );
+		}
+
+		float largest = 0;
+		for ( String s : source )
+		{
+			float size= tp.measureText( s );
+			if ( size > largest )
+			{ largest = size; }
+		}
+
+		itemHeight = (int) ( ( tp.getTextSize() + tp.descent() ) );
+		itemWidth = Math.max( 300, (int) ( largest * 1.2 ) );
+		itemSizeGap = itemSelectedTextSize - itemTextSize;
+		itemMiddleWidth = itemWidth / 2;
+
 		for ( String o : source )
 		{
 			TextView tv = new TextView( this.getContext() );
@@ -137,7 +202,13 @@ public class HorizontalSpinner extends HorizontalScrollView
 			tv.setHeight( itemHeight );
 			tv.setGravity( Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM );
 			tv.setText( o );
-			tv.setTextSize( itemTextSize );
+			tv.setPadding( 0, 0, 0, 0 );
+			tv.setBackgroundColor( Color.TRANSPARENT );
+			tv.setTextSize( TypedValue.COMPLEX_UNIT_PX, itemTextSize );
+			if ( itemTypeface != null )
+			{
+				tv.setTypeface( itemTypeface );
+			}
 			itemViews.add( tv );
 			itemContainer.addView( tv );
 		}
@@ -169,12 +240,12 @@ public class HorizontalSpinner extends HorizontalScrollView
 				TextView itemView = itemViews.get( i );
 				if ( i == position )
 				{
-					itemView.setTextSize( itemSelectedTextSize );
+					itemView.setTextSize( TypedValue.COMPLEX_UNIT_PX, itemSelectedTextSize );
 					itemView.setTextColor( itemSelectedTextColor );
 				}
 				else
 				{
-					itemView.setTextSize( itemTextSize );
+					itemView.setTextSize( TypedValue.COMPLEX_UNIT_PX, itemTextSize );
 					itemView.setTextColor( itemTextColor );
 				}
 			}
@@ -186,11 +257,11 @@ public class HorizontalSpinner extends HorizontalScrollView
 
 	protected void onLayout( final boolean changed, final int l, final int t, final int r, final int b )
 	{
-		if ( !alreadyInitialized )
+		if ( !alreadyInitialized && !isInEditMode() )
 		{
 			alreadyInitialized = true;
-			final int middlePoint = this.getMeasuredWidth() / 2;
-			final int margin = middlePoint - ( itemMiddleWidth );
+			int middlePoint = this.getMeasuredWidth() / 2;
+			int margin = middlePoint - itemMiddleWidth;
 			itemContainer.setPadding( margin, 0, margin, 0 );
 
 			setSelectedPosition( this.selectedPosition, true );
@@ -210,37 +281,37 @@ public class HorizontalSpinner extends HorizontalScrollView
 
 		Log.d( TAG, "X:" + x + ", Selection:" + position + ", where:" + where );
 
-		float distancePercent;
+		float scale;
 		TextView view = itemViews.get( position );
 
 		if ( isLeft )
 		{
-			distancePercent = 1 + ( where / (float) itemWidth );
+			scale = itemSizeGap * ( where / (float) itemWidth );
 
 			view.setTextColor( this.itemSelectedTextColor );
-			view.setTextSize( this.itemTextSize * distancePercent );
+			view.setTextSize( TypedValue.COMPLEX_UNIT_PX, this.itemTextSize + scale );
 
-			distancePercent = 1 + ( ( itemWidth - where ) / (float) itemWidth );
+			scale = itemSizeGap * ( ( itemWidth - where ) / (float) itemWidth );
 
 			view = itemViews.get( position - 1 );
 
 			view.setTextColor( this.itemTextColor );
-			view.setTextSize( this.itemTextSize * distancePercent );
+			view.setTextSize( TypedValue.COMPLEX_UNIT_PX, this.itemTextSize + scale );
 		}
 		else
 		{
-			distancePercent = 1 + ( ( itemWidth - where ) / (float) itemWidth );
+			scale = itemSizeGap * ( ( itemWidth - where ) / (float) itemWidth );
 
 			view.setTextColor( this.itemSelectedTextColor );
-			view.setTextSize( this.itemTextSize * distancePercent );
+			view.setTextSize( TypedValue.COMPLEX_UNIT_PX, this.itemTextSize + scale );
 
 			if ( position < source.length - 1 )
 			{
-				distancePercent = 1 + ( where / (float) itemWidth );
+				scale = itemSizeGap * ( where / (float) itemWidth );
 				view = itemViews.get( position + 1 );
 
 				view.setTextColor( this.itemTextColor );
-				view.setTextSize( this.itemTextSize * distancePercent );
+				view.setTextSize( TypedValue.COMPLEX_UNIT_PX, this.itemTextSize + scale );
 			}
 		}
 	}

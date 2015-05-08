@@ -10,6 +10,6 @@
     <string-array name="play_styles">
         <item>CASUAL</item>
         <item>NORMAL</item>
-        <item>HARD</item>
+        <item>HARDCORE</item>
     </string-array>
 </resources>

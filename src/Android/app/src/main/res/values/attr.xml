@@ -22,4 +22,13 @@
     <declare-styleable name="FontableTextView">
         <attr name="font" format="string"  />
     </declare-styleable>
+
+    <declare-styleable name="HorizontalSpinner">
+        <attr name="itemTextFont" format="string"  />
+        <attr name="itemSelectColor" format="color"  />
+        <attr name="itemSelectTextSize" format="dimension"  />
+        <attr name="itemColor" format="color"  />
+        <attr name="itemTextSize" format="dimension"  />
+        <attr name="itemWidth" format="dimension"  />
+    </declare-styleable>
 </resources>

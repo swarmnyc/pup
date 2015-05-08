@@ -19,6 +19,8 @@ public class FontableTextView extends TextView
 	public FontableTextView( final Context context, final AttributeSet attrs )
 	{
 		super( context, attrs );
+		if ( isInEditMode() )
+			return;
 
 		TypedArray array = context.obtainStyledAttributes( attrs, R.styleable.FontableTextView );
 		String font;

@@ -31,7 +31,7 @@
     <string name="label_other">Other</string>
     <string name="filter">Filter</string>
     <string name="msg_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
-    <string name="label_pick_a_platform"><b>PICK A SYSTEM</b>\n(Gamers must all use the same option to connect.)</string>
+    <string name="label_pick_a_platform">PICK A SYSTEM</string>
     <string name="label_play_style">PLAY STYLE</string>
     <string name="label_gamer_skill">GAMER SKILL</string>
     <string name="label_date">When?</string>

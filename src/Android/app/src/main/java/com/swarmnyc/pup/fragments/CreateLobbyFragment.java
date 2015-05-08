@@ -230,6 +230,7 @@ public class CreateLobbyFragment extends Fragment
 		long dateOffset = ( date2.getTimeInMillis() - date.getTimeInMillis() ) / DateUtils.DAY_IN_MILLIS;
 
 		setDate( (int) dateOffset );
+		setTime( selectedDate.get( Calendar.HOUR_OF_DAY ),selectedDate.get( Calendar.MINUTE ) );
 	}
 
 	@Override

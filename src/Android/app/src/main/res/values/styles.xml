@@ -59,9 +59,28 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@color/pup_teal</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_large</item>
         <item name="android:padding">@dimen/padding_half</item>
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="HorizontalSpinnerStyleForLobbyCreate">
+        <item name="itemColor">@color/pup_light</item>
+        <item name="itemTextSize">@dimen/text_small</item>
+        <item name="itemSelectColor">@color/pup_teal</item>
+        <item name="itemSelectTextSize">@dimen/text_large</item>
+        <item name="itemTextFont">@string/font_roboto_slab</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/margin_half</item>
+        <item name="android:layout_marginBottom">@dimen/margin_normal</item>
+    </style>
 
+    <style name="text_label">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">@dimen/margin_normal</item>
+    </style>
 </resources>

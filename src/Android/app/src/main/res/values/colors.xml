@@ -6,6 +6,7 @@
     <color name="pup_teal_dark">#2b9a9a</color>
     <color name="pup_grey_bg">#f1f1f1</color>
     <color name="pup_grey">#4d4d4d</color>
+    <color name="pup_light">#989898</color>
 
     <color name="game_xbox_360">#81b32e</color>
     <color name="game_xbox_one">#009500</color>

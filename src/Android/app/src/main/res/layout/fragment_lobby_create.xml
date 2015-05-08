@@ -39,39 +39,30 @@
         <!--platform-->
         <TextView
                 android:id="@+id/label_pick_a_platform"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_below="@+id/img_game"
                 android:text="@string/label_pick_a_platform"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/margin_normal"
-                android:layout_marginBottom="@dimen/margin_normal"
-                android:focusableInTouchMode="false"
-                />
+                style="@style/text_label"/>
 
         <com.swarmnyc.pup.view.GamePlatformSelectView
                 android:id="@+id/platform_select"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/label_pick_a_platform">
+                android:layout_below="@+id/label_pick_a_platform"
+                android:layout_marginTop="@dimen/margin_normal">
         </com.swarmnyc.pup.view.GamePlatformSelectView>
 
         <!--date-->
         <TextView
                 android:id="@+id/label_when"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_below="@+id/platform_select"
                 android:text="@string/label_date"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/margin_normal"
-                android:textStyle="bold"/>
+                style="@style/text_label" />
 
         <com.swarmnyc.pup.view.FontableTextView
                 android:id="@+id/text_date"
-                android:layout_below="@+id/label_when"
                 tools:text="Today"
-                style="@style/text_option_button"/>
+                style="@style/text_option_button"
+                android:layout_below="@+id/label_when"/>
 
         <View
                 android:layout_below="@+id/text_date"
@@ -84,13 +75,9 @@
         <!--time-->
         <TextView
                 android:id="@+id/label_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_below="@+id/text_date"
                 android:text="@string/label_time"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/margin_normal"
-                android:textStyle="bold"/>
+                style="@style/text_label"/>
 
 
         <com.swarmnyc.pup.view.FontableTextView
@@ -106,20 +93,14 @@
         <!--style-->
         <TextView
                 android:id="@+id/label_play_style"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_below="@+id/text_time"
                 android:text="@string/label_play_style"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/margin_normal"
-                android:textStyle="bold"/>
+                style="@style/text_label"/>
 
         <com.swarmnyc.pup.view.HorizontalSpinner
                 android:id="@+id/spinner_play_style"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_below="@+id/label_play_style"
-                android:layout_marginBottom="@dimen/margin_normal"/>
+                style="@style/HorizontalSpinnerStyleForLobbyCreate"/>
 
         <View
                 style="@style/horizontal_line"
@@ -128,20 +109,14 @@
         <!--Skill-->
         <TextView
                 android:id="@+id/label_gamer_skill"
-                android:layout_width="match_parent"
                 android:layout_below="@+id/spinner_play_style"
-                android:layout_height="wrap_content"
                 android:text="@string/label_gamer_skill"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/padding_normal"
-                android:textStyle="bold"/>
+                style="@style/text_label"/>
 
         <com.swarmnyc.pup.view.HorizontalSpinner
                 android:id="@+id/spinner_gamer_skill"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_below="@+id/label_gamer_skill"
-                android:layout_marginBottom="@dimen/margin_normal"/>
+                style="@style/HorizontalSpinnerStyleForLobbyCreate"/>
 
         <View
                 style="@style/horizontal_line"
@@ -150,20 +125,19 @@
         <!--description-->
         <TextView
                 android:id="@+id/label_description"
-                android:layout_width="match_parent"
                 android:layout_below="@+id/spinner_gamer_skill"
-                android:layout_height="wrap_content"
                 android:text="@string/label_description"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/padding_normal"
-                android:textStyle="bold"/>
+                style="@style/text_label"/>
 
         <EditText
                 android:id="@+id/text_description"
                 android:layout_below="@+id/label_description"
                 android:hint="@string/hint_description"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_normal"
+                android:textSize="@dimen/text_small"
+                android:textColorHint="@color/pup_light"/>
 
         <Button
                 android:id="@+id/btn_submit"
