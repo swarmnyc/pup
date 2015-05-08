@@ -46,11 +46,13 @@ public class Navigator
 		To( LobbyListFragment.class, null, true );
 	}
 
-	public static void ToLobby( final String id )
+	public static void ToLobby( final String id ,boolean pop)
 	{
 		Bundle bundle = new Bundle();
 		bundle.putString( LobbyFragment.LOBBY_ID, id );
-		popOnce();
+		if ( pop ){
+			popOnce();
+		}
 		To( LobbyFragment.class, bundle, true );
 	}
 
@@ -58,6 +60,12 @@ public class Navigator
 	{
 		FragmentManager fragmentManager = activity.getSupportFragmentManager();
 		fragmentManager.popBackStack();
+	}
+
+	private static<T> void pop(Class<T> name)
+	{
+		FragmentManager fragmentManager = activity.getSupportFragmentManager();
+		fragmentManager.popBackStack( name.getName(), 0 );
 	}
 
 	public static <T extends Fragment> void To(

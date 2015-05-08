@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/text_name"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textAppearance="?android:attr/textAppearanceListItemSmall"
-    android:gravity="center"
-    android:background="@drawable/item_selected_orange"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall"
-    />
+<com.swarmnyc.pup.view.FontableTextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/text_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:gravity="center"
+        app:font="@string/font_roboto_slab"
+        android:background="@drawable/item_selected_orange"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        />

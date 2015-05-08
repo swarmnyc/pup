@@ -7,6 +7,7 @@
     <dimen name="padding_small">4dp</dimen>
     <dimen name="btn_plus_size">36sp</dimen>
     <dimen name="text_label">12sp</dimen>
-    <dimen name="text_large">24sp</dimen>
-    <dimen name="height_header_img">200dp</dimen>
+    <dimen name="text_large">25sp</dimen>
+    <dimen name="text_small">10sp</dimen>
+    <dimen name="height_header_img">171dp</dimen>
 </resources>

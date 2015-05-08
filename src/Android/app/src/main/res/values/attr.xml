@@ -18,4 +18,8 @@
     <declare-styleable name="GamePlatformSelectView">
         <attr name="allowMultiSelect" format="boolean"  />
     </declare-styleable>
+
+    <declare-styleable name="FontableTextView">
+        <attr name="font" format="string"  />
+    </declare-styleable>
 </resources>

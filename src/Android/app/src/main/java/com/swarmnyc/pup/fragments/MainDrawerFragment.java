@@ -16,7 +16,6 @@ import android.widget.*;
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.Typefaces;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.components.Navigator;
@@ -124,16 +123,7 @@ public class MainDrawerFragment extends Fragment
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 			this.getActivity(), R.layout.item_drawer_menu, R.id.text_name, list
-		)
-		{
-			@Override
-			public View getView( final int position, final View convertView, final ViewGroup parent )
-			{
-				TextView view = (TextView) super.getView( position, convertView, parent );
-				view.setTypeface( Typefaces.RobotoSlab );
-				return view;
-			}
-		};
+		);
 		drawerListView.setAdapter( adapter );
 
 		selectItem( 1 );

@@ -1,0 +1,36 @@
+package com.swarmnyc.pup.view;
+
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Typeface;
+import android.util.AttributeSet;
+import android.widget.TextView;
+import com.swarmnyc.pup.Consts;
+import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.components.Typefaces;
+
+public class FontableTextView extends TextView
+{
+	public FontableTextView( final Context context )
+	{
+		super( context );
+	}
+
+	public FontableTextView( final Context context, final AttributeSet attrs )
+	{
+		super( context, attrs );
+
+		TypedArray array = context.obtainStyledAttributes( attrs, R.styleable.FontableTextView );
+		String font;
+		font = array.getString( R.styleable.FontableTextView_font );
+
+		if ( font != null )
+		{
+			Typeface typeface = Typefaces.get( font );
+			if ( typeface != null )
+			{
+				this.setTypeface( typeface );
+			}
+		}
+	}
+}

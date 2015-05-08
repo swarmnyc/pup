@@ -28,7 +28,7 @@ import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.models.*;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
-import com.swarmnyc.pup.widgets.HorizontalSpinner;
+import com.swarmnyc.pup.view.HorizontalSpinner;
 
 import java.util.*;
 
@@ -101,8 +101,6 @@ public class CreateLobbyFragment extends Fragment
 
 		PuPApplication.getInstance().getComponent().inject( this );
 		ButterKnife.inject( this, view );
-
-		MainActivity.getInstance().hideToolbar();
 
 		gameAdapter = new AutoCompleteForPicturedModelAdapter<Game>( this.getActivity() );
 
@@ -203,9 +201,6 @@ public class CreateLobbyFragment extends Fragment
 
 		selectedDate = Calendar.getInstance();
 		setTime( selectedDate.get( Calendar.HOUR_OF_DAY ), selectedDate.get( Calendar.MINUTE ) + 20 );
-
-		//temp
-		gameImageView.setImageDrawable( new ColorDrawable( Color.BLACK ) );
 	}
 
 	@Override
@@ -271,7 +266,7 @@ public class CreateLobbyFragment extends Fragment
 				@Override
 				public void success( final Lobby value )
 				{
-					Navigator.ToLobby( value.getId() );
+					Navigator.ToLobby( value.getId(), true );
 				}
 			}
 		);
@@ -306,10 +301,10 @@ public class CreateLobbyFragment extends Fragment
 				break;
 			default:
 				s = String.format(
-					"%s %d", selectedDate.getDisplayName( Calendar.MONTH, Calendar.SHORT, Locale.US ),
-					selectedDate.get(
-						Calendar.DAY_OF_MONTH
-					)
+					"%s %d", selectedDate.getDisplayName( Calendar.MONTH, Calendar.SHORT, Locale.US ), selectedDate
+						.get(
+							Calendar.DAY_OF_MONTH
+						)
 				);
 				break;
 		}

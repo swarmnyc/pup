@@ -84,7 +84,7 @@
                 android:orientation="vertical"
                 android:background="@android:color/white">
 
-            <com.swarmnyc.pup.components.ClearableAutoCompleteView
+            <com.swarmnyc.pup.view.ClearableAutoCompleteView
                     android:id="@+id/txt_game_serach"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

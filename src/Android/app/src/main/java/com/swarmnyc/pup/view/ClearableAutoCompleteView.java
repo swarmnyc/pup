@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.swarmnyc.pup.components;
+package com.swarmnyc.pup.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -26,6 +26,7 @@ import android.view.View.OnTouchListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import com.swarmnyc.pup.StringUtils;
+import com.swarmnyc.pup.components.TextWatcherAdapter;
 
 /**
  * To change clear icon, set

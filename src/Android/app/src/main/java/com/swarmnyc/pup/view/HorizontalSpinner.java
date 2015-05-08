@@ -1,4 +1,4 @@
-package com.swarmnyc.pup.widgets;
+package com.swarmnyc.pup.view;
 
 import android.content.Context;
 import android.os.Handler;

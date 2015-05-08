@@ -423,7 +423,7 @@ public class LobbyListFragment extends Fragment
 					{
 						@Override public void onClick( final View v )
 						{
-							Navigator.ToLobby(lobbyListItemView.getLobby().getId() );
+							Navigator.ToLobby(lobbyListItemView.getLobby().getId(),false );
 						}
 					}
 				);

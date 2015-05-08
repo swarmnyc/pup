@@ -43,7 +43,7 @@
         <item name="android:background">@color/pup_orange</item>
     </style>
 
-    <style name="text_button_1">
+    <style name="text_option_button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
@@ -51,6 +51,7 @@
         <item name="android:layout_marginBottom">@dimen/margin_normal</item>
         <item name="android:textColor">@color/pup_teal</item>
         <item name="android:textSize">@dimen/text_large</item>
+        <item name="font">@string/font_roboto_slab</item>
     </style>
 
     <style name="button_aqua">
