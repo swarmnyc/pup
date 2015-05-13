@@ -32,16 +32,12 @@ public class GamePlatformSelectView extends LinearLayout
 	@InjectView( R.id.btn_ps3 )      Button m_ps3Button;
 	@InjectView( R.id.btn_ps4 )      Button m_ps4Button;
 
-
 	private boolean m_allowMultiSelect = false;
-
 
 	public interface OnPlatformSelectionChangedListener
 	{
-
 		void onPlatformSelectionChanged(final View v);
 	}
-
 
 	private OnPlatformSelectionChangedListener m_platformSelectionChangedListener;
 
@@ -65,7 +61,6 @@ public class GamePlatformSelectView extends LinearLayout
 
 	private void init( AttributeSet attrs, int defStyle )
 	{
-
 		TypedArray a = getContext().obtainStyledAttributes( attrs, R.styleable.GamePlatformSelectView );
 
 		try
@@ -94,8 +89,6 @@ public class GamePlatformSelectView extends LinearLayout
 		m_xboxOneButton.setOnClickListener( onClickListener );
 		m_ps3Button.setOnClickListener( onClickListener );
 		m_ps4Button.setOnClickListener( onClickListener );
-
-
 	}
 
 	public List<GamePlatform> getSelectedGamePlatforms()
@@ -153,6 +146,36 @@ public class GamePlatformSelectView extends LinearLayout
 					break;
 				case PS4:
 					m_ps4Button.setSelected( true );
+					break;
+			}
+		}
+	}
+
+	public void setAvailablePlatforms( final List<GamePlatform> platforms )
+	{
+		resetEnablement();
+		resetSelection();
+		for ( GamePlatform platform : platforms )
+		{
+			switch ( platform )
+			{
+				case PC:
+					m_pcButton.setEnabled( true );
+					break;
+				case Steam:
+					m_steamButton.setEnabled( true );
+					break;
+				case Xbox360:
+					m_xbox360Button.setEnabled( true );
+					break;
+				case XboxOne:
+					m_xboxOneButton.setEnabled( true );
+					break;
+				case PS3:
+					m_ps3Button.setEnabled( true );
+					break;
+				case PS4:
+					m_ps4Button.setEnabled( true );
 					break;
 			}
 		}
@@ -231,12 +254,7 @@ public class GamePlatformSelectView extends LinearLayout
 			}
 			else
 			{
-				m_pcButton.setSelected( false );
-				m_steamButton.setSelected( false );
-				m_xbox360Button.setSelected( false );
-				m_xboxOneButton.setSelected( false );
-				m_ps3Button.setSelected( false );
-				m_ps4Button.setSelected( false );
+				resetSelection();
 
 				v.setSelected( true );
 			}
@@ -247,5 +265,25 @@ public class GamePlatformSelectView extends LinearLayout
 			}
 
 		}
+	}
+
+	private void resetEnablement()
+	{
+		m_pcButton.setEnabled( false );
+		m_steamButton.setEnabled( false );
+		m_xbox360Button.setEnabled( false );
+		m_xboxOneButton.setEnabled( false );
+		m_ps3Button.setEnabled( false );
+		m_ps4Button.setEnabled( false );
+	}
+
+	private void resetSelection()
+	{
+		m_pcButton.setSelected( false );
+		m_steamButton.setSelected( false );
+		m_xbox360Button.setSelected( false );
+		m_xboxOneButton.setSelected( false );
+		m_ps3Button.setSelected( false );
+		m_ps4Button.setSelected( false );
 	}
 }

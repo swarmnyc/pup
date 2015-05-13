@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.View;
 
+import android.widget.Toast;
 import com.swarmnyc.pup.*;
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.components.*;
@@ -72,5 +73,20 @@ public class MainActivity extends ActionBarActivity
 	public Toolbar getToolbar()
 	{
 		return toolbar;
+	}
+
+	@Subscribe
+	public void runtimeError( final RuntimeException exception )
+	{
+		this.runOnUiThread(
+			new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					Toast.makeText(MainActivity.this, exception.getMessage(), Toast.LENGTH_LONG ).show();
+				}
+			}
+		);
 	}
 }

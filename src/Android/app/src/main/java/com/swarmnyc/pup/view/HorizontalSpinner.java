@@ -44,23 +44,18 @@ public class HorizontalSpinner extends HorizontalScrollView
 	private boolean alreadyInitialized;
 	private Handler scrollHandler;
 	private float   itemSizeGap;
+	private boolean isSpecificItemWidth;
+	private boolean isSpecificItemHeight;
 
 	public HorizontalSpinner( Context context )
 	{
 		super( context );
 		init();
-
 	}
 
 	public HorizontalSpinner( Context context, AttributeSet attrs )
 	{
 		super( context, attrs );
-
-		if ( isInEditMode() )
-		{
-			this.setMinimumHeight( 100 );
-			return;
-		}
 
 		TypedArray typedArray = context.obtainStyledAttributes( attrs, R.styleable.HorizontalSpinner );
 
@@ -75,6 +70,19 @@ public class HorizontalSpinner extends HorizontalScrollView
 
 		if ( typedArray.hasValue( R.styleable.HorizontalSpinner_itemSelectTextSize ) )
 		{ itemSelectedTextSize = typedArray.getDimension( R.styleable.HorizontalSpinner_itemSelectTextSize, 0 ); }
+
+		if ( typedArray.hasValue( R.styleable.HorizontalSpinner_itemWidth ) )
+		{
+			isSpecificItemWidth = true;
+			itemWidth = (int) typedArray.getDimension( R.styleable.HorizontalSpinner_itemWidth, 0 );
+			itemMiddleWidth = itemWidth / 2;
+		}
+
+		if ( typedArray.hasValue( R.styleable.HorizontalSpinner_itemHeight ) )
+		{
+			isSpecificItemHeight = true;
+			itemHeight = (int) typedArray.getDimension( R.styleable.HorizontalSpinner_itemHeight, 0 );
+		}
 
 		if ( !isInEditMode() && typedArray.hasValue( R.styleable.HorizontalSpinner_itemTextFont ) )
 		{
@@ -111,12 +119,14 @@ public class HorizontalSpinner extends HorizontalScrollView
 			itemSelectedTextColor = getResources().getColor( R.color.pup_teal );
 		}
 
+		itemSizeGap = itemSelectedTextSize - itemTextSize;
 		itemContainer = new LinearLayout( this.getContext() );
 		itemContainer.setLayoutParams(
 			new LayoutParams(
 				ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
 			)
 		);
+
 		this.addView( itemContainer );
 
 		itemViews = new ArrayList<>();
@@ -163,6 +173,13 @@ public class HorizontalSpinner extends HorizontalScrollView
 					scrollBy( goal, 0 );
 					scrollHandler.sendEmptyMessage( SCROLL_HANDLER_MOVE );
 				}
+				else if ( msg.what == 2 )
+				{
+					int p = selectedPosition * itemWidth;
+					scrollTo( p, 0 );
+					if ( HorizontalSpinner.this.getScrollX() != p )
+					{ scrollHandler.sendEmptyMessageDelayed( 2, 100 ); }
+				}
 			}
 		};
 	}
@@ -171,29 +188,10 @@ public class HorizontalSpinner extends HorizontalScrollView
 	{
 		if ( source == null ) { throw new IllegalArgumentException( "source" ); }
 		this.source = source;
+		resetItemSize( source );
 
 		this.itemViews.clear();
 		this.itemContainer.removeAllViews();
-
-		TextPaint tp = new TextPaint();
-		tp.setTextSize( itemSelectedTextSize );
-		if ( itemTypeface != null )
-		{
-			tp.setTypeface( itemTypeface );
-		}
-
-		float largest = 0;
-		for ( String s : source )
-		{
-			float size= tp.measureText( s );
-			if ( size > largest )
-			{ largest = size; }
-		}
-
-		itemHeight = (int) ( ( tp.getTextSize() + tp.descent() ) );
-		itemWidth = Math.max( 300, (int) ( largest * 1.2 ) );
-		itemSizeGap = itemSelectedTextSize - itemTextSize;
-		itemMiddleWidth = itemWidth / 2;
 
 		for ( String o : source )
 		{
@@ -250,13 +248,15 @@ public class HorizontalSpinner extends HorizontalScrollView
 				}
 			}
 
-			int p = position * itemWidth;
-			scrollTo( p, 0 );
+			scrollHandler.sendEmptyMessageDelayed( 2, 100 );
 		}
 	}
 
-	protected void onLayout( final boolean changed, final int l, final int t, final int r, final int b )
+	@Override
+	protected void onSizeChanged( final int w, final int h, final int oldw, final int oldh )
 	{
+		super.onSizeChanged( w, h, oldw, oldh );
+
 		if ( !alreadyInitialized && !isInEditMode() )
 		{
 			alreadyInitialized = true;
@@ -264,9 +264,8 @@ public class HorizontalSpinner extends HorizontalScrollView
 			int margin = middlePoint - itemMiddleWidth;
 			itemContainer.setPadding( margin, 0, margin, 0 );
 
-			setSelectedPosition( this.selectedPosition, true );
+			setSelectedPosition( this.selectedPosition, false );
 		}
-		super.onLayout( changed, l, t, r, b );
 	}
 
 	@Override
@@ -331,5 +330,34 @@ public class HorizontalSpinner extends HorizontalScrollView
 		}
 
 		return super.onTouchEvent( ev );
+	}
+
+	private void resetItemSize( final String[] source )
+	{
+		if ( !isSpecificItemWidth || !isSpecificItemHeight )
+		{
+			TextPaint tp = new TextPaint();
+			tp.setTextSize( itemSelectedTextSize );
+			if ( itemTypeface != null )
+			{
+				tp.setTypeface( itemTypeface );
+			}
+
+			float largest = 0;
+			for ( String s : source )
+			{
+				float size = tp.measureText( s );
+				if ( size > largest )
+				{ largest = size; }
+			}
+
+			if ( !isSpecificItemHeight )
+			{ itemHeight = (int) ( ( tp.getTextSize() + tp.descent() ) ); }
+
+			if ( !isSpecificItemWidth )
+			{ itemWidth = Math.max( 300, (int) ( largest * 1.2 ) ); }
+
+			itemMiddleWidth = itemWidth / 2;
+		}
 	}
 }

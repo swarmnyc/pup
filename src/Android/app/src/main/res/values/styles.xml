@@ -54,13 +54,13 @@
         <item name="font">@string/font_roboto_slab</item>
     </style>
 
-    <style name="button_aqua">
+    <style name="button_teal">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/pup_teal</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/button_teal</item>
+        <item name="android:textColor">@color/write_and_gray</item>
         <item name="android:textSize">@dimen/text_large</item>
-        <item name="android:padding">@dimen/padding_half</item>
+        <item name="android:padding">@dimen/padding_normal</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -70,6 +70,8 @@
         <item name="itemSelectColor">@color/pup_teal</item>
         <item name="itemSelectTextSize">@dimen/text_large</item>
         <item name="itemTextFont">@string/font_roboto_slab</item>
+        <item name="itemWidth">150dp</item>
+        <item name="itemHeight">32dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_half</item>

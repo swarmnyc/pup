@@ -2,8 +2,6 @@ package com.swarmnyc.pup.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,11 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import butterknife.OnClick;
 import com.squareup.picasso.Picasso;
-import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.PuPApplication;
+import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.Filter.GameFilter;
 import com.swarmnyc.pup.Services.GameService;
 import com.swarmnyc.pup.Services.LobbyService;
@@ -30,12 +29,8 @@ import com.swarmnyc.pup.models.*;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
 import com.swarmnyc.pup.view.HorizontalSpinner;
 
-import java.util.*;
-
 import javax.inject.Inject;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import java.util.*;
 
 public class CreateLobbyFragment extends Fragment
 	implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener
@@ -69,6 +64,9 @@ public class CreateLobbyFragment extends Fragment
 
 	@InjectView( R.id.text_description )
 	EditText descriptionText;
+
+	@InjectView( R.id.btn_submit )
+	Button submitButton;
 
 	GameFilter gameFilter = new GameFilter();
 	Game                                      selectedGame;
@@ -142,6 +140,20 @@ public class CreateLobbyFragment extends Fragment
 						       .fit()
 						       .into( gameImageView );
 					}
+
+					platformSelect.setAvailablePlatforms( selectedGame.getPlatforms() );
+					valid();
+				}
+			}
+		);
+
+		platformSelect.setPlatformSelectionChangedListener(
+			new GamePlatformSelectView.OnPlatformSelectionChangedListener()
+			{
+				@Override
+				public void onPlatformSelectionChanged( final View v )
+				{
+					valid();
 				}
 			}
 		);
@@ -230,7 +242,7 @@ public class CreateLobbyFragment extends Fragment
 		long dateOffset = ( date2.getTimeInMillis() - date.getTimeInMillis() ) / DateUtils.DAY_IN_MILLIS;
 
 		setDate( (int) dateOffset );
-		setTime( selectedDate.get( Calendar.HOUR_OF_DAY ),selectedDate.get( Calendar.MINUTE ) );
+		setTime( selectedDate.get( Calendar.HOUR_OF_DAY ), selectedDate.get( Calendar.MINUTE ) );
 	}
 
 	@Override
@@ -243,16 +255,10 @@ public class CreateLobbyFragment extends Fragment
 	@OnClick( R.id.btn_submit )
 	void onCreateLobby()
 	{
-		if ( selectedGame == null )
-		{
-			return;
-		}
+		if ( !valid() )
+		{ return; }
 
 		List<GamePlatform> platforms = platformSelect.getSelectedGamePlatforms();
-		if ( platforms.size() == 0 )
-		{
-			return;
-		}
 
 		Lobby lobby = new Lobby();
 		lobby.setGameId( selectedGame.getId() );
@@ -271,6 +277,26 @@ public class CreateLobbyFragment extends Fragment
 				}
 			}
 		);
+
+		Toast.makeText( this.getActivity(), this.getActivity().getString( R.string.message_lobby_creating ), Toast.LENGTH_LONG ).show();
+	}
+
+	private boolean valid()
+	{
+		boolean isValid = true;
+		if ( selectedGame == null )
+		{
+			isValid = false;
+		}
+
+		if ( platformSelect.getSelectedGamePlatforms().size() == 0 )
+		{
+			isValid = false;
+		}
+
+		this.submitButton.setEnabled( isValid );
+
+		return isValid;
 	}
 
 	private Date getStartTime()
@@ -295,10 +321,10 @@ public class CreateLobbyFragment extends Fragment
 		switch ( dateOffset )
 		{
 			case 0:
-				s = "Today";
+				s = this.getActivity().getString( R.string.today );
 				break;
 			case 1:
-				s = "Tomorrow";
+				s = this.getActivity().getString( R.string.tomorrow);
 				break;
 			default:
 				s = String.format(
@@ -324,20 +350,21 @@ public class CreateLobbyFragment extends Fragment
 		timeOffset = Math.max( timeOffset, 20 );
 		if ( dateOffset == 0 && timeOffset <= 60 )
 		{
-			s = String.format( "In %d minutes", timeOffset );
+			s = this.getActivity().getString( R.string.time_in_minutes, timeOffset );
 		}
 		else
 		{
-			s = String.format( "%d:%d %s", hour, min, hour >= 12 ? "PM" : "AM" );
+			s = String.format(
+				"%d:%d %s",
+				hour,
+				min,
+				hour >= 12
+				? this.getActivity().getString( R.string.time_pm )
+				: this.getActivity().getString( R.string.time_am )
+			);
 		}
 
 		timeText.setText( s );
-	}
-
-	private long getTimeOffset()
-	{
-
-		return timeOffset;
 	}
 
 	private void removeTime( final Calendar date )
