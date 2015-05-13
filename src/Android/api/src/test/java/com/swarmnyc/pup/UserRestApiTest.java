@@ -18,7 +18,7 @@ public class UserRestApiTest {
         UserRestApi userRestApi = TestHelper.getRestApi(UserRestApi.class);
         final CountDownLatch signal = new CountDownLatch(1);
 
-        userRestApi.login("hello@swarmnyc.com","Abc1234", new RestApiCallback<LoggedInUser>() {
+        userRestApi.login("hello@swarmnyc.com","swarmnyc", new RestApiCallback<LoggedInUser>() {
             @Override
             public void success(LoggedInUser loggedInUser, Response response) {
                 signal.countDown();

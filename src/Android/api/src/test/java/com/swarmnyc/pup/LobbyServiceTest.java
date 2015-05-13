@@ -71,8 +71,9 @@ public class LobbyServiceTest
 	}
 
 	@Test
-	public void createLobbyTest() throws InterruptedException
+	public void createLobbyTest() throws Exception
 	{
+		TestHelper.ensureLoggedin();
 		final CountDownLatch signal = new CountDownLatch( 1 );
 
 		service.getGames(

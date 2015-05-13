@@ -56,6 +56,8 @@ public class LobbyRestApiTest {
 
     @Test
     public void createLobbyTest() throws Throwable {
+        TestHelper.ensureLoggedin();
+
         LobbyRestApi lobbyRestApi = TestHelper.getRestApi(LobbyRestApi.class);
         final CountDownLatch signal = new CountDownLatch(1);
 
