@@ -24,6 +24,7 @@ import com.swarmnyc.pup.StringUtils;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
 import com.swarmnyc.pup.components.Action;
+import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.models.*;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
@@ -258,6 +259,8 @@ public class CreateLobbyFragment extends Fragment
 		if ( !valid() )
 		{ return; }
 
+		DialogHelper.showProgressDialog( R.string.message_lobby_creating );
+
 		List<GamePlatform> platforms = platformSelect.getSelectedGamePlatforms();
 
 		Lobby lobby = new Lobby();
@@ -273,12 +276,11 @@ public class CreateLobbyFragment extends Fragment
 				@Override
 				public void success( final Lobby value )
 				{
+					DialogHelper.hide();
 					Navigator.ToLobby( value.getId(), true );
 				}
 			}
 		);
-
-		Toast.makeText( this.getActivity(), this.getActivity().getString( R.string.message_lobby_creating ), Toast.LENGTH_LONG ).show();
 	}
 
 	private boolean valid()

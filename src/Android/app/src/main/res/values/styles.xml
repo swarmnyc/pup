@@ -1,13 +1,11 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <!-- Customize your theme here. -->
-        <item name="windowActionBar">false</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- colorPrimary is used for the default action bar background -->
         <item name="windowActionModeOverlay">true</item>
 
-        <item name="android:background">@color/white</item>
+        <!--<item name="android:background">@color/white</item>-->
 
         <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/white</item>
@@ -23,7 +21,6 @@
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
     </style>
 
     <style name="MainActionBar" parent="ThemeOverlay.AppCompat.ActionBar">

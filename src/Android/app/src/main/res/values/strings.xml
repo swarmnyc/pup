@@ -48,4 +48,6 @@
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
     <string name="message_lobby_creating">Lobby Is Creating</string>
+    <string name="message_error_title">Oops! There is something wrong</string>
+    <string name="ok">Ok</string>
 </resources>

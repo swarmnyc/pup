@@ -1,27 +1,13 @@
 package com.swarmnyc.pup.activities;
 
-import android.content.Intent;
-import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Display;
 import android.view.View;
 
-import android.widget.Toast;
 import com.swarmnyc.pup.*;
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.components.*;
-import com.swarmnyc.pup.Consts;
-import com.swarmnyc.pup.events.UserChangedEvent;
-import com.swarmnyc.pup.chat.ChatService;
-import com.swarmnyc.pup.fragments.MainDrawerFragment;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -84,7 +70,8 @@ public class MainActivity extends ActionBarActivity
 				@Override
 				public void run()
 				{
-					Toast.makeText(MainActivity.this, exception.getMessage(), Toast.LENGTH_LONG ).show();
+					// TODO: Better Message content
+					DialogHelper.showError( exception.getMessage() );
 				}
 			}
 		);
