@@ -1,0 +1,11 @@
+# Uncomment this line to define a global platform for your project
+# platform :ios, '6.0'
+
+target 'pup' do
+pod 'SnapKit', '~> 0.10.0'
+end
+
+target 'pupTests' do
+
+end
+
