@@ -89,7 +89,7 @@ public class SignupFragment extends Fragment
 	void onTest()
 	{
 		userRestApi.login(
-			"hello@swarmnyc.com", "swarmnyc", new RestApiCallback<LoggedInUser>()
+			"test@swarmnyc.com", "abc123", new RestApiCallback<LoggedInUser>()
 			{
 				@Override
 				public void success( final LoggedInUser loggedInUser, final Response response )

@@ -1,10 +1,12 @@
 package com.swarmnyc.pup.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import android.view.inputmethod.InputMethodManager;
 import com.swarmnyc.pup.*;
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.components.*;
@@ -75,5 +77,17 @@ public class MainActivity extends ActionBarActivity
 				}
 			}
 		);
+	}
+
+	public void hideIme()
+	{
+		InputMethodManager imm = (InputMethodManager)getSystemService(
+			Context.INPUT_METHOD_SERVICE);
+
+		if (getCurrentFocus() == null)
+			return;
+		if (getCurrentFocus().getWindowToken() == null)
+			return;
+		imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 	}
 }

@@ -32,8 +32,11 @@
                 android:layout_marginRight="@dimen/margin_normal"
                 android:layout_marginLeft="@dimen/margin_normal"
                 android:textColor="@color/white"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/text_bigger"
                 android:hint="@string/hint_game_name"
                 android:textColorHint="@color/white"/>
 

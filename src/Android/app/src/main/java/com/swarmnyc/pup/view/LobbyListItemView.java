@@ -69,6 +69,7 @@ public class LobbyListItemView extends RelativeLayout
 		}
 
 		m_gameName.setText( lobby.getName() );
+		//TODO: Change Date Formatter 20 May to May 20;
 		m_gameTime.setText( DateUtils.getRelativeTimeSpanString( getContext(), lobby.getStartTime().getTime() ) );
 		m_description.setText( lobby.getDescription() );
 		m_platform.setText( GamePlatformUtils.labelResIdForPlatform( lobby.getPlatform()) );

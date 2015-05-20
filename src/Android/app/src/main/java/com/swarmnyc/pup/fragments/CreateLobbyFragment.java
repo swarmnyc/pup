@@ -2,6 +2,7 @@ package com.swarmnyc.pup.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -133,10 +135,10 @@ public class CreateLobbyFragment extends Fragment
 				public void onItemClick( AdapterView<?> parent, View view, int position, long id )
 				{
 					selectedGame = gameAdapter.getItem( position );
-					if ( StringUtils.isNotEmpty( selectedGame.getThumbnailPictureUrl() ) )
+					if ( StringUtils.isNotEmpty( selectedGame.getPictureUrl() ) )
 					{
 						Picasso.with( getActivity() )
-						       .load( selectedGame.getThumbnailPictureUrl() )
+						       .load( selectedGame.getPictureUrl() )
 						       .centerCrop()
 						       .fit()
 						       .into( gameImageView );
@@ -258,6 +260,8 @@ public class CreateLobbyFragment extends Fragment
 	{
 		if ( !valid() )
 		{ return; }
+
+		MainActivity.getInstance().hideIme();
 
 		DialogHelper.showProgressDialog( R.string.message_lobby_creating );
 

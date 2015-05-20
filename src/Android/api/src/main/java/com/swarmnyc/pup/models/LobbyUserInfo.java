@@ -2,32 +2,65 @@ package com.swarmnyc.pup.models;
 
 import java.util.Hashtable;
 
-public class LobbyUserInfo {
-    String id;
-    String name;
-    String pictureUrl;
-    Boolean isOwner;
-    Boolean isLeave;
+public class LobbyUserInfo
+{
+	public static final LobbyUserInfo Null = new LobbyUserInfo();
 
-    public String getId() {
-        return id;
-    }
+	String  id;
+	String  name;
+	String  pictureUrl;
+	Boolean isOwner;
+	Boolean isLeave;
 
-    public String getName() {
-        return name;
-    }
+	public String getId()
+	{
+		return id;
+	}
 
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
+	public String getName()
+	{
+		return name;
+	}
 
-    public Boolean getIsOwner() {
-        return isOwner;
-    }
+	public String getPictureUrl()
+	{
+		return pictureUrl;
+	}
 
-    public Boolean getIsLeave() {
-        return isLeave;
-    }
+	public Boolean getIsOwner()
+	{
+		return isOwner;
+	}
+
+	public Boolean getIsLeave()
+	{
+		return isLeave;
+	}
+
+	public void setId( final String id )
+	{
+		this.id = id;
+	}
+
+	public void setIsLeave( final Boolean isLeave )
+	{
+		this.isLeave = isLeave;
+	}
+
+	public void setIsOwner( final Boolean isOwner )
+	{
+		this.isOwner = isOwner;
+	}
+
+	public void setName( final String name )
+	{
+		this.name = name;
+	}
+
+	public void setPictureUrl( final String pictureUrl )
+	{
+		this.pictureUrl = pictureUrl;
+	}
 
     /*public LobbyUserInfo(JSONObject json) throws JSONException {
         id = json.getString("id");

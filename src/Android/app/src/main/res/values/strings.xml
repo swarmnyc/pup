@@ -50,4 +50,5 @@
     <string name="message_lobby_creating">Lobby Is Creating</string>
     <string name="message_error_title">Oops! There is something wrong</string>
     <string name="ok">Ok</string>
+    <string name="text_join_lobby">Join\n<small><small>You\'ll be able to chat and stuff</small></small></string>
 </resources>

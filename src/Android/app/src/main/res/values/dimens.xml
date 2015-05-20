@@ -8,6 +8,7 @@
     <dimen name="btn_plus_size">36sp</dimen>
     <dimen name="text_label">12sp</dimen>
     <dimen name="text_large">25sp</dimen>
-    <dimen name="text_small">10sp</dimen>
+    <dimen name="text_bigger">20sp</dimen>
+    <dimen name="text_small">11sp</dimen>
     <dimen name="height_header_img">171dp</dimen>
 </resources>

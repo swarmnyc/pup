@@ -110,4 +110,14 @@ public class Lobby extends Taggable implements PicturedModel {
     public void setThumbnailPictureUrl(String thumbnailPictureUrl) {
         this.thumbnailPictureUrl = thumbnailPictureUrl;
     }
+
+    public LobbyUserInfo getOwner()
+    {
+        for (LobbyUserInfo user : users) {
+            if (user.isOwner)
+                return user;
+        }
+
+        return LobbyUserInfo.Null;
+    }
 }
