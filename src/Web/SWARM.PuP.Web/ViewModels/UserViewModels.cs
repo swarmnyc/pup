@@ -50,7 +50,7 @@ namespace SWARM.PuP.Web.ViewModels
         {
             this.Id = user.Id;
 
-            this.DisplayName = user.UserName;
+            this.UserName = user.UserName;
 
             this.Email = user.Email;
 
@@ -61,7 +61,7 @@ namespace SWARM.PuP.Web.ViewModels
 
         public string Email { get; set; }
 
-        public string DisplayName { get; set; }
+        public string UserName { get; set; }
 
         public string PictureUrl { get; set; }
 

@@ -160,7 +160,6 @@
     <Compile Include="QueryFilters\BaseFilter.cs" />
     <Compile Include="QueryFilters\GameFilter.cs" />
     <Compile Include="ApiControllers\LobbyController.cs" />
-    <None Include="ApiControllers\OldAccountController.cs" />
     <Compile Include="ApiControllers\GameController.cs" />
     <Compile Include="Services\IBaseService.cs" />
     <Compile Include="Components\JsonContent.cs" />
@@ -174,9 +173,7 @@
     <Compile Include="Services\IGameService.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
-    <None Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <None Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Components\MongoHelper.cs" />
     <Compile Include="Components\WebApiHelper.cs" />
@@ -201,9 +198,7 @@
     <Compile Include="Services\UserService.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
     <Compile Include="Models\PuPUser.cs" />
-    <None Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Security\PuPOAuthProvider.cs" />
     <Compile Include="Services\IChatService.cs" />
     <Compile Include="Services\Quickblox\QuickbloxChatService.cs" />
     <Compile Include="Services\Quickblox\QuickbloxHttpHelper.cs" />
