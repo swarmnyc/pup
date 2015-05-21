@@ -5,7 +5,7 @@ namespace SWARM.PuP.Web.Security
 {
     public sealed class PuPClaimsIdentity : ClaimsIdentity
     {
-        public PuPUser User { get; }
+        public PuPUser User { get; private set; }
 
         public PuPClaimsIdentity(PuPUser user):base(null,"PuP")
         {
