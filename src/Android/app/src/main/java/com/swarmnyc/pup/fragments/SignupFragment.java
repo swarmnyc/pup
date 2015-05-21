@@ -67,7 +67,6 @@ public class SignupFragment extends Fragment
 		LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
 	)
 	{
-		MainActivity.getInstance().hideToolbar();
 		View view = inflater.inflate( R.layout.fragment_sign_up, container, false );
 		PuPApplication.getInstance().getComponent().inject( this );
 		ButterKnife.inject( this, view );
@@ -89,7 +88,7 @@ public class SignupFragment extends Fragment
 	void onTest()
 	{
 		userRestApi.login(
-			"test@swarmnyc.com", "abc123", new RestApiCallback<LoggedInUser>()
+			"test@swarmnyc.com", "swarmnyc", new RestApiCallback<LoggedInUser>()
 			{
 				@Override
 				public void success( final LoggedInUser loggedInUser, final Response response )
@@ -98,5 +97,19 @@ public class SignupFragment extends Fragment
 				}
 			}
 		);
+	}
+
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		MainActivity.getInstance().hideToolbar();
+	}
+
+	@Override
+	public void onStop()
+	{
+		super.onStop();
+		MainActivity.getInstance().showToolbar();
 	}
 }

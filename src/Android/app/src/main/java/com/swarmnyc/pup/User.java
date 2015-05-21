@@ -27,7 +27,9 @@ public class User {
         User.current = current;
 
         Config.setLong(KEY_USER_EXPIRES, System.currentTimeMillis() + (int)current.getExpiresIn());
-        Config.setString(KEY_USER, gson.toJson(current));
+        Config.setString( KEY_USER, gson.toJson( current ) );
+
+        EventBus.getBus().post( new UserChangedEvent() );
     }
 
     public static void Logout() {
