@@ -15,17 +15,18 @@ namespace SWARM.PuP.Web.Services.Quickblox
         {
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.User, HttpMethod.Post);
 
+            string username = Guid.NewGuid().ToString();
             var result = request.Json<CreateUserResult>(new
             {
                 user = new
                 {
-                    login = user.Id,
+                    login = username,
                     password = QuickbloxHttpHelper.UserPassword,
-                    email = user.Id + QuickbloxHttpHelper.CompanyEmailDomin
+                    email = username + QuickbloxHttpHelper.CompanyEmailDomin
                 }
             });
 
-            user.SetChatId(result.user.id.ToString());
+            user.SetChatId(result.user.id.ToString(), username);
         }
 
         public void DeleteUser(PuPUser user)
@@ -53,7 +54,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
 
         public void JoinRoom(Lobby lobby, IEnumerable<PuPUser> users)
         {
-            string[] chatUsersId = users.Select(x=>x.GetChatId()).ToArray();
+            string[] chatUsersId = users.Select(x => x.GetChatId()).ToArray();
 
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.RoomUpdate(lobby.GetTagValue(QuickbloxHttpHelper.Const_ChatRoomId)), HttpMethod.Put);
 

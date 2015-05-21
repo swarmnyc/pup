@@ -23,7 +23,6 @@ import com.swarmnyc.pup.models.LobbyUserInfo;
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class LobbyFragment extends Fragment
 {
@@ -186,7 +185,7 @@ public class LobbyFragment extends Fragment
 					{
 						LobbyUserInfo user = new LobbyUserInfo();
 						user.setId( User.current.getId() );
-						user.setName( User.current.getDisplayName() );
+						user.setName( User.current.getUserName() );
 						user.setPictureUrl( User.current.getPictureUrl() );
 
 						lobby.getUsers().add( user );

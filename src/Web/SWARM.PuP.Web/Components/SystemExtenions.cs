@@ -1,50 +1,66 @@
 ﻿using System.Collections;
 using System.Security.Principal;
-using Microsoft.AspNet.Identity;
-using SWARM.PuP.Web;
 using SWARM.PuP.Web.Models;
+using SWARM.PuP.Web.Security;
 using SWARM.PuP.Web.Services;
 
 namespace System
 {
-    public static class SystemExtenions 
+    public static class SystemExtenions
     {
-        public static Boolean IsNullOrEmpty(this IEnumerable enumerable)
+        public static bool IsNullOrEmpty(this IEnumerable enumerable)
         {
             if (enumerable == null)
                 return true;
 
-            if (!enumerable.GetEnumerator().MoveNext())
-                return true;
+            var s = enumerable as String;
+            if (s != null)
+                return s.Length == 0;
 
-            return false;
+            var array = enumerable as Array;
+            if (array != null)
+                return array.Length == 0;
+
+            var collection = enumerable as ICollection;
+            if (collection != null)
+                return collection.Count == 0;
+
+            return !enumerable.GetEnumerator().MoveNext();
         }
 
-        public static Boolean IsNullOrEmpty(this ICollection enumerable)
+        public static bool IsNotNullOrEmpty(this IEnumerable enumerable)
         {
             if (enumerable == null)
-                return true;
+                return false;
 
-            if (enumerable.Count==0)
-                return true;
+            var s = enumerable as String;
+            if (s != null)
+                return s.Length != 0;
 
-            return false;
+            var array = enumerable as Array;
+            if (array != null)
+                return array.Length != 0;
+
+            var collection = enumerable as ICollection;
+            if (collection != null)
+                return collection.Count != 0;
+
+            return enumerable.GetEnumerator().MoveNext();
         }
 
-        public static Boolean IsNullOrEmpty(this Array enumerable)
+        public static bool IsNullOrWhiteSpace(this string s)
         {
-            if (enumerable == null)
-                return true;
-
-            if (enumerable.Length == 0)
-                return true;
-
-            return false;
+            return string.IsNullOrWhiteSpace(s);
         }
 
-        public static PuPUser Get(this IUserService service, IIdentity identity)
+        public static bool IsNotNullOrWhiteSpace(this string s)
         {
-            return service.GetById(identity.GetUserId());
+            return !string.IsNullOrWhiteSpace(s);
+        }
+
+        public static PuPUser GetPuPUser(this IIdentity identity)
+        {
+            return ((PuPClaimsIdentity) identity).User;
         }
     }
 }

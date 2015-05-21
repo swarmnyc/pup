@@ -50,7 +50,7 @@ namespace SWARM.PuP.Web.Tests.Services
         {
             try
             {
-                var userService = new UserService();
+                var userService = new UserService(null);
                 QuickbloxChatService s = new QuickbloxChatService();
                 s.CreateRoomForLobby(userService.Collection.FindOne() , new Lobby()
                 {
@@ -71,7 +71,7 @@ namespace SWARM.PuP.Web.Tests.Services
         {
             try
             {
-                var userService = new UserService();
+                var userService = new UserService(null);
                 QuickbloxChatService s = new QuickbloxChatService();
                 Lobby lobby = new Lobby();
                 lobby.AddTag(QuickbloxHttpHelper.Const_ChatRoomId, "5515c344535c120576011113");
@@ -92,7 +92,7 @@ namespace SWARM.PuP.Web.Tests.Services
         {
             try
             {
-                var userService = new UserService();
+                var userService = new UserService(null);
                 QuickbloxChatService s = new QuickbloxChatService();
                 Lobby lobby = new Lobby();
                 lobby.AddTag(QuickbloxHttpHelper.Const_ChatRoomId, "5515c344535c120576011113");

@@ -3,13 +3,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using System.Web.Http;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.OAuth;
-using SWARM.PuP.Web.Auth;
 using SWARM.PuP.Web.Models;
+using SWARM.PuP.Web.Security;
+using SWARM.PuP.Web.Services;
 using SWARM.PuP.Web.ViewModels;
 
 namespace SWARM.PuP.Web.ApiControllers
@@ -17,38 +14,43 @@ namespace SWARM.PuP.Web.ApiControllers
     [RoutePrefix("api/User")]
     public class UserController : ApiController
     {
+        private readonly IUserService _userService;
+
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         [HttpPost]
         [Route("~/api/Login")]
         public IHttpActionResult Login(LoginViewModel model)
         {
-            if (model == null || string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Password))
+            if (!ModelState.IsValid)
             {
                 return BadRequest("No matches parameters");
             }
 
-            PuPUser user = PuPUserManager.Instance.Find(model.Email, model.Password);
+            var user = _userService.Find(model.Email, model.Password);
 
             if (user == null)
             {
-                return BadRequest();
+                return BadRequest("Email or Password aren't correct");
             }
 
-            HttpResponseMessage response = GenerateTokenResponse(user);
+            var response = GenerateTokenMessage(user);
             return ResponseMessage(response);
         }
-
 
         [HttpPost]
         [Route("~/api/ExternalLogin")]
         public IHttpActionResult ExternalLogin(ExternalLoginViewModel model)
         {
-            if (model == null || string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Provider) ||
-                string.IsNullOrWhiteSpace(model.Token))
+            if (ModelState.IsValid)
             {
                 return BadRequest("No matches parameters");
             }
 
-            PuPUser user = null;
+            PuPUser user;
             model.Provider = model.Provider.ToLower();
             switch (model.Provider)
             {
@@ -57,23 +59,23 @@ namespace SWARM.PuP.Web.ApiControllers
                         WebRequest.Create("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + model.Token);
                     var googleUser = request.Json<GoogleUserInfo>();
 
-                    user = PuPUserManager.Instance.FindByEmail(model.Email);
+                    user = _userService.FindByEmail(model.Email);
 
                     if (user == null)
                     {
-                        user = CreateUserByExternalLogin(new UserRegisterViewModel
+                        /*user = CreateUserByExternalLogin(new UserRegisterViewModel
                         {
                             IdFromProvider = googleUser.id,
                             UserName = googleUser.name,
                             PictureUrl = googleUser.picture,
                             Provider = model.Provider,
                             Email = model.Email
-                        });
+                        });*/
                     }
                     break;
 #if DEBUG
                 case "test":
-                    user = PuPUserManager.Instance.FindByEmail(model.Email);
+                    user = _userService.FindByEmail(model.Email);
                     break;
 #endif
                 default:
@@ -85,21 +87,18 @@ namespace SWARM.PuP.Web.ApiControllers
                 return BadRequest();
             }
 
-            HttpResponseMessage response = GenerateTokenResponse(user);
+            var response = GenerateTokenMessage(user);
             return ResponseMessage(response);
         }
 
-
         [Authorize]
-        public async Task<UserInfoViewModel> Get()
+        public UserInfoViewModel Get()
         {
-            var user = await PuPUserManager.Instance.FindByNameAsync(User.Identity.Name);
-
-            return new UserInfoViewModel(user);
+            return new UserInfoViewModel(User.Identity.GetPuPUser());
         }
 
         [AllowAnonymous]
-        [Route("Register")]
+        [HttpPost]
         public IHttpActionResult Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
@@ -107,62 +106,58 @@ namespace SWARM.PuP.Web.ApiControllers
                 return BadRequest(ModelState);
             }
 
-            var user = new PuPUser() { UserName = model.Email, Email = model.Email };
-
-            IdentityResult result = PuPUserManager.Instance.Create(user, model.Password);
-
-            if (!result.Succeeded)
+            if (_userService.FindByEmail(model.Email) != null)
             {
-                return BadRequest(result.Errors.FirstOrDefault());
+                return BadRequest("Exist");
             }
 
-            HttpResponseMessage response = GenerateTokenResponse(user);
+            var user = new PuPUser
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                PasswordHash = DataProtector.Hash(model.Password)
+            };
+
+            var response = GenerateTokenMessage(_userService.Add(user));
             return ResponseMessage(response);
         }
 
         [Authorize, HttpPost, Route("UserTag")]
-        public async Task<IHttpActionResult> AddUserTag([FromBody]PuPTag tag)
+        public IHttpActionResult AddUserTag([FromBody] PuPTag tag)
         {
             if (tag == null)
             {
                 return BadRequest();
             }
 
-            var user = await PuPUserManager.Instance.FindByIdAsync(User.Identity.GetUserId());
+            var user = User.Identity.GetPuPUser();
             user.Tags.Add(tag);
-            await PuPUserManager.Instance.UpdateAsync(user);
+            _userService.Update(user);
 
             return Ok(tag.Id);
         }
 
         [Authorize, HttpDelete, Route("UserTag/{tagId}")]
-        public async Task<IHttpActionResult> DeleteUserTag(string tagId)
+        public IHttpActionResult DeleteUserTag(string tagId)
         {
-            var user = await PuPUserManager.Instance.FindByNameAsync(User.Identity.Name);
+            var user = User.Identity.GetPuPUser();
             user.Tags.Remove(user.Tags.First(x => x.Id == tagId));
-            await PuPUserManager.Instance.UpdateAsync(user);
+            _userService.Update(user);
 
             return Ok();
         }
 
-        private HttpResponseMessage GenerateTokenResponse(PuPUser user)
+        private HttpResponseMessage GenerateTokenMessage(PuPUser user)
         {
-            var owin = ActionContext.Request.GetOwinContext();
-            var oAuthIdentity = PuPUserManager.Instance.CreateIdentity(user, OAuthDefaults.AuthenticationType);
-
-            var properties = PuPOAuthProvider.CreateProperties(user);
-            var ticket = new AuthenticationTicket(oAuthIdentity, properties);
-            ticket.Properties.ExpiresUtc = new DateTimeOffset(DateTime.Now.AddMilliseconds(Startup.OAuthOptions.AccessTokenExpireTimeSpan.TotalMilliseconds));
-
-            var accessToken = Startup.OAuthOptions.AccessTokenFormat.Protect(ticket);
+            var at = new AccessToken(user.Id);
 
             var response = Request.CreateResponse(HttpStatusCode.OK);
 
             response.Content = new JsonContent(new UserLoggedInViewModel(user)
             {
-                AccessToken = accessToken,
+                AccessToken = DataProtector.Protect(at.ToJson()),
                 TokenType = "bearer",
-                ExpiresIn = (long)Startup.OAuthOptions.AccessTokenExpireTimeSpan.TotalMilliseconds
+                ExpiresIn = (at.ExpirationDateUtc - DateTime.UtcNow).TotalSeconds
             });
 
             response.Headers.CacheControl = new CacheControlHeaderValue
@@ -172,25 +167,5 @@ namespace SWARM.PuP.Web.ApiControllers
 
             return response;
         }
-
-
-        private static PuPUser CreateUserByExternalLogin(UserRegisterViewModel userRegisterViewModel)
-        {
-            var pupUser = new PuPUser
-            {
-                Email = userRegisterViewModel.Email,
-                UserName = userRegisterViewModel.Email,
-                DisplayName = userRegisterViewModel.UserName,
-                PictureUrl = userRegisterViewModel.PictureUrl
-            };
-
-            pupUser.AddLogin(new UserLoginInfo(userRegisterViewModel.Provider, userRegisterViewModel.IdFromProvider));
-
-            var result = PuPUserManager.Instance.Create(pupUser);
-
-            return result.Succeeded ? pupUser : null;
-        }
     }
-
-
 }

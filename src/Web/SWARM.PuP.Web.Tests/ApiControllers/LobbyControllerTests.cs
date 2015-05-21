@@ -7,10 +7,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using Autofac;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MongoDB;
-using MongoDB.Bson;
 using Moq;
-using Newtonsoft.Json;
 using SWARM.PuP.Web.ApiControllers;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
@@ -20,7 +17,7 @@ using IContainer = Autofac.IContainer;
 
 namespace SWARM.PuP.Web.Tests.ApiControllers
 {
-    [TestClass()]
+    [TestClass]
     public class LobbyControllerTests
     {
         private readonly IContainer container;
@@ -28,44 +25,50 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
         public LobbyControllerTests()
         {
             TestHelper.MockDatabase();
-            container = TestHelper.GetContainer((b) =>
+            container = TestHelper.GetContainer(b =>
             {
                 var chatService = new Mock<IChatService>();
                 chatService.Setup(x =>
                     x.CreateRoomForLobby(It.IsAny<PuPUser>(), It.IsAny<Lobby>()))
-                     .Callback(new Action<PuPUser, Lobby>((x, y) => { y.AddTag(QuickbloxHttpHelper.Const_ChatRoomId, "Test"); })
-                 );
+                    .Callback(
+                        new Action<PuPUser, Lobby>((x, y) => { y.AddTag(QuickbloxHttpHelper.Const_ChatRoomId, "Test"); })
+                    );
 
                 b.RegisterInstance(chatService.Object).AsImplementedInterfaces();
             });
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void LobbyController_Filter_Test()
         {
-            LobbyController controller = container.Resolve<LobbyController>();
-            var result = controller.Get(new LobbyFilter()
+            var controller = container.Resolve<LobbyController>();
+            var result = controller.Get(new LobbyFilter
             {
                 Order = "Name",
                 PageSize = 1,
                 OrderDirection = ListSortDirection.Descending,
-                PlayStyles = new[] { PlayStyle.Casual }
+                PlayStyles = new[] {PlayStyle.Casual}
             });
-            
+
             Debug.WriteLine(result.ToJson());
 
             Assert.IsTrue(result.Any());
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void LobbyController_CreateLobby_Test()
         {
-            UserService userService = new UserService();
-            LobbyController controller = container.Resolve<LobbyController>();
+            var userService = new UserService(null);
+            var controller = container.Resolve<LobbyController>();
 
-            controller.RequestContext.Principal = new GenericPrincipal(new ClaimsIdentity(new List<Claim>() { new Claim(ClaimTypes.NameIdentifier, userService.Collection.FindOne().Id) }), null);
+            controller.RequestContext.Principal =
+                new GenericPrincipal(
+                    new ClaimsIdentity(new List<Claim>
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, userService.Collection.FindOne().Id)
+                    }), null);
 
-            var lobby = controller.Post(new Lobby()
+            var lobby = controller.Post(new Lobby
             {
                 GameId = "test",
                 Name = "Test 2",

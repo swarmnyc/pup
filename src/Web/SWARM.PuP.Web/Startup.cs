@@ -1,23 +1,17 @@
-﻿using System.Reflection;
-using System.Web.Http;
-using System.Web.Mvc;
-using Autofac;
-using Autofac.Integration.Mvc;
-using Autofac.Integration.WebApi;
-
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using Owin;
-using SWARM.PuP.Web.Services;
-using SWARM.PuP.Web.Services.Quickblox;
+using SWARM.PuP.Web;
+using SWARM.PuP.Web.Security;
 
-[assembly: OwinStartupAttribute(typeof(SWARM.PuP.Web.Startup))]
+[assembly: OwinStartup(typeof (Startup))]
+
 namespace SWARM.PuP.Web
 {
-    public partial class Startup
+    public class Startup
     {
         public void Configuration(IAppBuilder app)
-        {
-            ConfigureAuth(app);
+        {            
+            app.Use<AuthenticationMiddleware>();
         }
     }
 }

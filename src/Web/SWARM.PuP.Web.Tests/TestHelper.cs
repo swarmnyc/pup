@@ -1,33 +1,32 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using AspNet.Identity.MongoDB;
 using Autofac;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB;
-using MongoDB.Bson;
-using MongoDB.Driver.Linq;
 using MongoDB.Embedded;
 using Newtonsoft.Json;
-using SWARM.PuP.Web.ApiControllers;
 using SWARM.PuP.Web.Models;
-using SWARM.PuP.Web.Services;
 
 namespace SWARM.PuP.Web.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class TestHelper
     {
         public static void InitialUser()
         {
-            PuPIdentityContext.Create();
+            //PuPIdentityContext.Create();
         }
 
         public static IContainer GetContainer(Action<ContainerBuilder> extraBinding = null)
         {
-            ContainerBuilder builder = new ContainerBuilder();
-            builder.RegisterAssemblyTypes(typeof(PuPUser).Assembly).Where(x => x.FullName.EndsWith("Service")).AsImplementedInterfaces();
-            builder.RegisterAssemblyTypes(typeof(PuPUser).Assembly).Where(x => x.FullName.EndsWith("Controller")).AsSelf();
+            var builder = new ContainerBuilder();
+            builder.RegisterAssemblyTypes(typeof (PuPUser).Assembly)
+                .Where(x => x.FullName.EndsWith("Service"))
+                .AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(typeof (PuPUser).Assembly)
+                .Where(x => x.FullName.EndsWith("Controller"))
+                .AsSelf();
 
             if (extraBinding != null)
             {
@@ -37,7 +36,6 @@ namespace SWARM.PuP.Web.Tests
             return builder.Build();
         }
 
-        
         public static void MockDatabase()
         {
             var mongoEmbedded = new EmbeddedMongoDbServer();
@@ -59,9 +57,10 @@ namespace SWARM.PuP.Web.Tests
         [TestMethod]
         public void Real_DumpDatabase()
         {
-            File.WriteAllText("..\\..\\MockData\\games.json", JsonConvert.SerializeObject(MongoHelper.GetCollection<Game>("Games").FindAll()));
-            File.WriteAllText("..\\..\\MockData\\lobbies.json", JsonConvert.SerializeObject(MongoHelper.GetCollection<Lobby>("Lobbies").FindAll()));
-
+            File.WriteAllText("..\\..\\MockData\\games.json",
+                JsonConvert.SerializeObject(MongoHelper.GetCollection<Game>("Games").FindAll()));
+            File.WriteAllText("..\\..\\MockData\\lobbies.json",
+                JsonConvert.SerializeObject(MongoHelper.GetCollection<Lobby>("Lobbies").FindAll()));
         }
     }
 }

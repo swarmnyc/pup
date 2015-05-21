@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.AspNet.Identity;
 using MongoDB;
 using MongoDB.Driver.Linq;
 using SWARM.PuP.Web.Models;
@@ -22,7 +20,7 @@ namespace SWARM.PuP.Web.Services
 
         public Lobby Add(Lobby lobby, PuPUser owner)
         {
-            lobby.Users.Add(new LobbyUserInfo()
+            lobby.Users.Add(new LobbyUserInfo
             {
                 Id = owner.Id,
                 IsOwner = true,
@@ -81,21 +79,21 @@ namespace SWARM.PuP.Web.Services
 
         public void Join(string lobbyId, PuPUser user)
         {
-            Lobby lobby = this.GetById(lobbyId);
-            lobby.Users.Add(new LobbyUserInfo()
+            var lobby = GetById(lobbyId);
+            lobby.Users.Add(new LobbyUserInfo
             {
                 Id = user.Id,
                 PictureUrl = user.PictureUrl,
                 Name = user.GetUserName(lobby.Platform)
             });
 
-            _chatService.JoinRoom(lobby, new PuPUser[] { user });
+            _chatService.JoinRoom(lobby, new[] {user});
             Update(lobby);
         }
 
         public void Leave(string lobbyId, PuPUser user)
         {
-            Lobby lobby = this.GetById(lobbyId);
+            var lobby = GetById(lobbyId);
             var lobbyUser = lobby.Users.First(x => x.Id == user.Id);
             lobbyUser.IsLeave = true;
 
@@ -115,11 +113,9 @@ namespace SWARM.PuP.Web.Services
 
             lobbyUser.IsOwner = false;
 
-            _chatService.LeaveRoom(lobby, new PuPUser[] { user });
+            _chatService.LeaveRoom(lobby, new[] {user});
             Update(lobby);
         }
-
-
 
         protected override Expression<Func<Lobby, object>> GetOrderExpression(BaseFilter filter)
         {

@@ -50,6 +50,7 @@ namespace MongoDB
                     //Create Database from ConnectionString
                     var url = new MongoUrl(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
                     var client = new MongoClient(url);
+                    
                     _database = client.GetServer().GetDatabase(url.DatabaseName);
                 }
                 else

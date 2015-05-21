@@ -1,24 +1,25 @@
 package com.swarmnyc.pup.models;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class LoggedInUser
 {
-    private String id;
-    private String email;
-    private String displayName;
-    private String pictureUrl;
-    private String accessToken;
-    private String tokenType;
-    private long expiresIn;
+    private String       id;
+    private String       email;
+    private String       userName;
+    private String       pictureUrl;
+    private String       accessToken;
+    private String       tokenType;
+    private double       expiresIn;
     private List<PuPTag> tags;
 
-    public String getId() {
+    public String getId()
+    {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId( String id )
+    {
         this.id = id;
     }
 
@@ -30,12 +31,12 @@ public class LoggedInUser
         this.email = email;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setUserName( String userName ) {
+        this.userName = userName;
     }
 
     public String getPictureUrl() {
@@ -62,11 +63,11 @@ public class LoggedInUser
         this.tokenType = tokenType;
     }
 
-    public long getExpiresIn() {
+    public double getExpiresIn() {
         return expiresIn;
     }
 
-    public void setExpiresIn(long expiresIn) {
+    public void setExpiresIn(double expiresIn) {
         this.expiresIn = expiresIn;
     }
 

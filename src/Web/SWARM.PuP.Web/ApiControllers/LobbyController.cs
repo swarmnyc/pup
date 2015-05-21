@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net.Http;
+using System.Web;
 using System.Web.Http;
-using System.Web.Http.ExceptionHandling;
-using System.Web.Http.Results;
-using Microsoft.AspNet.Identity;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
 using SWARM.PuP.Web.Services;
@@ -15,9 +13,9 @@ namespace SWARM.PuP.Web.ApiControllers
     [RoutePrefix("api/Lobby")]
     public class LobbyController : ApiController
     {
-        private readonly IUserService _userService;
-        private readonly ILobbyService _lobbyService;
         private readonly IGameService _gameService;
+        private readonly ILobbyService _lobbyService;
+        private readonly IUserService _userService;
 
         public LobbyController(IUserService userService, ILobbyService lobbyService, IGameService gameService)
         {
@@ -26,7 +24,7 @@ namespace SWARM.PuP.Web.ApiControllers
             _gameService = gameService;
         }
 
-        public IEnumerable<LobbyViewModel> Get([FromUri]LobbyFilter filter)
+        public IEnumerable<LobbyViewModel> Get([FromUri] LobbyFilter filter)
         {
             return LobbyViewModel.Load(_lobbyService.Filter(filter));
         }
@@ -48,7 +46,7 @@ namespace SWARM.PuP.Web.ApiControllers
             lobby.PictureUrl = game.PictureUrl;
             lobby.ThumbnailPictureUrl = game.ThumbnailPictureUrl;
 
-            return _lobbyService.Add(lobby, _userService.Get(User.Identity));
+            return _lobbyService.Add(lobby, User.Identity.GetPuPUser());
         }
 
         [Authorize]
@@ -67,8 +65,8 @@ namespace SWARM.PuP.Web.ApiControllers
 
         [Authorize, Route("Join/{lobbyId}"), HttpPost]
         public IHttpActionResult Join(string lobbyId)
-        {   
-            _lobbyService.Join(lobbyId, _userService.Get(User.Identity));
+        {
+            _lobbyService.Join(lobbyId, User.Identity.GetPuPUser());
 
             return Ok();
         }
@@ -76,7 +74,7 @@ namespace SWARM.PuP.Web.ApiControllers
         [Authorize, Route("Leave/{lobbyId}"), HttpPost]
         public IHttpActionResult Leave(string lobbyId)
         {
-            _lobbyService.Leave(lobbyId, _userService.Get(User.Identity));
+            _lobbyService.Leave(lobbyId, User.Identity.GetPuPUser());
 
             return Ok();
         }

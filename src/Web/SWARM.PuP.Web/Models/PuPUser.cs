@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using AspNet.Identity.MongoDB;
-using MongoDB;
+﻿using System.Collections.Generic;
 
 namespace SWARM.PuP.Web.Models
 {
-    public class PuPUser : IdentityUser, IPuPTaggable, IMongoModel
+    public class PuPUser : PuPTaggable
     {
-        private List<PuPTag> _tags;
-
-        public string DisplayName { get; set; }
-
+        public string UserName { get; set; }
+        public virtual string SecurityStamp { get; set; }
+        public virtual string Email { get; set; }
+        public List<string> Roles { get; set; }
+        public virtual string PasswordHash { get; set; }
         public string PictureUrl { get; set; }
-
-        public List<PuPTag> Tags
-        {
-            get { return _tags ?? (_tags = new List<PuPTag>()); }
-            set { _tags = value; }
-        }
 
         public string GetUserName(GamePlatform platform)
         {
@@ -28,7 +20,5 @@ namespace SWARM.PuP.Web.Models
         {
             this.UpdateTag("Name" + platform, name);
         }
-
-        public DateTime UpdatedAtUtc { get; set; }
     }
 }

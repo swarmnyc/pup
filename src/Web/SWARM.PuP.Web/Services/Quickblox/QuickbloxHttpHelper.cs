@@ -27,6 +27,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
         public const string LobbyNameFormat = "Lobby:{0}";
         public const string Const_ChatRoomId = "QBChatRoomId";
         public const string Const_ChatId = "QBChatId";
+        public const string Const_ChatUserName = "QBChatUserName";
 
         static QuickbloxHttpHelper()
         {
@@ -57,9 +58,10 @@ namespace SWARM.PuP.Web.Services.Quickblox
             return user.GetTagValue(Const_ChatId);
         }
 
-        internal static void SetChatId(this PuPUser user, string chatId)
+        internal static void SetChatId(this PuPUser user, string chatId,string username)
         {
             user.UpdateTag(Const_ChatId, chatId);
+            user.UpdateTag(Const_ChatUserName, username);
         }
 
         private static bool IsNoSession()

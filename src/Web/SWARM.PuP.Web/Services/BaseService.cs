@@ -37,7 +37,7 @@ namespace SWARM.PuP.Web.Services
 
         public virtual T GetSingle(Expression<Func<T, bool>> criteria)
         {
-            return Collection.AsQueryable().Where(criteria).Single();
+            return Collection.AsQueryable().SingleOrDefault(criteria);
         }
 
         public virtual IQueryable<T> Get(Expression<Func<T, bool>> criteria)
