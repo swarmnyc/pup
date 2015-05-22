@@ -2,9 +2,6 @@ package com.swarmnyc.pup;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
-
-import com.swarmnyc.pup.models.LoggedInUser;
 
 import java.util.Hashtable;
 

@@ -35,7 +35,7 @@ public class DialogHelper
 		builder.setTitle( MainActivity.getInstance().getString( R.string.message_error_title ) );
 		builder.setMessage( message );
 		builder.setIcon( android.R.drawable.ic_dialog_alert );
-		builder.setPositiveButton( MainActivity.getInstance().getString( R.string.ok ), null );
+		builder.setPositiveButton( MainActivity.getInstance().getString( R.string.text_ok ), null );
 		setDialog( builder.show() );
 
 	}

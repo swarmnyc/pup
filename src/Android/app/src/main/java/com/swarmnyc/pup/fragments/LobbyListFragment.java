@@ -3,7 +3,6 @@ package com.swarmnyc.pup.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
@@ -29,7 +28,6 @@ import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.Services.GameService;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
-import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
 import com.swarmnyc.pup.components.Action;

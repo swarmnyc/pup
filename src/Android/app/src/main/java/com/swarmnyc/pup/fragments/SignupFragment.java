@@ -1,115 +1,80 @@
 package com.swarmnyc.pup.fragments;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.text.SpannedString;
-import android.text.style.URLSpan;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
-
-import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.RestApis.RestApiCallback;
-import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.RestApis.UserRestApi;
-import com.swarmnyc.pup.User;
-import com.swarmnyc.pup.activities.MainActivity;
-import com.swarmnyc.pup.components.Navigator;
-import com.swarmnyc.pup.models.LoggedInUser;
-import com.swarmnyc.pup.viewmodels.UserRegisterResult;
-
-import javax.inject.Inject;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import retrofit.client.Response;
+import com.swarmnyc.pup.PuPApplication;
+import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.Services.ServiceCallback;
+import com.swarmnyc.pup.Services.UserService;
+import com.swarmnyc.pup.User;
+import com.swarmnyc.pup.activities.MainActivity;
+import com.swarmnyc.pup.viewmodels.UserInfo;
 
-public class SignupFragment extends Fragment
+import javax.inject.Inject;
+
+public class SignupFragment extends DialogFragment
 {
 	@Inject
-	UserRestApi userRestApi;
+	UserService m_userService;
 
-	@InjectView(R.id.text_email)
+	@InjectView( R.id.text_email )
 	EditText emailText;
 
-	@InjectView(R.id.text_password)
-	EditText passwordText;
-
-	@InjectView(R.id.checkbox_tos)
-	CheckBox tosCheckbox;
-
-	@OnClick(R.id.btn_join)
-	public void userRegister()
-	{
-		if ( tosCheckbox.isChecked() )
-		{
-			userRestApi.register(
-				emailText.getText().toString(),
-				passwordText.getText().toString(),
-				new RestApiCallback<UserRegisterResult>()
-				{
-					@Override
-					public void success( UserRegisterResult userRegisterResult, Response response )
-					{
-						Navigator.ToLobbyList();
-					}
-				}
-			);
-		}
-	}
+	@InjectView( R.id.text_name )
+	EditText nameText;
 
 	@Override
 	public View onCreateView(
 		LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
 	)
 	{
+		MainActivity.getInstance().getToolbar().setTitle( R.string.text_signup );
+		MainActivity.getInstance().getToolbar().setSubtitle( null);
 		View view = inflater.inflate( R.layout.fragment_sign_up, container, false );
 		PuPApplication.getInstance().getComponent().inject( this );
 		ButterKnife.inject( this, view );
 
-		SpannedString ss = (SpannedString) tosCheckbox.getText();
-		URLSpan[] spans = ss.getSpans( 0, ss.length(), URLSpan.class );
-		for ( URLSpan span : spans )
-		{
-			int start = ss.getSpanStart( span );
-			int end = ss.getSpanEnd( span );
-			int flags = ss.getSpanFlags( span );
-
-		}
-
 		return view;
 	}
 
-	@OnClick( R.id.btn_join )
-	void onTest()
+	@NonNull
+	@Override
+	public Dialog onCreateDialog( final Bundle savedInstanceState )
 	{
-		userRestApi.login(
-			"test@swarmnyc.com", "swarmnyc", new RestApiCallback<LoggedInUser>()
+		View view = getLayoutInflater( savedInstanceState ).inflate( R.layout.fragment_sign_up, null );
+		PuPApplication.getInstance().getComponent().inject( this );
+		ButterKnife.inject( this, view );
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setView( view );
+
+		return builder.create();
+	}
+
+	@OnClick( R.id.btn_join )
+	public void userRegister()
+	{
+		m_userService.register(
+			emailText.getText().toString(), nameText.getText().toString(), new ServiceCallback<UserInfo>()
 			{
 				@Override
-				public void success( final LoggedInUser loggedInUser, final Response response )
+				public void success( final UserInfo value )
 				{
-					User.login( loggedInUser );
+					User.login( value );
 				}
 			}
 		);
-	}
-
-	@Override
-	public void onStart()
-	{
-		super.onStart();
-		MainActivity.getInstance().hideToolbar();
-	}
-
-	@Override
-	public void onStop()
-	{
-		super.onStop();
-		MainActivity.getInstance().showToolbar();
 	}
 }

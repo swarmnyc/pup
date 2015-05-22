@@ -21,35 +21,27 @@ namespace SWARM.PuP.Web.ApiControllers
             _userService = userService;
         }
 
-        [HttpPost]
-        [Route("~/api/Login")]
+        [HttpPost, Route("~/api/Login")]
         public IHttpActionResult Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("No matches parameters");
-            }
+            string errorMessage = null;
+            PuPUser user = null;
 
-            var user = _userService.Find(model.Email, model.Password);
+            user = _userService.Find(model.Email, model.Password);
 
             if (user == null)
             {
-                return BadRequest("Email or Password aren't correct");
+                errorMessage = ErrorCode.E003NotFound;
             }
 
-            var response = GenerateTokenMessage(user);
-            return ResponseMessage(response);
+
+            return ResponseMessage(GenerateUserRequestMessage(user, errorMessage));
         }
 
         [HttpPost]
         [Route("~/api/ExternalLogin")]
         public IHttpActionResult ExternalLogin(ExternalLoginViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                return BadRequest("No matches parameters");
-            }
-
             PuPUser user;
             model.Provider = model.Provider.ToLower();
             switch (model.Provider)
@@ -87,39 +79,39 @@ namespace SWARM.PuP.Web.ApiControllers
                 return BadRequest();
             }
 
-            var response = GenerateTokenMessage(user);
+            var response = GenerateUserRequestMessage(user, "");
             return ResponseMessage(response);
+        }
+
+        [HttpPost]
+        [Route("~/api/Register")]
+        public IHttpActionResult Register(RegisterViewModel model)
+        {
+            string errorMessage = null;
+            PuPUser user = null;
+            if (_userService.CheckExist(model.Email, model.UserName))
+            {
+                errorMessage = ErrorCode.E002Exist;
+            }
+            else
+            {
+                user = new PuPUser
+                {
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    PasswordHash = DataProtector.Hash(model.Password)
+                };
+
+                user = _userService.Add(user);
+            }
+
+            return ResponseMessage(GenerateUserRequestMessage(user, errorMessage));
         }
 
         [Authorize]
         public UserInfoViewModel Get()
         {
             return new UserInfoViewModel(User.Identity.GetPuPUser());
-        }
-
-        [AllowAnonymous]
-        [HttpPost]
-        public IHttpActionResult Register(RegisterViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (_userService.FindByEmail(model.Email) != null)
-            {
-                return BadRequest("Exist");
-            }
-
-            var user = new PuPUser
-            {
-                UserName = model.UserName,
-                Email = model.Email,
-                PasswordHash = DataProtector.Hash(model.Password)
-            };
-
-            var response = GenerateTokenMessage(_userService.Add(user));
-            return ResponseMessage(response);
         }
 
         [Authorize, HttpPost, Route("UserTag")]
@@ -147,18 +139,28 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        private HttpResponseMessage GenerateTokenMessage(PuPUser user)
+        private HttpResponseMessage GenerateUserRequestMessage(PuPUser user, string errorMessage)
         {
-            var at = new AccessToken(user.Id);
-
             var response = Request.CreateResponse(HttpStatusCode.OK);
-
-            response.Content = new JsonContent(new UserLoggedInViewModel(user)
+            var result = new RequestResult<UserRequestViewModel>();
+            if (user == null)
             {
-                AccessToken = DataProtector.Protect(at.ToJson()),
-                TokenType = "bearer",
-                ExpiresIn = (at.ExpirationDateUtc - DateTime.UtcNow).TotalSeconds
-            });
+                result.Success = false;
+                result.ErrorMessage = errorMessage;
+            }
+            else
+            {
+                var at = new AccessToken(user.Id);
+
+                result.Data = new UserRequestViewModel(user)
+                {
+                    AccessToken = DataProtector.Protect(at.ToJson()),
+                    ExpiresIn = (long)(at.ExpirationDateUtc - DateTime.UtcNow).TotalSeconds
+                };
+
+                result.Success = true;
+            }
+            response.Content = new JsonContent(result);
 
             response.Headers.CacheControl = new CacheControlHeaderValue
             {

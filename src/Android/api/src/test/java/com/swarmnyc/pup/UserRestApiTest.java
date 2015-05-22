@@ -2,8 +2,8 @@ package com.swarmnyc.pup;
 
 import com.swarmnyc.pup.RestApis.RestApiCallback;
 import com.swarmnyc.pup.RestApis.UserRestApi;
-import com.swarmnyc.pup.models.LoggedInUser;
 
+import com.swarmnyc.pup.viewmodels.UserRequestResult;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,11 +18,11 @@ public class UserRestApiTest {
         UserRestApi userRestApi = TestHelper.getRestApi(UserRestApi.class);
         final CountDownLatch signal = new CountDownLatch(1);
 
-        userRestApi.login("hello@swarmnyc.com","swarmnyc", new RestApiCallback<LoggedInUser>() {
+        userRestApi.login("hello@swarmnyc.com","swarmnyc", new RestApiCallback<UserRequestResult>() {
             @Override
-            public void success(LoggedInUser loggedInUser, Response response) {
+            public void success(UserRequestResult userRequestResult, Response response) {
                 signal.countDown();
-                Assert.assertNotNull(loggedInUser.getId());
+                Assert.assertNotNull( userRequestResult.isSuccess() );
             }
         });
 

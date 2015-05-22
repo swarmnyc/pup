@@ -2,7 +2,6 @@ package com.swarmnyc.pup.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,7 +9,6 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -137,11 +135,9 @@ public class CreateLobbyFragment extends Fragment
 					selectedGame = gameAdapter.getItem( position );
 					if ( StringUtils.isNotEmpty( selectedGame.getPictureUrl() ) )
 					{
-						Picasso.with( getActivity() )
-						       .load( selectedGame.getPictureUrl() )
-						       .centerCrop()
-						       .fit()
-						       .into( gameImageView );
+						Picasso.with( getActivity() ).load( selectedGame.getPictureUrl() ).centerCrop().fit().into(
+							gameImageView
+						);
 					}
 
 					platformSelect.setAvailablePlatforms( selectedGame.getPlatforms() );
@@ -185,7 +181,7 @@ public class CreateLobbyFragment extends Fragment
 					removeTime( range );
 
 					datePickerDialog.getDatePicker().setMaxDate(
-						range.getTimeInMillis() + 7 * DateUtils.DAY_IN_MILLIS
+						range.getTimeInMillis() + 8 * DateUtils.DAY_IN_MILLIS - 1
 					);
 					datePickerDialog.getDatePicker().setMinDate( range.getTimeInMillis() );
 					datePickerDialog.show();
@@ -327,17 +323,17 @@ public class CreateLobbyFragment extends Fragment
 		switch ( dateOffset )
 		{
 			case 0:
-				s = this.getActivity().getString( R.string.today );
+				s = this.getActivity().getString( R.string.text_today );
 				break;
 			case 1:
-				s = this.getActivity().getString( R.string.tomorrow);
+				s = this.getActivity().getString( R.string.text_tomorrow );
 				break;
 			default:
 				s = String.format(
 					"%s %d", selectedDate.getDisplayName( Calendar.MONTH, Calendar.SHORT, Locale.US ), selectedDate
 						.get(
-							Calendar.DAY_OF_MONTH
-						)
+						Calendar.DAY_OF_MONTH
+					)
 				);
 				break;
 		}

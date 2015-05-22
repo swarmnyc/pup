@@ -8,6 +8,10 @@ namespace SWARM.PuP.Web.Security
 
         public DateTime ExpirationDateUtc { get; set; }
 
+        public AccessToken()
+        {
+        }
+
         public AccessToken(string id, DateTime expirationDateUtc)
         {
             Id = id;

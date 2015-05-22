@@ -1,15 +1,16 @@
-package com.swarmnyc.pup.models;
+package com.swarmnyc.pup.viewmodels;
+
+import com.swarmnyc.pup.models.PuPTag;
 
 import java.util.List;
 
-public class LoggedInUser
+public class UserInfo
 {
     private String       id;
     private String       email;
     private String       userName;
     private String       pictureUrl;
     private String       accessToken;
-    private String       tokenType;
     private double       expiresIn;
     private List<PuPTag> tags;
 
@@ -47,35 +48,31 @@ public class LoggedInUser
         this.pictureUrl = pictureUrl;
     }
 
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public String getTokenType() {
-        return tokenType;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
-    }
-
-    public double getExpiresIn() {
-        return expiresIn;
-    }
-
-    public void setExpiresIn(double expiresIn) {
-        this.expiresIn = expiresIn;
-    }
-
     public List<PuPTag> getTags() {
         return tags;
     }
 
     public void setTags(List<PuPTag> tags) {
         this.tags = tags;
+    }
+
+    public String getAccessToken()
+    {
+        return accessToken;
+    }
+
+    public void setAccessToken( final String accessToken )
+    {
+        this.accessToken = accessToken;
+    }
+
+    public double getExpiresIn()
+    {
+        return expiresIn;
+    }
+
+    public void setExpiresIn( double expiresIn )
+    {
+        this.expiresIn = expiresIn;
     }
 }

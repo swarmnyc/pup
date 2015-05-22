@@ -143,6 +143,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiControllers\ErrorCode.cs" />
+    <Compile Include="Components\ValidateViewModelAttribute.cs" />
     <Compile Include="Security\AuthenticationMiddleware.cs" />
     <Compile Include="Security\DataProtector.cs" />
     <Compile Include="Security\AccessToken.cs" />
@@ -196,6 +198,7 @@
     <Compile Include="Services\Quickblox\QuickbloxUser.cs" />
     <Compile Include="Services\Quickblox\Session.cs" />
     <Compile Include="Services\UserService.cs" />
+    <Compile Include="ViewModels\RequestResult.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
     <Compile Include="Models\PuPUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -205,7 +208,6 @@
     <Compile Include="Services\Quickblox\QuickbloxApiTypes.cs" />
     <Compile Include="Services\Quickblox\SessionResult.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModels\OperationResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />

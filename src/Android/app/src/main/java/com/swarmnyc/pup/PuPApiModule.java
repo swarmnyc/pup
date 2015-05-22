@@ -6,10 +6,7 @@ import com.swarmnyc.pup.RestApis.GameRestApi;
 import com.swarmnyc.pup.RestApis.IsoDateTypeAdapter;
 import com.swarmnyc.pup.RestApis.LobbyRestApi;
 import com.swarmnyc.pup.RestApis.UserRestApi;
-import com.swarmnyc.pup.Services.GameService;
-import com.swarmnyc.pup.Services.GameServiceImpl;
-import com.swarmnyc.pup.Services.LobbyService;
-import com.swarmnyc.pup.Services.LobbyServiceImpl;
+import com.swarmnyc.pup.Services.*;
 import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.chat.MockChatService;
 
@@ -49,12 +46,6 @@ public class PuPApiModule {
 
     @Provides
     @Singleton
-    public UserRestApi provideUserService() {
-        return restAdapter.create(UserRestApi.class);
-    }
-
-    @Provides
-    @Singleton
     public LobbyService provideLobbyService() {
         return new LobbyServiceImpl(restAdapter.create(LobbyRestApi.class));
     }
@@ -63,6 +54,12 @@ public class PuPApiModule {
     @Singleton
     public GameService provideGameService() {
         return new GameServiceImpl(restAdapter.create(GameRestApi.class));
+    }
+
+    @Provides
+    @Singleton
+    public UserService provideUserService() {
+        return new UserServiceImpl(restAdapter.create(UserRestApi.class));
     }
 
     @Provides

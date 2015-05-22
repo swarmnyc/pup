@@ -7,5 +7,6 @@ namespace SWARM.PuP.Web.Services
     {
         PuPUser Find(string email, string password);
         PuPUser FindByEmail(string email);
+        bool CheckExist(string email, string username);
     }
 }
