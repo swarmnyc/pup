@@ -1,37 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:showIn="@layout/fragment_sign_up">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+        >
 
-    <TextView
+    <include layout="@layout/view_sign_up"
+             android:layout_margin="@dimen/margin_normal"
+             android:layout_marginTop="@dimen/margin_half"
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"/>
+
+    <View style="@style/horizontal_line_light"/>
+
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/hint_signup"
-            android:layout_margin="@dimen/margin_half"/>
+            android:weightSum="2"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/padding_normal"
+            android:paddingRight="@dimen/padding_normal">
+        <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical|left"
+                android:layout_marginLeft="@dimen/margin_half"
+                android:text="@string/text_cancel"
+                android:background="@drawable/button_text"/>
 
-    <EditText
-            android:id="@+id/text_name"
-            android:inputType="textPersonName"
-            android:hint="@string/hint_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_half"/>
-
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/hint_require_email"
-            android:layout_margin="@dimen/margin_half"/>
-
-    <EditText
-            android:id="@+id/text_email"
-            android:inputType="textEmailAddress"
-            android:hint="@string/hint_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_half"/>
+        <Button
+                android:id="@+id/btn_join"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/text_join"
+                android:gravity="center_vertical|right"
+                android:layout_marginRight="@dimen/margin_half"
+                android:textColor="@color/pup_teal"
+                android:background="@drawable/button_text"/>
+    </LinearLayout>
 </LinearLayout>

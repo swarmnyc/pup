@@ -12,11 +12,13 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.activities.MainActivity;
+import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 
@@ -79,6 +81,7 @@ public class LobbyFragment extends Fragment
 		super.onViewCreated( view, savedInstanceState );
 		PuPApplication.getInstance().getComponent().inject( this );
 		ButterKnife.inject( this, view );
+		EventBus.getBus().register( this );
 
 		//TODO: Loading Message
 		lobbyService.getLobby(
@@ -176,27 +179,49 @@ public class LobbyFragment extends Fragment
 	{
 		if ( User.isLoggedIn() )
 		{
-			//TODO: Processing
-			lobbyService.join(
-				lobby.getId(), new ServiceCallback()
-				{
-					@Override
-					public void success( final Object value )
-					{
-						LobbyUserInfo user = new LobbyUserInfo();
-						user.setId( User.current.getId() );
-						user.setName( User.current.getUserName() );
-						user.setPictureUrl( User.current.getPictureUrl() );
-
-						lobby.getUsers().add( user );
-						initialize();
-					}
-				}
-			);
+			joinLobby();
 		}
 		else
 		{
-			//TODO: Go to register
+			SignupFragment signupFragment = new SignupFragment();
+			signupFragment.setGoHomeAfterLogin( false );
+			signupFragment.show( this.getFragmentManager(), null );
 		}
+	}
+
+	private void joinLobby()
+	{//TODO: Processing
+		lobbyService.join(
+			lobby.getId(), new ServiceCallback()
+			{
+				@Override
+				public void success( final Object value )
+				{
+					LobbyUserInfo user = new LobbyUserInfo();
+					user.setId( User.current.getId() );
+					user.setName( User.current.getUserName() );
+					user.setPictureUrl( User.current.getPictureUrl() );
+
+					lobby.getUsers().add( user );
+					initialize();
+				}
+			}
+		);
+	}
+
+	@Subscribe
+	public void postUserChanged( UserChangedEvent event )
+	{
+		if ( User.isLoggedIn() )
+		{
+			joinLobby();
+		}
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		EventBus.getBus().unregister( this );
 	}
 }

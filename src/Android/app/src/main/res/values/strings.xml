@@ -48,8 +48,9 @@
     <string name="text_today">Today</string>
     <string name="text_tomorrow">Tomorrow</string>
     <string name="text_ok">Ok</string>
+    <string name="text_join">Join</string>
     <string name="text_join_pup">Join PuP</string>
-    <string name="text_join_lobby">Join\n<small><small>You\'ll be able to chat and stuff</small></small></string>
+    <string name="text_join_lobby">Join Lobby</string>
     <string name="text_signup">Register</string>
 
     <string name="message_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
@@ -59,5 +60,6 @@
     <string name="time_in_minutes">in %d minutes</string>
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
+    <string name="text_cancel">Cancel</string>
 
 </resources>

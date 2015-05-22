@@ -27,14 +27,19 @@ public class User
 		}
 	}
 
-	public static void login( UserInfo current )
+	public static void login( UserInfo userInfo )
 	{
-		User.current = current;
+		login( userInfo, true );
+	}
+
+	public static void login( final UserInfo userInfo, final boolean goHome )
+	{
+		User.current = userInfo;
 
 		Config.setLong( KEY_USER_EXPIRES, System.currentTimeMillis() + (int) current.getExpiresIn() );
 		Config.setString( KEY_USER, gson.toJson( current ) );
 
-		EventBus.getBus().post( new UserChangedEvent() );
+		EventBus.getBus().post( new UserChangedEvent( goHome ) );
 	}
 
 	public static void Logout()
@@ -43,13 +48,11 @@ public class User
 
 		Config.remove( KEY_USER_EXPIRES );
 
-		EventBus.getBus().post( new UserChangedEvent() );
+		EventBus.getBus().post( new UserChangedEvent( true ) );
 	}
 
 	public static boolean isLoggedIn()
 	{
 		return current != null;
 	}
-
-
 }

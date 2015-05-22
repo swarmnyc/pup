@@ -82,6 +82,7 @@
     </ScrollView>
 
     <RelativeLayout
+            android:background="@color/white"
             android:id="@+id/text_panel"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"

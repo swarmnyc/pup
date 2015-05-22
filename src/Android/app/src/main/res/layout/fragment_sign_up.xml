@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     >
 
-    <include layout="@layout/dialog_sign_up"/>
+    <include layout="@layout/view_sign_up"/>
 
     <Button
             android:id="@+id/btn_join"

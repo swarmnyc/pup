@@ -100,10 +100,10 @@ public class MainDrawerFragment extends Fragment
 
 		drawerMenuContainer.getLayoutParams().width = (int) ( Consts.windowWidth * 0.90 );
 
-		initializeDrawer();
+		initializeDrawer(true);
 	}
 
-	private void initializeDrawer()
+	private void initializeDrawer(boolean change)
 	{
 		List<String> list = new ArrayList<>();
 		// TODO:Move to resource, or better implement
@@ -126,8 +126,10 @@ public class MainDrawerFragment extends Fragment
 		);
 		drawerListView.setAdapter( adapter );
 
-		selectItem( 1 );
-		drawerListView.setItemChecked( 1, true );
+		if ( change ){
+			selectItem( 1 );
+			drawerListView.setItemChecked( 1, true );
+		}
 	}
 
 	public void selectItem( int position )
@@ -172,7 +174,7 @@ public class MainDrawerFragment extends Fragment
 	@Subscribe
 	public void postUserChanged( UserChangedEvent event )
 	{
-		initializeDrawer();
+		initializeDrawer(event.isGoHome());
 	}
 
 	@Override

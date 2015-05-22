@@ -40,6 +40,12 @@
         <item name="android:background">@color/pup_orange</item>
     </style>
 
+    <style name="horizontal_line_light">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">@color/pup_light</item>
+    </style>
+
     <style name="horizontal_line_bold">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">3px</item>
@@ -60,7 +66,6 @@
     <style name="button_teal">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">58dp</item>
-
         <item name="android:background">@drawable/button_teal</item>
         <item name="android:textColor">@color/always_white</item>
         <item name="android:textSize">@dimen/text_large</item>
