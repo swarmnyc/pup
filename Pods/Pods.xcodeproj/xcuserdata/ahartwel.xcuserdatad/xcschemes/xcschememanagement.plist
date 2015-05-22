@@ -4,58 +4,65 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Pods-pup-SnapKit 2.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>5</integer>
-		</dict>
 		<key>Pods-pup-SnapKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>2</integer>
+		</dict>
+		<key>Pods-pup-SwiftyJSON.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>Pods-pup.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>1</integer>
 		</dict>
 		<key>Pods-pupTests-SnapKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>4</integer>
+		</dict>
+		<key>Pods-pupTests-SwiftyJSON.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>Pods-pupTests.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>3</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0B60DA531D72DB02AC206366</key>
+		<key>7BC454DF577F94835AB95599</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>18AAACC7C2F3A55E5FDA7CF1</key>
+		<key>903D56662F05B306B5F09C2C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9B41222ED888CB67935875DE</key>
+		<key>A279C7F6EB61DC58ACAFA9A1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AC4392295CDE9C76B4B0F0A4</key>
+		<key>A62617567B5143EFC04D534C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A82C40FF92F04FF9929BDB89</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>AD4AEB444637AD85B019A567</key>
 		<dict>
 			<key>primary</key>
 			<true/>

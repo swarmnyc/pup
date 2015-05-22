@@ -6,9 +6,11 @@ use_frameworks!
 
 target 'pup' do
   pod 'SnapKit', '~> 0.10.0'
+  pod "SwiftyJSON", ">= 2.2"
 end
 
 target 'pupTests' do
   pod 'SnapKit', '~> 0.10.0'
+  pod "SwiftyJSON", ">= 2.2"
 end
 

@@ -7,11 +7,12 @@
 //
 
 import UIKit
-
+var colors: appColors = appColors();
+var urls: appURLS = appURLS();
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    
+
     var window: UIWindow?
     var nav:UINavigationController?
     
@@ -21,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window!.backgroundColor = UIColor.whiteColor()
         self.window!.makeKeyAndVisible()
         
-        var studyController: ViewController? = ViewController(nibName: nil, bundle: nil)
+        var studyController: lobbyListController? = lobbyListController(nibName: nil, bundle: nil)
         self.nav = UINavigationController(rootViewController: studyController!)
         
         self.window!.rootViewController = self.nav

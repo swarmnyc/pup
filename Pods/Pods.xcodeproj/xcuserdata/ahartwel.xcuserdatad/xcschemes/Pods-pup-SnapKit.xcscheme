@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2CCC7F481B0A451400C16A85"
-               BuildableName = "pup.app"
-               BlueprintName = "pup"
-               ReferencedContainer = "container:../pup.xcodeproj">
+               BlueprintIdentifier = "903D56662F05B306B5F09C2C"
+               BuildableName = "SnapKit.framework"
+               BlueprintName = "Pods-pup-SnapKit"
+               ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -39,15 +39,6 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2CCC7F481B0A451400C16A85"
-            BuildableName = "pup.app"
-            BlueprintName = "pup"
-            ReferencedContainer = "container:../pup.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
