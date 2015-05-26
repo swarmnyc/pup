@@ -18,10 +18,52 @@ struct appColors {
 }
 
 
+struct miscData {
+    var platforms: Array<String> = ["Steam or PC", "XBOX 360", "XBOX ONE", "PS3", "PS4"]
+
+}
+
+
 struct appURLS {
     var apiBase = "http://pup-secondary.azurewebsites.net/api/"
-    var lobbies = "http://pup-secondary.azurewebsites.net/api/lobby/"
-    var games = "http://pup-secondary.azurewebsites.net/api/games/"
+    var lobbies: String {
+        get {
+          return  "\(apiBase)lobby/"
+        }
+    }
+
+    var joinLobby: String {
+        get {
+          return  "\(apiBase)lobby/join/"
+        }
+    }
+
+    var leaveLobby: String {
+        get {
+          return  "\(apiBase)lobby/leave/"
+        }
+    }
+
+    var games: String {
+        get {
+          return  "\(apiBase)games/"
+        }
+    }
+
+
+    var login: String {
+        get {
+          return  "\(apiBase)login/"
+        }
+    }
+
+
+    var register: String {
+        get {
+            return "\(apiBase)register"
+        }
+    }
+
 
 
 }
@@ -34,6 +76,11 @@ struct UIValues {
         get {
             return self.horizontalPadding/2
 
+        }
+    }
+    var halfVerticalPadding: Double {
+        get {
+            return self.verticalPadding/2
         }
     }
     var verticalPadding = 11.0

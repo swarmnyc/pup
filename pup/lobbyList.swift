@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class lobbyListController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDataSource {
    
     var findAGame: UIViewController!
     
@@ -470,6 +470,9 @@ class headerCell: UITableViewCell {
     }
 
 }
+
+
+
 
 
 

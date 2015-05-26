@@ -9,7 +9,7 @@ import Foundation
 
 class singleLobby {
     var data = lobbyData();
-
+    var empty = false;
 
     init() {
 
@@ -19,10 +19,18 @@ class singleLobby {
 
         addOwnerAndUsersToData(detailed);
         println(data.users.count)
-
+        empty = isEmpty();
     }
 
+    func isEmpty() -> Bool {
+        if data.users.count==1 {
+            return true
+        }
 
+        return false;
+
+
+    }
 
     func addOwnerAndUsersToData(detailed: JSON) {
 

@@ -52,7 +52,6 @@ struct lobbyData {
 }
 
 
-
 struct singleLobbyUser {
     var isLeave = false
     var id = "-1"
@@ -66,9 +65,9 @@ class lobbyList {  //collection of all the current games
     var games: Array<lobbyData>;
 
     var updated: Bool = false;
-    var parent: lobbyListController;
+    var parent: LobbyListController;
 
-    init(parentView: lobbyListController) {
+    init(parentView: LobbyListController) {
 
         parent = parentView;
 

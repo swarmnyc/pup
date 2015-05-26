@@ -9,6 +9,8 @@ import QuartzCore
 
 class SingleLobbyController: UIViewController {
 
+    var viewCreator: SingleLobbyView?;
+
     var data: singleLobby = singleLobby();
 
     var topContentBox: UIView = UIView();
@@ -22,6 +24,8 @@ class SingleLobbyController: UIViewController {
     var tags: UILabel = UILabel();
     var desc: UITextView = UITextView()
     var divider: UIView = UIView()
+
+    var logInButton: JoinButton? = nil
 
     convenience init(info: lobbyData) {
 
@@ -37,7 +41,9 @@ class SingleLobbyController: UIViewController {
             let jsonResponse = JSON(data: data)
             self.data.addDetailed(jsonResponse)
            // println(jsonResponse)
+
             dispatch_async(dispatch_get_main_queue(),{
+                self.viewCreator = SingleLobbyView(info: self.data);
                 self.setUpViews()
 
             })
@@ -57,6 +63,11 @@ class SingleLobbyController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor=UIColor.whiteColor()
          self.title = data.data.Name;
+
+        if (currentUser.loggedIn() == false) {
+            logInButton = JoinButton(parentController: self)
+        }
+
        // setUpViews();
 
     }
@@ -97,6 +108,8 @@ class SingleLobbyController: UIViewController {
         lobbyTitle.backgroundColor = UIColor.clearColor()
         lobbyTitle.textColor = UIColor.whiteColor()
         lobbyTitle.font = lobbyTitle.font.fontWithSize(19)
+        lobbyTitle.editable = false;
+
         gradient.colors = [UIColor.clearColor().CGColor, UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).CGColor]
         gradient.startPoint = CGPoint(x: 0.5,y: 0.5)
 
@@ -230,7 +243,7 @@ class SingleLobbyController: UIViewController {
 class JoinButton {
 
     var parent: SingleLobbyController
-    var view: UIView = UIView();
+    var view: joinUIView = joinUIView();
     var topLabel: UILabel = UILabel();
     var bottomLabel: UILabel = UILabel();
 
@@ -242,7 +255,18 @@ class JoinButton {
 
     func setUpViews() {
 
+        view.backgroundColor = UIColor(rgba: colors.orange)
 
+        topLabel.textColor = UIColor.whiteColor();
+        topLabel.text = "Join"
+        topLabel.font = topLabel.font.fontWithSize(16)
+        topLabel.textAlignment = NSTextAlignment.Center
+
+
+        bottomLabel.textColor = UIColor.whiteColor();
+        bottomLabel.text = "You'll be able to chat and stuff"
+        bottomLabel.font = bottomLabel.font.fontWithSize(12)
+        bottomLabel.textAlignment = .Center
         addViews();
         setUpConstraints();
     }
@@ -258,7 +282,7 @@ class JoinButton {
     }
 
     func setUpConstraints() {
-        view.snp_makeConstraints{(make) -> Void in
+        view.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.parent.view).offset(0)
             make.right.equalTo(self.parent.view).offset(0)
             make.bottom.equalTo(self.parent.view).offset(0)
@@ -267,7 +291,111 @@ class JoinButton {
         }
 
 
+
+        bottomLabel.snp_remakeConstraints { (make) -> Void in
+            make.left.equalTo(self.view).offset(UIConstants.horizontalPadding)
+            make.right.equalTo(self.view).offset(-UIConstants.horizontalPadding)
+            make.bottom.equalTo(self.view).offset(-UIConstants.verticalPadding)
+            make.height.equalTo(12)
+        }
+
+        topLabel.snp_remakeConstraints { (make) -> Void in
+            make.left.equalTo(self.view).offset(UIConstants.horizontalPadding)
+            make.right.equalTo(self.view).offset(-UIConstants.horizontalPadding)
+            make.bottom.equalTo(self.bottomLabel.snp_top).offset(-UIConstants.halfVerticalPadding)
+            make.height.equalTo(17)
+        }
+
+
     }
+
+
+
+
+}
+
+class joinUIView: UIView {
+
+
+    override init (frame : CGRect) {
+        super.init(frame : frame)
+       //add to init
+    }
+
+
+    required init(coder aDecoder: NSCoder) {
+        fatalError("This class does not support NSCoding")
+    }
+
+    override func touchesBegan( touches: Set<NSObject>, withEvent event: UIEvent) {
+        println("wooh")
+        self.backgroundColor = self.backgroundColor?.darkerColor(0.3);
+
+    }
+
+    override func touchesEnded( touches: Set<NSObject>, withEvent event: UIEvent) {
+        self.backgroundColor = UIColor(rgba: colors.orange)
+
+        println("wooh")
+
+    }
+
+}
+
+
+class NoOnesHere {
+
+    var topText: UIView = UIView();
+    var facebookBlocks: Array<UITextView> = []
+    var inviteButton: UIButton = UIButton()
+    var parent: SingleLobbyController?
+    init(parentController: SingleLobbyController) {
+        parent = parentController;
+
+        setUpViews()
+    }
+
+    func setUpViews() {
+
+
+    }
+
+    func addViews() {
+
+    }
+
+    func setUpConstraints() {
+
+
+    }
+
+
+}
+
+
+class SingleLobbyView: UIView {
+
+    var data: singleLobby = singleLobby();
+
+
+    override init (frame : CGRect) {
+        super.init(frame : frame)
+        println(data);
+        //custom init
+    }
+
+    convenience init(info: singleLobby) {
+        println(".....GAAAHHH")
+        self.init(frame: CGRectZero)
+        data = info
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        fatalError("This class does not support NSCoding")
+    }
+
+
+
 
 
 }

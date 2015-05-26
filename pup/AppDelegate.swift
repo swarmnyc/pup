@@ -15,6 +15,8 @@ var UIConstants: UIValues = UIValues();
 
 var currentUser: User = User()
 
+var appData: miscData = miscData()
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -28,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window!.backgroundColor = UIColor.whiteColor()
         self.window!.makeKeyAndVisible()
         
-        var studyController: lobbyListController? = lobbyListController(nibName: nil, bundle: nil)
+        var studyController: LobbyListController? = LobbyListController(nibName: nil, bundle: nil)
         self.nav = UINavigationController(rootViewController: studyController!)
         
         self.window!.rootViewController = self.nav

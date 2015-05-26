@@ -13,6 +13,7 @@ struct userInfo {
     var name = ""
 }
 
+
 class User {
 
     let localStorage = NSUserDefaults.standardUserDefaults()
@@ -36,6 +37,16 @@ class User {
 
         }
 
+
+    }
+
+    func loggedIn() -> Bool {
+
+        if (data.loggedIn) {
+            return true
+        } else {
+            return false;
+        }
 
     }
 
