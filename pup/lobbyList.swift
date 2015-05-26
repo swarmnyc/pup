@@ -226,12 +226,15 @@ class gameCell: UITableViewCell {
 
     func setUpConstraints() {
 
+        var bottomSectionHeight = 26;
+        var topSectionHeight = 93;
+
         var viewsDict = Dictionary <String, UIView>()
         viewsDict["imageAndPlatform"] = imageAndPlatform
         viewsDict["imgView"] = imgView
         viewsDict["platform"] = platform
-        imageAndPlatform.snp_makeConstraints { (make) -> Void in
-                make.width.equalTo(93)
+        imageAndPlatform.snp_remakeConstraints { (make) -> Void in
+                make.width.equalTo(topSectionHeight)
                 make.top.equalTo(self.contentView).offset(0)
                 make.left.equalTo(self.contentView).offset(0)
                 make.bottom.equalTo(self.contentView).offset(0)
@@ -240,69 +243,69 @@ class gameCell: UITableViewCell {
         }
 
 
-        textRightTop.snp_makeConstraints { (make) -> Void in
+        textRightTop.snp_remakeConstraints { (make) -> Void in
                 make.left.equalTo(imageAndPlatform.snp_right).offset(0);
                 make.right.equalTo(self.contentView).offset(0)
                 make.top.equalTo(self.contentView).offset(0)
                 make.bottom.equalTo(self.contentView).offset(26)
         }
-        textRightBottom.snp_makeConstraints { (make) -> Void in
+        textRightBottom.snp_remakeConstraints { (make) -> Void in
                 make.left.equalTo(imageAndPlatform.snp_right).offset(0);
                 make.right.equalTo(self.contentView).offset(0)
-                make.height.equalTo(26)
+                make.height.equalTo(bottomSectionHeight)
                 make.bottom.equalTo(self.contentView).offset(0)
         }
 
-        imgView.snp_makeConstraints { (make) -> Void in
+        imgView.snp_remakeConstraints { (make) -> Void in
                 make.right.equalTo(imageAndPlatform).offset(0)
                 make.top.equalTo(imageAndPlatform).offset(0)
                 make.left.equalTo(imageAndPlatform).offset(0)
-                make.height.equalTo(93)
+                make.height.equalTo(topSectionHeight)
 
 
         }
 
-        platform.snp_makeConstraints { (make) -> Void in
+        platform.snp_remakeConstraints { (make) -> Void in
                 make.top.equalTo(imgView.snp_bottom).offset(0)
                 make.right.equalTo(imageAndPlatform).offset(0)
                 make.left.equalTo(imageAndPlatform).offset(0)
-                make.height.equalTo(26)
+                make.height.equalTo(bottomSectionHeight)
                 //make.bottom.equalTo(imageAndPlatform).offset(0)
         }
 
-        title.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(textRightTop).offset(13)
-            make.right.equalTo(textRightTop).offset(-16)
-            make.top.equalTo(textRightTop).offset(11)
+        title.snp_remakeConstraints { (make) -> Void in
+            make.left.equalTo(textRightTop).offset(UIConstants.horizontalPadding)
+            make.right.equalTo(textRightTop).offset(-UIConstants.horizontalPadding)
+            make.top.equalTo(textRightTop).offset(UIConstants.verticalPadding)
             make.height.equalTo(18)
 
         }
-        desc.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(textRightTop).offset(13)
-            make.right.equalTo(textRightTop).offset(-16)
-            make.top.equalTo(title.snp_bottom).offset(11)
-            make.bottom.equalTo(textRightTop).offset(-11)
+        desc.snp_remakeConstraints { (make) -> Void in
+            make.left.equalTo(textRightTop).offset(UIConstants.horizontalPadding)
+            make.right.equalTo(textRightTop).offset(-UIConstants.horizontalPadding)
+            make.top.equalTo(title.snp_bottom).offset(UIConstants.halfHorizontalPadding)
+            make.bottom.equalTo(textRightTop).offset(-UIConstants.verticalPadding)
 
         }
 
-        tags.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(textRightBottom).offset(13);
+        tags.snp_remakeConstraints { (make) -> Void in
+            make.left.equalTo(textRightBottom).offset(UIConstants.horizontalPadding);
             make.top.equalTo(textRightBottom).offset(0)
             make.bottom.equalTo(textRightBottom).offset(0)
             make.width.greaterThanOrEqualTo(100)
         }
 
-        time.snp_makeConstraints { (make) -> Void in
-            make.right.equalTo(textRightBottom).offset(-13)
+        time.snp_remakeConstraints { (make) -> Void in
+            make.right.equalTo(textRightBottom).offset(-UIConstants.horizontalPadding)
             make.top.equalTo(textRightBottom).offset(0)
             make.bottom.equalTo(textRightBottom).offset(0)
         }
 
-        divider.snp_makeConstraints { (make) -> Void in
+        divider.snp_remakeConstraints { (make) -> Void in
             make.top.equalTo(textRightBottom).offset(0)
             make.left.equalTo(textRightBottom).offset(0)
             make.right.equalTo(textRightBottom).offset(0)
-            make.height.equalTo(0.5)
+            make.height.equalTo(UIConstants.dividerWidth)
         }
 
 
@@ -340,7 +343,8 @@ class gameCell: UITableViewCell {
         platform.text = data.Platform;
         platform.textAlignment = NSTextAlignment.Center
         platform.font = platform.font.fontWithSize(9)
-        platform.backgroundColor = UIColor.clearColor()
+        platform.textColor = UIColor.whiteColor();
+        platform.backgroundColor = UIColor(rgba: colorFromSystem(data.Platform))
 
 
         title.text = data.Name
@@ -358,7 +362,7 @@ class gameCell: UITableViewCell {
         desc.setTranslatesAutoresizingMaskIntoConstraints(false)
         desc.backgroundColor = UIColor.clearColor()
 
-        tags.text = "\(data.PlayStyle) > \(data.SkillLevel)"
+        tags.text = data.getTagText
         tags.font = tags.font.fontWithSize(9)
 
         time.text = data.timeInHuman
@@ -433,7 +437,7 @@ class headerCell: UITableViewCell {
 
         var viewsDict = Dictionary <String, UIView>()
         viewsDict["title"] = title
-        title.snp_makeConstraints { (make) -> Void in
+        title.snp_remakeConstraints { (make) -> Void in
             make.top.equalTo(self.contentView).offset(0)
             make.left.equalTo(self.contentView).offset(16)
             make.bottom.equalTo(self.contentView).offset(0)
@@ -466,6 +470,9 @@ class headerCell: UITableViewCell {
     }
 
 }
+
+
+
 
 
 

@@ -17,14 +17,19 @@
 		85DD200601949A35C0E74D07 /* View+SnapKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2992D9B81BFE9BCF8B85 /* View+SnapKit.swift */; };
 		85DD2069CAD3A6E88AB0FDF3 /* SnapKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2B0AC805490D54A2EDB5 /* SnapKit.swift */; };
 		85DD21EE1A10C2BEFEF8E322 /* singleLobby.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2D764819A548A6DCFB79 /* singleLobby.swift */; };
+		85DD2229FE0884A14F6079D9 /* appData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2AE22FE9B22725C77289 /* appData.swift */; };
 		85DD2295CF985A41E309F3A4 /* AFDateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD22C0B0EC0ED29F6251ED /* AFDateHelper.swift */; };
 		85DD261ABE6FB64BD9AE7B7B /* ConstraintItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD27ACEAAB289844D30C60 /* ConstraintItem.swift */; };
+		85DD27A3FF3778F7C14480FF /* users.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2D4861C2BBF20EE55949 /* users.swift */; };
 		85DD27B7800A775281DF098B /* EdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2E8514C938B94BF216C7 /* EdgeInsets.swift */; };
 		85DD289C1744FE461F6A0282 /* ConstraintMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD21304E71FA623F0B4525 /* ConstraintMaker.swift */; };
 		85DD28CAFAD79E3B8CDDF85F /* Debugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD263DBBB80767380877A5 /* Debugging.swift */; };
-		85DD295AB93818BC3D619667 /* structures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2D29B05647DBEADF3610 /* structures.swift */; };
+		85DD295AB93818BC3D619667 /* games.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2D29B05647DBEADF3610 /* games.swift */; };
 		85DD2A37B659A1FF2D72D849 /* ConstraintRelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2C9A6D0EFDF6C8790B0F /* ConstraintRelation.swift */; };
+		85DD2A63419F9C7E1A851F67 /* singleLobbyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2EF7994C1C2784008A3E /* singleLobbyData.swift */; };
+		85DD2ABD3F702CACE1935F41 /* lobbies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2C5B66D10B2F40BA8D74 /* lobbies.swift */; };
 		85DD2B505C697215D2D818DC /* Constraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD28D81A9D1BB3BF8FFBD5 /* Constraint.swift */; };
+		85DD2BE930403D89C5A34A33 /* colorFromSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD22141CF1C919B1C3657B /* colorFromSystem.swift */; };
 		85DD2C752502EC161124812E /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2DA5E7FD1C1DE09AF62C /* SwiftyJSON.swift */; };
 		85DD2CA61F21CEB9582DD947 /* colorFromHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2CD088BD6AD26D436A2D /* colorFromHex.swift */; };
 		85DD2D07CF454E8D5D135FFB /* ConstraintAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD20F1DE2CB692EA098B2F /* ConstraintAttributes.swift */; };
@@ -61,6 +66,7 @@
 		8361C645BF26B1B51B7F8F15 /* Pods-pup.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pup.release.xcconfig"; path = "Pods/Target Support Files/Pods-pup/Pods-pup.release.xcconfig"; sourceTree = "<group>"; };
 		85DD20F1DE2CB692EA098B2F /* ConstraintAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintAttributes.swift; sourceTree = "<group>"; };
 		85DD21304E71FA623F0B4525 /* ConstraintMaker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintMaker.swift; sourceTree = "<group>"; };
+		85DD22141CF1C919B1C3657B /* colorFromSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = colorFromSystem.swift; sourceTree = "<group>"; };
 		85DD22C0B0EC0ED29F6251ED /* AFDateHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AFDateHelper.swift; path = AFDateHelper/AFDateHelper.swift; sourceTree = "<group>"; };
 		85DD263DBBB80767380877A5 /* Debugging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debugging.swift; sourceTree = "<group>"; };
 		85DD27ACEAAB289844D30C60 /* ConstraintItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintItem.swift; sourceTree = "<group>"; };
@@ -68,15 +74,19 @@
 		85DD28D81A9D1BB3BF8FFBD5 /* Constraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constraint.swift; sourceTree = "<group>"; };
 		85DD2992D9B81BFE9BCF8B85 /* View+SnapKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+SnapKit.swift"; sourceTree = "<group>"; };
 		85DD29F3BC4E4E112590B364 /* LayoutConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayoutConstraint.swift; sourceTree = "<group>"; };
+		85DD2AE22FE9B22725C77289 /* appData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = appData.swift; path = data/appData.swift; sourceTree = "<group>"; };
 		85DD2B0AC805490D54A2EDB5 /* SnapKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapKit.swift; sourceTree = "<group>"; };
 		85DD2BDD3E207769685D2DE6 /* ico_filter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico_filter.png; sourceTree = "<group>"; };
+		85DD2C5B66D10B2F40BA8D74 /* lobbies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = lobbies.swift; path = data/lobbies.swift; sourceTree = "<group>"; };
 		85DD2C9A6D0EFDF6C8790B0F /* ConstraintRelation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintRelation.swift; sourceTree = "<group>"; };
 		85DD2CD088BD6AD26D436A2D /* colorFromHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = colorFromHex.swift; sourceTree = "<group>"; };
-		85DD2D29B05647DBEADF3610 /* structures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = structures.swift; path = data/structures.swift; sourceTree = "<group>"; };
+		85DD2D29B05647DBEADF3610 /* games.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = games.swift; path = data/games.swift; sourceTree = "<group>"; };
+		85DD2D4861C2BBF20EE55949 /* users.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = users.swift; path = data/users.swift; sourceTree = "<group>"; };
 		85DD2D764819A548A6DCFB79 /* singleLobby.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = singleLobby.swift; sourceTree = "<group>"; };
 		85DD2DA02911862CD98932A6 /* ConstraintDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintDescription.swift; sourceTree = "<group>"; };
 		85DD2DA5E7FD1C1DE09AF62C /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftyJSON.swift; path = pup/SwiftyJSON/Source/SwiftyJSON.swift; sourceTree = SOURCE_ROOT; };
 		85DD2E8514C938B94BF216C7 /* EdgeInsets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EdgeInsets.swift; sourceTree = "<group>"; };
+		85DD2EF7994C1C2784008A3E /* singleLobbyData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = singleLobbyData.swift; path = data/singleLobbyData.swift; sourceTree = "<group>"; };
 		B7CC845B2E20426DEC2444A3 /* Pods-pupTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pupTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-pupTests/Pods-pupTests.release.xcconfig"; sourceTree = "<group>"; };
 		D31A00077328C646BCF8A958 /* Pods-pupTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pupTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-pupTests/Pods-pupTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E0671204B2C397D857FF500F /* Pods_pup.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pup.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -136,9 +146,13 @@
 				85DD21A08C9E851942639922 /* Source */,
 				85DD2D764819A548A6DCFB79 /* singleLobby.swift */,
 				85DD24EBC48465991E750D8C /* helperFunctions */,
-				85DD2D29B05647DBEADF3610 /* structures.swift */,
+				85DD2D29B05647DBEADF3610 /* games.swift */,
 				85DD285BE31B0F5EEC0704F8 /* filter.swift */,
 				85DD22C0B0EC0ED29F6251ED /* AFDateHelper.swift */,
+				85DD2D4861C2BBF20EE55949 /* users.swift */,
+				85DD2AE22FE9B22725C77289 /* appData.swift */,
+				85DD2C5B66D10B2F40BA8D74 /* lobbies.swift */,
+				85DD2EF7994C1C2784008A3E /* singleLobbyData.swift */,
 			);
 			path = pup;
 			sourceTree = "<group>";
@@ -213,6 +227,7 @@
 			isa = PBXGroup;
 			children = (
 				85DD2CD088BD6AD26D436A2D /* colorFromHex.swift */,
+				85DD22141CF1C919B1C3657B /* colorFromSystem.swift */,
 			);
 			path = helperFunctions;
 			sourceTree = "<group>";
@@ -432,10 +447,15 @@
 				85DD2F75F62A6A813B2EDA4A /* ConstraintDescription.swift in Sources */,
 				85DD21EE1A10C2BEFEF8E322 /* singleLobby.swift in Sources */,
 				85DD2CA61F21CEB9582DD947 /* colorFromHex.swift in Sources */,
-				85DD295AB93818BC3D619667 /* structures.swift in Sources */,
+				85DD295AB93818BC3D619667 /* games.swift in Sources */,
 				85DD2DF1A71ED24FCE06D6FD /* filter.swift in Sources */,
 				85DD2C752502EC161124812E /* SwiftyJSON.swift in Sources */,
 				85DD2295CF985A41E309F3A4 /* AFDateHelper.swift in Sources */,
+				85DD2BE930403D89C5A34A33 /* colorFromSystem.swift in Sources */,
+				85DD27A3FF3778F7C14480FF /* users.swift in Sources */,
+				85DD2229FE0884A14F6079D9 /* appData.swift in Sources */,
+				85DD2ABD3F702CACE1935F41 /* lobbies.swift in Sources */,
+				85DD2A63419F9C7E1A851F67 /* singleLobbyData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
