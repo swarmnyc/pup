@@ -14,6 +14,8 @@ public class Consts {
 
     public static final String ATTR_NAMESPACE = "http://schemas.android.com/apk/res-auto";
 
+    public static int CODE_PHOTO = 74;
+
     public static int windowWidth;
     public static int windowHeight;
 }

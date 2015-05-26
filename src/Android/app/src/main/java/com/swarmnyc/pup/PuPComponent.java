@@ -5,7 +5,7 @@ import com.swarmnyc.pup.activities.SplashActivity;
 import com.swarmnyc.pup.fragments.CreateLobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
-import com.swarmnyc.pup.fragments.SignupFragment;
+import com.swarmnyc.pup.fragments.RegisterFragment;
 import dagger.Component;
 
 import javax.inject.Singleton;
@@ -23,5 +23,5 @@ public interface PuPComponent {
 
 	void inject( LobbyFragment lobbyFragment );
 
-	void inject( SignupFragment signupFragment );
+	void inject( RegisterFragment registerFragment );
 }

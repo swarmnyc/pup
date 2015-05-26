@@ -13,19 +13,19 @@ import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
-import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.Filter.GameFilter;
 import com.swarmnyc.pup.Services.GameService;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
-import com.swarmnyc.pup.StringUtils;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.Navigator;
+import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.*;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
 import com.swarmnyc.pup.view.HorizontalSpinner;
@@ -100,6 +100,7 @@ public class CreateLobbyFragment extends Fragment
 
 		PuPApplication.getInstance().getComponent().inject( this );
 		ButterKnife.inject( this, view );
+		EventBus.getBus().register( this );
 
 		gameAdapter = new AutoCompleteForPicturedModelAdapter<Game>( this.getActivity() );
 
@@ -252,10 +253,19 @@ public class CreateLobbyFragment extends Fragment
 	}
 
 	@OnClick( R.id.btn_submit )
-	void onCreateLobby()
+	void createLobby()
 	{
 		if ( !valid() )
 		{ return; }
+
+
+		if ( !User.isLoggedIn() ){
+			RegisterFragment registerFragment = new RegisterFragment();
+			registerFragment.setGoHomeAfterLogin( false );
+			registerFragment.show( this.getFragmentManager(), null );
+			return;
+		}
+
 
 		MainActivity.getInstance().hideIme();
 
@@ -375,5 +385,21 @@ public class CreateLobbyFragment extends Fragment
 		date.set( Calendar.MINUTE, 0 );
 		date.set( Calendar.SECOND, 0 );
 		date.set( Calendar.MILLISECOND, 0 );
+	}
+
+	@Subscribe
+	public void postUserChanged( UserChangedEvent event )
+	{
+		if ( User.isLoggedIn() )
+		{
+			createLobby();
+		}
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		EventBus.getBus().unregister( this );
 	}
 }

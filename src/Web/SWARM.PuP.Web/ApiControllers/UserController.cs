@@ -148,11 +148,12 @@ namespace SWARM.PuP.Web.ApiControllers
                 return BadRequest(ErrorCode.E001WrongParameter);
             }
 
+            string url = GetUserPortraitUrl(User.Identity.GetPuPUser());
             var stream = new MemoryStream(file.Buffer);
             _imageService.CreateThumbnailTo(stream,
-                HostingEnvironment.MapPath(GetUserPortraitUrl(User.Identity.GetPuPUser())));
+                HostingEnvironment.MapPath(url));
 
-            return Ok();
+            return Ok(url);
         }
 
         [Authorize]
@@ -201,7 +202,7 @@ namespace SWARM.PuP.Web.ApiControllers
 
                 result.Data = new UserRequestViewModel(user)
                 {
-                    AccessToken = DataProtector.Protect(at.ToJson()),
+                    AccessToken = DataProtector.Protect(System.Json.ToJson(at)),
                     ExpiresIn = (long)(at.ExpirationDateUtc - DateTime.UtcNow).TotalSeconds
                 };
 

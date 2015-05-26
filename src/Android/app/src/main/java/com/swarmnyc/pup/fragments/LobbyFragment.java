@@ -183,9 +183,9 @@ public class LobbyFragment extends Fragment
 		}
 		else
 		{
-			SignupFragment signupFragment = new SignupFragment();
-			signupFragment.setGoHomeAfterLogin( false );
-			signupFragment.show( this.getFragmentManager(), null );
+			RegisterFragment registerFragment = new RegisterFragment();
+			registerFragment.setGoHomeAfterLogin( false );
+			registerFragment.show( this.getFragmentManager(), null );
 		}
 	}
 

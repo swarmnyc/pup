@@ -3,10 +3,14 @@ package com.swarmnyc.pup.Services;
 import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.RestApis.RestApiCallback;
 import com.swarmnyc.pup.RestApis.UserRestApi;
+import com.swarmnyc.pup.StringUtils;
 import com.swarmnyc.pup.viewmodels.UserInfo;
 import com.swarmnyc.pup.viewmodels.UserRequestException;
 import com.swarmnyc.pup.viewmodels.UserRequestResult;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
+
+import java.io.File;
 
 public class UserServiceImpl implements UserService
 {
@@ -45,11 +49,16 @@ public class UserServiceImpl implements UserService
 
 	@Override
 	public void register(
-		final String email, final String username, final ServiceCallback<UserInfo> callback
+		final String email, final String username, String file, final ServiceCallback<UserInfo> callback
 	)
 	{
+
+		TypedFile tf = null;
+		if ( StringUtils.isNotEmpty( file ) )
+		{ tf = new TypedFile( "multipart/form-data", new File( file ) ); }
+
 		m_userApi.register(
-			email, PASSWORD, username, new RestApiCallback<UserRequestResult>()
+			email, PASSWORD, username, tf, new RestApiCallback<UserRequestResult>()
 			{
 				@Override
 				public void success( final UserRequestResult userRequestResult, final Response response )
@@ -62,6 +71,25 @@ public class UserServiceImpl implements UserService
 					{
 						EventBus.getBus().post( new UserRequestException( userRequestResult.getErrorMessage() ) );
 					}
+				}
+			}
+		);
+	}
+
+	@Override
+	public void updatePortrait( final String file, final ServiceCallback<String> callback )
+	{
+		TypedFile tf = null;
+		if ( StringUtils.isNotEmpty( file ) )
+		{ tf = new TypedFile( "multipart/form-data", new File( file ) ); }
+
+		m_userApi.updatePortrait(
+			tf, new RestApiCallback<String>()
+			{
+				@Override
+				public void success( final String s, final Response response )
+				{
+					callback.success( s );
 				}
 			}
 		);

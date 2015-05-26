@@ -12,8 +12,8 @@ namespace SWARM.PuP.Web.Services
             Stream output;
             using (var img = Image.FromStream(input))
             {
-                var widthRatio = (float)img.Width / 800;
-                var heightRatio = (float)img.Height / 800;
+                var widthRatio = (float)img.Width / 1024;
+                var heightRatio = (float)img.Height / 1024;
                 if (widthRatio > 1 && heightRatio > 1)
                 {
                     // Resize to the greatest ratio

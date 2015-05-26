@@ -48,10 +48,8 @@
     <string name="text_today">Today</string>
     <string name="text_tomorrow">Tomorrow</string>
     <string name="text_ok">Ok</string>
-    <string name="text_join">Join</string>
-    <string name="text_join_pup">Join PuP</string>
-    <string name="text_join_lobby">Join Lobby</string>
-    <string name="text_signup">Register</string>
+    <string name="text_cancel">Cancel</string>
+    <string name="text_register">Register for PUP</string>
 
     <string name="message_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
     <string name="message_lobby_creating">Lobby Is Creating</string>
@@ -60,6 +58,7 @@
     <string name="time_in_minutes">in %d minutes</string>
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
-    <string name="text_cancel">Cancel</string>
+    <string name="text_register_and_join"><![CDATA[Register & Join]]></string>
+
 
 </resources>

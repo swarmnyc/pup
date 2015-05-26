@@ -14,8 +14,8 @@ namespace SWARM.PuP.Web.Services.Quickblox
         public void CreateUser(PuPUser user)
         {
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.User, HttpMethod.Post);
-
-            string username = Guid.NewGuid().ToString();
+            
+            string username = user.Id ?? Guid.NewGuid().ToString();
             var result = request.Json<CreateUserResult>(new
             {
                 user = new

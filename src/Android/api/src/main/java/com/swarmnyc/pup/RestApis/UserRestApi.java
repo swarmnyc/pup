@@ -3,9 +3,8 @@ package com.swarmnyc.pup.RestApis;
 import com.swarmnyc.pup.viewmodels.UserRequestResult;
 
 import retrofit.Callback;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.POST;
+import retrofit.http.*;
+import retrofit.mime.TypedFile;
 
 public interface UserRestApi
 {
@@ -30,14 +29,25 @@ public interface UserRestApi
 		String token, RestApiCallback<UserRequestResult> callback
 	);
 
-	@FormUrlEncoded
+	@Multipart
 	@POST( "/Register" )
 	void register(
-		@Field( "email" )
+		@Part( "email" )
 		String email,
-		@Field( "password" )
+		@Part( "password" )
 		String password,
-		@Field( "username" )
-		String username, RestApiCallback<UserRequestResult> callback
+		@Part( "username" )
+		String username,
+		@Part( "portrait" )
+		TypedFile portrait,
+		RestApiCallback<UserRequestResult> callback
+	);
+
+	@Multipart
+	@POST( "/UpdatePortrait" )
+	void updatePortrait(
+		@Part( "portrait" )
+		TypedFile portrait,
+		RestApiCallback<String> callback
 	);
 }

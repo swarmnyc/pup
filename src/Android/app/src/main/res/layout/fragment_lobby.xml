@@ -110,7 +110,7 @@
     <TextView
             android:id="@+id/btn_join"
             android:layout_alignParentBottom="true"
-            android:text="@string/text_join_lobby"
+            android:text="@string/text_register_and_join"
             style="@style/button_orange"
             android:visibility="invisible"/>
 </RelativeLayout>

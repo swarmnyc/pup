@@ -32,7 +32,7 @@ public class MainDrawerFragment extends Fragment
 {
 	int currentSelection = -1;
 
-	@InjectView( R.id.drawer_contrainer )
+	@InjectView( R.id.drawer_container )
 	View drawerMenuContainer;
 
 	@InjectView( R.id.drawer_list )
@@ -112,10 +112,6 @@ public class MainDrawerFragment extends Fragment
 		{
 			list.add( "My Chats" );
 		}
-		else
-		{
-			list.add( "Register" );
-		}
 
 		list.add( "Find a Game" );
 		list.add( "Feedback" );
@@ -127,8 +123,9 @@ public class MainDrawerFragment extends Fragment
 		drawerListView.setAdapter( adapter );
 
 		if ( change ){
-			selectItem( 1 );
-			drawerListView.setItemChecked( 1, true );
+			int position = User.isLoggedIn()? 1: 0;
+			selectItem( position );
+			drawerListView.setItemChecked( position, true );
 		}
 	}
 
@@ -139,27 +136,38 @@ public class MainDrawerFragment extends Fragment
 			currentSelection = position;
 			Class fragment = null;
 
-			switch ( position )
+			if ( User.isLoggedIn() )
 			{
-				case 0:
-					if ( User.isLoggedIn() )
-					{
+				switch ( position )
+				{
+					case 0:
 						fragment = MyChatsFragment.class;
-					}
-					else
-					{
-						fragment = SignupFragment.class;
-					}
-					break;
-				case 1:
-					fragment = LobbyListFragment.class;
-					break;
-				case 2:
-					UserVoice.launchUserVoice( this.getActivity() );
-					break;
-				case 3:
-					fragment = SettingsFragment.class;
-					break;
+						break;
+					case 1:
+						fragment = LobbyListFragment.class;
+						break;
+					case 2:
+						UserVoice.launchUserVoice( this.getActivity() );
+						break;
+					case 3:
+						fragment = SettingsFragment.class;
+						break;
+				}
+			}
+			else
+			{
+				switch ( position )
+				{
+					case 0:
+						fragment = LobbyListFragment.class;
+						break;
+					case 1:
+						UserVoice.launchUserVoice( this.getActivity() );
+						break;
+					case 2:
+						fragment = SettingsFragment.class;
+						break;
+				}
 			}
 
 			if ( fragment != null )
