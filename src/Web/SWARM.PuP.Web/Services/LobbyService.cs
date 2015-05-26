@@ -24,7 +24,7 @@ namespace SWARM.PuP.Web.Services
             {
                 Id = owner.Id,
                 IsOwner = true,
-                PictureUrl = owner.PictureUrl,
+                PictureUrl = owner.PortraitUrl,
                 Name = owner.GetUserName(lobby.Platform)
             });
 
@@ -83,7 +83,7 @@ namespace SWARM.PuP.Web.Services
             lobby.Users.Add(new LobbyUserInfo
             {
                 Id = user.Id,
-                PictureUrl = user.PictureUrl,
+                PictureUrl = user.PortraitUrl,
                 Name = user.GetUserName(lobby.Platform)
             });
 

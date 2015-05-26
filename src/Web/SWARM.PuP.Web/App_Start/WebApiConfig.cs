@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Filters;
+using MultipartDataMediaFormatter;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -31,10 +32,9 @@ namespace SWARM.PuP.Web
 
             config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new {id = RouteParameter.Optional}
                 );
-
-            var appXmlType =
-                config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");
-            config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);
+            
+            config.Formatters.Add(new FormMultipartEncodedMediaTypeFormatter());
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
         }
     }
 }

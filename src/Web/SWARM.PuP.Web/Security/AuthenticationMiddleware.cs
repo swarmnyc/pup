@@ -23,7 +23,7 @@ namespace SWARM.PuP.Web.Security
         public override Task Invoke(IOwinContext context)
         {
             Authenticate(context);
-            
+
             return Next.Invoke(context);
         }
 
@@ -35,7 +35,7 @@ namespace SWARM.PuP.Web.Security
             if (context.Request.Headers.ContainsKey("Authorization"))
             {
                 string s = context.Request.Headers.Get("Authorization");
-                if (s.IsNotNullOrEmpty() && s.StartsWith(TokenPrefix))
+                if (s.IsNotNullOrEmpty() && s.StartsWith(TokenPrefix, StringComparison.CurrentCultureIgnoreCase))
                 {
                     encryptedToken = s.Substring(_tokenPrefixLength);
                     goto CHECK;

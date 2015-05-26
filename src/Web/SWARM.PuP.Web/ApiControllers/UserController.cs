@@ -1,9 +1,15 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Web.Hosting;
 using System.Web.Http;
+using System.Web.Http.Results;
+using MongoDB.Bson;
+using MultipartDataMediaFormatter.Infrastructure;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.Security;
 using SWARM.PuP.Web.Services;
@@ -14,11 +20,13 @@ namespace SWARM.PuP.Web.ApiControllers
     [RoutePrefix("api/User")]
     public class UserController : ApiController
     {
+        private readonly IImageService _imageService;
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IImageService imageService)
         {
             _userService = userService;
+            _imageService = imageService;
         }
 
         [HttpPost, Route("~/api/Login")]
@@ -28,6 +36,8 @@ namespace SWARM.PuP.Web.ApiControllers
             PuPUser user = null;
 
             user = _userService.Find(model.Email, model.Password);
+
+            RequestContext.Principal = new ClaimsPrincipal(new PuPClaimsIdentity(user));
 
             if (user == null)
             {
@@ -85,7 +95,7 @@ namespace SWARM.PuP.Web.ApiControllers
 
         [HttpPost]
         [Route("~/api/Register")]
-        public IHttpActionResult Register(RegisterViewModel model)
+        public ResponseMessageResult Register(RegisterViewModel model)
         {
             string errorMessage = null;
             PuPUser user = null;
@@ -97,15 +107,52 @@ namespace SWARM.PuP.Web.ApiControllers
             {
                 user = new PuPUser
                 {
+                    Id = ObjectId.GenerateNewId().ToString(),
                     UserName = model.UserName,
                     Email = model.Email,
                     PasswordHash = DataProtector.Hash(model.Password)
                 };
 
+                RequestContext.Principal = new ClaimsPrincipal(new PuPClaimsIdentity(user));
+                if (model.Portrait == null)
+                {
+                    user.PortraitUrl = "~/Content/User/default-portrait.png";
+                }
+                else
+                {
+                    user.PortraitUrl = GetUserPortraitUrl(user);
+
+                    var stream = new MemoryStream(model.Portrait.Buffer);
+                    _imageService.CreateThumbnailTo(stream,
+                        HostingEnvironment.MapPath(user.PortraitUrl));
+                }
+
                 user = _userService.Add(user);
             }
 
             return ResponseMessage(GenerateUserRequestMessage(user, errorMessage));
+        }
+
+        private static string GetUserPortraitUrl(PuPUser user)
+        {
+            return "~/Content/User/" + user.Id + ".png";
+        }
+
+        [Authorize, HttpPost]
+        [Route("~/api/UpdatePortrait")]
+        public IHttpActionResult UpdatePortrait(FormData formData)
+        {
+            HttpFile file;
+            if (!formData.TryGetValue("portrait", out file))
+            {
+                return BadRequest(ErrorCode.E001WrongParameter);
+            }
+
+            var stream = new MemoryStream(file.Buffer);
+            _imageService.CreateThumbnailTo(stream,
+                HostingEnvironment.MapPath(GetUserPortraitUrl(User.Identity.GetPuPUser())));
+
+            return Ok();
         }
 
         [Authorize]
@@ -158,6 +205,10 @@ namespace SWARM.PuP.Web.ApiControllers
                     ExpiresIn = (long)(at.ExpirationDateUtc - DateTime.UtcNow).TotalSeconds
                 };
 
+                if (result.Data.PortraitUrl.IsNotNullOrWhiteSpace())
+                {
+                    result.Data.PortraitUrl = Url.Content(result.Data.PortraitUrl);
+                }
                 result.Success = true;
             }
             response.Content = new JsonContent(result);

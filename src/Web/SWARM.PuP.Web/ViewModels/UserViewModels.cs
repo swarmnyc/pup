@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web;
+using MultipartDataMediaFormatter.Infrastructure;
 using SWARM.PuP.Web.Models;
 
 namespace SWARM.PuP.Web.ViewModels
@@ -38,6 +40,8 @@ namespace SWARM.PuP.Web.ViewModels
         [MaxLength(100)]
         [Display(Name = "Password")]
         public string Password { get; set; }
+        
+        public HttpFile Portrait { get; set; }
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
@@ -55,6 +59,8 @@ namespace SWARM.PuP.Web.ViewModels
             this.Email = user.Email;
 
             this.Tags = user.Tags;
+
+            this.PortraitUrl = user.PortraitUrl;
         }
 
         public string Id { get; set; }
@@ -63,7 +69,7 @@ namespace SWARM.PuP.Web.ViewModels
 
         public string UserName { get; set; }
 
-        public string PictureUrl { get; set; }
+        public string PortraitUrl { get; set; }
 
         public IEnumerable<PuPTag> Tags { get; set; }
     }

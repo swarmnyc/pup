@@ -17,7 +17,7 @@ namespace SWARM.PuP.Web.Models
         }
 
         public virtual string PasswordHash { get; set; }
-        public string PictureUrl { get; set; }
+        public string PortraitUrl { get; set; }
 
         public string GetUserName(GamePlatform platform)
         {
