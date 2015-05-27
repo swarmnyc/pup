@@ -3,21 +3,26 @@ package com.swarmnyc.pup.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.*;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.squareup.otto.Subscribe;
-import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.activities.MainActivity;
+import com.swarmnyc.pup.adapters.ChatAdapter;
+import com.swarmnyc.pup.chat.ChatRoomService;
+import com.swarmnyc.pup.chat.ChatService;
+import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
@@ -33,33 +38,34 @@ public class LobbyFragment extends Fragment
 	@Inject
 	LobbyService lobbyService;
 
+	@Inject
+	ChatService chatService;
+
+	ChatRoomService chatRoomService;
+
 	@InjectView( R.id.container )
 	View container;
+
+	@InjectView( R.id.panel )
+	ViewGroup textPanel;
 
 	@InjectView( R.id.btn_join )
 	TextView joinButton;
 
-	@InjectView( R.id.img_game )
-	ImageView gameImageView;
+	@InjectView( R.id.text_message )
+	EditText messageText;
 
-	@InjectView( R.id.text_name )
-	TextView lobbyNameText;
+	@InjectView( R.id.btn_send )
+	View sendButton;
 
-	@InjectView( R.id.text_lobby_type )
-	TextView lobbyTypeText;
-
-	@InjectView( R.id.text_description )
-	TextView lobbyDescriptionText;
+	@InjectView( R.id.list_chat )
+	RecyclerView chatList;
 
 	Lobby lobby;
 
 	@Override
 	public View onCreateView(
-		final LayoutInflater inflater,
-		@Nullable
-		final ViewGroup container,
-		@Nullable
-		final Bundle savedInstanceState
+		final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState
 	)
 	{
 		return inflater.inflate( R.layout.fragment_lobby, container, false );
@@ -83,7 +89,7 @@ public class LobbyFragment extends Fragment
 		ButterKnife.inject( this, view );
 		EventBus.getBus().register( this );
 
-		//TODO: Loading Message
+		DialogHelper.showProgressDialog( R.string.text_loding );
 		lobbyService.getLobby(
 			this.getArguments().getString( LOBBY_ID ), new ServiceCallback<Lobby>()
 			{
@@ -92,6 +98,7 @@ public class LobbyFragment extends Fragment
 				{
 					lobby = value;
 					initialize();
+					DialogHelper.hide();
 				}
 			}
 		);
@@ -139,47 +146,71 @@ public class LobbyFragment extends Fragment
 		            .getToolbar()
 		            .setSubtitleTextColor( getResources().getColor( R.color.pup_teal_light ) );
 
-		//name
-		lobbyNameText.setText( lobby.getOwner().getName() + "'s\n" + lobby.getName() );
-
-		//img
-		if ( StringUtils.isNotEmpty( lobby.getPictureUrl() ) )
-		{
-			Picasso.with( getActivity() ).load( lobby.getPictureUrl() ).centerCrop().fit().into( gameImageView );
-		}
-
-		//type
-		lobbyTypeText.setText( String.format( "%s,%s", lobby.getPlayStyle(), lobby.getSkillLevel() ) );
-
-		//description
-		lobbyDescriptionText.setText( lobby.getDescription() );
-
-		//join button
+		//joinLobby button and text panel
 		if ( User.isLoggedIn() )
 		{
 			LobbyUserInfo user = lobby.getUser( User.current.getId() );
 			if ( user == null )
 			{
 				joinButton.setVisibility( View.VISIBLE );
+				textPanel.setVisibility( View.GONE );
 			}
 			else
 			{
 				joinButton.setVisibility( View.GONE );
+				textPanel.setVisibility( View.VISIBLE );
 			}
 		}
 		else
 		{
 			joinButton.setVisibility( View.VISIBLE );
+			textPanel.setVisibility( View.GONE );
 		}
 
+		//chat list
+		if ( chatList.getAdapter() == null )
+		{
+			chatRoomService = chatService.getChatRoomService( getActivity(), lobby );
+
+			chatList.setAdapter( new ChatAdapter( getActivity(), chatRoomService , lobby ) );
+			LinearLayoutManager llm = new LinearLayoutManager( getActivity() );
+			//llm.setStackFromEnd( true );
+			chatList.setLayoutManager(  llm );
+		}
+	}
+
+	@OnClick(R.id.btn_send)
+	void send(){
+		String message = messageText.getText().toString().trim();
+		if ( message.length()>0 ){
+			chatRoomService.SendMessage( message );
+			messageText.setText("");
+		}
 	}
 
 	@OnClick( R.id.btn_join )
-	void join()
+	void joinLobby()
 	{
 		if ( User.isLoggedIn() )
 		{
-			joinLobby();
+			DialogHelper.showProgressDialog( R.string.text_processing );
+			lobbyService.join(
+				lobby.getId(), new ServiceCallback()
+				{
+					@Override
+					public void success( final Object value )
+					{
+						LobbyUserInfo user = new LobbyUserInfo();
+						user.setId( User.current.getId() );
+						user.setName( User.current.getUserName() );
+						user.setPictureUrl( User.current.getPictureUrl() );
+
+						lobby.getUsers().add( user );
+						initialize();
+						DialogHelper.hide();
+					}
+				}
+			);
 		}
 		else
 		{
@@ -187,26 +218,6 @@ public class LobbyFragment extends Fragment
 			registerFragment.setGoHomeAfterLogin( false );
 			registerFragment.show( this.getFragmentManager(), null );
 		}
-	}
-
-	private void joinLobby()
-	{//TODO: Processing
-		lobbyService.join(
-			lobby.getId(), new ServiceCallback()
-			{
-				@Override
-				public void success( final Object value )
-				{
-					LobbyUserInfo user = new LobbyUserInfo();
-					user.setId( User.current.getId() );
-					user.setName( User.current.getUserName() );
-					user.setPictureUrl( User.current.getPictureUrl() );
-
-					lobby.getUsers().add( user );
-					initialize();
-				}
-			}
-		);
 	}
 
 	@Subscribe
@@ -224,4 +235,5 @@ public class LobbyFragment extends Fragment
 		super.onDestroy();
 		EventBus.getBus().unregister( this );
 	}
+
 }

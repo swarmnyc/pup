@@ -57,7 +57,7 @@ public class QuickbloxChatRoomService extends ChatRoomService {
         chat = QBChatService.getInstance().getGroupChatManager().createGroupChat(dialog.getRoomJid());
 
         DiscussionHistory history = new DiscussionHistory();
-        history.setMaxStanzas(0);
+        history.setMaxStanzas(100);
         chat.join(history, new QBEntityCallbackImpl() {
             @Override
             public void onSuccess() {

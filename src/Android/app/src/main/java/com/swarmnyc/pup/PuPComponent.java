@@ -2,6 +2,7 @@ package com.swarmnyc.pup;
 
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.activities.SplashActivity;
+import com.swarmnyc.pup.adapters.ChatAdapter;
 import com.swarmnyc.pup.fragments.CreateLobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
@@ -24,4 +25,6 @@ public interface PuPComponent {
 	void inject( LobbyFragment lobbyFragment );
 
 	void inject( RegisterFragment registerFragment );
+
+    void inject( ChatAdapter chatAdapter );
 }

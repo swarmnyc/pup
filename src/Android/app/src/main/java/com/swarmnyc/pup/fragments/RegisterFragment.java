@@ -88,12 +88,14 @@ public class RegisterFragment extends DialogFragment
 			}
 		}
 
+		DialogHelper.showProgressDialog( R.string.text_processing );
 		m_userService.register(
 			emailText.getText().toString(), nameText.getText().toString(), path, new ServiceCallback<UserInfo>()
 			{
 				@Override
 				public void success( final UserInfo value )
 				{
+					DialogHelper.hide();
 					User.login( value, goHome );
 				}
 			}

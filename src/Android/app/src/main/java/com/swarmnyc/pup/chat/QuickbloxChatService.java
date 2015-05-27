@@ -30,36 +30,48 @@ import java.util.Hashtable;
 import java.util.List;
 
 public class QuickbloxChatService implements ChatService {
-    private Hashtable<String, QBDialog> dialogs = new Hashtable<>();
-
     private QBChatService qbChatService;
+    private String        m_appId;
+    private QBUser        user;
 
-    public QuickbloxChatService() {
-        EventBus.getBus().register(this);
+    public QuickbloxChatService()
+    {
+        EventBus.getBus().register( this );
     }
 
     @Override
-    public void login(final Activity activity) {
-        if (qbChatService != null && qbChatService.isLoggedIn()) {
-            try {
+    public void login( final Activity activity )
+    {
+        if ( qbChatService != null && qbChatService.isLoggedIn() )
+        {
+            try
+            {
                 qbChatService.logout();
-            } catch (SmackException.NotConnectedException e) {
+            }
+            catch ( SmackException.NotConnectedException e )
+            {
                 e.printStackTrace();
             }
         }
 
-        //QBChatService.setDebugEnabled(true);
-        QBSettings.getInstance().fastConfigInit(Config.getConfigString(R.string.QB_APP_ID), Config.getConfigString(R.string.QB_APP_KEY), Config.getConfigString(R.string.QB_APP_SECRET));
-        if (!QBChatService.isInitialized()) {
-            QBChatService.init(activity);
+        //Login API
+        QBChatService.setDebugEnabled( true );
+        m_appId = Config.getConfigString( R.string.QB_APP_ID );
+        QBSettings.getInstance().fastConfigInit(
+            m_appId, Config.getConfigString( R.string.QB_APP_KEY ), Config.getConfigString( R.string.QB_APP_SECRET )
+        );
+        if ( !QBChatService.isInitialized() )
+        {
+            QBChatService.init( activity );
         }
 
         qbChatService = QBChatService.getInstance();
 
-        final QBUser user = new QBUser();
-        if (User.isLoggedIn()) {
-            user.setLogin(User.current.getId());
-            user.setPassword(Config.getConfigString(R.string.QB_APP_PW));
+        user = new QBUser();
+        if ( User.isLoggedIn() )
+        {
+            user.setLogin( User.current.getId() );
+            user.setPassword( Config.getConfigString( R.string.QB_APP_PW));
         } else {
             user.setLogin(Config.getConfigString(R.string.QB_APP_DEFAULT_USER));
             user.setPassword(Config.getConfigString(R.string.QB_APP_PW));
@@ -73,6 +85,7 @@ public class QuickbloxChatService implements ChatService {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //Login Chat
                         loginChat(activity, user);
                     }
                 });
@@ -86,8 +99,11 @@ public class QuickbloxChatService implements ChatService {
     }
 
     @Override
-    public ChatRoomService getChatRoom(Activity activity, Lobby lobby) {
-        return new QuickbloxChatRoomService(activity, dialogs.get(lobby.getTagValue("QBChatRoomId")));
+    public ChatRoomService getChatRoomService( Activity activity, Lobby lobby ) {
+        QBDialog dialog = new QBDialog( lobby.getTagValue( "QBChatRoomId" ) );
+        dialog.setRoomJid( m_appId + "_" + dialog.getDialogId() + "@muc.chat.quickblox.com" );
+        dialog.setUserId( user.getId());
+        return new QuickbloxChatRoomService(activity, dialog);
     }
 
     private void loginChat(final Activity context, final QBUser user) {
@@ -95,30 +111,12 @@ public class QuickbloxChatService implements ChatService {
             @Override
             public void onSuccess() {
                 try {
-                    qbChatService.startAutoSendPresence(30);
+                    qbChatService.startAutoSendPresence(60);
                 } catch (SmackException.NotLoggedInException e) {
                     e.printStackTrace();
                 }
 
-                context.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        new PlayServicesHelper(context);
-                        QBRequestGetBuilder customObjectRequestBuilder = new QBRequestGetBuilder();
-                        customObjectRequestBuilder.setPagesLimit(100);
-
-                        QBChatService.getChatDialogs(null, customObjectRequestBuilder, new QBEntityCallbackImpl<ArrayList<QBDialog>>() {
-                            @Override
-                            public void onSuccess(ArrayList<QBDialog> result, Bundle params) {
-                                for (QBDialog dialog : result) {
-                                    dialogs.put(dialog.getDialogId(), dialog);
-                                }
-                            }
-                        });
-
-                        EventBus.getBus().post(new ChatServiceLoggedInEvent());
-                    }
-                });
+                EventBus.getBus().post( new ChatServiceLoggedInEvent() );
             }
 
             @Override
@@ -130,6 +128,7 @@ public class QuickbloxChatService implements ChatService {
 
     @Subscribe
     public void postUserChanged(UserChangedEvent event) {
+        //Relog in if user change
         login(MainActivity.getInstance());
     }
 

@@ -15,18 +15,17 @@ namespace SWARM.PuP.Web.Services.Quickblox
         {
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.User, HttpMethod.Post);
             
-            string username = user.Id ?? Guid.NewGuid().ToString();
             var result = request.Json<CreateUserResult>(new
             {
                 user = new
                 {
-                    login = username,
+                    login = user.Id,
                     password = QuickbloxHttpHelper.UserPassword,
-                    email = username + QuickbloxHttpHelper.CompanyEmailDomin
+                    email = user.Id + QuickbloxHttpHelper.CompanyEmailDomin
                 }
             });
 
-            user.SetChatId(result.user.id.ToString(), username);
+            user.SetChatId(result.user.id.ToString());
         }
 
         public void DeleteUser(PuPUser user)

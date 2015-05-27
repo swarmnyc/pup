@@ -20,5 +20,5 @@ import java.util.List;
 public interface ChatService {
     public void login(Activity activity);
 
-    public ChatRoomService getChatRoom(Activity activity, Lobby lobby);
+    public ChatRoomService getChatRoomService( Activity activity, Lobby lobby );
 }

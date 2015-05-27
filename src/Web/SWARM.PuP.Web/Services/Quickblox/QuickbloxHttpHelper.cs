@@ -58,10 +58,9 @@ namespace SWARM.PuP.Web.Services.Quickblox
             return user.GetTagValue(Const_ChatId);
         }
 
-        internal static void SetChatId(this PuPUser user, string chatId,string username)
+        internal static void SetChatId(this PuPUser user, string chatId)
         {
             user.UpdateTag(Const_ChatId, chatId);
-            user.UpdateTag(Const_ChatUserName, username);
         }
 
         private static bool IsNoSession()

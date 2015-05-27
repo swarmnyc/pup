@@ -13,7 +13,7 @@ public class MockChatService implements ChatService {
     }
 
     @Override
-    public ChatRoomService getChatRoom(Activity activity, Lobby lobby) {
-        return null;
+    public ChatRoomService getChatRoomService( Activity activity, Lobby lobby ) {
+        return new MockChatRoomService( );
     }
 }

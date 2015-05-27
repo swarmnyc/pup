@@ -1,28 +1,17 @@
 package com.swarmnyc.pup.viewmodels;
 
 import com.swarmnyc.pup.models.PuPTag;
+import com.swarmnyc.pup.models.Taggable;
 
 import java.util.List;
 
-public class UserInfo
+public class UserInfo extends Taggable
 {
-    private String       id;
     private String       email;
     private String       userName;
     private String       pictureUrl;
     private String       accessToken;
     private double       expiresIn;
-    private List<PuPTag> tags;
-
-    public String getId()
-    {
-        return id;
-    }
-
-    public void setId( String id )
-    {
-        this.id = id;
-    }
 
     public String getEmail() {
         return email;
@@ -46,14 +35,6 @@ public class UserInfo
 
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
-    }
-
-    public List<PuPTag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<PuPTag> tags) {
-        this.tags = tags;
     }
 
     public String getAccessToken()

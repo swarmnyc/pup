@@ -20,7 +20,7 @@ namespace SWARM.PuP.Web.Tests.Services
     {
         public QuickbloxChatServiceTest()
         {
-            TestHelper.MockDatabase();
+            //TestHelper.MockDatabase();
         }
 
         [TestMethod]
@@ -31,8 +31,9 @@ namespace SWARM.PuP.Web.Tests.Services
                 QuickbloxChatService s = new QuickbloxChatService();
                 var puPUser = new PuPUser()
                 {
+                    Id=Guid.NewGuid().ToString(),
                     UserName = "Test",
-                    Email = "Test@swarmnyc.com"
+                    Email = "test@swarmnyc.com"
                 };
                 s.CreateUser(puPUser);
 

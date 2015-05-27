@@ -14,6 +14,7 @@ import java.util.Date;
 
 import javax.inject.Singleton;
 
+import com.swarmnyc.pup.chat.QuickbloxChatService;
 import dagger.Module;
 import dagger.Provides;
 import retrofit.RequestInterceptor;
@@ -65,7 +66,7 @@ public class PuPApiModule {
     @Provides
     @Singleton
     public ChatService provideChatService() {
-        return new MockChatService();
-        //return new QuickbloxChatService();
+        //return new MockChatService();
+        return new QuickbloxChatService();
     }
 }

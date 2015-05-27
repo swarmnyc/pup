@@ -49,13 +49,13 @@ public class SplashActivity extends Activity {
         int size = (int) (Consts.windowWidth * 0.7);
         logoImage.getLayoutParams().width = size;
         logoImage.getLayoutParams().height = size;
-        ((RelativeLayout.LayoutParams) logoImage.getLayoutParams()).setMargins(0, (int) (size * 0.1), 0, 0);
-
-        chatService.login(this);
+        ((RelativeLayout.LayoutParams) logoImage.getLayoutParams()).setMargins( 0, (int) ( size * 0.1 ), 0, 0 );
 
         com.uservoice.uservoicesdk.Config config = new  com.uservoice.uservoicesdk.Config("swarmnyc.uservoice.com");
         config.setForumId(272754);
         UserVoice.init(config, this);
+
+        chatService.login(this);
     }
 
     @Subscribe

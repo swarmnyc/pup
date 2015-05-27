@@ -76,7 +76,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/button_text</item>
-        <item name="android:textColor">@color/pup_orange</item>
+        <item name="android:textColor">@color/button_orange</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -111,5 +111,18 @@
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_marginTop">@dimen/margin_normal</item>
+    </style>
+
+    <style name="text_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/pup_grey</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="text_message">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:color">@color/pup_light</item>
+        <item name="android:textSize">13sp</item>
     </style>
 </resources>

@@ -59,6 +59,8 @@
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
     <string name="text_register_and_join"><![CDATA[Register & Join]]></string>
+    <string name="text_processing">Processing</string>
+    <string name="text_loding">Loding</string>
 
 
 </resources>
