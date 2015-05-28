@@ -45,7 +45,7 @@ namespace SWARM.PuP.Web.ApiControllers
             }
 
 
-            return ResponseMessage(GenerateUserRequestMessage(user, errorMessage));
+            return ResponseMessage(GenerateCurrentUserInfoMessage(user, errorMessage));
         }
 
         [HttpPost]
@@ -89,7 +89,7 @@ namespace SWARM.PuP.Web.ApiControllers
                 return BadRequest();
             }
 
-            var response = GenerateUserRequestMessage(user, "");
+            var response = GenerateCurrentUserInfoMessage(user, "");
             return ResponseMessage(response);
         }
 
@@ -126,7 +126,7 @@ namespace SWARM.PuP.Web.ApiControllers
                 user = _userService.Add(user);
             }
 
-            return ResponseMessage(GenerateUserRequestMessage(user, errorMessage));
+            return ResponseMessage(GenerateCurrentUserInfoMessage(user, errorMessage));
         }
 
         private static string GetUserPortraitUrl(PuPUser user)
@@ -183,7 +183,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        private HttpResponseMessage GenerateUserRequestMessage(PuPUser user, string errorMessage)
+        private HttpResponseMessage GenerateCurrentUserInfoMessage(PuPUser user, string errorMessage)
         {
             var response = Request.CreateResponse(HttpStatusCode.OK);
             var result = new RequestResult<CurrentUserToken>();
