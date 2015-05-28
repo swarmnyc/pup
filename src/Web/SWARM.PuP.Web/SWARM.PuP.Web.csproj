@@ -157,6 +157,7 @@
     <Compile Include="Security\PuPClaimsIdentity.cs" />
     <Compile Include="Services\IImageService.cs" />
     <Compile Include="Services\ImageService.cs" />
+    <Compile Include="Models\CurrentUserInfo.cs" />
     <Compile Include="ViewModels\LobbyViewModel.cs" />
     <Compile Include="ApiControllers\UserController.cs" />
     <Compile Include="Models\PuPTaggable.cs" />
@@ -219,7 +220,6 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\User\default-portrait.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -285,6 +285,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\User\" />
     <Folder Include="Views\Game\" />
   </ItemGroup>
   <ItemGroup>

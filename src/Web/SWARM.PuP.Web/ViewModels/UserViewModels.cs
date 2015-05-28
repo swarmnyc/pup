@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Web;
 using MultipartDataMediaFormatter.Infrastructure;
 using SWARM.PuP.Web.Models;
@@ -47,33 +46,6 @@ namespace SWARM.PuP.Web.ViewModels
         public bool RememberMe { get; set; }
     }
 
-    public class UserInfoViewModel
-    {
-
-        public UserInfoViewModel(PuPUser user)
-        {
-            this.Id = user.Id;
-
-            this.UserName = user.UserName;
-
-            this.Email = user.Email;
-
-            this.Tags = user.Tags;
-
-            this.PortraitUrl = user.PortraitUrl;
-        }
-
-        public string Id { get; set; }
-
-        public string Email { get; set; }
-
-        public string UserName { get; set; }
-
-        public string PortraitUrl { get; set; }
-
-        public IEnumerable<PuPTag> Tags { get; set; }
-    }
-
     public class ExternalLoginViewModel
     {
         [Required]
@@ -98,17 +70,5 @@ namespace SWARM.PuP.Web.ViewModels
         public string IdFromProvider { get; set; }
         public string Provider { get; set; }
         public string Email { get; set; }
-    }
-
-    public class UserRequestViewModel : UserInfoViewModel
-    {
-        public UserRequestViewModel(PuPUser user) : base(user)
-        {
-
-        }
-
-        public string AccessToken { get; set; }
-        
-        public long ExpiresIn { get; set; }
     }
 }

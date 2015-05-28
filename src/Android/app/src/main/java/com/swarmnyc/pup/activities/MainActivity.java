@@ -1,18 +1,24 @@
 package com.swarmnyc.pup.activities;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.View;
 
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.RelativeLayout;
 import com.swarmnyc.pup.*;
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.components.*;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.uservoice.uservoicesdk.UserVoice;
 
 public class MainActivity extends ActionBarActivity
 {
@@ -41,6 +47,21 @@ public class MainActivity extends ActionBarActivity
 		PuPApplication.getInstance().getComponent().inject( this );
 		Navigator.init( this );
 		EventBus.getBus().register( this );
+
+		com.uservoice.uservoicesdk.Config config = new  com.uservoice.uservoicesdk.Config("swarmnyc.uservoice.com");
+		config.setForumId( 272754 );
+		UserVoice.init( config, this );
+
+		Display display = getWindowManager().getDefaultDisplay();
+		Point windowSize = new Point();
+		display.getSize(windowSize);
+		Consts.windowWidth = windowSize.x;
+		Consts.windowHeight = windowSize.y;
+
+		if ( Config.getBool( "ShowedSplash" )  == false ) {
+			Config.setBool("ShowedSplash",true);
+			startActivity( new Intent( this, SplashActivity.class ) );
+		}
 	}
 
 	public void retrieveMessage( final String message )

@@ -168,23 +168,20 @@ public class LobbyFragment extends Fragment
 		}
 
 		//chat list
-		if ( chatList.getAdapter() == null )
-		{
-			chatRoomService = chatService.getChatRoomService( getActivity(), lobby );
-
-			chatList.setAdapter( new ChatAdapter( getActivity(), chatRoomService , lobby ) );
-			LinearLayoutManager llm = new LinearLayoutManager( getActivity() );
-			//llm.setStackFromEnd( true );
-			chatList.setLayoutManager(  llm );
-		}
+		chatRoomService = chatService.getChatRoomService( getActivity(), lobby );
+		chatList.setAdapter( new ChatAdapter( getActivity(), chatRoomService, lobby ) );
+		LinearLayoutManager llm = new LinearLayoutManager( getActivity() );
+		chatList.setLayoutManager( llm );
 	}
 
-	@OnClick(R.id.btn_send)
-	void send(){
+	@OnClick( R.id.btn_send )
+	void send()
+	{
 		String message = messageText.getText().toString().trim();
-		if ( message.length()>0 ){
+		if ( message.length() > 0 )
+		{
 			chatRoomService.SendMessage( message );
-			messageText.setText("");
+			messageText.setText( "" );
 		}
 	}
 
@@ -202,8 +199,8 @@ public class LobbyFragment extends Fragment
 					{
 						LobbyUserInfo user = new LobbyUserInfo();
 						user.setId( User.current.getId() );
-						user.setName( User.current.getUserName() );
-						user.setPictureUrl( User.current.getPictureUrl() );
+						user.setUserName( User.current.getUserName() );
+						user.setPortraitUrl( User.current.getPortraitUrl() );
 
 						lobby.getUsers().add( user );
 						initialize();

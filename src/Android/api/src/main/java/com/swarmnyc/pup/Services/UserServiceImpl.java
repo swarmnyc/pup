@@ -4,8 +4,7 @@ import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.RestApis.RestApiCallback;
 import com.swarmnyc.pup.RestApis.UserRestApi;
 import com.swarmnyc.pup.StringUtils;
-import com.swarmnyc.pup.viewmodels.UserInfo;
-import com.swarmnyc.pup.viewmodels.UserRequestException;
+import com.swarmnyc.pup.models.CurrentUserInfo;
 import com.swarmnyc.pup.viewmodels.UserRequestResult;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
@@ -25,7 +24,7 @@ public class UserServiceImpl implements UserService
 
 	@Override
 	public void login(
-		final String email, final ServiceCallback<UserInfo> callback
+		final String email, final ServiceCallback<CurrentUserInfo> callback
 	)
 	{
 		m_userApi.login(
@@ -40,7 +39,7 @@ public class UserServiceImpl implements UserService
 					}
 					else
 					{
-						EventBus.getBus().post( new UserRequestException( userRequestResult.getErrorMessage() ) );
+						EventBus.getBus().post( new RuntimeException( userRequestResult.getErrorMessage() ) );
 					}
 				}
 			}
@@ -49,10 +48,9 @@ public class UserServiceImpl implements UserService
 
 	@Override
 	public void register(
-		final String email, final String username, String file, final ServiceCallback<UserInfo> callback
+		final String email, final String username, String file, final ServiceCallback<CurrentUserInfo> callback
 	)
 	{
-
 		TypedFile tf = null;
 		if ( StringUtils.isNotEmpty( file ) )
 		{ tf = new TypedFile( "multipart/form-data", new File( file ) ); }
@@ -69,7 +67,7 @@ public class UserServiceImpl implements UserService
 					}
 					else
 					{
-						EventBus.getBus().post( new UserRequestException( userRequestResult.getErrorMessage() ) );
+						EventBus.getBus().post( new RuntimeException( userRequestResult.getErrorMessage() ) );
 					}
 				}
 			}

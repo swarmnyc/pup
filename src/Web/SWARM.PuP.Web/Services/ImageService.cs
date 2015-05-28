@@ -30,7 +30,9 @@ namespace SWARM.PuP.Web.Services
                 }
                 else
                 {
-                    output = input;
+                    output = new MemoryStream();
+                    img.Save(output, ImageFormat.Png);
+                    output.Position = 0;
                 }
             }
 

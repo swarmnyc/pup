@@ -118,6 +118,6 @@ public class Lobby extends Taggable implements PicturedModel {
                 return user;
         }
 
-        return LobbyUserInfo.Null;
+        return null;
     }
 }

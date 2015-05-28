@@ -31,7 +31,16 @@ namespace SWARM.PuP.Web.ApiControllers
 
         public Lobby Get(string id)
         {
-            return _lobbyService.GetById(id);
+            var lobby = _lobbyService.GetById(id);
+            foreach (var user in lobby.Users)
+            {
+                if (user.PortraitUrl.IsNotNullOrWhiteSpace())
+                {
+                    user.PortraitUrl = Url.Content(user.PortraitUrl);
+                }
+            }
+
+            return lobby;
         }
 
         [Authorize]

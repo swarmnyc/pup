@@ -1,13 +1,14 @@
 package com.swarmnyc.pup.viewmodels;
 
 import com.google.gson.annotations.SerializedName;
+import com.swarmnyc.pup.models.CurrentUserInfo;
 
 public class UserRequestResult
 {
     @SerializedName( "data" )
-    private UserInfo user;
-    private boolean  success;
-    private String   errorMessage;
+    private CurrentUserInfo user;
+    private boolean         success;
+    private String          errorMessage;
 
     public String getErrorMessage()
     {
@@ -29,12 +30,12 @@ public class UserRequestResult
         this.success = success;
     }
 
-    public UserInfo getUser()
+    public CurrentUserInfo getUser()
     {
         return user;
     }
 
-    public void setUser( final UserInfo user )
+    public void setUser( final CurrentUserInfo user )
     {
         this.user = user;
     }

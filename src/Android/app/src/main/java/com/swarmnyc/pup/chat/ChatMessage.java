@@ -1,20 +1,25 @@
 package com.swarmnyc.pup.chat;
 
-public class ChatMessage {
+import com.swarmnyc.pup.models.UserInfo;
 
-    private String userId;
-    private String body;
+public class ChatMessage
+{
+	private UserInfo m_user;
+	private String   m_body;
 
-    public ChatMessage(String userId, String body) {
-        this.userId = userId;
-        this.body = body;
-    }
+	public ChatMessage( UserInfo user, String body )
+	{
+		m_user = user;
+		m_body = body;
+	}
 
-    public String getUserId() {
-        return userId;
-    }
+	public String getBody()
+	{
+		return m_body;
+	}
 
-    public String getBody() {
-        return body;
-    }
+	public UserInfo getUser()
+	{
+		return m_user;
+	}
 }

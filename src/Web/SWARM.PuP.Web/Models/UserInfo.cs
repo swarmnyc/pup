@@ -6,9 +6,9 @@ namespace SWARM.PuP.Web.Models
     {
         public String Id { get; set; }
 
-        public String Name { get; set; }
+        public String UserName { get; set; }
 
-        public String PictureUrl { get; set; }
+        public String PortraitUrl { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -29,7 +29,7 @@ namespace SWARM.PuP.Web.Models
 
         public override string ToString()
         {
-            return string.Format("({0}, {1})", Id, Name);
+            return string.Format("({0}, {1})", Id, UserName);
         }
     }
 

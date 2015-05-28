@@ -1,6 +1,5 @@
 package com.swarmnyc.pup.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,23 +10,20 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.picasso.Picasso;
-import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.StringUtils;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatMessageListener;
 import com.swarmnyc.pup.chat.ChatRoomService;
-import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.models.Lobby;
 
-import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ChatMessageListener
 {
 	private static final int HEADER = 0;
+	private static final int SHARE  = -1;
 	private static final int ITEM   = 1;
 	private Context        m_context;
 	private Lobby          m_lobby;
@@ -35,6 +31,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 	ChatRoomService   m_chatRoomService;
 	List<ChatMessage> m_chatMessages;
+	private RecyclerView m_recyclerView;
 
 	public ChatAdapter( final Context context, final ChatRoomService chatRoomService, final Lobby lobby )
 	{
@@ -49,6 +46,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	}
 
 	@Override
+	public void onAttachedToRecyclerView( final RecyclerView recyclerView )
+	{
+		m_recyclerView = recyclerView;
+		super.onAttachedToRecyclerView( recyclerView );
+	}
+
+	@Override
 	public void onDetachedFromRecyclerView( final RecyclerView recyclerView )
 	{
 		super.onDetachedFromRecyclerView( recyclerView );
@@ -60,22 +64,25 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	{
 		if ( viewType == HEADER )
 		{
-
 			View view = m_inflater.inflate( R.layout.item_lobby_chat_header, null );
-			return new HeaderViewHolder( m_context, view, m_lobby );
+			return new HeaderViewHolder( view );
+		}
+		else if ( viewType == SHARE )
+		{
+			View view = m_inflater.inflate( R.layout.item_lobby_chat_share, null );
+			return new ShareViewHolder( view );
 		}
 		else
 		{
 			View view = m_inflater.inflate( R.layout.item_lobby_chat, null );
-
-			return new ItemViewHolder( m_context, view );
+			return new ItemViewHolder( view );
 		}
 	}
 
 	@Override
 	public void onBindViewHolder( final RecyclerView.ViewHolder holder, final int position )
 	{
-		if ( position != 0 )
+		if ( ItemViewHolder.class.isInstance( holder ) )
 		{
 			( (ItemViewHolder) holder ).setCharMessage( m_chatMessages.get( position - 1 ) );
 		}
@@ -84,13 +91,27 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	@Override
 	public int getItemViewType( final int position )
 	{
-		return position == HEADER ? HEADER : ITEM;
+		if ( m_chatMessages.size() == 0 )
+		{
+			return position == HEADER ? HEADER : SHARE;
+		}
+		else
+		{
+			return position == HEADER ? HEADER : ITEM;
+		}
 	}
 
 	@Override
 	public int getItemCount()
 	{
-		return m_chatMessages.size() + 1;
+		if ( m_chatMessages.size() == 0 )
+		{
+			return 2;
+		}
+		else
+		{
+			return m_chatMessages.size() + 1;
+		}
 	}
 
 	@Override
@@ -98,6 +119,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	{
 		m_chatMessages.addAll( message );
 		notifyDataSetChanged();
+
+		//TODO: Better Scrolling
+		m_recyclerView.scrollToPosition( m_chatMessages.size() );
 	}
 
 
@@ -111,20 +135,23 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 		@InjectView( R.id.text_message )
 		TextView messageText;
-		private Context m_context;
 
-		public ItemViewHolder( final Context context, final View view )
+		public ItemViewHolder( final View view )
 		{
 			super( view );
-			m_context = context;
 
 			ButterKnife.inject( this, view );
 		}
 
 		public void setCharMessage( final ChatMessage chatMessage )
 		{
-			portrait.setImageResource( R.drawable.default_portrait );
-			nameText.setText( chatMessage.getUserId() );
+			if (StringUtils.isEmpty( chatMessage.getUser().getPortraitUrl()) ){
+				portrait.setImageResource( R.drawable.default_portrait );
+			}else{
+				Picasso.with( m_context ).load(chatMessage.getUser().getPortraitUrl()).into( portrait );
+			}
+
+			nameText.setText( chatMessage.getUser().getUserName() );
 			messageText.setText( chatMessage.getBody() );
 		}
 	}
@@ -143,31 +170,34 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 		@InjectView( R.id.text_description )
 		TextView lobbyDescriptionText;
 
-		private Context m_context;
-		private Lobby   m_lobby;
-
-		public HeaderViewHolder( final Context context, final View view, final Lobby lobby )
+		public HeaderViewHolder( final View view )
 		{
 			super( view );
-			m_context = context;
-			m_lobby = lobby;
 
 			ButterKnife.inject( this, view );
 
 			//name
-			lobbyNameText.setText( lobby.getOwner().getName() + "'s\n" + lobby.getName() );
+			lobbyNameText.setText( m_lobby.getOwner().getUserName() + "'s\n" + m_lobby.getName() );
 
 			//img
-			if ( StringUtils.isNotEmpty( lobby.getPictureUrl() ) )
+			if ( StringUtils.isNotEmpty( m_lobby.getPictureUrl() ) )
 			{
-				Picasso.with( context ).load( lobby.getPictureUrl() ).centerCrop().fit().into( gameImageView );
+				Picasso.with( m_context ).load( m_lobby.getPictureUrl() ).centerCrop().fit().into( gameImageView );
 			}
 
 			//type
-			lobbyTypeText.setText( String.format( "%s,%s", lobby.getPlayStyle(), lobby.getSkillLevel() ) );
+			lobbyTypeText.setText( String.format( "%s,%s", m_lobby.getPlayStyle(), m_lobby.getSkillLevel() ) );
 
 			//description
-			lobbyDescriptionText.setText( lobby.getDescription() );
+			lobbyDescriptionText.setText( m_lobby.getDescription() );
 		}
+	}
+
+	class ShareViewHolder extends RecyclerView.ViewHolder
+	{
+		public ShareViewHolder(
+			final View view
+		)
+		{super( view );}
 	}
 }

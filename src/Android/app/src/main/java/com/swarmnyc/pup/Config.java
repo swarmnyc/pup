@@ -21,24 +21,36 @@ public class Config {
     }
 
     public static Long getLong(String key) {
-        return data.getLong(key, 0);
+        return data.getLong( key, 0 );
+    }
+
+
+    public static boolean getBool( final String key )
+    {
+        return data.getBoolean( key, false );
     }
 
     public static void setString(String key, String value) {
         SharedPreferences.Editor editor = data.edit();
-        editor.putString(key, value);
+        editor.putString( key, value );
         editor.apply();
     }
 
     public static void setLong(String key, long value) {
         SharedPreferences.Editor editor = data.edit();
-        editor.putLong(key, value);
+        editor.putLong( key, value );
+        editor.apply();
+    }
+
+    public static void setBool(String key, boolean value) {
+        SharedPreferences.Editor editor = data.edit();
+        editor.putBoolean( key, value );
         editor.apply();
     }
 
     public static void remove(String key) {
         SharedPreferences.Editor editor = data.edit();
-        editor.remove(key);
+        editor.remove( key );
         editor.apply();
     }
 
@@ -55,4 +67,5 @@ public class Config {
 
         return getConfigString(id);
     }
+
 }

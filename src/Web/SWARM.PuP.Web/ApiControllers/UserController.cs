@@ -114,11 +114,7 @@ namespace SWARM.PuP.Web.ApiControllers
                 };
 
                 RequestContext.Principal = new ClaimsPrincipal(new PuPClaimsIdentity(user));
-                if (model.Portrait == null)
-                {
-                    user.PortraitUrl = "~/Content/User/default-portrait.png";
-                }
-                else
+                if (model.Portrait != null)
                 {
                     user.PortraitUrl = GetUserPortraitUrl(user);
 
@@ -139,7 +135,7 @@ namespace SWARM.PuP.Web.ApiControllers
         }
 
         [Authorize, HttpPost]
-        [Route("~/api/UpdatePortrait")]
+        [Route("UpdatePortrait")]
         public IHttpActionResult UpdatePortrait(FormData formData)
         {
             HttpFile file;
@@ -157,9 +153,9 @@ namespace SWARM.PuP.Web.ApiControllers
         }
 
         [Authorize]
-        public UserInfoViewModel Get()
+        public CurrentUserInfo Get()
         {
-            return new UserInfoViewModel(User.Identity.GetPuPUser());
+            return new CurrentUserInfo(User.Identity.GetPuPUser());
         }
 
         [Authorize, HttpPost, Route("UserTag")]
@@ -190,7 +186,7 @@ namespace SWARM.PuP.Web.ApiControllers
         private HttpResponseMessage GenerateUserRequestMessage(PuPUser user, string errorMessage)
         {
             var response = Request.CreateResponse(HttpStatusCode.OK);
-            var result = new RequestResult<UserRequestViewModel>();
+            var result = new RequestResult<CurrentUserToken>();
             if (user == null)
             {
                 result.Success = false;
@@ -200,7 +196,7 @@ namespace SWARM.PuP.Web.ApiControllers
             {
                 var at = new AccessToken(user.Id);
 
-                result.Data = new UserRequestViewModel(user)
+                result.Data = new CurrentUserToken(user)
                 {
                     AccessToken = DataProtector.Protect(System.Json.ToJson(at)),
                     ExpiresIn = (long)(at.ExpirationDateUtc - DateTime.UtcNow).TotalSeconds

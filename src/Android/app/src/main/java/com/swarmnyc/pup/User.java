@@ -3,15 +3,15 @@ package com.swarmnyc.pup;
 import com.google.gson.Gson;
 import com.quickblox.core.helper.StringUtils;
 import com.swarmnyc.pup.events.UserChangedEvent;
-import com.swarmnyc.pup.viewmodels.UserInfo;
+import com.swarmnyc.pup.models.CurrentUserInfo;
 
 public class User
 {
 	private static final String KEY_USER_EXPIRES = "UserExpires";
 	private static final String KEY_USER         = "User";
 
-	public static UserInfo current;
-	private static Gson gson = new Gson();
+	public static  CurrentUserInfo current = CurrentUserInfo.Null;
+	private static Gson            gson    = new Gson();
 
 	public static void init()
 	{
@@ -22,17 +22,17 @@ public class User
 
 			if ( !StringUtils.isEmpty( json ) )
 			{
-				current = gson.fromJson( json, UserInfo.class );
+				current = gson.fromJson( json, CurrentUserInfo.class );
 			}
 		}
 	}
 
-	public static void login( UserInfo userInfo )
+	public static void login( CurrentUserInfo userInfo )
 	{
 		login( userInfo, true );
 	}
 
-	public static void login( final UserInfo userInfo, final boolean goHome )
+	public static void login( final CurrentUserInfo userInfo, final boolean goHome )
 	{
 		User.current = userInfo;
 
@@ -44,7 +44,7 @@ public class User
 
 	public static void Logout()
 	{
-		User.current = null;
+		User.current = CurrentUserInfo.Null;
 
 		Config.remove( KEY_USER_EXPIRES );
 
@@ -53,6 +53,6 @@ public class User
 
 	public static boolean isLoggedIn()
 	{
-		return current != null;
+		return current != CurrentUserInfo.Null;
 	}
 }

@@ -24,8 +24,8 @@ namespace SWARM.PuP.Web.Services
             {
                 Id = owner.Id,
                 IsOwner = true,
-                PictureUrl = owner.PortraitUrl,
-                Name = owner.GetUserName(lobby.Platform)
+                PortraitUrl = owner.PortraitUrl,
+                UserName = owner.GetUserName(lobby.Platform)
             });
 
             _chatService.CreateRoomForLobby(owner, lobby);
@@ -83,8 +83,8 @@ namespace SWARM.PuP.Web.Services
             lobby.Users.Add(new LobbyUserInfo
             {
                 Id = user.Id,
-                PictureUrl = user.PortraitUrl,
-                Name = user.GetUserName(lobby.Platform)
+                PortraitUrl = user.PortraitUrl,
+                UserName = user.GetUserName(lobby.Platform)
             });
 
             _chatService.JoinRoom(lobby, new[] {user});

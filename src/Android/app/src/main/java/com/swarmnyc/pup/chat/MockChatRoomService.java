@@ -12,6 +12,7 @@ import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.core.request.QBRequestGetBuilder;
 import com.swarmnyc.pup.User;
+import com.swarmnyc.pup.models.LobbyUserInfo;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
@@ -26,7 +27,10 @@ public class MockChatRoomService extends ChatRoomService
 	public void SendMessage( String message )
 	{
 		List<ChatMessage> list = new ArrayList<>();
-		list.add( new ChatMessage( "0", message ) );
+		LobbyUserInfo user = new LobbyUserInfo();
+		user.setId( "0" );
+		user.setId( "Name" );
+		list.add( new ChatMessage( user, message ) );
 		listener.receive( list );
 	}
 
@@ -37,7 +41,10 @@ public class MockChatRoomService extends ChatRoomService
 
 		for ( int i = 0; i < 20; i++ )
 		{
-			list.add( new ChatMessage( "0", "Test " + i ) );
+			LobbyUserInfo user = new LobbyUserInfo();
+			user.setId( "0" );
+			user.setId( "Name" );
+			list.add( new ChatMessage( user, "Test " + i ) );
 		}
 
 		listener.receive( list );
