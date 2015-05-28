@@ -52,7 +52,7 @@
     <string name="text_register">Register for PUP</string>
 
     <string name="message_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
-    <string name="message_lobby_creating">Lobby Is Creating</string>
+    <string name="message_lobby_creating">Creating</string>
     <string name="message_error_title">Oops! There is something wrong</string>
 
     <string name="time_in_minutes">in %d minutes</string>
