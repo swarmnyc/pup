@@ -2,7 +2,6 @@ package com.swarmnyc.pup.components;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -41,33 +40,6 @@ public class Navigator
 		To( CreateLobbyFragment.class, null, true );
 	}
 
-	public static void ToLobbyList()
-	{
-		To( LobbyListFragment.class, null, true );
-	}
-
-	public static void ToLobby( final String id ,boolean pop)
-	{
-		Bundle bundle = new Bundle();
-		bundle.putString( LobbyFragment.LOBBY_ID, id );
-		if ( pop ){
-			popOnce();
-		}
-		To( LobbyFragment.class, bundle, true );
-	}
-
-	private static void popOnce()
-	{
-		FragmentManager fragmentManager = activity.getSupportFragmentManager();
-		fragmentManager.popBackStack();
-	}
-
-	private static<T> void pop(Class<T> name)
-	{
-		FragmentManager fragmentManager = activity.getSupportFragmentManager();
-		fragmentManager.popBackStack( name.getName(), 0 );
-	}
-
 	public static <T extends Fragment> void To(
 		Class<T> fragmentClass, Bundle bundle, boolean backable
 	)
@@ -102,6 +74,35 @@ public class Navigator
 		{
 			Log.e( "Navigator", "Error in To ([fragmentClass, bundle])", e );
 		}
+	}
+
+	public static void ToLobbyList()
+	{
+		To( LobbyListFragment.class, null, true );
+	}
+
+	public static void ToLobby( final String id, boolean pop )
+	{
+		Bundle bundle = new Bundle();
+		bundle.putString( LobbyFragment.LOBBY_ID, id );
+		if ( pop )
+		{
+			pop(CreateLobbyFragment.class);
+		}
+
+		To( LobbyFragment.class, bundle, true );
+	}
+
+	private static void popOnce()
+	{
+		FragmentManager fragmentManager = activity.getSupportFragmentManager();
+		fragmentManager.popBackStack();
+	}
+
+	private static <T> void pop( Class<T> name )
+	{
+		FragmentManager fragmentManager = activity.getSupportFragmentManager();
+		fragmentManager.popBackStack( name.getName(), 0 );
 	}
 
 

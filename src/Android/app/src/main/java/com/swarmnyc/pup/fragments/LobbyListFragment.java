@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -46,6 +46,24 @@ import java.util.List;
 
 public class LobbyListFragment extends Fragment
 {
+	@InjectView( R.id.txt_game_serach )
+	public AutoCompleteTextView m_gameSearch;
+	@InjectView( R.id.layout_sliding_panel )
+	public SlidingUpPanelLayout m_slidingPanel;
+	@InjectView( R.id.list_lobby )
+	public RecyclerView m_lobbyRecyclerView;
+	@InjectView( R.id.btn_create_lobby )
+	public ImageButton            m_createLobbyButton;
+	@InjectView( R.id.platform_select )
+	public GamePlatformSelectView m_gamePlatformSelectView;
+	@InjectView( R.id.layout_empty_results )
+	public ViewGroup              m_emptyResults;
+	@Inject
+	GameService gameService;
+	@Inject
+	LobbyService lobbyService;
+	float m_panelSize = 0.0f;
+	LayoutInflater inflater;
 	private MainActivity        activity;
 	private LobbyAdapter        m_lobbyAdapter;
 	private LinearLayoutManager mLayoutManager;
@@ -53,39 +71,14 @@ public class LobbyListFragment extends Fragment
 	private GameFilter  m_gameFilter  = new GameFilter();
 	private AutoCompleteForPicturedModelAdapter<Game> gameAdapter;
 
-	@Inject
-	       GameService          gameService;
-	@InjectView(R.id.txt_game_serach)
-	public AutoCompleteTextView m_gameSearch;
-	@InjectView(R.id.layout_sliding_panel)
-	public SlidingUpPanelLayout m_slidingPanel;
+	public LobbyListFragment()
+	{
+	}
 
-	@InjectView(R.id.list_lobby)
-	public RecyclerView m_lobbyRecyclerView;
-
-	@InjectView(R.id.btn_create_lobby)
-	public ImageButton            m_createLobbyButton;
-	@InjectView(R.id.platform_select)
-	public GamePlatformSelectView m_gamePlatformSelectView;
-	@InjectView(R.id.layout_empty_results)
-	public ViewGroup              m_emptyResults;
-
-
-	@OnClick(R.id.btn_create_lobby)
+	@OnClick( R.id.btn_create_lobby )
 	public void onCreateLobbyButtonClicked()
 	{
 		Navigator.ToCreateLobby();
-	}
-
-	@Inject
-	LobbyService lobbyService;
-
-	float m_panelSize = 0.0f;
-
-	LayoutInflater inflater;
-
-	public LobbyListFragment()
-	{
 	}
 
 	@Override
@@ -172,23 +165,26 @@ public class LobbyListFragment extends Fragment
 		m_gameSearch.addTextChangedListener(
 			new TextWatcher()
 			{
-				@Override public void beforeTextChanged(
+				@Override
+				public void beforeTextChanged(
 					final CharSequence s, final int start, final int count, final int after
 				)
 				{
 
 				}
 
-				@Override public void onTextChanged(
+				@Override
+				public void onTextChanged(
 					final CharSequence s, final int start, final int before, final int count
 				)
 				{
 
 				}
 
-				@Override public void afterTextChanged( final Editable s )
+				@Override
+				public void afterTextChanged( final Editable s )
 				{
-					if (s.length() == 0)
+					if ( s.length() == 0 )
 					{
 						m_lobbyFilter.setGame( null );
 						reloadData();
@@ -204,7 +200,8 @@ public class LobbyListFragment extends Fragment
 		m_slidingPanel.setPanelSlideListener(
 			new SlidingUpPanelLayout.PanelSlideListener()
 			{
-				@Override public void onPanelSlide( final View view, final float v )
+				@Override
+				public void onPanelSlide( final View view, final float v )
 				{
 					if ( m_panelSize == 0 && v > 0 )
 					{
@@ -222,25 +219,29 @@ public class LobbyListFragment extends Fragment
 					m_panelSize = v;
 				}
 
-				@Override public void onPanelCollapsed( final View view )
+				@Override
+				public void onPanelCollapsed( final View view )
 				{
 					// Hide Keyboard
 					hideKeyboard();
 				}
 
-				@Override public void onPanelExpanded( final View view )
+				@Override
+				public void onPanelExpanded( final View view )
 				{
 
 				}
 
 
-				@Override public void onPanelAnchored( final View view )
+				@Override
+				public void onPanelAnchored( final View view )
 				{
 
 
 				}
 
-				@Override public void onPanelHidden( final View view )
+				@Override
+				public void onPanelHidden( final View view )
 				{
 
 				}
@@ -261,9 +262,9 @@ public class LobbyListFragment extends Fragment
 		mLayoutManager = new LinearLayoutManager( getActivity() );
 		m_lobbyRecyclerView.setLayoutManager( mLayoutManager );
 
-		if (null != savedInstanceState)
+		if ( null != savedInstanceState )
 		{
-			m_lobbyFilter = Utility.fromJson(  savedInstanceState.getString( "filter" ), LobbyFilter.class);
+			m_lobbyFilter = Utility.fromJson( savedInstanceState.getString( "filter" ), LobbyFilter.class );
 			m_gamePlatformSelectView.setSelectedGamePlatforms( m_lobbyFilter.getPlatforms() );
 		}
 
@@ -271,14 +272,8 @@ public class LobbyListFragment extends Fragment
 		return view;
 	}
 
-	private void hideKeyboard()
-	{InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-		Context.INPUT_METHOD_SERVICE
-	);
-		imm.hideSoftInputFromWindow( m_gameSearch.getWindowToken(), 0 );
-	}
-
-	@Override public void onStart()
+	@Override
+	public void onStart()
 	{
 		reloadData();
 
@@ -293,74 +288,15 @@ public class LobbyListFragment extends Fragment
 		super.onSaveInstanceState( outState );
 	}
 
-	private void reloadData()
-	{
-		final ContentLoadingProgressBar progressDialog = new ContentLoadingProgressBar( getActivity() );
-		progressDialog.show();
-		if ( m_emptyResults.getVisibility() == View.VISIBLE ) // Hide empty results before loading
-		{
-			com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation( getActivity(), m_emptyResults );
-		}
-
-		lobbyService.getLobbies(
-			m_lobbyFilter, new ServiceCallback<List<Lobby>>()
-			{
-				@Override public void success( List<Lobby> lobbies )
-				{
-					m_lobbyAdapter.setLobbies( lobbies );
-					progressDialog.hide();
-					if ( lobbies.size() == 0 )
-					{
-						com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(
-							getActivity(), m_emptyResults
-						);
-					}
-				}
-			}
-		);
-
-		updateTitle();
-	}
-
-
-
-	private void updateTitle()
-	{
-		final String title = null == m_lobbyFilter.getGame() ?  "All Lobbies" : m_lobbyFilter.getGame().getName();
-		final ActionBar actionBar = ( (ActionBarActivity) getActivity() ).getSupportActionBar();
-		actionBar.setTitle( title );
-		actionBar.setSubtitle( null );
-
-		if (m_lobbyFilter.getPlatforms().size() > 0);
-		{
-			List<GamePlatform> platforms = new ArrayList<>( m_lobbyFilter.getPlatforms() );
-
-				StringBuilder stringBuilder = new StringBuilder(  );
-			for ( int i = 0; i < platforms.size(); i++ )
-			{
-				final GamePlatform platform = platforms.get( i );
-
-				if (i > 0)
-				{
-					stringBuilder.append( ", " );
-				}
-
-				stringBuilder.append( GamePlatformUtils.labelForPlatform( getActivity(), platform ) );
-
-			}
-			actionBar.setSubtitle( stringBuilder.toString() );
-		}
-
-	}
-
-
-	@Override public void onCreateOptionsMenu( final Menu menu, final MenuInflater inflater )
+	@Override
+	public void onCreateOptionsMenu( final Menu menu, final MenuInflater inflater )
 	{
 		inflater.inflate( R.menu.menu_all_lobbies, menu );
 		super.onCreateOptionsMenu( menu, inflater );
 	}
 
-	@Override public boolean onOptionsItemSelected( final MenuItem item )
+	@Override
+	public boolean onOptionsItemSelected( final MenuItem item )
 	{
 		final int itemId = item.getItemId();
 
@@ -383,14 +319,87 @@ public class LobbyListFragment extends Fragment
 		return super.onOptionsItemSelected( item );
 	}
 
+	private void reloadData()
+	{
+		final ContentLoadingProgressBar progressDialog = new ContentLoadingProgressBar( getActivity() );
+		progressDialog.show();
+		if ( m_emptyResults.getVisibility() == View.VISIBLE ) // Hide empty results before loading
+		{
+			com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation( getActivity(), m_emptyResults );
+		}
+
+		lobbyService.getLobbies(
+			m_lobbyFilter, new ServiceCallback<List<Lobby>>()
+			{
+				@Override
+				public void success( List<Lobby> lobbies )
+				{
+					m_lobbyAdapter.setLobbies( lobbies );
+					progressDialog.hide();
+					if ( lobbies.size() == 0 )
+					{
+						com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(
+							getActivity(), m_emptyResults
+						);
+					}
+				}
+			}
+		);
+
+		updateTitle();
+	}
+
+	private void hideKeyboard()
+	{
+		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+			Context.INPUT_METHOD_SERVICE
+		);
+		imm.hideSoftInputFromWindow( m_gameSearch.getWindowToken(), 0 );
+	}
+
+	private void updateTitle()
+	{
+		final String title = null == m_lobbyFilter.getGame() ? "All Lobbies" : m_lobbyFilter.getGame().getName();
+		final ActionBar actionBar = ( (AppCompatActivity) getActivity() ).getSupportActionBar();
+		actionBar.setTitle( title );
+		actionBar.setSubtitle( null );
+
+		if ( m_lobbyFilter.getPlatforms().size() > 0 )
+		{ ; }
+		{
+			List<GamePlatform> platforms = new ArrayList<>( m_lobbyFilter.getPlatforms() );
+
+			StringBuilder stringBuilder = new StringBuilder();
+			for ( int i = 0; i < platforms.size(); i++ )
+			{
+				final GamePlatform platform = platforms.get( i );
+
+				if ( i > 0 )
+				{
+					stringBuilder.append( ", " );
+				}
+
+				stringBuilder.append( GamePlatformUtils.labelForPlatform( getActivity(), platform ) );
+
+			}
+			actionBar.setSubtitle( stringBuilder.toString() );
+		}
+
+	}
+
 	private class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.ViewHolder>
 	{
-		private List<Lobby> m_lobbies = new ArrayList<>();
 		Context m_context;
+		private List<Lobby> m_lobbies = new ArrayList<>();
 
 		private LobbyAdapter( final Context context )
 		{
 			m_context = context;
+		}
+
+		public List<Lobby> getLobbies()
+		{
+			return m_lobbies;
 		}
 
 		public void setLobbies( final List<Lobby> lobbies )
@@ -399,9 +408,30 @@ public class LobbyListFragment extends Fragment
 			notifyDataSetChanged();
 		}
 
-		public List<Lobby> getLobbies()
+		@Override
+		public ViewHolder onCreateViewHolder(
+			final ViewGroup viewGroup, final int i
+		)
 		{
-			return m_lobbies;
+			return new ViewHolder( new LobbyListItemView( m_context ) );
+		}
+
+		@Override
+		public void onBindViewHolder( final ViewHolder viewHolder, final int i )
+		{
+			viewHolder.m_lobbyListItemView.setLobby( m_lobbies.get( i ) );
+		}
+
+		@Override
+		public long getItemId( final int position )
+		{
+			return position;
+		}
+
+		@Override
+		public int getItemCount()
+		{
+			return m_lobbies.size();
 		}
 
 		// Provide a reference to the views for each data item
@@ -419,35 +449,14 @@ public class LobbyListFragment extends Fragment
 				m_lobbyListItemView.setOnClickListener(
 					new View.OnClickListener()
 					{
-						@Override public void onClick( final View v )
+						@Override
+						public void onClick( final View v )
 						{
-							Navigator.ToLobby(lobbyListItemView.getLobby().getId(),false );
+							Navigator.ToLobby( lobbyListItemView.getLobby().getId(), false );
 						}
 					}
 				);
 			}
-		}
-
-		@Override public ViewHolder onCreateViewHolder(
-			final ViewGroup viewGroup, final int i
-		)
-		{
-			return new ViewHolder( new LobbyListItemView( m_context ) );
-		}
-
-		@Override public void onBindViewHolder( final ViewHolder viewHolder, final int i )
-		{
-			viewHolder.m_lobbyListItemView.setLobby( m_lobbies.get( i ) );
-		}
-
-		@Override public long getItemId( final int position )
-		{
-			return position;
-		}
-
-		@Override public int getItemCount()
-		{
-			return m_lobbies.size();
 		}
 
 

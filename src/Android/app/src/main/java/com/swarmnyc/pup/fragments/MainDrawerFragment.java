@@ -5,28 +5,28 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.squareup.otto.Subscribe;
+import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
-import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.uservoice.uservoicesdk.UserVoice;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class MainDrawerFragment extends Fragment
 {
@@ -62,7 +62,7 @@ public class MainDrawerFragment extends Fragment
 
 		Toolbar toolbar = (Toolbar) this.getActivity().findViewById( R.id.toolbar );
 
-		( (ActionBarActivity) this.getActivity() ).setSupportActionBar( toolbar );
+		( (AppCompatActivity) this.getActivity() ).setSupportActionBar( toolbar );
 
 		if ( android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP )
 		{
@@ -100,33 +100,7 @@ public class MainDrawerFragment extends Fragment
 
 		drawerMenuContainer.getLayoutParams().width = (int) ( Consts.windowWidth * 0.90 );
 
-		initializeDrawer(true);
-	}
-
-	private void initializeDrawer(boolean change)
-	{
-		List<String> list = new ArrayList<>();
-		// TODO:Move to resource, or better implement
-		// TODO:Back button support;
-		if ( User.isLoggedIn() )
-		{
-			list.add( "My Chats" );
-		}
-
-		list.add( "Find a Game" );
-		list.add( "Feedback" );
-		list.add( "Settings" );
-
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-			this.getActivity(), R.layout.item_drawer_menu, R.id.text_name, list
-		);
-		drawerListView.setAdapter( adapter );
-
-		if ( change ){
-			int position = User.isLoggedIn()? 1: 0;
-			selectItem( position );
-			drawerListView.setItemChecked( position, true );
-		}
+		initializeDrawer( true );
 	}
 
 	public void selectItem( int position )
@@ -179,10 +153,31 @@ public class MainDrawerFragment extends Fragment
 		drawerLayout.closeDrawers();
 	}
 
-	@Subscribe
-	public void postUserChanged( UserChangedEvent event )
+	private void initializeDrawer( boolean change )
 	{
-		initializeDrawer(event.isGoHome());
+		List<String> list = new ArrayList<>();
+		// TODO:Move to resource, or better implement
+		// TODO:Back button support;
+		if ( User.isLoggedIn() )
+		{
+			list.add( "My Chats" );
+		}
+
+		list.add( "Find a Game" );
+		list.add( "Feedback" );
+		list.add( "Settings" );
+
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+			this.getActivity(), R.layout.item_drawer_menu, R.id.text_name, list
+		);
+		drawerListView.setAdapter( adapter );
+
+		if ( change )
+		{
+			int position = User.isLoggedIn() ? 1 : 0;
+			selectItem( position );
+			drawerListView.setItemChecked( position, true );
+		}
 	}
 
 	@Override
@@ -190,6 +185,12 @@ public class MainDrawerFragment extends Fragment
 	{
 		super.onDestroy();
 		EventBus.getBus().unregister( this );
+	}
+
+	@Subscribe
+	public void postUserChanged( UserChangedEvent event )
+	{
+		initializeDrawer( event.isGoHome() );
 	}
 
 }
