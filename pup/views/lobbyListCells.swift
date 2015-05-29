@@ -1,162 +1,10 @@
 //
-//  lobbyList.swift
-//  pup
-//
-//  Created by Alex Hartwell on 5/18/15.
-//  Copyright (c) 2015 SWARM NYC. All rights reserved.
+// Created by Alex Hartwell on 5/29/15.
+// Copyright (c) 2015 SWARM NYC. All rights reserved.
 //
 
 import Foundation
 import UIKit
-
-class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-   
-    var findAGame: UIViewController!
-    
-    var table:UITableView!
-
-    var filter: filterView!
-
-    var updateTimer: NSTimer = NSTimer();
-    lazy var listOfGames: lobbyList = lobbyList(parentView: self);
-
-
-    required init(coder aDecoder: NSCoder)
-    {
-        super.init(coder: aDecoder)
-    }
-
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        // Here you can init your properties
-
-    }
-
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-
-        self.view.backgroundColor=UIColor.whiteColor()
-        self.view.clipsToBounds = true;
-        setUpTableStyle();
-        setUpTableConstraints();
-
-        filter = filterView(parentview: self.view);
-
-
-
-
-
-    }
-
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
-
-    func setUpTableStyle() {
-        table = UITableView();
-        table.separatorInset = UIEdgeInsetsZero
-        self.title = "All Games";
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(rgba: colors.tealMain)]
-        self.navigationController?.navigationBar.tintColor = UIColor(rgba: colors.tealMain)
-        let image = UIImage(named: "filter")
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action: "openFilter")
-
-
-
-
-        table.delegate = self;
-        table.dataSource = self;
-
-        self.view.addSubview(table);
-
-
-    }
-
-
-
-
-
-    func setUpTableConstraints() {
-        table.snp_makeConstraints { (make) -> Void in
-            make.right.equalTo(self.view).offset(0)
-            make.left.equalTo(self.view).offset(0)
-            make.top.equalTo(self.view).offset(0)
-            make.bottom.equalTo(self.view).offset(0)
-        }
-    }
-
-
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        println("count \(self.listOfGames.games.count)")
-        return self.listOfGames.games.count;
-    }
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        //var cell:UITableViewCell = self.tableV.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
-        //cell.textLabel.text = self.items[indexPath.row]
-        if !self.listOfGames.games[indexPath.row].isBreakdown {
-            let cell: gameCell = gameCell();
-            cell.setCell(self.listOfGames.games[indexPath.row])
-            return cell
-        } else {
-            let cell: headerCell = headerCell();
-            cell.setCell(self.listOfGames.games[indexPath.row])
-            return cell
-
-        }
-
-
-    }
-    
-    func tableView(tlableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if !self.listOfGames.games[indexPath.row].isBreakdown {
-            return 119.0;
-        } else {
-            return 26.0;
-        }
-
-
-    }
-
-
-   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        println("You selected cell #\(indexPath.row)!")
-       var selectedCell = tableView.cellForRowAtIndexPath(indexPath) as? gameCell;
-
-
-       println(selectedCell?.data)
-       if (selectedCell?.data.isBreakdown == false) {
-           let lobbyView = SingleLobbyController(info: selectedCell!.data)
-           self.navigationController?.pushViewController(lobbyView, animated: true)
-       }
-    }
-
-//    func tableView(tableView: UITableView, didUnhighlightRowAtIndexPath indexPath: NSIndexPath) {
-//        var cell:gameCell = tableView.cellForRowAtIndexPath(indexPath) as! gameCell;
-//        cell.highlightCell()
-//
-//    }
-    
-    
-    func openFilter() {
-        println("opening it")
-        filter.toggleState()
-
-
-
-    }
-    
-    
-}
-
-
-
-
 
 class gameCell: UITableViewCell {
 
@@ -176,17 +24,16 @@ class gameCell: UITableViewCell {
     var platform: UILabel = UILabel()
     var divider = UIView()
 
-    var data = lobbyData()
-    
+
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String!) {
-       // println(style);
+        // println(style);
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -195,9 +42,8 @@ class gameCell: UITableViewCell {
 
 
     func setCell(item: lobbyData) {
-        data = item;
 
-        setUpViews()
+        setUpViews(item)
 
         imageAndPlatform.addSubview(imgView)
         imageAndPlatform.addSubview(platform)
@@ -217,8 +63,8 @@ class gameCell: UITableViewCell {
 
         setUpConstraints();
 
-        
-    
+
+
     }
 
 
@@ -234,43 +80,43 @@ class gameCell: UITableViewCell {
         viewsDict["imgView"] = imgView
         viewsDict["platform"] = platform
         imageAndPlatform.snp_remakeConstraints { (make) -> Void in
-                make.width.equalTo(topSectionHeight)
-                make.top.equalTo(self.contentView).offset(0)
-                make.left.equalTo(self.contentView).offset(0)
-                make.bottom.equalTo(self.contentView).offset(0)
+            make.width.equalTo(topSectionHeight)
+            make.top.equalTo(self.contentView).offset(0)
+            make.left.equalTo(self.contentView).offset(0)
+            make.bottom.equalTo(self.contentView).offset(0)
 
 
         }
 
 
         textRightTop.snp_remakeConstraints { (make) -> Void in
-                make.left.equalTo(imageAndPlatform.snp_right).offset(0);
-                make.right.equalTo(self.contentView).offset(0)
-                make.top.equalTo(self.contentView).offset(0)
-                make.bottom.equalTo(self.contentView).offset(26)
+            make.left.equalTo(imageAndPlatform.snp_right).offset(0);
+            make.right.equalTo(self.contentView).offset(0)
+            make.top.equalTo(self.contentView).offset(0)
+            make.bottom.equalTo(self.contentView).offset(26)
         }
         textRightBottom.snp_remakeConstraints { (make) -> Void in
-                make.left.equalTo(imageAndPlatform.snp_right).offset(0);
-                make.right.equalTo(self.contentView).offset(0)
-                make.height.equalTo(bottomSectionHeight)
-                make.bottom.equalTo(self.contentView).offset(0)
+            make.left.equalTo(imageAndPlatform.snp_right).offset(0);
+            make.right.equalTo(self.contentView).offset(0)
+            make.height.equalTo(bottomSectionHeight)
+            make.bottom.equalTo(self.contentView).offset(0)
         }
 
         imgView.snp_remakeConstraints { (make) -> Void in
-                make.right.equalTo(imageAndPlatform).offset(0)
-                make.top.equalTo(imageAndPlatform).offset(0)
-                make.left.equalTo(imageAndPlatform).offset(0)
-                make.height.equalTo(topSectionHeight)
+            make.right.equalTo(imageAndPlatform).offset(0)
+            make.top.equalTo(imageAndPlatform).offset(0)
+            make.left.equalTo(imageAndPlatform).offset(0)
+            make.height.equalTo(topSectionHeight)
 
 
         }
 
         platform.snp_remakeConstraints { (make) -> Void in
-                make.top.equalTo(imgView.snp_bottom).offset(0)
-                make.right.equalTo(imageAndPlatform).offset(0)
-                make.left.equalTo(imageAndPlatform).offset(0)
-                make.height.equalTo(bottomSectionHeight)
-                //make.bottom.equalTo(imageAndPlatform).offset(0)
+            make.top.equalTo(imgView.snp_bottom).offset(0)
+            make.right.equalTo(imageAndPlatform).offset(0)
+            make.left.equalTo(imageAndPlatform).offset(0)
+            make.height.equalTo(bottomSectionHeight)
+            //make.bottom.equalTo(imageAndPlatform).offset(0)
         }
 
         title.snp_remakeConstraints { (make) -> Void in
@@ -316,16 +162,16 @@ class gameCell: UITableViewCell {
 
 
     override func setHighlighted(highlighted: Bool, animated: Bool) {
-      if (!highlighted) {
-          self.contentView.backgroundColor = UIColor.whiteColor()
-      } else {
-          self.contentView.backgroundColor = UIColor(white: 0.0, alpha: 0.5)
-      }
+        if (!highlighted) {
+            self.contentView.backgroundColor = UIColor.whiteColor()
+        } else {
+            self.contentView.backgroundColor = UIColor(white: 0.0, alpha: 0.5)
+        }
 
 
     }
 
-    func setUpViews() {
+    func setUpViews(data: lobbyData) {
 
         selectionStyle = UITableViewCellSelectionStyle.None
 
@@ -380,13 +226,13 @@ class gameCell: UITableViewCell {
         get { return UIEdgeInsetsZero }
         set(newVal) {}
     }
-    
+
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
+
         // Configure the view for the selected state
     }
-    
+
 }
 
 
@@ -414,10 +260,10 @@ class headerCell: UITableViewCell {
 
 
     func setCell(item: lobbyData) {
-        data = item;
-        self.selectionStyle = UITableViewCellSelectionStyle.None
-        setUpViews()
 
+
+        self.selectionStyle = UITableViewCellSelectionStyle.None
+        setUpViews(item)
 
 
         self.contentView.addSubview(title)
@@ -451,8 +297,8 @@ class headerCell: UITableViewCell {
 
 
 
-    func setUpViews() {
-       title.text = data.breakdownTitle
+    func setUpViews(data: lobbyData) {
+        title.text = data.breakdownTitle
         title.font = title.font.fontWithSize(10)
 
     }
@@ -470,14 +316,5 @@ class headerCell: UITableViewCell {
     }
 
 }
-
-
-
-
-
-
-
-
-
 
 

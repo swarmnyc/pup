@@ -163,7 +163,7 @@ class lobbyList {  //collection of all the current games
         updated = true;
 
         dispatch_async(dispatch_get_main_queue(),{
-            self.parent.table.reloadData()
+            self.parent.updateData()
 
         })
 
