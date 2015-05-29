@@ -50,17 +50,16 @@
     <string name="text_ok">Ok</string>
     <string name="text_cancel">Cancel</string>
     <string name="text_register">Register for PUP</string>
+    <string name="text_register_and_join"><![CDATA[Register & Join]]></string>
+    <string name="text_members">Members</string>
 
     <string name="message_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
     <string name="message_lobby_creating">Creating</string>
     <string name="message_error_title">Oops! There is something wrong</string>
+    <string name="message_loading">Loading</string>
+    <string name="message_processing">Processing</string>
 
     <string name="time_in_minutes">in %d minutes</string>
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
-    <string name="text_register_and_join"><![CDATA[Register & Join]]></string>
-    <string name="text_processing">Processing</string>
-    <string name="text_loding">Loding</string>
-
-
 </resources>

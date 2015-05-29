@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.*;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.EditText;
 import android.widget.TextView;
 import butterknife.ButterKnife;
@@ -59,9 +57,10 @@ public class LobbyFragment extends Fragment
 	@InjectView( R.id.list_chat )
 	RecyclerView chatList;
 
-	private Lobby  m_lobby;
-	private String m_source;
-	private String m_lobbyName;
+	private Lobby          m_lobby;
+	private String         m_source;
+	private String         m_lobbyName;
+	private MemberFragment m_memberFragment;
 
 	@Override
 	public View onCreateView(
@@ -79,6 +78,7 @@ public class LobbyFragment extends Fragment
 		m_source = this.getArguments().getString( Consts.KEY_LOBBY_SOURCE );
 	}
 
+
 	@Override
 	public void onViewCreated(
 		final View view,
@@ -91,7 +91,8 @@ public class LobbyFragment extends Fragment
 		ButterKnife.inject( this, view );
 		EventBus.getBus().register( this );
 
-		DialogHelper.showProgressDialog( R.string.text_loding );
+		setHasOptionsMenu( true );
+		DialogHelper.showProgressDialog( R.string.message_loading );
 		lobbyService.getLobby(
 			this.getArguments().getString( Consts.KEY_LOBBY_ID ), new ServiceCallback<Lobby>()
 			{
@@ -99,6 +100,9 @@ public class LobbyFragment extends Fragment
 				public void success( final Lobby value )
 				{
 					m_lobby = value;
+					m_memberFragment = new MemberFragment();
+					m_memberFragment.setArguments( getArguments() );
+					MainDrawerFragment.getInstance().setRightDrawer( m_memberFragment );
 					initialize();
 					DialogHelper.hide();
 				}
@@ -192,7 +196,7 @@ public class LobbyFragment extends Fragment
 	{
 		if ( User.isLoggedIn() )
 		{
-			DialogHelper.showProgressDialog( R.string.text_processing );
+			DialogHelper.showProgressDialog( R.string.message_processing );
 			lobbyService.join(
 				m_lobby.getId(), new ServiceCallback()
 				{
@@ -219,6 +223,23 @@ public class LobbyFragment extends Fragment
 		}
 	}
 
+	@Override
+	public void onCreateOptionsMenu( final Menu menu, final MenuInflater inflater )
+	{
+		inflater.inflate( R.menu.menu_lobby, menu );
+	}
+
+	@Override
+	public boolean onOptionsItemSelected( final MenuItem item )
+	{
+		if ( item.getItemId()== R.id.menu_members ){
+			MainDrawerFragment.getInstance().showRightDrawer();
+			return true;
+		}else {
+			return super.onOptionsItemSelected( item );
+		}
+	}
+
 	@Subscribe
 	public void postUserChanged( UserChangedEvent event )
 	{
@@ -236,10 +257,11 @@ public class LobbyFragment extends Fragment
 	}
 
 	@Override
-	public void onDestroy()
+	public void onStop()
 	{
-		super.onDestroy();
+		super.onStop();
 		EventBus.getBus().unregister( this );
+		MainDrawerFragment.getInstance().removeRightDrawer(m_memberFragment);
 	}
 
 	@Override

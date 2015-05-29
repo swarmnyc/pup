@@ -24,7 +24,6 @@
         <FrameLayout
                 android:id="@+id/fragment_container"
                 android:layout_width="match_parent"
-
                 android:layout_height="match_parent"/>
     </LinearLayout>
 
@@ -32,7 +31,13 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:id="@+id/main_drawer_fragment"
+            android:id="@+id/main_drawer_left"
             android:name="com.swarmnyc.pup.fragments.MainDrawerFragment"
             tools:layout="@layout/fragment_drawer_main"/>
+
+        <FrameLayout
+                android:id="@+id/main_drawer_right"
+                android:layout_gravity="end"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"/>
 </android.support.v4.widget.DrawerLayout>

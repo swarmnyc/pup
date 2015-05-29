@@ -24,7 +24,7 @@ public class DialogHelper
 	{
 		if ( dialog != null )
 		{
-			dialog.hide();
+			dialog.dismiss();
 			dialog = null;
 		}
 	}

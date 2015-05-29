@@ -82,6 +82,7 @@ public class MainDrawerFragment extends Fragment
 
 		m_drawerLayout = (DrawerLayout) this.getActivity().findViewById( R.id.drawer_layout );
 		m_drawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
+		m_drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END );
 
 		Toolbar toolbar = (Toolbar) this.getActivity().findViewById( R.id.toolbar );
 
@@ -103,7 +104,7 @@ public class MainDrawerFragment extends Fragment
 			@Override
 			public void onDrawerSlide( final View drawerView, final float slideOffset )
 			{
-				int way = drawerView.getId() == R.id.main_drawer_fragment ? 0 : 1;
+				int way = drawerView.getId() == R.id.main_drawer_left ? 0 : 1;
 				if ( way != m_slideWay )
 				{
 					m_slideWay = way;
@@ -261,5 +262,30 @@ public class MainDrawerFragment extends Fragment
 	public boolean isDrawOpens()
 	{
 		return m_drawerLayout.isDrawerOpen( GravityCompat.START ) || m_drawerLayout.isDrawerOpen( GravityCompat.END );
+	}
+
+	public void setRightDrawer( final Fragment fragment )
+	{
+		getActivity().getSupportFragmentManager()
+		             .beginTransaction()
+		             .replace( R.id.main_drawer_right, fragment )
+		             .commit();
+
+		m_drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END );
+	}
+
+	public void removeRightDrawer( final Fragment fragment )
+	{
+		if ( fragment != null )
+		{
+			getActivity().getSupportFragmentManager().beginTransaction().remove( fragment ).commit();
+		}
+
+		m_drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END );
+	}
+
+	public void showRightDrawer()
+	{
+		m_drawerLayout.openDrawer( GravityCompat.END );
 	}
 }
