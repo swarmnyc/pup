@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.Filter.GameFilter;
@@ -278,6 +279,7 @@ public class LobbyListFragment extends Fragment
 		reloadData();
 
 		super.onStart();
+		MainDrawerFragment.getInstance().highLight( Consts.KEY_LOBBIES );
 	}
 
 	@Override
@@ -452,7 +454,7 @@ public class LobbyListFragment extends Fragment
 						@Override
 						public void onClick( final View v )
 						{
-							Navigator.ToLobby( lobbyListItemView.getLobby().getId(), false );
+							Navigator.ToLobby( lobbyListItemView.getLobby().getId(), Consts.KEY_LOBBIES, false );
 						}
 					}
 				);

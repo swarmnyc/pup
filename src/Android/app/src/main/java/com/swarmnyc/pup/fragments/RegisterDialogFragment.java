@@ -28,7 +28,7 @@ import com.swarmnyc.pup.models.CurrentUserInfo;
 import javax.inject.Inject;
 import java.io.File;
 
-public class RegisterFragment extends DialogFragment
+public class RegisterDialogFragment extends DialogFragment
 {
 	private boolean goHome = true;
 

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.activities.MainActivity;
 
@@ -18,7 +19,7 @@ public class MyChatsFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate( savedInstanceState );
     }
 
     @Override
@@ -28,15 +29,10 @@ public class MyChatsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_my_chats, container, false);
     }
 
-
-
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onStart()
+    {
+        super.onStart();
+        MainDrawerFragment.getInstance().highLight( Consts.KEY_MY_LOBBIES );
     }
 }

@@ -7,10 +7,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.fragments.CreateLobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
+import com.swarmnyc.pup.fragments.MainDrawerFragment;
 
 public class Navigator
 {
@@ -81,10 +83,11 @@ public class Navigator
 		To( LobbyListFragment.class, null, true );
 	}
 
-	public static void ToLobby( final String id, boolean pop )
+	public static void ToLobby( final String id,final String from, boolean pop )
 	{
 		Bundle bundle = new Bundle();
-		bundle.putString( LobbyFragment.LOBBY_ID, id );
+		bundle.putString( Consts.KEY_LOBBY_ID, id );
+		bundle.putString( Consts.KEY_LOBBY_SOURCE, from );
 		if ( pop )
 		{
 			pop(CreateLobbyFragment.class);

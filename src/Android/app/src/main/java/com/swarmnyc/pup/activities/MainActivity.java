@@ -15,6 +15,7 @@ import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.Navigator;
+import com.swarmnyc.pup.fragments.MainDrawerFragment;
 import com.uservoice.uservoicesdk.UserVoice;
 
 public class MainActivity extends AppCompatActivity
@@ -109,5 +110,18 @@ public class MainActivity extends AppCompatActivity
 		if ( getCurrentFocus().getWindowToken() == null )
 		{ return; }
 		imm.hideSoftInputFromWindow( getCurrentFocus().getWindowToken(), 0 );
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+		if ( MainDrawerFragment.getInstance().isDrawOpens() )
+		{
+			MainDrawerFragment.getInstance().closeDrawers();
+		}
+		else
+		{
+			super.onBackPressed();
+		}
 	}
 }

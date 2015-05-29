@@ -6,7 +6,7 @@ import com.swarmnyc.pup.adapters.ChatAdapter;
 import com.swarmnyc.pup.fragments.CreateLobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
-import com.swarmnyc.pup.fragments.RegisterFragment;
+import com.swarmnyc.pup.fragments.RegisterDialogFragment;
 import dagger.Component;
 
 import javax.inject.Singleton;
@@ -24,7 +24,7 @@ public interface PuPComponent {
 
 	void inject( LobbyFragment lobbyFragment );
 
-	void inject( RegisterFragment registerFragment );
+	void inject( RegisterDialogFragment registerDialogFragment );
 
     void inject( ChatAdapter chatAdapter );
 }

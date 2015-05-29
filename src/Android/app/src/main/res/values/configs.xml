@@ -6,4 +6,7 @@
     <string name="QB_APP_SECRET">YGabpebTkW2Q9r6</string>
     <string name="QB_APP_DEFAULT_USER">553be08dcbf5a81a70567b13</string>
     <string name="QB_APP_PW">swarmnyc</string>
+
+    <integer name="menu_item_default">0</integer>
+    <integer name="menu_item_default_for_user">1</integer>
 </resources>

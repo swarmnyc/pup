@@ -1,5 +1,6 @@
 package com.swarmnyc.pup.fragments;
 
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,21 +26,35 @@ import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.uservoice.uservoicesdk.UserVoice;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainDrawerFragment extends Fragment
 {
-	int currentSelection = -1;
-
+	private static MainDrawerFragment m_instance;
 	@InjectView( R.id.drawer_container )
-	View drawerMenuContainer;
+	View m_drawerMenuContainer;
 
 	@InjectView( R.id.drawer_list )
-	ListView drawerListView;
+	ListView m_drawerListView;
 
-	private ActionBarDrawerToggle mDrawerToggle;
-	private DrawerLayout          drawerLayout;
+	private int m_currentSelection = -1;
+	private int m_slideWay         = 0;
+	private ActionBarDrawerToggle m_drawerToggle;
+	private DrawerLayout          m_drawerLayout;
+	private String[]              m_items;
+	private String[]              m_itemCodes;
+	private String[]              m_itemsForUser;
+	private String[]              m_itemCodesForUser;
+	private int                   m_defaultItem;
+	private int                   m_defaultItemForUser;
+
+	public MainDrawerFragment()
+	{
+		m_instance = this;
+	}
+
+	public static MainDrawerFragment getInstance()
+	{
+		return m_instance;
+	}
 
 	@Override
 	public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
@@ -49,6 +64,14 @@ public class MainDrawerFragment extends Fragment
 
 		EventBus.getBus().register( this );
 
+		Resources r = getResources();
+		m_items = r.getStringArray( R.array.menu_items );
+		m_itemCodes = r.getStringArray( R.array.menu_item_code );
+		m_itemsForUser = r.getStringArray( R.array.menu_items_for_user );
+		m_itemCodesForUser = r.getStringArray( R.array.menu_item_code_for_user );
+		m_defaultItem = r.getInteger( R.integer.menu_item_default );
+		m_defaultItemForUser = r.getInteger( R.integer.menu_item_default_for_user );
+
 		return view;
 	}
 
@@ -57,8 +80,8 @@ public class MainDrawerFragment extends Fragment
 	{
 		super.onActivityCreated( savedInstanceState );
 
-		drawerLayout = (DrawerLayout) this.getActivity().findViewById( R.id.drawer_layout );
-		drawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
+		m_drawerLayout = (DrawerLayout) this.getActivity().findViewById( R.id.drawer_layout );
+		m_drawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
 
 		Toolbar toolbar = (Toolbar) this.getActivity().findViewById( R.id.toolbar );
 
@@ -69,25 +92,48 @@ public class MainDrawerFragment extends Fragment
 			toolbar.setElevation( 2 );
 		}
 
-		mDrawerToggle = new ActionBarDrawerToggle(
-			this.getActivity(), drawerLayout, toolbar, R.string.navigation_drawer_open, R.string
-			.navigation_drawer_close
-		);
+		m_drawerToggle = new ActionBarDrawerToggle(
+			this.getActivity(),
+			m_drawerLayout,
+			toolbar,
+			R.string.navigation_drawer_open,
+			R.string.navigation_drawer_close
+		)
+		{
+			@Override
+			public void onDrawerSlide( final View drawerView, final float slideOffset )
+			{
+				int way = drawerView.getId() == R.id.main_drawer_fragment ? 0 : 1;
+				if ( way != m_slideWay )
+				{
+					m_slideWay = way;
+					if ( m_slideWay == 0 )
+					{
+						m_drawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
+					}
+					else
+					{
+						m_drawerLayout.setDrawerShadow( R.drawable.drawer_shadow_right, GravityCompat.END );
+					}
+				}
+				super.onDrawerSlide( drawerView, slideOffset );
+			}
+		};
 
-		drawerLayout.post(
+		m_drawerLayout.post(
 			new Runnable()
 			{
 				@Override
 				public void run()
 				{
-					mDrawerToggle.syncState();
+					m_drawerToggle.syncState();
 				}
 			}
 		);
 
-		drawerLayout.setDrawerListener( mDrawerToggle );
+		m_drawerLayout.setDrawerListener( m_drawerToggle );
 
-		drawerListView.setOnItemClickListener(
+		m_drawerListView.setOnItemClickListener(
 			new AdapterView.OnItemClickListener()
 			{
 				@Override
@@ -98,50 +144,42 @@ public class MainDrawerFragment extends Fragment
 			}
 		);
 
-		drawerMenuContainer.getLayoutParams().width = (int) ( Consts.windowWidth * 0.90 );
+		m_drawerMenuContainer.getLayoutParams().width = (int) ( Consts.windowWidth * 0.90 );
 
 		initializeDrawer( true );
 	}
 
 	public void selectItem( int position )
 	{
-		if ( position != currentSelection )
+		if ( position != m_currentSelection )
 		{
-			currentSelection = position;
+			m_currentSelection = position;
 			Class fragment = null;
+			String code;
 
 			if ( User.isLoggedIn() )
 			{
-				switch ( position )
-				{
-					case 0:
-						fragment = MyChatsFragment.class;
-						break;
-					case 1:
-						fragment = LobbyListFragment.class;
-						break;
-					case 2:
-						UserVoice.launchUserVoice( this.getActivity() );
-						break;
-					case 3:
-						fragment = SettingsFragment.class;
-						break;
-				}
+				code = m_itemCodesForUser[position];
 			}
 			else
 			{
-				switch ( position )
-				{
-					case 0:
-						fragment = LobbyListFragment.class;
-						break;
-					case 1:
-						UserVoice.launchUserVoice( this.getActivity() );
-						break;
-					case 2:
-						fragment = SettingsFragment.class;
-						break;
-				}
+				code = m_itemCodes[position];
+			}
+
+			switch ( code )
+			{
+				case Consts.KEY_MY_LOBBIES:
+					fragment = MyChatsFragment.class;
+					break;
+				case Consts.KEY_LOBBIES:
+					fragment = LobbyListFragment.class;
+					break;
+				case Consts.KEY_FEEDBACK:
+					UserVoice.launchUserVoice( this.getActivity() );
+					break;
+				case Consts.KEY_SETTINGS:
+					fragment = SettingsFragment.class;
+					break;
 			}
 
 			if ( fragment != null )
@@ -150,41 +188,63 @@ public class MainDrawerFragment extends Fragment
 			}
 		}
 
-		drawerLayout.closeDrawers();
+		m_drawerLayout.closeDrawers();
 	}
 
 	private void initializeDrawer( boolean change )
 	{
-		List<String> list = new ArrayList<>();
-		// TODO:Move to resource, or better implement
-		// TODO:Back button support;
+		String[] items;
 		if ( User.isLoggedIn() )
 		{
-			list.add( "My Chats" );
+			items = m_itemsForUser;
+		}
+		else
+		{
+			items = m_items;
 		}
 
-		list.add( "Find a Game" );
-		list.add( "Feedback" );
-		list.add( "Settings" );
-
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-			this.getActivity(), R.layout.item_drawer_menu, R.id.text_name, list
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(
+			this.getActivity(), R.layout.item_drawer_menu, R.id.text_name, items
 		);
-		drawerListView.setAdapter( adapter );
+		m_drawerListView.setAdapter( adapter );
 
 		if ( change )
 		{
-			int position = User.isLoggedIn() ? 1 : 0;
+			int position = User.isLoggedIn() ? m_defaultItemForUser : m_defaultItem;
 			selectItem( position );
-			drawerListView.setItemChecked( position, true );
+			m_drawerListView.setItemChecked( position, true );
 		}
 	}
 
 	@Override
 	public void onDestroy()
 	{
-		super.onDestroy();
 		EventBus.getBus().unregister( this );
+		super.onDestroy();
+	}
+
+	public void highLight( String code )
+	{
+		int position = -1;
+		if ( User.isLoggedIn() )
+		{
+			for ( int i = 0; i < m_itemCodesForUser.length; i++ )
+			{
+				if ( m_itemCodesForUser[i].equals( code ) )
+				{ position = i; }
+			}
+		}
+		else
+		{
+			for ( int i = 0; i < m_itemCodes.length; i++ )
+			{
+				if ( m_itemCodes[i].equals( code ) )
+				{ position = i; }
+			}
+		}
+
+		if ( position > -1 )
+		{ m_drawerListView.setItemChecked( position, true ); }
 	}
 
 	@Subscribe
@@ -193,4 +253,13 @@ public class MainDrawerFragment extends Fragment
 		initializeDrawer( event.isGoHome() );
 	}
 
+	public void closeDrawers()
+	{
+		m_drawerLayout.closeDrawers();
+	}
+
+	public boolean isDrawOpens()
+	{
+		return m_drawerLayout.isDrawerOpen( GravityCompat.START ) || m_drawerLayout.isDrawerOpen( GravityCompat.END );
+	}
 }

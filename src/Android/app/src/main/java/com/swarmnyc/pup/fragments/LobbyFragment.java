@@ -33,8 +33,6 @@ import java.util.Locale;
 
 public class LobbyFragment extends Fragment
 {
-	public static String LOBBY_ID = "LobbyId";
-
 	@Inject
 	LobbyService lobbyService;
 
@@ -63,6 +61,8 @@ public class LobbyFragment extends Fragment
 
 	Lobby lobby;
 
+	String m_source;
+
 	@Override
 	public View onCreateView(
 		final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState
@@ -89,9 +89,10 @@ public class LobbyFragment extends Fragment
 		ButterKnife.inject( this, view );
 		EventBus.getBus().register( this );
 
+		m_source = this.getArguments().getString( Consts.KEY_LOBBY_SOURCE );
 		DialogHelper.showProgressDialog( R.string.text_loding );
 		lobbyService.getLobby(
-			this.getArguments().getString( LOBBY_ID ), new ServiceCallback<Lobby>()
+			this.getArguments().getString( Consts.KEY_LOBBY_ID ), new ServiceCallback<Lobby>()
 			{
 				@Override
 				public void success( final Lobby value )
@@ -211,9 +212,9 @@ public class LobbyFragment extends Fragment
 		}
 		else
 		{
-			RegisterFragment registerFragment = new RegisterFragment();
-			registerFragment.setGoHomeAfterLogin( false );
-			registerFragment.show( this.getFragmentManager(), null );
+			RegisterDialogFragment registerDialogFragment = new RegisterDialogFragment();
+			registerDialogFragment.setGoHomeAfterLogin( false );
+			registerDialogFragment.show( this.getFragmentManager(), null );
 		}
 	}
 
@@ -224,6 +225,13 @@ public class LobbyFragment extends Fragment
 		{
 			joinLobby();
 		}
+	}
+
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		MainDrawerFragment.getInstance().highLight( m_source );
 	}
 
 	@Override
