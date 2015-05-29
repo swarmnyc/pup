@@ -199,7 +199,7 @@ namespace SWARM.PuP.Web.ApiControllers
                 result.Data = new CurrentUserToken(user)
                 {
                     AccessToken = DataProtector.Protect(System.Json.ToJson(at)),
-                    ExpiresIn = (long)(at.ExpirationDateUtc - DateTime.UtcNow).TotalSeconds
+                    ExpiresIn = (long)(at.ExpirationDateUtc - DateTime.UtcNow).TotalMilliseconds
                 };
 
                 if (result.Data.PortraitUrl.IsNotNullOrWhiteSpace())

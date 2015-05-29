@@ -25,7 +25,6 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ico_camera_teal"
-                android:background="@color/white"
                 android:layout_margin="@dimen/margin_half"
                 android:layout_alignBottom="@+id/img_portrait"
                 android:layout_alignLeft="@+id/img_portrait"
