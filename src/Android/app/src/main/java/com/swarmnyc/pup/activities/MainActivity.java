@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.components.DialogHelper;
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity
 
 	@InjectView( R.id.toolbar )
 	Toolbar toolbar;
+	private GoogleAnalytics m_googleAnalytics;
+	private Tracker         m_tracker;
 
 	public MainActivity()
 	{
@@ -43,7 +47,6 @@ public class MainActivity extends AppCompatActivity
 
 		ButterKnife.inject( this );
 		PuPApplication.getInstance().getComponent().inject( this );
-		Navigator.init( this );
 		EventBus.getBus().register( this );
 
 		com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config( "swarmnyc.uservoice.com" );
@@ -55,6 +58,15 @@ public class MainActivity extends AppCompatActivity
 		display.getSize( windowSize );
 		Consts.windowWidth = windowSize.x;
 		Consts.windowHeight = windowSize.y;
+
+		m_googleAnalytics = GoogleAnalytics.getInstance( this );
+		m_googleAnalytics.setLocalDispatchPeriod(1800);
+
+		m_tracker = m_googleAnalytics.newTracker("UA-43683040-6");
+		m_tracker.enableExceptionReporting( true );
+
+		Navigator.init( this, m_tracker );
+
 
 		if ( !Config.getBool( "ShowedSplash" ) )
 		{

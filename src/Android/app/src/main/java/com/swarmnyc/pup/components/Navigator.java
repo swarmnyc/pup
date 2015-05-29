@@ -7,18 +7,21 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.fragments.CreateLobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
-import com.swarmnyc.pup.fragments.MainDrawerFragment;
+
+import java.util.List;
 
 public class Navigator
 {
 	private static FragmentActivity activity;
 
-	public static void init( final FragmentActivity activity )
+	public static void init( final FragmentActivity activity, final Tracker tracker )
 	{
 		Navigator.activity = activity;
 
@@ -31,6 +34,17 @@ public class Navigator
 					if ( activity.getSupportFragmentManager().getBackStackEntryCount() == 0 )
 					{
 						activity.finish();
+					}
+					else
+					{
+						List<Fragment> fragments = activity.getSupportFragmentManager().getFragments();
+
+						Fragment f = fragments.get( fragments.size() - 1 );
+						if ( f != null )
+						{
+							tracker.setScreenName( f.toString() );
+							tracker.send( new HitBuilders.ScreenViewBuilder().build() );
+						}
 					}
 				}
 			}
@@ -83,29 +97,31 @@ public class Navigator
 		To( LobbyListFragment.class, null, true );
 	}
 
-	public static void ToLobby( final String id,final String from, boolean pop )
+	public static void ToLobby( final String id,final String name, final String from, boolean pop )
 	{
 		Bundle bundle = new Bundle();
 		bundle.putString( Consts.KEY_LOBBY_ID, id );
+		bundle.putString( Consts.KEY_LOBBY_NAME, name );
 		bundle.putString( Consts.KEY_LOBBY_SOURCE, from );
+
 		if ( pop )
 		{
-			pop(CreateLobbyFragment.class);
+			pop( CreateLobbyFragment.class );
 		}
 
 		To( LobbyFragment.class, bundle, true );
-	}
-
-	private static void popOnce()
-	{
-		FragmentManager fragmentManager = activity.getSupportFragmentManager();
-		fragmentManager.popBackStack();
 	}
 
 	private static <T> void pop( Class<T> name )
 	{
 		FragmentManager fragmentManager = activity.getSupportFragmentManager();
 		fragmentManager.popBackStack( name.getName(), 0 );
+	}
+
+	private static void popOnce()
+	{
+		FragmentManager fragmentManager = activity.getSupportFragmentManager();
+		fragmentManager.popBackStack();
 	}
 
 

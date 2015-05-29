@@ -45,4 +45,10 @@ public class SettingsFragment extends Fragment
 		super.onStart();
 		MainDrawerFragment.getInstance().highLight( Consts.KEY_SETTINGS );
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Settings";
+	}
 }

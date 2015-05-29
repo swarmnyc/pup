@@ -78,6 +78,101 @@ public class CreateLobbyFragment extends Fragment
 	int                                       m_timeOffset;
 
 	@Override
+	public void onDateSet( final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth )
+	{
+		m_customDateTime = true;
+		m_selectedDate.set( year, monthOfYear, dayOfMonth );
+		Calendar date = Calendar.getInstance();
+
+		removeTime( date );
+
+		Calendar date2 = new GregorianCalendar( year, monthOfYear, dayOfMonth );
+		long dateOffset = ( date2.getTimeInMillis() - date.getTimeInMillis() ) / DateUtils.DAY_IN_MILLIS;
+
+		setDate( (int) dateOffset );
+		setTime( m_selectedDate.get( Calendar.HOUR_OF_DAY ), m_selectedDate.get( Calendar.MINUTE ) );
+	}
+
+	@Override
+	public void onTimeSet( final TimePicker view, final int hourOfDay, final int minute )
+	{
+		m_customDateTime = true;
+		setTime( hourOfDay, minute );
+	}
+
+	@Subscribe
+	public void postUserChanged( UserChangedEvent event )
+	{
+		if ( User.isLoggedIn() )
+		{
+			createLobby();
+		}
+	}
+
+	@OnClick( R.id.btn_submit )
+	void createLobby()
+	{
+		if ( !valid() )
+		{ return; }
+
+
+		if ( !User.isLoggedIn() )
+		{
+			RegisterDialogFragment registerDialogFragment = new RegisterDialogFragment();
+			registerDialogFragment.setGoHomeAfterLogin( false );
+			registerDialogFragment.show( this.getFragmentManager(), null );
+			return;
+		}
+
+
+		MainActivity.getInstance().hideIme();
+
+		DialogHelper.showProgressDialog( R.string.message_lobby_creating );
+
+		List<GamePlatform> platforms = m_gamePlatformSelectView.getSelectedGamePlatforms();
+
+		Lobby lobby = new Lobby();
+		lobby.setGameId( m_selectedGame.getId() );
+		lobby.setPlatform( platforms.get( 0 ) );
+		lobby.setSkillLevel( SkillLevel.get( m_gamerSkillSpinner.getSelectedPosition() ) );
+		lobby.setPlayStyle( PlayStyle.get( m_playStyleSpinner.getSelectedPosition() ) );
+		lobby.setDescription( m_descriptionText.getText().toString() );
+		lobby.setStartTime( getStartTime() );
+		m_lobbyService.create(
+			lobby, new ServiceCallback<Lobby>()
+			{
+				@Override
+				public void success( final Lobby value )
+				{
+					DialogHelper.hide();
+					Navigator.ToLobby( value.getId(), value.getName(), Consts.KEY_LOBBIES, true );
+				}
+			}
+		);
+	}
+
+	private Date getStartTime()
+	{
+		if ( m_customDateTime )
+		{
+			return m_selectedDate.getTime();
+		}
+		else
+		{
+			Calendar date = Calendar.getInstance();
+			date.add( Calendar.MINUTE, m_timeOffset );
+
+			return date.getTime();
+		}
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Create Lobby";
+	}
+
+	@Override
 	public View onCreateView(
 		LayoutInflater inflater,
 		@Nullable
@@ -173,9 +268,13 @@ public class CreateLobbyFragment extends Fragment
 				public void onClick( final View v )
 				{
 					DatePickerDialog datePickerDialog = new DatePickerDialog(
-						getActivity(), CreateLobbyFragment.this, m_selectedDate.get( Calendar.YEAR ), m_selectedDate.get(
-						Calendar.MONTH
-					), m_selectedDate.get( Calendar.DAY_OF_MONTH )
+						getActivity(),
+						CreateLobbyFragment.this,
+						m_selectedDate.get( Calendar.YEAR ),
+						m_selectedDate.get(
+							Calendar.MONTH
+						),
+						m_selectedDate.get( Calendar.DAY_OF_MONTH )
 					);
 
 					Calendar range = Calendar.getInstance();
@@ -277,10 +376,11 @@ public class CreateLobbyFragment extends Fragment
 				break;
 			default:
 				s = String.format(
-					"%s %d", m_selectedDate.getDisplayName( Calendar.MONTH, Calendar.SHORT, Locale.US ), m_selectedDate
-						.get(
-							Calendar.DAY_OF_MONTH
-						)
+					"%s %d",
+					m_selectedDate.getDisplayName( Calendar.MONTH, Calendar.SHORT, Locale.US ),
+					m_selectedDate.get(
+						Calendar.DAY_OF_MONTH
+					)
 				);
 				break;
 		}
@@ -294,7 +394,7 @@ public class CreateLobbyFragment extends Fragment
 		m_selectedDate.set( Calendar.HOUR_OF_DAY, hour );
 		m_selectedDate.set( Calendar.MINUTE, min );
 		m_timeOffset = (int) ( ( m_selectedDate.getTimeInMillis() - Calendar.getInstance().getTimeInMillis() )
-		                     / DateUtils.MINUTE_IN_MILLIS
+		                       / DateUtils.MINUTE_IN_MILLIS
 		);
 		m_timeOffset = Math.max( m_timeOffset, 20 );
 		if ( m_dateOffset == 0 && m_timeOffset <= 60 )
@@ -314,94 +414,5 @@ public class CreateLobbyFragment extends Fragment
 		}
 
 		m_timeText.setText( s );
-	}
-
-	@Override
-	public void onDateSet( final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth )
-	{
-		m_customDateTime = true;
-		m_selectedDate.set( year, monthOfYear, dayOfMonth );
-		Calendar date = Calendar.getInstance();
-
-		removeTime( date );
-
-		Calendar date2 = new GregorianCalendar( year, monthOfYear, dayOfMonth );
-		long dateOffset = ( date2.getTimeInMillis() - date.getTimeInMillis() ) / DateUtils.DAY_IN_MILLIS;
-
-		setDate( (int) dateOffset );
-		setTime( m_selectedDate.get( Calendar.HOUR_OF_DAY ), m_selectedDate.get( Calendar.MINUTE ) );
-	}
-
-	@Override
-	public void onTimeSet( final TimePicker view, final int hourOfDay, final int minute )
-	{
-		m_customDateTime = true;
-		setTime( hourOfDay, minute );
-	}
-
-	@Subscribe
-	public void postUserChanged( UserChangedEvent event )
-	{
-		if ( User.isLoggedIn() )
-		{
-			createLobby();
-		}
-	}
-
-	@OnClick( R.id.btn_submit )
-	void createLobby()
-	{
-		if ( !valid() )
-		{ return; }
-
-
-		if ( !User.isLoggedIn() )
-		{
-			RegisterDialogFragment registerDialogFragment = new RegisterDialogFragment();
-			registerDialogFragment.setGoHomeAfterLogin( false );
-			registerDialogFragment.show( this.getFragmentManager(), null );
-			return;
-		}
-
-
-		MainActivity.getInstance().hideIme();
-
-		DialogHelper.showProgressDialog( R.string.message_lobby_creating );
-
-		List<GamePlatform> platforms = m_gamePlatformSelectView.getSelectedGamePlatforms();
-
-		Lobby lobby = new Lobby();
-		lobby.setGameId( m_selectedGame.getId() );
-		lobby.setPlatform( platforms.get( 0 ) );
-		lobby.setSkillLevel( SkillLevel.get( m_gamerSkillSpinner.getSelectedPosition() ) );
-		lobby.setPlayStyle( PlayStyle.get( m_playStyleSpinner.getSelectedPosition() ) );
-		lobby.setDescription( m_descriptionText.getText().toString() );
-		lobby.setStartTime( getStartTime() );
-		m_lobbyService.create(
-			lobby, new ServiceCallback<Lobby>()
-			{
-				@Override
-				public void success( final Lobby value )
-				{
-					DialogHelper.hide();
-					Navigator.ToLobby( value.getId(), Consts.KEY_LOBBIES, true );
-				}
-			}
-		);
-	}
-
-	private Date getStartTime()
-	{
-		if ( m_customDateTime )
-		{
-			return m_selectedDate.getTime();
-		}
-		else
-		{
-			Calendar date = Calendar.getInstance();
-			date.add( Calendar.MINUTE, m_timeOffset );
-
-			return date.getTime();
-		}
 	}
 }

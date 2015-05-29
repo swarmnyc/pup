@@ -454,14 +454,17 @@ public class LobbyListFragment extends Fragment
 						@Override
 						public void onClick( final View v )
 						{
-							Navigator.ToLobby( lobbyListItemView.getLobby().getId(), Consts.KEY_LOBBIES, false );
+							Navigator.ToLobby( lobbyListItemView.getLobby().getId(),lobbyListItemView.getLobby().getName(), Consts.KEY_LOBBIES, false );
 						}
 					}
 				);
 			}
 		}
-
-
 	}
 
+	@Override
+	public String toString()
+	{
+		return "Lobby List";
+	}
 }

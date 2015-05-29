@@ -59,9 +59,9 @@ public class LobbyFragment extends Fragment
 	@InjectView( R.id.list_chat )
 	RecyclerView chatList;
 
-	Lobby lobby;
-
-	String m_source;
+	private Lobby  m_lobby;
+	private String m_source;
+	private String m_lobbyName;
 
 	@Override
 	public View onCreateView(
@@ -75,6 +75,8 @@ public class LobbyFragment extends Fragment
 	public void setArguments( final Bundle args )
 	{
 		super.setArguments( args );
+		m_lobbyName = this.getArguments().getString( Consts.KEY_LOBBY_NAME );
+		m_source = this.getArguments().getString( Consts.KEY_LOBBY_SOURCE );
 	}
 
 	@Override
@@ -89,7 +91,6 @@ public class LobbyFragment extends Fragment
 		ButterKnife.inject( this, view );
 		EventBus.getBus().register( this );
 
-		m_source = this.getArguments().getString( Consts.KEY_LOBBY_SOURCE );
 		DialogHelper.showProgressDialog( R.string.text_loding );
 		lobbyService.getLobby(
 			this.getArguments().getString( Consts.KEY_LOBBY_ID ), new ServiceCallback<Lobby>()
@@ -97,7 +98,7 @@ public class LobbyFragment extends Fragment
 				@Override
 				public void success( final Lobby value )
 				{
-					lobby = value;
+					m_lobby = value;
 					initialize();
 					DialogHelper.hide();
 				}
@@ -110,35 +111,35 @@ public class LobbyFragment extends Fragment
 		container.setVisibility( View.VISIBLE );
 
 		//title
-		MainActivity.getInstance().getToolbar().setTitle( lobby.getName() );
+		MainActivity.getInstance().getToolbar().setTitle( m_lobby.getName() );
 
 		//subtitle
-		long offset = lobby.getStartTime().getTime() - TimeUtils.todayTimeMillis();
+		long offset = m_lobby.getStartTime().getTime() - TimeUtils.todayTimeMillis();
 		String time;
 		if ( offset < 0 )
 		{
 			SimpleDateFormat format = new SimpleDateFormat( "MMM dd @ h:m a", Locale.getDefault() );
-			time = "Started " + format.format( lobby.getStartTime() );
+			time = "Started " + format.format( m_lobby.getStartTime() );
 		}
 		else if ( offset < TimeUtils.day_in_millis )
 		{
 			SimpleDateFormat format = new SimpleDateFormat( "@ h:m a", Locale.getDefault() );
-			time = "Today " + format.format( lobby.getStartTime() );
+			time = "Today " + format.format( m_lobby.getStartTime() );
 		}
 		else if ( offset < TimeUtils.week_in_millis )
 		{
 			SimpleDateFormat format = new SimpleDateFormat( "EEEE @ h:m a", Locale.getDefault() );
-			time = format.format( lobby.getStartTime() );
+			time = format.format( m_lobby.getStartTime() );
 		}
 		else
 		{
 			SimpleDateFormat format = new SimpleDateFormat( "MMM dd @ h:m a", Locale.getDefault() );
-			time = format.format( lobby.getStartTime() );
+			time = format.format( m_lobby.getStartTime() );
 		}
 
 		Spanned subtitle = Html.fromHtml(
 			String.format(
-				"<small>%s: %s</small>", lobby.getPlatform(), time
+				"<small>%s: %s</small>", m_lobby.getPlatform(), time
 			)
 		);
 
@@ -150,7 +151,7 @@ public class LobbyFragment extends Fragment
 		//joinLobby button and text panel
 		if ( User.isLoggedIn() )
 		{
-			LobbyUserInfo user = lobby.getUser( User.current.getId() );
+			LobbyUserInfo user = m_lobby.getUser( User.current.getId() );
 			if ( user == null )
 			{
 				joinButton.setVisibility( View.VISIBLE );
@@ -169,8 +170,8 @@ public class LobbyFragment extends Fragment
 		}
 
 		//chat list
-		chatRoomService = chatService.getChatRoomService( getActivity(), lobby );
-		chatList.setAdapter( new ChatAdapter( getActivity(), chatRoomService, lobby ) );
+		chatRoomService = chatService.getChatRoomService( getActivity(), m_lobby );
+		chatList.setAdapter( new ChatAdapter( getActivity(), chatRoomService, m_lobby ) );
 		LinearLayoutManager llm = new LinearLayoutManager( getActivity() );
 		chatList.setLayoutManager( llm );
 	}
@@ -193,7 +194,7 @@ public class LobbyFragment extends Fragment
 		{
 			DialogHelper.showProgressDialog( R.string.text_processing );
 			lobbyService.join(
-				lobby.getId(), new ServiceCallback()
+				m_lobby.getId(), new ServiceCallback()
 				{
 					@Override
 					public void success( final Object value )
@@ -203,7 +204,7 @@ public class LobbyFragment extends Fragment
 						user.setUserName( User.current.getUserName() );
 						user.setPortraitUrl( User.current.getPortraitUrl() );
 
-						lobby.getUsers().add( user );
+						m_lobby.getUsers().add( user );
 						initialize();
 						DialogHelper.hide();
 					}
@@ -241,4 +242,9 @@ public class LobbyFragment extends Fragment
 		EventBus.getBus().unregister( this );
 	}
 
+	@Override
+	public String toString()
+	{
+		return "Lobby: " + m_lobbyName;
+	}
 }

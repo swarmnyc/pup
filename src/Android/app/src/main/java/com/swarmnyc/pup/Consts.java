@@ -13,13 +13,15 @@ public class Consts
 	public static final String GCM_SEND_ERROR      = "Send error: ";
 	public static final String GCM_RECEIVED        = "Received: ";
 
-	public static final String KEY_LOBBIES         = "lobbies";
-	public static final String KEY_MY_LOBBIES       = "my_lobbies";
-	public static final String KEY_FEEDBACK       = "feedback";
-	public static final String KEY_SETTINGS       = "settings";
-	public static final String KEY_LOBBY_SOURCE         = "LobbySource";
-	public static final String KEY_LOBBY_ID       = "LobbyId";
-	public static final int    CODE_PHOTO     = 74;
+	public static final String KEY_LOBBIES      = "lobbies";
+	public static final String KEY_MY_LOBBIES   = "my_lobbies";
+	public static final String KEY_FEEDBACK     = "feedback";
+	public static final String KEY_SETTINGS     = "settings";
+	public static final String KEY_LOBBY_SOURCE = "LobbySource";
+	public static final String KEY_LOBBY_ID     = "LobbyId";
+	public static final String KEY_LOBBY_NAME   = "LobbyName";
+	public static final int    CODE_PHOTO       = 74;
+
 
 	public static int windowWidth;
 	public static int windowHeight;
