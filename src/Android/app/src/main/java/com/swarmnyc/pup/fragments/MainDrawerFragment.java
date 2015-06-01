@@ -278,7 +278,7 @@ public class MainDrawerFragment extends Fragment
 	{
 		if ( fragment != null )
 		{
-			getActivity().getSupportFragmentManager().beginTransaction().remove( fragment ).commit();
+			getActivity().getSupportFragmentManager().beginTransaction().remove( fragment ).commitAllowingStateLoss();
 		}
 
 		m_drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END );

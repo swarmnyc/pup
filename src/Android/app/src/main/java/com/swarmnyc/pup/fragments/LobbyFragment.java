@@ -61,6 +61,7 @@ public class LobbyFragment extends Fragment
 	private String         m_source;
 	private String         m_lobbyName;
 	private MemberFragment m_memberFragment;
+	private String         m_lobbyId;
 
 	@Override
 	public View onCreateView(
@@ -74,8 +75,9 @@ public class LobbyFragment extends Fragment
 	public void setArguments( final Bundle args )
 	{
 		super.setArguments( args );
-		m_lobbyName = this.getArguments().getString( Consts.KEY_LOBBY_NAME );
-		m_source = this.getArguments().getString( Consts.KEY_LOBBY_SOURCE );
+		m_lobbyId = args.getString( Consts.KEY_LOBBY_ID );
+		m_lobbyName = args.getString( Consts.KEY_LOBBY_NAME );
+		m_source = args.getString( Consts.KEY_LOBBY_SOURCE );
 	}
 
 
@@ -94,14 +96,14 @@ public class LobbyFragment extends Fragment
 		setHasOptionsMenu( true );
 		DialogHelper.showProgressDialog( R.string.message_loading );
 		lobbyService.getLobby(
-			this.getArguments().getString( Consts.KEY_LOBBY_ID ), new ServiceCallback<Lobby>()
+			m_lobbyId, new ServiceCallback<Lobby>()
 			{
 				@Override
 				public void success( final Lobby value )
 				{
 					m_lobby = value;
 					m_memberFragment = new MemberFragment();
-					m_memberFragment.setArguments( getArguments() );
+					m_memberFragment.setLobby( value );
 					MainDrawerFragment.getInstance().setRightDrawer( m_memberFragment );
 					initialize();
 					DialogHelper.hide();
