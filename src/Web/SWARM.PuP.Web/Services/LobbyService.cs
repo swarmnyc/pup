@@ -10,7 +10,6 @@ namespace SWARM.PuP.Web.Services
 {
     public class LobbyService : BaseService<Lobby>, ILobbyService
     {
-        private const int ShowTimeOffset = -15;
         private readonly IChatService _chatService;
 
         public LobbyService(IChatService chatService) : base("Lobbies")
@@ -37,8 +36,6 @@ namespace SWARM.PuP.Web.Services
         {
             var query = All();
 
-            filter = filter ?? new LobbyFilter();
-
             if (!string.IsNullOrWhiteSpace(filter.Search))
             {
                 query = query.Where(x => x.Name.ToLower().Contains(filter.Search));
@@ -47,6 +44,11 @@ namespace SWARM.PuP.Web.Services
             if (!string.IsNullOrWhiteSpace(filter.GameId))
             {
                 query = query.Where(x => x.GameId == filter.GameId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filter.UserId))
+            {
+                query = query.Where(x => x.Users.Any(y => !y.IsLeave && y.Id == filter.UserId));
             }
 
             if (!filter.PlayStyles.IsNullOrEmpty())
@@ -64,12 +66,11 @@ namespace SWARM.PuP.Web.Services
                 query = query.Where(x => x.Platform.In(filter.Platforms));
             }
 
-            if (!filter.StartTimeUtc.HasValue)
+            if (filter.StartTimeUtc.HasValue)
             {
-                filter.StartTimeUtc = DateTime.UtcNow.AddMinutes(ShowTimeOffset);
+                query = query.Where(x => x.StartTimeUtc >= filter.StartTimeUtc);
             }
 
-            query = query.Where(x => x.StartTimeUtc >= filter.StartTimeUtc);
             query = query.Where(x => x.State == ModelState.Actived);
 
             query = DoOrderQuery(query, filter);
@@ -87,7 +88,7 @@ namespace SWARM.PuP.Web.Services
                 UserName = user.GetUserName(lobby.Platform)
             });
 
-            _chatService.JoinRoom(lobby, new[] {user});
+            _chatService.JoinRoom(lobby, new[] { user });
             Update(lobby);
         }
 
@@ -113,7 +114,7 @@ namespace SWARM.PuP.Web.Services
 
             lobbyUser.IsOwner = false;
 
-            _chatService.LeaveRoom(lobby, new[] {user});
+            _chatService.LeaveRoom(lobby, new[] { user });
             Update(lobby);
         }
 

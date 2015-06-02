@@ -147,7 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\ErrorCode.cs" />
-    <Compile Include="Components\ValidateViewModelAttribute.cs" />
+    <Compile Include="Components\ModelValidateAttribute.cs" />
     <Compile Include="Security\AuthenticationMiddleware.cs" />
     <Compile Include="Security\DataProtector.cs" />
     <Compile Include="Security\AccessToken.cs" />

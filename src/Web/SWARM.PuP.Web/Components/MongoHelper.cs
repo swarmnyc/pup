@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Web.Http.ModelBinding;
+using Microsoft.Ajax.Utilities;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Options;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using SWARM.PuP.Web.Models;
 
 namespace MongoDB
@@ -70,6 +74,25 @@ namespace MongoDB
         public static MongoCollection<T> GetCollection<T>(string collectionName)
         {
             return GetDatabase().GetCollection<T>(collectionName);
+        }
+
+        public static IMongoQuery ToMongoQuery<T>(this IQueryable<T> query)
+        {
+            MongoQueryable<T> mongoQueryable = query as MongoQueryable<T>;
+            if (mongoQueryable != null)
+                return mongoQueryable.GetMongoQuery();
+            MongoCursor<T> mongoCursor = query as MongoCursor<T>;
+            if (mongoCursor != null)
+                return mongoCursor.Query;
+            throw new ArgumentException(string.Format("Cannot convert from {0} to either {1} or {2}.", (object)query.GetType().Name, (object)typeof(MongoQueryable<T>).Name, (object)typeof(MongoCursor<T>).Name));
+        }
+
+        public static string ToMongoQueryText<T>(this IQueryable<T> query)
+        {
+            IMongoQuery mongoQuery = ToMongoQuery<T>(query);
+            if (mongoQuery == null)
+                return (string)null;
+            return mongoQuery.ToString();
         }
     }
 }

@@ -18,5 +18,6 @@ namespace SWARM.PuP.Web.QueryFilters
         public IList<PlayStyle> PlayStyles { get; set; }
         public IList<SkillLevel> SkillLevels { get; set; }
         public DateTime? StartTimeUtc { get; set; }
+        public string UserId { get; set; }
     }
 }

@@ -16,11 +16,11 @@ namespace System.Web.Http.Filters
             if (exception == null)
             {
                 context.Response = context.Request.CreateErrorResponse(HttpStatusCode.BadRequest,
-                    "A error happened: " + context.Exception.Message);
+                    "000 A error happened: " + context.Exception.Message);
             }
             else
             {
-                context.Response = context.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "A error happened: " + exception.Response.ReasonPhrase);
+                context.Response = context.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "000 A error happened: " + exception.Response.ReasonPhrase);
             }
 
         }

@@ -121,11 +121,6 @@ namespace SWARM.PuP.Web.Services
 
         protected virtual IQueryable<T> DoOrderQuery(IQueryable<T> query, BaseFilter filter)
         {
-            if (filter.PageIndex != 0)
-            {
-                query = query.Skip(filter.PageIndex * filter.PageSize);
-            }
-
             if (filter.OrderDirection == ListSortDirection.Ascending)
             {
                 query = query.OrderBy(GetOrderExpression(filter));
@@ -133,6 +128,11 @@ namespace SWARM.PuP.Web.Services
             else
             {
                 query = query.OrderByDescending(GetOrderExpression(filter));
+            }
+
+            if (filter.PageIndex != 0)
+            {
+                query = query.Skip(filter.PageIndex * filter.PageSize);
             }
 
             return query.Take(filter.PageSize);

@@ -46,6 +46,7 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
             {
                 Order = "Name",
                 PageSize = 1,
+                UserId = "5567728355187621542717b4",
                 OrderDirection = ListSortDirection.Descending,
                 PlayStyles = new[] {PlayStyle.Casual}
             });

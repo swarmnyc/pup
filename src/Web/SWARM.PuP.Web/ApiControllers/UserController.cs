@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Web.Hosting;
 using System.Web.Http;
+using System.Web.Http.Filters;
 using System.Web.Http.Results;
 using MongoDB.Bson;
 using MultipartDataMediaFormatter.Infrastructure;
@@ -29,7 +30,7 @@ namespace SWARM.PuP.Web.ApiControllers
             _imageService = imageService;
         }
 
-        [HttpPost, Route("~/api/Login")]
+        [HttpPost, Route("~/api/Login"), ModelValidate]
         public IHttpActionResult Login(LoginViewModel model)
         {
             string errorMessage = null;
@@ -49,7 +50,7 @@ namespace SWARM.PuP.Web.ApiControllers
         }
 
         [HttpPost]
-        [Route("~/api/ExternalLogin")]
+        [Route("~/api/ExternalLogin"), ModelValidate]
         public IHttpActionResult ExternalLogin(ExternalLoginViewModel model)
         {
             PuPUser user;
@@ -94,7 +95,7 @@ namespace SWARM.PuP.Web.ApiControllers
         }
 
         [HttpPost]
-        [Route("~/api/Register")]
+        [Route("~/api/Register"), ModelValidate]
         public ResponseMessageResult Register(RegisterViewModel model)
         {
             string errorMessage = null;
@@ -134,8 +135,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return "~/Content/User/" + user.Id + ".png";
         }
 
-        [Authorize, HttpPost]
-        [Route("UpdatePortrait")]
+        [Authorize, Route("UpdatePortrait"), HttpPost, ModelValidate]
         public IHttpActionResult UpdatePortrait(FormData formData)
         {
             HttpFile file;
@@ -158,7 +158,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return new CurrentUserInfo(User.Identity.GetPuPUser());
         }
 
-        [Authorize, HttpPost, Route("UserTag")]
+        [Authorize, HttpPost, Route("UserTag"), ModelValidate]
         public IHttpActionResult AddUserTag([FromBody] PuPTag tag)
         {
             if (tag == null)
@@ -173,7 +173,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok(tag.Id);
         }
 
-        [Authorize, HttpDelete, Route("UserTag/{tagId}")]
+        [Authorize, HttpDelete, Route("UserTag/{tagId}"), ModelValidate]
         public IHttpActionResult DeleteUserTag(string tagId)
         {
             var user = User.Identity.GetPuPUser();

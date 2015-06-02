@@ -15,8 +15,6 @@ namespace SWARM.PuP.Web
         {
             // Web API configuration and services
             config.Filters.Add(new ExceptionLoggerAttribute());
-            config.Filters.Add(new ValidateViewModelAttribute());
-
 
             // Use camel case for JSON data.
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver =

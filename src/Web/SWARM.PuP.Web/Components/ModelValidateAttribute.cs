@@ -6,7 +6,7 @@ using SWARM.PuP.Web.ApiControllers;
 
 namespace System.Web.Http.Filters
 {
-    public class ValidateViewModelAttribute : ActionFilterAttribute
+    public class ModelValidateAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
