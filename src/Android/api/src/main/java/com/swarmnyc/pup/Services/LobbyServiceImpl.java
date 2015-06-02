@@ -59,6 +59,28 @@ public class LobbyServiceImpl implements LobbyService
 	}
 
 	@Override
+	public void getMyLobbies(LobbyFilter filter, final ServiceCallback<List<Lobby>> callback
+	)
+	{
+		if ( filter == null ) { filter = new LobbyFilter(); }
+
+		this.lobbyRestApi.getMyLobbies(
+			filter.toMap(),
+			filter.getPlatforms(),
+			filter.getLevels(),
+			filter.getStyles(),
+			new RestApiCallback<List<Lobby>>()
+			{
+				@Override
+				public void success( List<Lobby> list, Response response )
+				{
+					callback.success( list );
+				}
+			}
+		);
+	}
+
+	@Override
 	public void join( String id, final ServiceCallback callback )
 	{
 		this.lobbyRestApi.join(

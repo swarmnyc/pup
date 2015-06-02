@@ -52,6 +52,7 @@
     <string name="text_register">Register for PUP</string>
     <string name="text_register_and_join"><![CDATA[Register & Join]]></string>
     <string name="text_members">Members</string>
+    <string name="text_lobbies">My Chats</string>
 
     <string name="message_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
     <string name="message_lobby_creating">Creating</string>

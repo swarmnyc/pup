@@ -66,7 +66,7 @@ public class PuPApiModule {
     @Provides
     @Singleton
     public ChatService provideChatService() {
-        return new MockChatService();
-        //return new QuickbloxChatService();
+        //return new MockChatService();
+        return new QuickbloxChatService();
     }
 }

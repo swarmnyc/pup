@@ -88,10 +88,10 @@ public class MainDrawerFragment extends Fragment
 
 		( (AppCompatActivity) this.getActivity() ).setSupportActionBar( toolbar );
 
-		if ( android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP )
+		/*if ( android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP )
 		{
 			toolbar.setElevation( 2 );
-		}
+		}*/
 
 		m_drawerToggle = new ActionBarDrawerToggle(
 			this.getActivity(),
@@ -245,7 +245,10 @@ public class MainDrawerFragment extends Fragment
 		}
 
 		if ( position > -1 )
-		{ m_drawerListView.setItemChecked( position, true ); }
+		{
+			m_currentSelection = position;
+			m_drawerListView.setItemChecked( position, true );
+		}
 	}
 
 	@Subscribe

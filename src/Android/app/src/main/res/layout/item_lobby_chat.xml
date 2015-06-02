@@ -21,6 +21,7 @@
             android:id="@+id/text_message"
             tools:text="Message"
             style="@style/text_message"
+            android:textIsSelectable="true"
             android:layout_below="@+id/text_name"
             android:layout_marginLeft="56dp"/>
 </RelativeLayout>

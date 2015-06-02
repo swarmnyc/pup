@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:paddingTop="@dimen/padding_half"
+                android:paddingBottom="@dimen/padding_half"
+                android:paddingRight="@dimen/padding_normal"
+                android:paddingLeft="@dimen/padding_normal">
+    <ImageView
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:id="@+id/img_game"
+            tools:src="@drawable/default_portrait"
+            android:scaleType="centerCrop"/>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@color/pup_grey"
+            tools:text="Destiny | DST"
+            android:id="@+id/txt_game_name"
+            android:layout_marginLeft="50dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            tools:text="This is some random text that is about the game that is about to be played and I love so so so so much"
+            android:id="@+id/txt_description"
+            android:textColor="@color/pup_light"
+            android:layout_below="@+id/txt_game_name"
+            android:layout_marginLeft="50dp"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_small"
+            tools:text="XBOX"
+            android:id="@+id/txt_platform"
+            android:textColor="@color/pup_light"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true" />
+    <TextView
+            android:id="@+id/txt_game_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/pup_teal"
+            android:textSize="@dimen/text_small"
+            android:textStyle="bold"
+            tools:text="17 mins"
+            android:layout_marginTop="50dp"/>
+</RelativeLayout>

@@ -106,7 +106,8 @@ public class Navigator
 
 		if ( pop )
 		{
-			pop( CreateLobbyFragment.class );
+			//pop( CreateLobbyFragment.class );
+			popOnce();
 		}
 
 		To( LobbyFragment.class, bundle, true );
@@ -123,6 +124,4 @@ public class Navigator
 		FragmentManager fragmentManager = activity.getSupportFragmentManager();
 		fragmentManager.popBackStack();
 	}
-
-
 }

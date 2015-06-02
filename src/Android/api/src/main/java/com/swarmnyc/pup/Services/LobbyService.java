@@ -13,6 +13,8 @@ public interface LobbyService {
 
     void getLobbies(LobbyFilter filter, ServiceCallback<List<Lobby>> callback);
 
+    void getMyLobbies( LobbyFilter filter, ServiceCallback<List<Lobby>> callback );
+
     void join(String id, ServiceCallback callback);
 
     void leave(String id, ServiceCallback callback);

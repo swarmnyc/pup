@@ -259,11 +259,11 @@ public class LobbyFragment extends Fragment
 	}
 
 	@Override
-	public void onStop()
+	public void onDestroy()
 	{
-		super.onStop();
 		EventBus.getBus().unregister( this );
 		MainDrawerFragment.getInstance().removeRightDrawer(m_memberFragment);
+		super.onDestroy();
 	}
 
 	@Override

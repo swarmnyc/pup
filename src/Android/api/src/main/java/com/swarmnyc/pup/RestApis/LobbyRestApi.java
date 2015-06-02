@@ -25,6 +25,13 @@ public interface LobbyRestApi {
                     @Query("PlayStyles") Iterable<PlayStyle> styles,
                     Callback<List<Lobby>> callback);
 
+    @GET("/Lobby/My")
+    void getMyLobbies(@QueryMap Map<String, Object> filter,
+                    @Query("Platforms") Iterable<GamePlatform> platforms,
+                    @Query("SkillLevels") Iterable<SkillLevel> levels,
+                    @Query("PlayStyles") Iterable<PlayStyle> styles,
+                    Callback<List<Lobby>> callback);
+
     @GET("/Lobby/{LobbyId}")
     void get(@Path("LobbyId") String lobbyId, Callback<Lobby> Lobby);
 
