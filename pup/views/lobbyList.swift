@@ -14,15 +14,13 @@ import UIKit
 class LobbyListView: UIView {
 
     var table: UITableView = UITableView()
+    var swipeDetectionView = UIView()
+    var panDetector = UIPanGestureRecognizer()
+    var swipeDelegate: PanGestureDelegate?
 
     override init(frame: CGRect) {
-        // 1. setup any properties here
-
-        // 2. call super.init(frame:)
         super.init(frame: frame)
 
-        // 3. Setup view from .xib file
-        println ("fun on a bun")
         backgroundColor=UIColor.blackColor()
 
         clipsToBounds = true;
@@ -38,12 +36,7 @@ class LobbyListView: UIView {
 
 
     required init(coder aDecoder: NSCoder) {
-        // 1. setup any properties here
-
-        // 2. call super.init(coder:)
         super.init(coder: aDecoder)
-
-
     }
 
 
@@ -53,20 +46,22 @@ class LobbyListView: UIView {
     }
 
     func setUpTable() {
-
         table.separatorInset = UIEdgeInsetsZero
+        self.panDetector.addTarget(self, action: "swiped:");
 
-
-
+        self.swipeDetectionView.addGestureRecognizer(panDetector);
+        self.swipeDetectionView.userInteractionEnabled = true;
 
 
         addSubview(table);
-
-
+        addSubview(swipeDetectionView)
     }
 
+    func swiped(sender: UIPanGestureRecognizer) {
+        println("haha!")
+        self.swipeDelegate?.swiped(sender);
 
-
+    }
 
 
     func setUpTableConstraints() {
@@ -76,7 +71,14 @@ class LobbyListView: UIView {
             make.top.equalTo(self).offset(0)
             make.bottom.equalTo(self).offset(0)
         }
+        swipeDetectionView.snp_makeConstraints { (make) -> Void in
+            make.left.equalTo(self).offset(0);
+            make.top.equalTo(self).offset(0);
+            make.bottom.equalTo(self).offset(0);
+            make.width.equalTo(20);
+        }
     }
+
 
 
 }

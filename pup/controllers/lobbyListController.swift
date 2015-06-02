@@ -13,9 +13,14 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
     var table:UITableView!
 
-    var filter: filterView!
+    var filter: FilterViewController!
+
+    var sideMenu: SideMenuController!
 
     var updateTimer: NSTimer = NSTimer();
+
+
+
     lazy var listOfGames: lobbyList = lobbyList(parentView: self);
 
 
@@ -40,21 +45,23 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        currentUser.setPage("Find A Game");
         self.title = "All Games";
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(rgba: colors.tealMain)]
         self.navigationController?.navigationBar.tintColor = UIColor(rgba: colors.tealMain)
-        let image = UIImage(named: "filter")
+        let filterImage = UIImage(named: "filter")
 
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action: "openFilter")
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: filterImage, style: UIBarButtonItemStyle.Plain, target: self, action: "openFilter")
 
+        let menuImage = UIImage(named: "hamburgerMenu")
 
-
-
-
-        filter = filterView(parentview: self.view);
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: menuImage, style: UIBarButtonItemStyle.Plain, target: self, action: "openMenu")
 
 
+
+        filter = FilterViewController(parentController: self);
+        sideMenu = SideMenuController(parentController: self)
+        self.listView.swipeDelegate = sideMenu;
 
 
 
@@ -131,6 +138,13 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
 
     }
+
+    func openMenu() {
+        println("openMenu");
+        sideMenu.toggleState()
+    }
+
+
 
 
 }

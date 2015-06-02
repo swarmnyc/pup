@@ -23,6 +23,62 @@ struct gameData {
 
 
 
+class Searcher {
 
+    var data: Array<gameData> = [];
+
+    var platforms: Array<String> = [];
+
+    init() {
+
+
+    }
+
+    func addPlatformToSearch(addedPlatform: String) {
+        println(platforms);
+        platforms.append(appData.platformDict[addedPlatform]!);
+        println(platforms);
+
+    }
+
+    func removePlatformFromSearch(removedPlatform: String) {
+        println(platforms);
+
+        for (var i = 0; i<platforms.count; i++) {
+            if (platforms[i] == appData.platformDict[removedPlatform]) {
+                platforms.removeAtIndex(i);
+            }
+        }
+        println(platforms);
+    }
+
+    func search(name: String) {
+        println("searching!!!!")
+        var suffix = "?search=\(name)";
+
+        if (platforms.count>0) {
+            for (var i = 0; i<platforms.count; i++) {
+                suffix+="&platform=\(platforms[i])";
+            }
+        }
+
+        let requestUrl = NSURL(string: "\(urls.games)\(suffix)")
+
+            let task = NSURLSession.sharedSession().dataTaskWithURL(requestUrl!) {(data, response, error) in
+                println(error)
+                let jsonResponse = JSON(data: data)
+                println(jsonResponse)
+
+            }
+
+            task.resume();
+            println(suffix);
+
+
+
+
+    }
+
+}
 
 

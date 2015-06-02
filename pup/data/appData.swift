@@ -20,6 +20,7 @@ struct appColors {
 
 struct miscData {
     var platforms: Array<String> = ["Steam or PC", "XBOX 360", "XBOX ONE", "PS3", "PS4"]
+    var platformDict = ["Steam or PC": "Steam", "XBOX 360": "Xbox360", "XBOX ONE": "XboxOne", "PS3": "PS3", "PS4": "PS4"];
 
 }
 
@@ -46,7 +47,7 @@ struct appURLS {
 
     var games: String {
         get {
-          return  "\(apiBase)games/"
+          return  "\(apiBase)game/"
         }
     }
 
@@ -71,7 +72,7 @@ struct appURLS {
 
 struct UIValues {
     var dividerWidth = 0.5
-    var horizontalPadding = 13.0
+    var horizontalPadding = 11.0
     var halfHorizontalPadding: Double {
         get {
             return self.horizontalPadding/2

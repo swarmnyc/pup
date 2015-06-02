@@ -40,7 +40,7 @@ class singleLobby {
             var isLeave = subJson["isLeave"].boolValue
             var isOwner = subJson["isOwner"].boolValue
             var id = subJson["id"].stringValue
-            var name = subJson["name"].stringValue
+            var name = subJson["userName"].stringValue
             if (isOwner) {
                 data.owner = singleLobbyUser(isLeave: isLeave, id: id, isOwner: isOwner, name: name)
             }

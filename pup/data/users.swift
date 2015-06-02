@@ -18,10 +18,14 @@ class User {
 
     let localStorage = NSUserDefaults.standardUserDefaults()
     var data: userInfo = userInfo();
-
+    var currentPage = "Find A Game";
     init() {
         checkStored()
 
+    }
+
+    func setPage(page: String) {
+        currentPage = page;
     }
 
     func checkStored() {
