@@ -24,7 +24,7 @@ class SearchResultsView: UIView {
         results = UICollectionView(frame: self.frame, collectionViewLayout: layout)
         results!.dataSource = parent as? UICollectionViewDataSource;
         results!.delegate = parent as? UICollectionViewDelegate
-        results!.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: "searchResult")
+        results!.registerClass(SearchResultsViewCell.self, forCellWithReuseIdentifier: "searchResult")
         results!.backgroundColor = UIColor(rgba: colors.mainGrey)
 
         self.addViews();
@@ -63,18 +63,26 @@ class SearchResultsView: UIView {
 
 
     func openResults(searchBar: UISearchBar) {
-
-        UIView.animateWithDuration(Double(0.5)) {
-            self.snp_remakeConstraints {
-                (make) -> Void in
-                make.left.equalTo(self.searchBar!.snp_left).offset(0)
-                make.top.equalTo(self.searchBar!.snp_bottom).offset(0)
-                make.right.equalTo(self.searchBar!.snp_right).offset(0)
-                make.height.equalTo(180)
-            }
-            self.parentView?.layoutIfNeeded()
-
+        println("opening it!!! (the search results should be animating)")
+        self.snp_remakeConstraints {
+            (make) -> Void in
+            make.left.equalTo(self.searchBar!.snp_left).offset(0)
+            make.top.equalTo(self.searchBar!.snp_bottom).offset(0)
+            make.right.equalTo(self.searchBar!.snp_right).offset(0)
+            make.height.equalTo(180)
         }
+        self.parentView?.layoutIfNeeded()
+//        UIView.animateWithDuration(Double(0.5)) {
+//            self.snp_remakeConstraints {
+//                (make) -> Void in
+//                make.left.equalTo(self.searchBar!.snp_left).offset(0)
+//                make.top.equalTo(self.searchBar!.snp_bottom).offset(0)
+//                make.right.equalTo(self.searchBar!.snp_right).offset(0)
+//                make.height.equalTo(180)
+//            }
+//            self.parentView?.layoutIfNeeded()
+//
+//        }
     }
 
     func closeResults() {

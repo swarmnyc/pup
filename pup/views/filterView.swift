@@ -13,7 +13,6 @@ class FilterView: UIView {
     var whiteBox = UIView()
     var parentView = UIView()
     var search = UISearchBar()
-    var buttonHeight = 75;
     var platforms: Array<Button> = [];
     var buttonDelegate: SimpleButtonDelegate? = nil
     var handle: UIView = UIView();
@@ -151,32 +150,32 @@ class FilterView: UIView {
         self.search.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.whiteBox).offset(16)
             make.right.equalTo(self.whiteBox).offset(-16)
-            make.top.equalTo(self.whiteBox).offset(75)
-            make.height.equalTo(self.buttonHeight / 2)
+            make.top.equalTo(self.whiteBox).offset(UIConstants.justBelowSearchBar)
+            make.height.equalTo(UIConstants.buttonHeight / 2)
 
         }
 
         self.platforms[0].snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.whiteBox).offset(0)
-            make.top.equalTo(self.search.snp_bottom).offset(UIConstants.verticalPadding)
+            make.top.equalTo(self.whiteBox).offset(UIConstants.justBelowSearchBar + (UIConstants.buttonHeight / 2.0) + UIConstants.verticalPadding)
             make.right.equalTo(self.platforms[1].snp_left).offset(0)
-            make.height.equalTo(self.buttonHeight)
+            make.height.equalTo(UIConstants.buttonHeight)
             make.width.equalTo(thirdW)
         }
         self.platforms[1].snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.platforms[0].snp_right).offset(0)
-            make.top.equalTo(self.search.snp_bottom).offset(UIConstants.verticalPadding)
+            make.top.equalTo(self.whiteBox).offset(UIConstants.justBelowSearchBar + (UIConstants.buttonHeight / 2.0) + UIConstants.verticalPadding)
             make.right.equalTo(self.platforms[2].snp_left).offset(0)
-            make.height.equalTo(self.buttonHeight)
+            make.height.equalTo(UIConstants.buttonHeight)
             make.width.equalTo(thirdW)
 
         }
 
         self.platforms[2].snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.platforms[1].snp_right).offset(0)
-            make.top.equalTo(self.search.snp_bottom).offset(UIConstants.verticalPadding)
+            make.top.equalTo(self.whiteBox).offset(UIConstants.justBelowSearchBar + (UIConstants.buttonHeight / 2.0) + UIConstants.verticalPadding)
             make.right.equalTo(self.whiteBox).offset(0)
-            make.height.equalTo(self.buttonHeight)
+            make.height.equalTo(UIConstants.buttonHeight)
             make.width.equalTo(thirdW)
 
         }
@@ -184,14 +183,14 @@ class FilterView: UIView {
             make.left.equalTo(self.whiteBox).offset(0)
             make.top.equalTo(self.platforms[1].snp_bottom).offset(0)
             make.right.equalTo(self.platforms[1].snp_left).offset(0)
-            make.height.equalTo(self.buttonHeight)
+            make.height.equalTo(UIConstants.buttonHeight)
             make.width.equalTo(thirdW)
         }
         self.platforms[4].snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.platforms[0].snp_right).offset(0)
             make.top.equalTo(self.platforms[1].snp_bottom).offset(0)
             make.right.equalTo(self.platforms[2].snp_left).offset(0)
-            make.height.equalTo(self.buttonHeight)
+            make.height.equalTo(UIConstants.buttonHeight)
             make.width.equalTo(thirdW)
 
         }

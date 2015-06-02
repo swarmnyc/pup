@@ -7,7 +7,7 @@ import Foundation
 import UIKit
 
 
-class searchResultsViewCell: UICollectionViewCell {
+class SearchResultsViewCell: UICollectionViewCell {
 
     var gameName: UILabel = UILabel();
     var gameImg: UIImageView = UIImageView();
@@ -29,7 +29,17 @@ class searchResultsViewCell: UICollectionViewCell {
     }
 
 
-    func setUpCell() {
+    func setUpCell(data: gameData) {
+        gameName.text = data.Name
+        self.contentView.addSubview(gameName);
+
+        gameName.snp_makeConstraints{(make) -> Void in
+            make.left.equalTo(self.contentView).offset(0);
+            make.top.equalTo(self.contentView).offset(0);
+            make.bottom.equalTo(self.contentView).offset(0);
+            make.width.equalTo(300);
+
+        }
 //        imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height*2/3))
 //        imageView.contentMode = UIViewContentMode.ScaleAspectFit
 //

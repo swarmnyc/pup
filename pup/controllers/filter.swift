@@ -7,7 +7,7 @@ import Foundation
 import UIKit
 
 
-class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonDelegate, PanGestureDelegate {
+class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonDelegate, PanGestureDelegate, SearcherDelegate {
     var isOpen = false;
     var filterView: FilterView = FilterView()
     var parent: UIViewController = UIViewController()
@@ -30,13 +30,20 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
         //self.searchController.setUpView(self as UIViewController);
         view.addSubview(searchController!.view)
 
+        data.delegate = self;
 
 
 
     }
 
 
+    func handOffResults(newdata: Array<gameData>) {
+        println("display results");
+        searchController?.displayResults(filterView.search);
+        searchController?.giveResults(newdata);
 
+
+    }
 
     func touchUpInside(button: Button) { //from button delegate
         var added = setSelectionCount(button.checked)
@@ -129,7 +136,6 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
         if (searchText == "") {
             searchController?.hideResults();
         } else {
-            searchController?.displayResults(searchBar);
             data.search(searchText);
         }
 

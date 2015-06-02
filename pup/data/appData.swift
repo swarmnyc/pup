@@ -85,5 +85,7 @@ struct UIValues {
         }
     }
     var verticalPadding = 11.0
+    var buttonHeight = 75.0;
+    var justBelowSearchBar = 75.0;
 }
 
