@@ -3,10 +3,13 @@ package com.swarmnyc.pup.adapters;
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -32,7 +35,10 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 	@Inject
 	LobbyService m_lobbyService;
 	private int pageIndex = 0;
-	private boolean noMoreData;
+	private boolean          m_noMoreData;
+	private double           m_lastPosition;
+	private double           m_downPosition;
+	private MyChatViewHolder m_currentViewHolder;
 
 	public MyChatAdapter( final Activity activity )
 	{
@@ -45,7 +51,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 
 	private void fetchMoreData()
 	{
-		if ( noMoreData )
+		if ( m_noMoreData )
 		{ return; }
 
 		LobbyFilter filter = new LobbyFilter();
@@ -58,12 +64,12 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 				{
 					if ( value.size() == 0 )
 					{
-						noMoreData = true;
+						m_noMoreData = true;
 					}
 					else
 					{
 						if ( value.size() < Consts.PAGE_SIZE )
-						{ noMoreData = true; }
+						{ m_noMoreData = true; }
 
 						m_lobbies.addAll( value );
 						notifyDataSetChanged();
@@ -83,7 +89,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 	public void onBindViewHolder( final MyChatViewHolder holder, final int position )
 	{
 		holder.setLobby( m_lobbies.get( position ) );
-		if ( !noMoreData && position + 1 >= ( pageIndex * Consts.PAGE_SIZE ) )
+		if ( !m_noMoreData && position + 1 >= ( pageIndex * Consts.PAGE_SIZE ) )
 		{
 			fetchMoreData();
 		}
@@ -95,34 +101,102 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 		return m_lobbies.size();
 	}
 
+	@Override
+	public void onAttachedToRecyclerView( final RecyclerView recyclerView )
+	{
+		super.onAttachedToRecyclerView( recyclerView );
+		recyclerView.setOnTouchListener(
+			new View.OnTouchListener()
+			{
+				@Override
+				public boolean onTouch( final View v, final MotionEvent event )
+				{
+					if ( m_currentViewHolder == null )
+					{ return false; }
+
+					View view = m_currentViewHolder.m_contentPanel;
+					switch ( event.getAction() )
+					{
+						case MotionEvent.ACTION_DOWN:
+							m_lastPosition = event.getX();
+							break;
+						case MotionEvent.ACTION_MOVE:
+							double move = event.getX() - m_lastPosition;
+							Log.d( "Move", "Left:" + view.getLeft() + ", Right:" + view.getRight() );
+
+							if ( view.getLeft() < 20 )
+							{
+								view.setLeft( (int) ( view.getLeft() + move ) );
+								view.setRight( view.getLeft() + recyclerView.getWidth() );
+							}
+
+							m_lastPosition = event.getX();
+							break;
+						case MotionEvent.ACTION_UP:
+							if ( event.getEventTime() - event.getDownTime() < 250 )
+							{
+								//click
+								Navigator.ToLobby(
+									m_currentViewHolder.m_lobby.getId(),
+									m_currentViewHolder.m_lobby.getName(),
+									Consts.KEY_MY_LOBBIES,
+									false
+								);
+							}
+							else
+							{
+								//Todo: removing it
+								view.setLeft( recyclerView.getLeft() );
+								view.setRight( recyclerView.getRight() );
+							}
+
+							break;
+						case MotionEvent.ACTION_CANCEL:
+							view.setLeft( recyclerView.getLeft() );
+							view.setRight( recyclerView.getRight() );
+
+							break;
+					}
+
+					return true;
+				}
+			}
+		);
+	}
+
 	public class MyChatViewHolder extends RecyclerView.ViewHolder
 	{
-
+		@InjectView( R.id.contentPanel )
+		RelativeLayout m_contentPanel;
 		@InjectView( R.id.img_game )
-		ImageView m_gameImage;
+		ImageView      m_gameImage;
 		@InjectView( R.id.txt_game_name )
-		TextView  m_gameName;
+		TextView       m_gameName;
 		@InjectView( R.id.txt_game_time )
-		TextView  m_gameTime;
+		TextView       m_gameTime;
 		@InjectView( R.id.txt_description )
-		TextView  m_description;
+		TextView       m_description;
 		@InjectView( R.id.txt_platform )
-		TextView  m_platform;
+		TextView       m_platform;
 
 		private Lobby m_lobby;
 
 		public MyChatViewHolder( final View itemView )
 		{
 			super( itemView );
+			itemView.setTag( this );
 			ButterKnife.inject( this, itemView );
 
-			itemView.setOnClickListener(
-				new View.OnClickListener()
+			itemView.setOnTouchListener(
+				new View.OnTouchListener()
 				{
 					@Override
-					public void onClick( final View v )
+					public boolean onTouch( final View v, final MotionEvent event )
 					{
-						Navigator.ToLobby( m_lobby.getId(), m_lobby.getName(), Consts.KEY_MY_LOBBIES, false );
+						if ( event.getAction() == MotionEvent.ACTION_DOWN )
+						{ m_currentViewHolder = MyChatViewHolder.this; }
+
+						return false;
 					}
 				}
 			);
