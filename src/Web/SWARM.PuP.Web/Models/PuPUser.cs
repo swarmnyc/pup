@@ -4,15 +4,21 @@ namespace SWARM.PuP.Web.Models
 {
     public class PuPUser : PuPTaggable
     {
-        private IList<string> _roles;
-
+        private HashSet<SocialMedium> _media;
+        private HashSet<string> _roles;
         public string UserName { get; set; }
         public virtual string SecurityStamp { get; set; }
         public virtual string Email { get; set; }
 
-        public IList<string> Roles
+        public virtual HashSet<SocialMedium> Media
         {
-            get { return _roles ?? (_roles = new List<string>()); }
+            get { return _media ?? (_media = new HashSet<SocialMedium>()); }
+            set { _media = value; }
+        }
+
+        public HashSet<string> Roles
+        {
+            get { return _roles ?? (_roles = new HashSet<string>()); }
             set { _roles = value; }
         }
 

@@ -183,6 +183,27 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
+        [Authorize, HttpPost, Route("Medium"), ModelValidate]
+        public IHttpActionResult AddMedium([FromBody] SocialMedium medium)
+        {
+            var user = User.Identity.GetPuPUser();
+            
+            user.Media.Add(medium);
+            _userService.Update(user);
+
+            return Ok();
+        }
+
+        [Authorize, HttpDelete, Route("Medium/{type}"), ModelValidate]
+        public IHttpActionResult DeleteMedium(string type)
+        {
+            var user = User.Identity.GetPuPUser();
+            user.Media.Remove(user.Media.First(x => x.Type == type));
+            _userService.Update(user);
+
+            return Ok();
+        }
+
         private HttpResponseMessage GenerateCurrentUserInfoMessage(PuPUser user, string errorMessage)
         {
             var response = Request.CreateResponse(HttpStatusCode.OK);

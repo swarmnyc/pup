@@ -1,13 +1,25 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.swarmnyc.pup.fragments.MyChatsFragment">
+    tools:context="com.swarmnyc.pup.fragments.SettingsFragment">
 
     <Button
         android:id="@+id/btn_logout"
         android:layout_width="match_parent"
         android:text="Log out"
         android:layout_height="wrap_content" />
+    <Button
+            android:id="@+id/btn_login_fb"
+            android:layout_width="match_parent"
+            android:text="Connect to Facebook"
+            android:layout_height="wrap_content" />
 
-</FrameLayout>
+    <TextView
+            android:id="@+id/text_description"
+            android:layout_width="wrap_content"
+            android:textIsSelectable="true"
+            android:layout_height="wrap_content"/>
+</LinearLayout>

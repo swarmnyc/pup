@@ -91,7 +91,6 @@ public class LobbyFragment extends Fragment
 		super.onViewCreated( view, savedInstanceState );
 		PuPApplication.getInstance().getComponent().inject( this );
 		ButterKnife.inject( this, view );
-		EventBus.getBus().register( this );
 
 		setHasOptionsMenu( true );
 		DialogHelper.showProgressDialog( R.string.message_loading );
@@ -255,15 +254,16 @@ public class LobbyFragment extends Fragment
 	public void onStart()
 	{
 		super.onStart();
+		EventBus.getBus().register( this );
 		MainDrawerFragment.getInstance().highLight( m_source );
 	}
 
 	@Override
-	public void onDestroy()
+	public void onStop()
 	{
+		super.onStop();
 		EventBus.getBus().unregister( this );
-		MainDrawerFragment.getInstance().removeRightDrawer(m_memberFragment);
-		super.onDestroy();
+		MainDrawerFragment.getInstance().removeRightDrawer( m_memberFragment );
 	}
 
 	@Override

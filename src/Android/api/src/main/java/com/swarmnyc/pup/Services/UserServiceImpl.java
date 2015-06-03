@@ -10,6 +10,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 
 import java.io.File;
+import java.util.Date;
 
 public class UserServiceImpl implements UserService
 {
@@ -88,6 +89,50 @@ public class UserServiceImpl implements UserService
 				public void success( final String s, final Response response )
 				{
 					callback.success( s );
+				}
+			}
+		);
+	}
+
+	@Override
+	public void addFacebookToken(
+		final String userId, final String token, final Date expireAt, final ServiceCallback callback
+	)
+	{
+		addMedium("Facebook", userId, token, expireAt,callback);
+	}
+
+	@Override
+	public void deleteFacebookToken( final ServiceCallback callback )
+	{
+		deleteMedium( "Facebook", callback );
+	}
+
+	private void addMedium(
+		final String type, final String userId, final String token, final Date expireAt, final ServiceCallback callback
+	)
+	{
+		m_userApi.addMedium(
+			type, userId, token,StringUtils.toDateString( expireAt ) , new RestApiCallback() {
+				@Override
+				public void success( final Object o, final Response response )
+				{
+					callback.success( o );
+				}
+			}
+		);
+	}
+
+
+	private void deleteMedium( final String type, final ServiceCallback callback )
+	{
+		m_userApi.deleteMedium(
+			type, new RestApiCallback()
+			{
+				@Override
+				public void success( final Object o, final Response response )
+				{
+					callback.success( o );
 				}
 			}
 		);

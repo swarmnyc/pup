@@ -10,6 +10,8 @@ public class CurrentUserInfo extends UserInfo
 	private String       accessToken;
 	private double       expiresIn;
 	private List<PuPTag> tags;
+	private List<String> media;
+
 	public CurrentUserInfo()
 	{
 		tags = new ArrayList<>();
@@ -66,5 +68,19 @@ public class CurrentUserInfo extends UserInfo
 		}
 
 		return null;
+	}
+
+	public List<String> getMedia()
+	{
+		if ( media == null )
+		{
+			media = new ArrayList<>();
+		}
+		return media;
+	}
+
+	public void setMedia( List<String> media )
+	{
+		this.media = media;
 	}
 }

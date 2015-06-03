@@ -4,10 +4,7 @@ import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.activities.SplashActivity;
 import com.swarmnyc.pup.adapters.ChatAdapter;
 import com.swarmnyc.pup.adapters.MyChatAdapter;
-import com.swarmnyc.pup.fragments.CreateLobbyFragment;
-import com.swarmnyc.pup.fragments.LobbyFragment;
-import com.swarmnyc.pup.fragments.LobbyListFragment;
-import com.swarmnyc.pup.fragments.RegisterDialogFragment;
+import com.swarmnyc.pup.fragments.*;
 import dagger.Component;
 
 import javax.inject.Singleton;
@@ -30,4 +27,6 @@ public interface PuPComponent {
     void inject( ChatAdapter chatAdapter );
 
     void inject( MyChatAdapter myChatAdapter );
+
+    void inject( SettingsFragment settingsFragment );
 }

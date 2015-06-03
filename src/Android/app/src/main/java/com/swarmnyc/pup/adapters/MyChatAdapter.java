@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,18 +28,26 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatViewHolder>
+public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatViewHolder> implements View.OnTouchListener
 {
+	public static final int ScrollBarHodler = 10;
 	private final LayoutInflater m_inflater;
 	private final Activity       m_activity;
 	private final List<Lobby>    m_lobbies;
 	@Inject
 	LobbyService m_lobbyService;
 	private int pageIndex = 0;
-	private boolean          m_noMoreData;
-	private double           m_lastPosition;
-	private double           m_downPosition;
+	private boolean m_noMoreData;
+	private double  m_lastPositionX;
+	private double  m_lastPositionY;
+	private double  m_downPositionX;
+	private double  m_downPositionY;
+	private boolean m_handled = false;
+	private double m_tigger;
+
 	private MyChatViewHolder m_currentViewHolder;
+	private RecyclerView     m_recyclerView;
+
 
 	public MyChatAdapter( final Activity activity )
 	{
@@ -46,6 +55,9 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 		m_activity = activity;
 		m_inflater = m_activity.getLayoutInflater();
 		m_lobbies = new ArrayList<>();
+		m_tigger = -TypedValue.applyDimension(
+			TypedValue.COMPLEX_UNIT_DIP, 90, m_activity.getResources().getDisplayMetrics()
+		);
 		fetchMoreData();
 	}
 
@@ -105,63 +117,109 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 	public void onAttachedToRecyclerView( final RecyclerView recyclerView )
 	{
 		super.onAttachedToRecyclerView( recyclerView );
-		recyclerView.setOnTouchListener(
-			new View.OnTouchListener()
-			{
-				@Override
-				public boolean onTouch( final View v, final MotionEvent event )
+		recyclerView.setOnTouchListener( this );
+		this.m_recyclerView = recyclerView;
+	}
+
+	@Override
+	public boolean onTouch( final View v, final MotionEvent event )
+	{
+		if ( m_currentViewHolder == null )
+		{ return false; }
+
+		View view = m_currentViewHolder.m_contentPanel;
+		switch ( event.getAction() )
+		{
+			case MotionEvent.ACTION_DOWN:
+				m_handled = false;
+				m_downPositionX = m_lastPositionX = event.getX();
+				m_downPositionY = m_lastPositionY = event.getY();
+				break;
+			case MotionEvent.ACTION_MOVE:
+				double moveX = event.getX() - m_lastPositionX;
+				double moveY = event.getY() - m_lastPositionY;
+
+				if ( !m_handled && Math.abs( moveY ) > Math.abs( moveX ) && Math.abs( moveY ) > ScrollBarHodler )
 				{
-					if ( m_currentViewHolder == null )
-					{ return false; }
+					view.setLeft( m_recyclerView.getLeft() );
+					view.setRight( m_recyclerView.getRight() );
+					m_currentViewHolder = null;
+				}
+				else
+				{
+					m_handled = m_handled || Math.abs( m_downPositionX - m_lastPositionX ) > ScrollBarHodler;
 
-					View view = m_currentViewHolder.m_contentPanel;
-					switch ( event.getAction() )
+					//Log.d( "Move", "Left:" + m_downPositionX + ", Right:" + m_lastPositionX + ", handled:" +
+					// m_handled );
+					//Log.d( "Move", "Left:" + view.getLeft() + ", Right:" + view.getRight() + ", handled:" +
+					// m_handled );
+
+					int left = (int) ( view.getLeft() + moveX );
+					if ( left > 20 )
 					{
-						case MotionEvent.ACTION_DOWN:
-							m_lastPosition = event.getX();
-							break;
-						case MotionEvent.ACTION_MOVE:
-							double move = event.getX() - m_lastPosition;
-							Log.d( "Move", "Left:" + view.getLeft() + ", Right:" + view.getRight() );
-
-							if ( view.getLeft() < 20 )
-							{
-								view.setLeft( (int) ( view.getLeft() + move ) );
-								view.setRight( view.getLeft() + recyclerView.getWidth() );
-							}
-
-							m_lastPosition = event.getX();
-							break;
-						case MotionEvent.ACTION_UP:
-							if ( event.getEventTime() - event.getDownTime() < 250 )
-							{
-								//click
-								Navigator.ToLobby(
-									m_currentViewHolder.m_lobby.getId(),
-									m_currentViewHolder.m_lobby.getName(),
-									Consts.KEY_MY_LOBBIES,
-									false
-								);
-							}
-							else
-							{
-								//Todo: removing it
-								view.setLeft( recyclerView.getLeft() );
-								view.setRight( recyclerView.getRight() );
-							}
-
-							break;
-						case MotionEvent.ACTION_CANCEL:
-							view.setLeft( recyclerView.getLeft() );
-							view.setRight( recyclerView.getRight() );
-
-							break;
+						left = 20;
+					}
+					else if ( left < m_tigger )
+					{
+						left = (int) m_tigger;
 					}
 
-					return true;
+					view.setLeft( left );
+					view.setRight( view.getLeft() + m_recyclerView.getWidth() );
+
+					m_currentViewHolder.m_deleteMode = ( view.getLeft() <= m_tigger + 1 );
 				}
-			}
-		);
+
+				m_lastPositionX = event.getX();
+				m_lastPositionY = event.getY();
+
+				break;
+			case MotionEvent.ACTION_CANCEL:
+			case MotionEvent.ACTION_UP:
+				Log.d(
+					"Mode",
+					"handled:" + m_handled + ", deleteMode:" + m_currentViewHolder.m_deleteMode + ", X:" + event.getX()
+				);
+				if ( m_handled )
+				{
+					if ( !m_currentViewHolder.m_deleteMode )
+					{
+						//return
+						view.setLeft( m_recyclerView.getLeft() );
+						view.setRight( m_recyclerView.getRight() );
+					}
+				}
+				else
+				{
+					if ( m_currentViewHolder.m_deleteMode )
+					{
+						double x = event.getX();
+						if ( x > m_currentViewHolder.m_deleteImage.getX() )
+						{
+							m_currentViewHolder.remove();
+						}
+						else
+						{
+							//return
+							view.setLeft( m_recyclerView.getLeft() );
+							view.setRight( m_recyclerView.getRight() );
+						}
+					}
+					else
+					{
+						//click
+						Navigator.ToLobby(
+							m_currentViewHolder.m_lobby.getId(),
+							m_currentViewHolder.m_lobby.getName(),
+							Consts.KEY_MY_LOBBIES,
+							false
+						);
+					}
+				}
+				break;
+		}
+
+		return m_handled;
 	}
 
 	public class MyChatViewHolder extends RecyclerView.ViewHolder
@@ -170,6 +228,8 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 		RelativeLayout m_contentPanel;
 		@InjectView( R.id.img_game )
 		ImageView      m_gameImage;
+		@InjectView( R.id.img_delete )
+		ImageView      m_deleteImage;
 		@InjectView( R.id.txt_game_name )
 		TextView       m_gameName;
 		@InjectView( R.id.txt_game_time )
@@ -179,11 +239,13 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 		@InjectView( R.id.txt_platform )
 		TextView       m_platform;
 
-		private Lobby m_lobby;
+		private boolean m_deleteMode;
+		private Lobby   m_lobby;
 
 		public MyChatViewHolder( final View itemView )
 		{
 			super( itemView );
+
 			itemView.setTag( this );
 			ButterKnife.inject( this, itemView );
 
@@ -202,6 +264,29 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 			);
 		}
 
+		private void remove()
+		{
+			//Log.d( "Remove", "LobbyId:" + m_lobby.getId() );
+			m_lobbies.remove( this.getAdapterPosition() );
+			notifyItemRemoved( this.getAdapterPosition() );
+			m_lobbyService.leave(
+				m_lobby.getId(), new ServiceCallback()
+				{
+					@Override
+					public void success( final Object value )
+					{
+
+					}
+				}
+			);
+
+			//TODO: Snackbar
+			/*Snackbar
+				.make(m_recyclerView , "Test", Snackbar.LENGTH_LONG )
+				//.setAction(R.string.snackbar_action, myOnClickListener)
+				.show();*/
+		}
+
 		public void setLobby( final Lobby lobby )
 		{
 			m_lobby = lobby;
@@ -218,4 +303,6 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 			);
 		}
 	}
+
+
 }

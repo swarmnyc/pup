@@ -189,14 +189,14 @@ public class QuickbloxChatRoomService extends ChatRoomService
 
 	private LobbyUserInfo getLobbyUserInfo( final QBChatMessage chatMessage )
 	{
-		String userId = chatMessage.getProperty( "userId" );
+		String userId = (String)chatMessage.getProperty( "userId" );
 		LobbyUserInfo user = m_lobby.getUser( userId );
 
 		if ( user == null )
 		{
 			user = new LobbyUserInfo();
 			user.setId( userId );
-			user.setUserName( chatMessage.getProperty( "userName" ) );
+			user.setUserName( (String)chatMessage.getProperty( "userName" ) );
 		}
 		return user;
 	}

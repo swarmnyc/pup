@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
@@ -107,6 +109,36 @@ namespace SWARM.PuP.Web.ApiControllers
             _lobbyService.Leave(lobbyId, User.Identity.GetPuPUser());
 
             return Ok();
+        }
+
+        [Authorize, Route("Invite/{lobbyId}"), HttpPost, ModelValidate]
+        public IHttpActionResult Invite(string lobbyId)
+        {
+            var user = User.Identity.GetPuPUser();
+            var lobby = _lobbyService.GetById(lobbyId);
+
+            foreach (var medium in user.Media)
+            {
+                switch (medium.Type)
+                {
+                    case "Facebook":
+                        ShareToFb(medium, lobby);
+                        break;
+                }
+            }
+
+            return Ok();
+        }
+
+        private void ShareToFb(SocialMedium medium, Lobby lobby)
+        {
+            //TODO: Refresh Token;
+            object msg = "Let's play " + lobby.Name + " with me.";
+            var url = string.Format("https://graph.facebook.com/{0}/feed?access_token={1}&message={2}", medium.UserId, medium.Token, msg);
+            WebRequest webRequest = WebRequest.CreateHttp(url);
+            webRequest.Method = "POST";
+            var response = webRequest.GetResponse();
+            response.GetResponseStream();
         }
     }
 }

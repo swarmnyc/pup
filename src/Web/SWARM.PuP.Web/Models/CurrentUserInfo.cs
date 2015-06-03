@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SWARM.PuP.Web.Models;
 
 namespace SWARM.PuP.Web.ViewModels
@@ -16,18 +17,22 @@ namespace SWARM.PuP.Web.ViewModels
             this.Tags = user.Tags;
 
             this.PortraitUrl = user.PortraitUrl;
+
+            this.Media = user.Media.Select(medium => medium.Type).ToList(); 
         }
 
         public string Email { get; set; }
         
         public IEnumerable<PuPTag> Tags { get; set; }
+
+        public IEnumerable<string> Media { get; set; }
     }
 
     public class CurrentUserToken : CurrentUserInfo
     {
         public CurrentUserToken(PuPUser user) : base(user)
         {
-
+            
         }
 
         public string AccessToken { get; set; }

@@ -6,6 +6,8 @@ import retrofit.Callback;
 import retrofit.http.*;
 import retrofit.mime.TypedFile;
 
+import java.util.Date;
+
 public interface UserRestApi
 {
 
@@ -49,5 +51,27 @@ public interface UserRestApi
 		@Part( "portrait" )
 		TypedFile portrait,
 		RestApiCallback<String> callback
+	);
+
+	@FormUrlEncoded
+	@POST( "/User/Medium" )
+	void addMedium(
+		@Field( "type" )
+		String type,
+		@Field( "userId" )
+		String userId,
+		@Field( "token" )
+		String token,
+		@Field( "ExpireAtUtc" )
+		String expireAt,
+		RestApiCallback callback
+	);
+
+	@FormUrlEncoded
+	@DELETE( "/User/Medium" )
+	void deleteMedium(
+		@Field( "type" )
+		String type,
+		RestApiCallback callback
 	);
 }
