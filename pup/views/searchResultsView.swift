@@ -12,7 +12,7 @@ class SearchResultsView: UIView {
     var results: UICollectionView?
     var searchBar: UISearchBar?
     var gameMissing: GameMissingView = GameMissingView()
-    var plusSign: UIImageView = UIImageView()
+
     var maxHeight = 225.0;
     var maxHeightResults = 180.0;
 
@@ -27,10 +27,7 @@ class SearchResultsView: UIView {
 
 
         gameMissing.setDelegate(parent as! SimpleButtonDelegate) //request game cell
-        gameMissing.backgroundColor = UIColor(rgba: colors.lightGray)
-        let plus = UIImage(named: "plus")
-        plusSign.image = plus;
-        plusSign.contentMode = UIViewContentMode.ScaleAspectFill
+
 
 
         self.clipsToBounds = true;                                  //lets get this table going
@@ -58,8 +55,10 @@ class SearchResultsView: UIView {
     func addViews() {
         self.addSubview(results!);
         self.parentView?.addSubview(self);
-        gameMissing.addSubview(plusSign)
+
         self.addSubview(gameMissing);
+
+        self.bringSubviewToFront(gameMissing);
     }
 
 
@@ -90,12 +89,7 @@ class SearchResultsView: UIView {
             make.height.equalTo(45)
         }
 
-        plusSign.snp_makeConstraints{ (make) -> Void in
-            make.left.equalTo(gameMissing).offset(UIConstants.horizontalPadding * 1.25)
-            make.top.equalTo(gameMissing).offset(UIConstants.horizontalPadding * 1.25)
-            make.bottom.equalTo(gameMissing).offset(-UIConstants.horizontalPadding * 1.25)
-            make.right.equalTo(gameMissing.snp_left).offset(45 - UIConstants.horizontalPadding * 1.25)
-        }
+
 
     }
 
@@ -161,14 +155,18 @@ class SearchResultsView: UIView {
 class GameMissingView: UIView {
 
     var simpleButtonDelegate: SimpleButtonDelegate?
+    var plusSign: UIImageView = UIImageView()
+    var requestText:UILabel = UILabel()
 
     override func touchesBegan( touches: Set<NSObject>, withEvent event: UIEvent) {
         simpleButtonDelegate?.touchDown(self, type: "missing");
+        self.backgroundColor = self.backgroundColor!.darkerColor(0.2)
 
     }
 
     override func touchesEnded( touches: Set<NSObject>, withEvent event: UIEvent) {
         simpleButtonDelegate?.touchUp(self, type: "missing");
+        self.backgroundColor = self.backgroundColor!.lighterColor(0.2)
 
 
     }
@@ -176,7 +174,34 @@ class GameMissingView: UIView {
     func setDelegate(simpleButtonDelegate: SimpleButtonDelegate) {
         self.simpleButtonDelegate = simpleButtonDelegate;
         self.userInteractionEnabled = true;
+
+        self.backgroundColor = UIColor(rgba: colors.lightGray)
+        let plus = UIImage(named: "plus")
+        plusSign.image = plus;
+        plusSign.contentMode = UIViewContentMode.ScaleAspectFill
+
+        requestText.text = "Not showing up? Request a Game."
+        requestText.textColor = UIColor(rgba: colors.midGray);
+        requestText.font = requestText.font.fontWithSize(12);
+        self.addSubview(plusSign)
+        self.addSubview(requestText)
+
+        plusSign.snp_makeConstraints{ (make) -> Void in
+            make.left.equalTo(self).offset(UIConstants.horizontalPadding * 1.25)
+            make.top.equalTo(self).offset(UIConstants.horizontalPadding * 1.25)
+            make.bottom.equalTo(self).offset(-UIConstants.horizontalPadding * 1.25)
+            make.right.equalTo(self.snp_left).offset(45 - UIConstants.horizontalPadding * 1.25)
+        }
+
+        requestText.snp_makeConstraints{ (make) -> Void in
+            make.left.equalTo(plusSign.snp_right).offset(UIConstants.horizontalPadding)
+            make.top.equalTo(self).offset(UIConstants.horizontalPadding * 1.25)
+            make.bottom.equalTo(self).offset(-UIConstants.horizontalPadding * 1.25)
+            make.right.equalTo(self).offset(-UIConstants.horizontalPadding);
+        }
+
     }
+
 
 
 

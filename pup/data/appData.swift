@@ -16,6 +16,7 @@ struct appColors {
     var PS3 = "#9391b4"
     var PC = "#1e1e1e"
     var lightGray = "#f1f1f1"
+    var midGray = "#b3b3b3"
 }
 
 

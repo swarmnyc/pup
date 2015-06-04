@@ -79,7 +79,7 @@ class SearchResultsController: UIViewController, UICollectionViewDataSource, UIC
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("searchResult", forIndexPath: indexPath) as! SearchResultsViewCell
-        cell.frame.size = CGSize(width: self.view.frame.size.width, height: 45)
+        cell.frame.size = CGSize(width: self.resultsView!.frame.size.width, height: 45)
         cell.frame.origin.x = 0;
         println(self.data![indexPath.row])
         println(indexPath.row);

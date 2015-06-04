@@ -2,26 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8aac0fe2-1966-4622-aea2-527f730c3829" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/.idea/synonymAPI.iml" />
-      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/package.json" />
-      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/server.js" />
-      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google Drive/SENIOR YEAR/Ely Kim/theBuild/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google Drive/SENIOR YEAR/Ely Kim/theBuild/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google Drive/SENIOR YEAR/Ely Kim/theBuild/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$APPLICATION_CONFIG_DIR$/options/images.support.xml" />
-      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/.idea/scopes/scope_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google Drive/SENIOR YEAR/Ely Kim/theBuild/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google Drive/SENIOR YEAR/Ely Kim/theBuild/.idea/workspace.xml" />
-      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google Drive/SENIOR YEAR/Ely Kim/theBuild/.idea/scopes/scope_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$APPLICATION_CONFIG_DIR$/options/ui.lnf.xml" />
       <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$APPLICATION_CONFIG_DIR$/options/template.settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/.idea/vcs.xml" />
       <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/README.md" />
-      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google Drive/SENIOR YEAR/Ely Kim/theBuild/.idea/theBuild.iml" />
-      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/.idea/workspace.xml" />
+      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google Drive/SENIOR YEAR/Ely Kim/theBuild/.idea/encodings.xml" />
+      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/.idea/encodings.xml" />
+      <change type="NEW" beforePath="" afterPath="$APPLICATION_CONFIG_DIR$/options/images.support.xml" />
+      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google Drive/SENIOR YEAR/Ely Kim/theBuild/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google Drive/SENIOR YEAR/Ely Kim/theBuild/.idea/modules.xml" />
       <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/package.json" />
+      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google Drive/SENIOR YEAR/Ely Kim/theBuild/.idea/scopes/scope_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/.idea/scopes/scope_settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/server.js" />
+      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/.idea/synonymAPI.iml" />
+      <change type="NEW" beforePath="" afterPath="$APPLICATION_CONFIG_DIR$/options/template.settings.xml" />
+      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google Drive/SENIOR YEAR/Ely Kim/theBuild/.idea/theBuild.iml" />
+      <change type="NEW" beforePath="" afterPath="$APPLICATION_CONFIG_DIR$/options/ui.lnf.xml" />
+      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google Drive/SENIOR YEAR/Ely Kim/theBuild/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google Drive/SENIOR YEAR/Ely Kim/theBuild/.idea/workspace.xml" />
+      <change type="NEW" beforePath="" afterPath="$USER_HOME$/Google_Drive/SENIOR_YEAR/synonymAPI/.idea/workspace.xml" />
     </list>
     <ignored path="pup.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -45,41 +45,61 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="filter.swift" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pup/controllers/filter.swift">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="65" max-vertical-offset="2197">
+              <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="searchResultsView.swift" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pup/views/searchResultsView.swift">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2082" max-vertical-offset="2769">
+              <caret line="58" column="18" selection-start-line="58" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sideMenuController.swift" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pup/controllers/sideMenuController.swift">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="210" max-vertical-offset="1105">
+              <caret line="50" column="33" selection-start-line="50" selection-start-column="33" selection-end-line="50" selection-end-column="33" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="searchResultsCell.swift" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pup/views/searchResultsCell.swift">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="262" max-vertical-offset="1001">
+              <caret line="37" column="54" selection-start-line="37" selection-start-column="54" selection-end-line="37" selection-end-column="54" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="horizontalScrollView.swift" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pup/views/horizontalScrollView.swift">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="494" max-vertical-offset="1287">
+            <state vertical-scroll-proportion="0.0" vertical-offset="266" max-vertical-offset="1287">
               <caret line="38" column="57" selection-start-line="38" selection-start-column="57" selection-end-line="38" selection-end-column="57" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="createLobbyView.swift" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/pup/views/createLobbyView.swift">
+      <file leaf-file-name="filterView.swift" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pup/views/filterView.swift">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2867647" vertical-offset="897" max-vertical-offset="2119">
-              <caret line="81" column="58" selection-start-line="81" selection-start-column="58" selection-end-line="81" selection-end-column="58" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="horizontalSelectController.swift" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pup/controllers/horizontalSelectController.swift">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="455" max-vertical-offset="676">
-              <caret line="35" column="56" selection-start-line="35" selection-start-column="37" selection-end-line="35" selection-end-column="56" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="joinButton.swift" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pup/controllers/joinButton.swift">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="403" max-vertical-offset="637">
-              <caret line="31" column="49" selection-start-line="31" selection-start-column="49" selection-end-line="31" selection-end-column="49" />
+            <state vertical-scroll-proportion="0.28456914" vertical-offset="3212" max-vertical-offset="3796">
+              <caret line="258" column="0" selection-start-line="258" selection-start-column="0" selection-end-line="258" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -88,18 +108,8 @@
       <file leaf-file-name="searchResultsController.swift" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pup/controllers/searchResultsController.swift">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="143" max-vertical-offset="1417">
-              <caret line="11" column="43" selection-start-line="11" selection-start-column="3" selection-end-line="11" selection-end-column="43" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="createLobbyController.swift" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pup/controllers/createLobbyController.swift">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="494" max-vertical-offset="1547">
-              <caret line="38" column="54" selection-start-line="38" selection-start-column="54" selection-end-line="38" selection-end-column="54" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="873" max-vertical-offset="1417">
+              <caret line="81" column="74" selection-start-line="81" selection-start-column="56" selection-end-line="81" selection-end-column="74" />
               <folding />
             </state>
           </provider>
@@ -108,38 +118,28 @@
       <file leaf-file-name="lobbyListController.swift" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pup/controllers/lobbyListController.swift">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="468" max-vertical-offset="2574">
-              <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+            <state vertical-scroll-proportion="-0.4814815" vertical-offset="897" max-vertical-offset="2574">
+              <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SingleLobbyView.swift" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pup/views/SingleLobbyView.swift">
+      <file leaf-file-name="lobbyList.swift" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pup/views/lobbyList.swift">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1406" max-vertical-offset="2574">
-              <caret line="126" column="38" selection-start-line="126" selection-start-column="38" selection-end-line="126" selection-end-column="38" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1314" max-vertical-offset="2665">
+              <caret line="186" column="0" selection-start-line="186" selection-start-column="0" selection-end-line="186" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="appData.swift" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pup/data/appData.swift">
+      <file leaf-file-name="overlay.swift" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pup/views/overlay.swift">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="730" max-vertical-offset="1352">
-              <caret line="93" column="42" selection-start-line="93" selection-start-column="42" selection-end-line="93" selection-end-column="42" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="buttonDelegate.swift" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pup/protocols/buttonDelegate.swift">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="169" max-vertical-offset="312">
-              <caret line="13" column="1" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="559">
+              <caret line="17" column="87" selection-start-line="17" selection-start-column="87" selection-end-line="17" selection-end-column="87" />
               <folding />
             </state>
           </provider>
@@ -153,7 +153,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/pup/Images.xcassets/filter.imageset/Contents.json" />
         <option value="$PROJECT_DIR$/Podfile" />
         <option value="$PROJECT_DIR$/pup/structures/structures.swift" />
         <option value="$PROJECT_DIR$/pup/AFDateHelper/AFDateHelper.swift" />
@@ -177,33 +176,34 @@
         <option value="$PROJECT_DIR$/pup/views/gameSearchView.swift" />
         <option value="$PROJECT_DIR$/pup/controllers/gameSearch.swift" />
         <option value="$PROJECT_DIR$/pup/protocols/searcherDelegate.swift" />
-        <option value="$PROJECT_DIR$/pup/views/searchResultsCell.swift" />
         <option value="$PROJECT_DIR$/pup/data/games.swift" />
         <option value="$PROJECT_DIR$/pup/helperFunctions/stringExtension.swift" />
         <option value="$PROJECT_DIR$/pup/views/selectableTextView.swift" />
         <option value="$PROJECT_DIR$/pup/views/lobbyListCells.swift" />
         <option value="$PROJECT_DIR$/pup/views/menuView.swift" />
         <option value="$PROJECT_DIR$/pup/helperFunctions/transitionManager.swift" />
-        <option value="$PROJECT_DIR$/pup/views/filterView.swift" />
-        <option value="$PROJECT_DIR$/pup/views/lobbyList.swift" />
         <option value="$PROJECT_DIR$/pup/protocols/overlayDelegate.swift" />
         <option value="$PROJECT_DIR$/pup/controllers/sideMenuController.swift" />
         <option value="$PROJECT_DIR$/pup/data/lobbies.swift" />
         <option value="$PROJECT_DIR$/pup/data/lobbyCreation.swift" />
-        <option value="$PROJECT_DIR$/pup/protocols/buttonDelegate.swift" />
         <option value="$PROJECT_DIR$/pup/views/buttonView.swift" />
         <option value="$PROJECT_DIR$/pup/controllers/joinButton.swift" />
         <option value="$PROJECT_DIR$/pup/views/joinButtonView.swift" />
-        <option value="$PROJECT_DIR$/pup/controllers/searchResultsController.swift" />
-        <option value="$PROJECT_DIR$/pup/views/searchResultsView.swift" />
-        <option value="$PROJECT_DIR$/pup/controllers/filter.swift" />
         <option value="$PROJECT_DIR$/pup/controllers/horizontalSelectController.swift" />
         <option value="$PROJECT_DIR$/pup/views/horizontalScrollView.swift" />
         <option value="$PROJECT_DIR$/pup/controllers/createLobbyController.swift" />
-        <option value="$PROJECT_DIR$/pup/controllers/lobbyListController.swift" />
+        <option value="$PROJECT_DIR$/pup/views/createLobbyView.swift" />
         <option value="$PROJECT_DIR$/pup/views/SingleLobbyView.swift" />
         <option value="$PROJECT_DIR$/pup/data/appData.swift" />
-        <option value="$PROJECT_DIR$/pup/views/createLobbyView.swift" />
+        <option value="$PROJECT_DIR$/pup/views/searchResultsCell.swift" />
+        <option value="$PROJECT_DIR$/pup/protocols/buttonDelegate.swift" />
+        <option value="$PROJECT_DIR$/pup/controllers/lobbyListController.swift" />
+        <option value="$PROJECT_DIR$/pup/views/lobbyList.swift" />
+        <option value="$PROJECT_DIR$/pup/views/overlay.swift" />
+        <option value="$PROJECT_DIR$/pup/controllers/searchResultsController.swift" />
+        <option value="$PROJECT_DIR$/pup/views/searchResultsView.swift" />
+        <option value="$PROJECT_DIR$/pup/controllers/filter.swift" />
+        <option value="$PROJECT_DIR$/pup/views/filterView.swift" />
       </list>
     </option>
   </component>
@@ -534,7 +534,7 @@
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32988358" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32522407" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32522407" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33034572" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -543,7 +543,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290653" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24947146" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22551093" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26760563" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26760563" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="2635" y="663" width="1240" height="673" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -585,13 +585,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/pup.xcworkspace/contents.xcworkspacedata">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="496">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pup/SnapKit/Source/SnapKit.swift">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="585">
@@ -764,24 +757,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pup/protocols/overlayDelegate.swift">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="234">
-          <caret line="10" column="25" selection-start-line="10" selection-start-column="25" selection-end-line="10" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pup/data/lobbies.swift">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1176" max-vertical-offset="2574">
           <caret line="101" column="37" selection-start-line="101" selection-start-column="37" selection-end-line="101" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pup/controllers/sideMenuController.swift">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="210" max-vertical-offset="1105">
-          <caret line="50" column="33" selection-start-line="50" selection-start-column="33" selection-end-line="50" selection-end-column="33" />
         </state>
       </provider>
     </entry>
@@ -806,20 +785,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pup/views/filterView.swift">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-120.85185" vertical-offset="117" max-vertical-offset="3822">
-          <caret line="260" column="0" selection-start-line="260" selection-start-column="0" selection-end-line="260" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pup/views/lobbyList.swift">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1495" max-vertical-offset="2769">
-          <caret line="134" column="0" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pup/views/lobbyListCells.swift">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1976" max-vertical-offset="4251">
@@ -834,13 +799,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pup/views/searchResultsCell.swift">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="988">
-          <caret line="28" column="5" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pup/views/buttonView.swift">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="526" max-vertical-offset="1456">
@@ -852,39 +810,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="305" max-vertical-offset="1365">
           <caret line="36" column="38" selection-start-line="36" selection-start-column="38" selection-end-line="36" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pup/views/searchResultsView.swift">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1327" max-vertical-offset="2444">
-          <caret line="165" column="60" selection-start-line="165" selection-start-column="60" selection-end-line="165" selection-end-column="60" />
-          <caret line="170" column="58" selection-start-line="170" selection-start-column="58" selection-end-line="170" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pup/controllers/filter.swift">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="338" max-vertical-offset="2197">
-          <caret line="50" column="13" selection-start-line="50" selection-start-column="13" selection-end-line="50" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pup/controllers/searchResultsController.swift">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1417">
-          <caret line="11" column="43" selection-start-line="11" selection-start-column="3" selection-end-line="11" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pup/protocols/buttonDelegate.swift">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="312">
-          <caret line="13" column="1" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -904,14 +829,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pup/views/horizontalScrollView.swift">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="266" max-vertical-offset="1287">
-          <caret line="38" column="57" selection-start-line="38" selection-start-column="57" selection-end-line="38" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pup/controllers/createLobbyController.swift">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="494" max-vertical-offset="1547">
@@ -920,34 +837,122 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pup/controllers/lobbyListController.swift">
+    <entry file="file://$PROJECT_DIR$/pup/views/createLobbyView.swift">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="468" max-vertical-offset="2574">
-          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1326" max-vertical-offset="2119">
+          <caret line="81" column="58" selection-start-line="81" selection-start-column="58" selection-end-line="81" selection-end-column="58" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pup/views/SingleLobbyView.swift">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1406" max-vertical-offset="2574">
-          <caret line="126" column="38" selection-start-line="126" selection-start-column="38" selection-end-line="126" selection-end-column="38" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1497" max-vertical-offset="2574">
+          <caret line="142" column="77" selection-start-line="142" selection-start-column="77" selection-end-line="142" selection-end-column="77" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pup/data/appData.swift">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="730" max-vertical-offset="1352">
-          <caret line="93" column="42" selection-start-line="93" selection-start-column="42" selection-end-line="93" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1365">
+          <caret line="18" column="26" selection-start-line="18" selection-start-column="26" selection-end-line="18" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pup/views/createLobbyView.swift">
+    <entry file="file://$PROJECT_DIR$/pup/protocols/buttonDelegate.swift">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2867647" vertical-offset="897" max-vertical-offset="2119">
-          <caret line="81" column="58" selection-start-line="81" selection-start-column="58" selection-end-line="81" selection-end-column="58" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="312">
+          <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pup/protocols/overlayDelegate.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="234">
+          <caret line="10" column="25" selection-start-line="10" selection-start-column="25" selection-end-line="10" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pup/controllers/lobbyListController.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.4814815" vertical-offset="897" max-vertical-offset="2574">
+          <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pup/views/overlay.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="559">
+          <caret line="17" column="87" selection-start-line="17" selection-start-column="87" selection-end-line="17" selection-end-column="87" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pup/views/lobbyList.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1912" max-vertical-offset="2665">
+          <caret line="186" column="0" selection-start-line="186" selection-start-column="0" selection-end-line="186" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pup/views/horizontalScrollView.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="266" max-vertical-offset="1287">
+          <caret line="38" column="57" selection-start-line="38" selection-start-column="57" selection-end-line="38" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pup/views/searchResultsCell.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="262" max-vertical-offset="1001">
+          <caret line="37" column="54" selection-start-line="37" selection-start-column="54" selection-end-line="37" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pup/controllers/sideMenuController.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="210" max-vertical-offset="1105">
+          <caret line="50" column="33" selection-start-line="50" selection-start-column="33" selection-end-line="50" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pup/controllers/searchResultsController.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="873" max-vertical-offset="1417">
+          <caret line="81" column="74" selection-start-line="81" selection-start-column="56" selection-end-line="81" selection-end-column="74" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pup/views/searchResultsView.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2082" max-vertical-offset="2769">
+          <caret line="58" column="18" selection-start-line="58" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pup/controllers/filter.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="65" max-vertical-offset="2197">
+          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pup/views/filterView.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.28456914" vertical-offset="3212" max-vertical-offset="3796">
+          <caret line="258" column="0" selection-start-line="258" selection-start-column="0" selection-end-line="258" selection-end-column="0" />
           <folding />
         </state>
       </provider>

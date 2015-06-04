@@ -244,6 +244,7 @@ class FilterView: UIView {
                 make.top.equalTo(self.parentView).offset(-300)
                 make.height.equalTo(UIConstants.justBelowSearchBar + (UIConstants.buttonHeight / 2.0) + UIConstants.verticalPadding + (2 * UIConstants.buttonHeight))
 
+
             }
 
 
@@ -252,9 +253,6 @@ class FilterView: UIView {
 
 
         }
-
-
-
 
 
 

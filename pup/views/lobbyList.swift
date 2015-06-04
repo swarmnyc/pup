@@ -17,10 +17,9 @@ class LobbyListView: UIView {
     var swipeDetectionView = UIView()
     var panDetector = UIPanGestureRecognizer()
     var swipeDelegate: PanGestureDelegate?
-    var overlay: UIView = UIView()
+    var overlay: Overlay = Overlay()
     var FAB: floatingAction?
     var fabDelegate: FABDelegate?
-    var overlayDelegate: OverlayDelegate?
     var darkened = false;
 
 
@@ -50,7 +49,7 @@ class LobbyListView: UIView {
         table.delegate = delegate;
         table.dataSource = dataSource;
         FAB?.fabDelegate = fabDelegate
-        self.overlayDelegate = overlayDelegate
+        overlay.setDelegate(overlayDelegate)
     }
 
     func setUpTable() {
@@ -64,9 +63,7 @@ class LobbyListView: UIView {
         let singleTap = UITapGestureRecognizer(target: self, action: Selector("tapDetected"))
         singleTap.numberOfTapsRequired = 1
 
-        overlay.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-        overlay.layer.opacity = 0;
-        overlay.addGestureRecognizer(singleTap)
+
 
         let fabImage = UIImage(named: "FAB")
         FAB = floatingAction()
@@ -109,14 +106,9 @@ class LobbyListView: UIView {
 
     }
 
-    func tapDetected() {
-        if darkened {
-            println("clickedShadow");
-            overlayDelegate?.hideEverything();
-        }
-    }
 
     func darkenOverlay() {
+
         animateOverlay(1)
         darkened = true;
     }
@@ -185,12 +177,12 @@ class floatingAction: UIImageView {
 
 
     override func touchesBegan( touches: Set<NSObject>, withEvent event: UIEvent) {
-        fabDelegate?.touchDown();
+        fabDelegate?.fabTouchDown();
 
     }
 
     override func touchesEnded( touches: Set<NSObject>, withEvent event: UIEvent) {
-        fabDelegate?.touchUp();
+        fabDelegate?.fabTouchUp();
 
 
     }

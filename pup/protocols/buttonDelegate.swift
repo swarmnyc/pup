@@ -14,6 +14,6 @@ protocol SimpleButtonDelegate: class {
 }
 
 protocol FABDelegate: class {
-    func touchDown()
-    func touchUp()
+    func fabTouchDown()
+    func fabTouchUp()
 }

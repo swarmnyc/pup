@@ -35,6 +35,7 @@ class SearchResultsViewCell: UICollectionViewCell {
         gameName.textColor = UIColor(rgba: colors.mainGrey);
         println(data.Name)
         var url = NSURL(string: data.ThumbnailPictureUrl)
+        gameName.font = gameName.font.fontWithSize(12)
 
         var request:NSURLRequest = NSURLRequest(URL: url!)
         gameImg.backgroundColor = UIColor.blackColor();

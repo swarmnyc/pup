@@ -49,6 +49,7 @@
 		85DD2B6A57C65B1EA20AA823 /* MenuItemDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD21221D7D3B56F29F04C3 /* MenuItemDelegate.swift */; };
 		85DD2BE8383D6A52A712A7B4 /* transitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD228148A69D018E0E6E6D /* transitionManager.swift */; };
 		85DD2BE930403D89C5A34A33 /* colorFromSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD22141CF1C919B1C3657B /* colorFromSystem.swift */; };
+		85DD2BFF1AD4E1112ED119EC /* overlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD266A19EF82C8CFB1C963 /* overlay.swift */; };
 		85DD2C752502EC161124812E /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2DA5E7FD1C1DE09AF62C /* SwiftyJSON.swift */; };
 		85DD2CA61F21CEB9582DD947 /* colorFromHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2CD088BD6AD26D436A2D /* colorFromHex.swift */; };
 		85DD2D0549CB0795A4CB448B /* horizontalScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2FE2DE6479C5ED1CF81A /* horizontalScrollView.swift */; };
@@ -105,6 +106,7 @@
 		85DD256BD3A49C314605295B /* selectableTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = selectableTextView.swift; path = views/selectableTextView.swift; sourceTree = "<group>"; };
 		85DD2579270B8917230A6634 /* stringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = stringExtension.swift; sourceTree = "<group>"; };
 		85DD263DBBB80767380877A5 /* Debugging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debugging.swift; sourceTree = "<group>"; };
+		85DD266A19EF82C8CFB1C963 /* overlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = overlay.swift; path = views/overlay.swift; sourceTree = "<group>"; };
 		85DD266BBA90DA07583C2BB8 /* filter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = filter.swift; path = controllers/filter.swift; sourceTree = "<group>"; };
 		85DD26BEDFEE5AE7971B5273 /* SingleLobbyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SingleLobbyView.swift; path = views/SingleLobbyView.swift; sourceTree = "<group>"; };
 		85DD27868059972BED2B656E /* buttonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = buttonView.swift; path = views/buttonView.swift; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 				85DD238EFD5444EC37120A93 /* lobbyCreation.swift */,
 				85DD2FE2DE6479C5ED1CF81A /* horizontalScrollView.swift */,
 				85DD2DD3C511513115E28402 /* horizontalSelectController.swift */,
+				85DD266A19EF82C8CFB1C963 /* overlay.swift */,
 			);
 			path = pup;
 			sourceTree = "<group>";
@@ -556,6 +559,7 @@
 				85DD283AFDA2697E1053E7C2 /* lobbyCreation.swift in Sources */,
 				85DD2D0549CB0795A4CB448B /* horizontalScrollView.swift in Sources */,
 				85DD28BE1047C703D1F36BFE /* horizontalSelectController.swift in Sources */,
+				85DD2BFF1AD4E1112ED119EC /* overlay.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

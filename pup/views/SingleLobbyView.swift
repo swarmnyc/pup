@@ -140,7 +140,7 @@ class SingleLobbyView: UIView {
             make.bottom.equalTo(self.topContentBox).offset(0)
             make.left.equalTo(self.topContentBox).offset(UIConstants.horizontalPadding)
             make.right.equalTo(self.topContentBox).offset(-UIConstants.horizontalPadding)
-            make.height.greaterThanOrEqualTo(75)
+            make.height.greaterThanOrEqualTo(UIConstants.halfLobbyImage / 2.0)
         }
 
         gradientBox.snp_remakeConstraints { (make) -> Void in
@@ -153,7 +153,7 @@ class SingleLobbyView: UIView {
         }
 
 
-        gradient.frame = CGRect(x: 0,y: 0,width: 800,height: 100) //set an initial value that is wider than needed to stop gradient from animating
+        gradient.frame = CGRect(x: 0,y: 0,width: 800,height: UIConstants.lobbyImageHeight) //set an initial value that is wider than needed to stop gradient from animating
 
 
         descBox.snp_remakeConstraints { (make) -> Void in

@@ -69,12 +69,12 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
 
-    func touchDown() {
+    func fabTouchDown() {
         println("woooh")
         listView?.pushFab()
 
     }
-    func touchUp() {
+    func fabTouchUp() {
         print("hooooo")
         listView?.releaseFab()
         let createLobby = CreateLobbyController()

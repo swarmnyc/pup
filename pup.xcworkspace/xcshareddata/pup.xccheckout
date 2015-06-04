@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>22358D67-2334-40DF-A6A2-D41307109A4B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>pup</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>636D61B9E19C3254F95836EE4C21FDEECC478DCA</key>
+		<string>github.com:swarmnyc/pupiOS.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>pup.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>636D61B9E19C3254F95836EE4C21FDEECC478DCA</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:swarmnyc/pupiOS.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>636D61B9E19C3254F95836EE4C21FDEECC478DCA</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>636D61B9E19C3254F95836EE4C21FDEECC478DCA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>pup</string>
+		</dict>
+	</array>
+</dict>
+</plist>
