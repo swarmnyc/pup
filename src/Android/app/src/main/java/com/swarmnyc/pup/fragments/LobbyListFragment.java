@@ -31,10 +31,7 @@ import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
-import com.swarmnyc.pup.components.Action;
-import com.swarmnyc.pup.components.GamePlatformUtils;
-import com.swarmnyc.pup.components.Navigator;
-import com.swarmnyc.pup.components.Utility;
+import com.swarmnyc.pup.components.*;
 import com.swarmnyc.pup.models.Game;
 import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.models.Lobby;
@@ -45,7 +42,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LobbyListFragment extends Fragment
+public class LobbyListFragment extends Fragment implements Screen
 {
 	@InjectView( R.id.txt_game_serach )
 	public AutoCompleteTextView m_gameSearch;

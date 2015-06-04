@@ -46,11 +46,11 @@ public interface UserRestApi
 	);
 
 	@Multipart
-	@POST( "/UpdatePortrait" )
+	@POST( "/User/UpdatePortrait" )
 	void updatePortrait(
 		@Part( "portrait" )
 		TypedFile portrait,
-		RestApiCallback<String> callback
+		RestApiCallback callback
 	);
 
 	@FormUrlEncoded

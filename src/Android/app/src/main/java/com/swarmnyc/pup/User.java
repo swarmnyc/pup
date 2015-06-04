@@ -56,8 +56,13 @@ public class User
 		return current != CurrentUserInfo.Null;
 	}
 
-	public static void addMedia( final String type ) {
+	public static void addMedium( final String type ) {
 		current.getMedia().add( type );
+		Config.setString( KEY_USER, gson.toJson( current ) );
+	}
+
+	public static void removeMedium( final String type ) {
+		current.getMedia().remove( type );
 		Config.setString( KEY_USER, gson.toJson( current ) );
 	}
 }

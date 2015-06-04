@@ -39,7 +39,19 @@ public class Navigator
 					{
 						List<Fragment> fragments = activity.getSupportFragmentManager().getFragments();
 
-						Fragment f = fragments.get( fragments.size() - 1 );
+						Fragment f = null;
+						int p = fragments.size() - 1;
+						while ( p >= 0 )
+						{
+							if ( Screen.class.isInstance( fragments.get( p ) ) )
+							{
+								f = fragments.get( p );
+								break;
+							}
+
+							p--;
+						}
+
 						if ( f != null )
 						{
 							tracker.setScreenName( f.toString() );
@@ -97,7 +109,7 @@ public class Navigator
 		To( LobbyListFragment.class, null, true );
 	}
 
-	public static void ToLobby( final String id,final String name, final String from, boolean pop )
+	public static void ToLobby( final String id, final String name, final String from, boolean pop )
 	{
 		Bundle bundle = new Bundle();
 		bundle.putString( Consts.KEY_LOBBY_ID, id );
@@ -113,15 +125,15 @@ public class Navigator
 		To( LobbyFragment.class, bundle, true );
 	}
 
-	private static <T> void pop( Class<T> name )
-	{
-		FragmentManager fragmentManager = activity.getSupportFragmentManager();
-		fragmentManager.popBackStack( name.getName(), 0 );
-	}
-
 	private static void popOnce()
 	{
 		FragmentManager fragmentManager = activity.getSupportFragmentManager();
 		fragmentManager.popBackStack();
+	}
+
+	private static <T> void pop( Class<T> name )
+	{
+		FragmentManager fragmentManager = activity.getSupportFragmentManager();
+		fragmentManager.popBackStack( name.getName(), 0 );
 	}
 }

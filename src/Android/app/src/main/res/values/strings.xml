@@ -63,4 +63,9 @@
     <string name="time_in_minutes">in %d minutes</string>
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
+    <string name="your_pup_name">Your PUP username</string>
+    <string name="text_user_name_info">We\'ll be adding integrations for additional systems</string>
+    <string name="social_connection">Social Connection</string>
+    <string name="text_facebook">Facebook</string>
+    <string name="settings"><![CDATA[Accounts & Settings]]></string>
 </resources>

@@ -21,6 +21,7 @@ import com.swarmnyc.pup.adapters.ChatAdapter;
 import com.swarmnyc.pup.chat.ChatRoomService;
 import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.components.DialogHelper;
+import com.swarmnyc.pup.components.Screen;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
@@ -29,7 +30,8 @@ import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class LobbyFragment extends Fragment
+
+public class LobbyFragment extends Fragment implements Screen
 {
 	@Inject
 	LobbyService m_lobbyService;

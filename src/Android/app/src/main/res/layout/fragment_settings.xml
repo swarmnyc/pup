@@ -1,25 +1,86 @@
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.swarmnyc.pup.fragments.SettingsFragment">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_normal">
 
-    <Button
-        android:id="@+id/btn_logout"
-        android:layout_width="match_parent"
-        android:text="Log out"
-        android:layout_height="wrap_content" />
-    <Button
-            android:id="@+id/btn_login_fb"
+    <TextView
             android:layout_width="match_parent"
-            android:text="Connect to Facebook"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/your_pup_name"
+            style="@style/text_label"
+            android:layout_marginBottom="@dimen/margin_normal"
+            android:id="@+id/label_name"/>
+
+    <ImageView
+            android:id="@+id/img_portrait"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/label_name"
+            android:src="@drawable/default_portrait"
+            android:scaleType="centerCrop"/>
+
+    <View
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/border"
+            android:layout_below="@+id/label_name"
+            android:id="@+id/view">
+    </View>
+
+
+    <ImageView
+            android:id="@+id/img_camera"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ico_camera_teal"
+            android:layout_margin="@dimen/margin_half"
+            android:layout_alignBottom="@+id/img_portrait"
+            android:layout_alignLeft="@+id/img_portrait"
+            android:layout_alignStart="@+id/img_portrait"
+            />
+
+    <EditText
+            android:id="@+id/text_name"
+            android:hint="@string/hint_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_alignTop="@+id/img_portrait"
+            android:layout_toRightOf="@+id/img_portrait"
+            android:layout_toEndOf="@+id/img_portrait"
+            android:enabled="false"/>
 
     <TextView
             android:id="@+id/text_description"
-            android:layout_width="wrap_content"
-            android:textIsSelectable="true"
-            android:layout_height="wrap_content"/>
-</LinearLayout>
+            android:text="@string/text_user_name_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/pup_light"
+            android:layout_alignBottom="@+id/img_camera"
+            android:layout_alignLeft="@+id/text_name"
+            android:layout_alignStart="@+id/text_name"/>
+
+    <LinearLayout
+            android:id="@+id/contentPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:layout_below="@+id/img_portrait"
+            >
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/text_label"
+                android:text="@string/social_connection"/>
+
+        <Switch
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_facebook"
+                android:id="@+id/switch_facebook"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

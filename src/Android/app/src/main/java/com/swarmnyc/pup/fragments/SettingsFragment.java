@@ -1,91 +1,47 @@
 package com.swarmnyc.pup.fragments;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Switch;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.facebook.*;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.swarmnyc.pup.Consts;
-import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.Services.ServiceCallback;
+import com.soundcloud.android.crop.Crop;
+import com.squareup.picasso.Picasso;
+import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.UserService;
-import com.swarmnyc.pup.User;
+import com.swarmnyc.pup.activities.MainActivity;
+import com.swarmnyc.pup.components.DialogHelper;
+import com.swarmnyc.pup.components.FacebookHelper;
+import com.swarmnyc.pup.components.Screen;
 
 import javax.inject.Inject;
-import java.util.Arrays;
+import java.io.File;
 
-public class SettingsFragment extends Fragment
+public class SettingsFragment extends Fragment implements Screen
 {
 	@Inject
 	UserService m_userService;
 
-	@InjectView( R.id.text_description )
-	TextView test;
-	CallbackManager callbackManager;
+	@InjectView( R.id.text_name )
+	EditText m_nameText;
 
+	@InjectView( R.id.img_portrait )
+	ImageView m_portrait;
 
-	@OnClick( R.id.btn_logout )
-	void logout()
-	{
-		User.Logout();
-	}
-
-	@OnClick( R.id.btn_login_fb )
-	void connectFacebook()
-	{
-		callbackManager = CallbackManager.Factory.create();
-		FacebookSdk.sdkInitialize( getActivity().getApplicationContext() );
-
-		LoginManager.getInstance().registerCallback(
-			callbackManager, new FacebookCallback<LoginResult>()
-			{
-				@Override
-				public void onSuccess( final LoginResult loginResult )
-				{
-					AccessToken at = loginResult.getAccessToken();
-					m_userService.addFacebookToken(
-						at.getUserId(), at.getToken(), at.getExpires(), new ServiceCallback()
-						{
-							@Override
-							public void success( final Object value )
-							{
-								User.addMedia("Facebook");
-								Toast.makeText( getActivity(), "Connected", Toast.LENGTH_LONG ).show();
-							}
-						}
-					);
-				}
-
-				@Override
-				public void onCancel()
-				{
-
-				}
-
-				@Override
-				public void onError( final FacebookException e )
-				{
-
-				}
-			}
-		);
-
-		LoginManager.getInstance().logInWithPublishPermissions(
-			this, Arrays.asList(
-				"publish_actions"
-			)
-		);
-	}
+	@InjectView( R.id.switch_facebook )
+	Switch m_fbSwitch;
 
 	@Override
 	public String toString()
@@ -96,8 +52,46 @@ public class SettingsFragment extends Fragment
 	@Override
 	public void onActivityResult( final int requestCode, final int resultCode, final Intent data )
 	{
-		super.onActivityResult( requestCode, resultCode, data );
-		callbackManager.onActivityResult( requestCode, resultCode, data );
+		if ( requestCode == Consts.CODE_PHOTO && resultCode == Activity.RESULT_OK )
+		{
+			Uri destination = Uri.fromFile( new File( getActivity().getCacheDir(), "cropped" ) );
+			Crop.of( data.getData(), destination ).asSquare().withMaxSize( 1000, 1000 ).start(
+				getActivity(), this
+			);
+
+		}
+		else if ( requestCode == Crop.REQUEST_CROP && resultCode == Activity.RESULT_OK )
+		{
+			Uri uri = Crop.getOutput( data );
+
+			if ( uri != null )
+			{
+				String path;
+
+				m_portrait.setImageURI( uri );
+
+				Cursor cursor = this.getActivity().getContentResolver().query(
+					uri, null, null, null, null
+				);
+
+				if ( cursor == null )
+				{
+					path = uri.getPath();
+				}
+				else
+				{
+					cursor.moveToFirst();
+					int idx = cursor.getColumnIndex( MediaStore.Images.ImageColumns.DATA );
+					path = cursor.getString( idx );
+				}
+
+				m_userService.updatePortrait( path, null );
+			}
+		}
+		else
+		{
+			super.onActivityResult( requestCode, resultCode, data );
+		}
 	}
 
 	@Override
@@ -114,6 +108,17 @@ public class SettingsFragment extends Fragment
 		super.onViewCreated( view, savedInstanceState );
 		ButterKnife.inject( this, view );
 		PuPApplication.getInstance().getComponent().inject( this );
+		MainActivity.getInstance().getToolbar().setTitle( R.string.settings );
+		MainActivity.getInstance().getToolbar().setSubtitle( null );
+
+		if ( StringUtils.isNotEmpty( User.current.getPortraitUrl() ) )
+		{
+			Picasso.with( this.getActivity() ).load( User.current.getPortraitUrl() ).into( m_portrait );
+		}
+
+		m_nameText.setText( User.current.getUserName() );
+
+		m_fbSwitch.setChecked( User.current.hasMedium( Consts.KEY_FACEBOOK ) );
 	}
 
 	@Override
@@ -121,5 +126,44 @@ public class SettingsFragment extends Fragment
 	{
 		super.onStart();
 		MainDrawerFragment.getInstance().highLight( Consts.KEY_SETTINGS );
+	}
+
+	@OnClick( {R.id.img_camera, R.id.img_portrait} )
+	void choosePortrait()
+	{
+		DialogHelper.showOptions(
+			new String[]{"Take a new photo", "Choose from gallery"}, new DialogInterface.OnClickListener()
+			{
+				@Override
+				public void onClick( final DialogInterface dialog, final int which )
+				{
+					if ( which == 0 )
+					{
+						Intent takePicture = new Intent( MediaStore.ACTION_IMAGE_CAPTURE );
+						startActivityForResult( takePicture, Consts.CODE_PHOTO );
+					}
+					else
+					{
+						Intent pickPhoto = new Intent(
+							Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+						);
+						startActivityForResult( pickPhoto, Consts.CODE_PHOTO );
+					}
+				}
+			}
+		);
+	}
+
+	@OnClick( R.id.switch_facebook )
+	void connectToFacebook()
+	{
+		if ( m_fbSwitch.isChecked() )
+		{
+			FacebookHelper.getAndSubmitToken( null );
+		}
+		else
+		{
+			User.removeMedium( Consts.KEY_FACEBOOK );
+		}
 	}
 }

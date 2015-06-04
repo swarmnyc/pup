@@ -149,7 +149,7 @@ namespace SWARM.PuP.Web.ApiControllers
             _imageService.CreateThumbnailTo(stream,
                 HostingEnvironment.MapPath(url));
 
-            return Ok(url);
+            return Ok();
         }
 
         [Authorize]

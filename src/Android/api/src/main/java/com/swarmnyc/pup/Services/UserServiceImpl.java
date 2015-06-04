@@ -78,17 +78,17 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public void updatePortrait( final String file, final ServiceCallback<String> callback )
+	public void updatePortrait( final String file, final ServiceCallback callback )
 	{
 		TypedFile tf = null;
 		if ( StringUtils.isNotEmpty( file ) )
 		{ tf = new TypedFile( "multipart/form-data", new File( file ) ); }
 
 		m_userApi.updatePortrait(
-			tf, new RestApiCallback<String>()
+			tf, new RestApiCallback()
 			{
 				@Override
-				public void success( final String s, final Response response )
+				public void success( final Object s, final Response response )
 				{
 					if ( callback != null )
 						callback.success( s );

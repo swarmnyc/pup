@@ -5,6 +5,7 @@ import android.widget.Toast;
 import com.facebook.*;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.Services.UserService;
@@ -38,7 +39,7 @@ public class FacebookHelper
 								@Override
 								public void success( final Object value )
 								{
-									User.addMedia( "Facebook" );
+									User.addMedium( Consts.KEY_FACEBOOK );
 									Toast.makeText( MainActivity.getInstance(), "Connected", Toast.LENGTH_LONG )
 									     .show();
 

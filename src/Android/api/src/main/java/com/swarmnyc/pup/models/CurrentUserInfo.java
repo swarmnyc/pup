@@ -1,7 +1,9 @@
 package com.swarmnyc.pup.models;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CurrentUserInfo extends UserInfo
 {
@@ -10,7 +12,7 @@ public class CurrentUserInfo extends UserInfo
 	private String       accessToken;
 	private double       expiresIn;
 	private List<PuPTag> tags;
-	private List<String> media;
+	private Set<String>  media;
 
 	public CurrentUserInfo()
 	{
@@ -70,16 +72,16 @@ public class CurrentUserInfo extends UserInfo
 		return null;
 	}
 
-	public List<String> getMedia()
+	public Set<String> getMedia()
 	{
 		if ( media == null )
 		{
-			media = new ArrayList<>();
+			media = new HashSet<>();
 		}
 		return media;
 	}
 
-	public void setMedia( List<String> media )
+	public void setMedia( Set<String> media )
 	{
 		this.media = media;
 	}

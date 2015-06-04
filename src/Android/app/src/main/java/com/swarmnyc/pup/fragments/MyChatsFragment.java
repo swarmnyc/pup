@@ -13,9 +13,10 @@ import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.MyChatAdapter;
+import com.swarmnyc.pup.components.Screen;
 import com.swarmnyc.pup.view.DividerItemDecoration;
 
-public class MyChatsFragment extends Fragment
+public class MyChatsFragment extends Fragment implements Screen
 {
 	@InjectView( R.id.list_chat )
 	RecyclerView chatList;
