@@ -7,6 +7,6 @@ import Foundation
 
 protocol SearcherDelegate: class {
     func handOffResults(data: Array<gameData>)
-
+    func retreiveData(data: gameData)
 
 }

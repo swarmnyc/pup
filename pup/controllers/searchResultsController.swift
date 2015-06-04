@@ -94,7 +94,14 @@ class SearchResultsController: UIViewController, UICollectionViewDataSource, UIC
         var selectedCell = collectionView.cellForItemAtIndexPath(indexPath) as? SearchResultsViewCell;
         println(selectedCell?.gameName.text!)
         self.searchBar?.text = selectedCell?.gameName.text!
+
         self.hideResults();
+
+
+        var searcherDelegate = parentController! as? SearcherDelegate
+        searcherDelegate!.retreiveData(data![indexPath.item])
+        println(data![indexPath.row])
+
     }
 
 

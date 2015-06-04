@@ -45,6 +45,10 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
 
     }
 
+    func retreiveData(data: gameData) { //from search results
+        //empty here
+    }
+
     func handOffResults(newdata: Array<gameData>) {
         println("display results");
         searchController?.giveResults(newdata);

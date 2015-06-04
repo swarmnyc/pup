@@ -6,13 +6,14 @@
 import Foundation
 import UIKit
 
-class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarDelegate, SearcherDelegate {
+class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarDelegate, SearcherDelegate, UIScrollViewDelegate, UITextFieldDelegate {
 
     var createView: CreateLobbyView = CreateLobbyView()
     var searchController: SearchResultsController?;
     var data: Searcher = Searcher();
     var playStyle: HorizontalSelectController?
-
+    var gamerSkill: HorizontalSelectController?
+    var logInButton: JoinButton? = nil
 
     required init(coder aDecoder: NSCoder)
     {
@@ -32,13 +33,32 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        currentUser.setPage("Create Lobby")
 
         searchController = SearchResultsController(parent: self, searchBar: createView.searchBar);
-        playStyle = HorizontalSelectController(parent: self, options: ["NORMAL", "HARDCORE", "3L337", "PRO"])
-        view.addSubview(playStyle!.view)
-        playStyle?.setUpView(self.view, topOffset: 330.0)
+        playStyle = HorizontalSelectController(parent: self, options: ["NORMAL", "HARDCORE", "3L337", "PRO"], title: "PLAY STYLE")
+        gamerSkill = HorizontalSelectController(parent: self, options: ["NOOB", "CASUAL", "3L337", "PRO"], title: "GAMER SKILL")
+        //scrollView.panGestureRecognizer.requireGestureRecognizerToFail(mySwipe)
+
+        createView.containerView.addSubview(playStyle!.view)
+        createView.containerView.addSubview(gamerSkill!.view)
+        playStyle?.setUpView(self.createView.containerView, bottomOffset:  300.0)
+        gamerSkill?.setUpView(self.createView.containerView, bottomOffset: 200.0)
         view.addSubview(searchController!.view)
         data.delegate = self;
+
+        if (currentUser.loggedIn() == false) {
+            logInButton = JoinButton(parentController: self)
+            logInButton?.setNewView(createView.containerView)
+        }
+
+    }
+
+    func retreiveData(data: gameData) {
+        var imageURL: String = data.PictureUrl
+        println(imageURL)
+        println("got it!")
+        createView.setImage(imageURL);
 
 
     }
@@ -55,7 +75,7 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
         closeEverything();
 
         createView.uncheckAllPlatforms()
-
+        println(theButton)
        println(theButton.currentTitle!)
     }
 
@@ -96,6 +116,10 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
     }
 
 
+
+    func handleDatePicker(sender: UIDatePicker) {
+        println(sender.date)
+    }
 
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         println(searchText)

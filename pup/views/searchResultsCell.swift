@@ -34,9 +34,9 @@ class SearchResultsViewCell: UICollectionViewCell {
         gameName.text = data.Name
         gameName.textColor = UIColor(rgba: colors.mainGrey);
         println(data.Name)
-        var url = NSURL(string: data.ThumbnailPictureUrl)
         gameName.font = gameName.font.fontWithSize(12)
 
+        var url = NSURL(string: data.ThumbnailPictureUrl)
         var request:NSURLRequest = NSURLRequest(URL: url!)
         gameImg.backgroundColor = UIColor.blackColor();
         NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in

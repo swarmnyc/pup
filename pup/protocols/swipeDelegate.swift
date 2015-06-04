@@ -11,3 +11,9 @@ protocol PanGestureDelegate: class {
 
 
 }
+
+protocol SwipeGestureDelegate: class {
+    func swiped(direction: String)
+
+
+}

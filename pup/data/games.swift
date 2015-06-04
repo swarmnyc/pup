@@ -16,6 +16,9 @@ class Searcher {
     var delegate: SearcherDelegate?
     var platforms: Array<String> = [];
     var searchTerm: String = ""
+
+    var selectedImage = ""
+
     init() {
 
 

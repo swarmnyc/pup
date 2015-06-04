@@ -21,6 +21,7 @@
 		85DD2295CF985A41E309F3A4 /* AFDateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD22C0B0EC0ED29F6251ED /* AFDateHelper.swift */; };
 		85DD22B004638E2F3BBA70DA /* swipeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2DDAF8450556CC4B1F09 /* swipeDelegate.swift */; };
 		85DD233E18A4FE40D17A89A8 /* lobbyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD247410FFEEC9AB25B772 /* lobbyList.swift */; };
+		85DD23443F10E4CA9DD5778C /* datePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD27E31AD0E3012A386959 /* datePicker.swift */; };
 		85DD23EBFCC8960B9DDFC289 /* selectableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD256BD3A49C314605295B /* selectableTextView.swift */; };
 		85DD24C113D07393415D69A6 /* menuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2AB635DC227D9EAB9E35 /* menuView.swift */; };
 		85DD253635184ED5D8B1F6D1 /* stringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2579270B8917230A6634 /* stringExtension.swift */; };
@@ -31,6 +32,7 @@
 		85DD27A3FF3778F7C14480FF /* users.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2D4861C2BBF20EE55949 /* users.swift */; };
 		85DD27B7800A775281DF098B /* EdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2E8514C938B94BF216C7 /* EdgeInsets.swift */; };
 		85DD283AFDA2697E1053E7C2 /* lobbyCreation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD238EFD5444EC37120A93 /* lobbyCreation.swift */; };
+		85DD2894B3A4430DAD16E5D5 /* dateDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD222D009817F36BF19C9D /* dateDisplay.swift */; };
 		85DD289C1744FE461F6A0282 /* ConstraintMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD21304E71FA623F0B4525 /* ConstraintMaker.swift */; };
 		85DD28BE1047C703D1F36BFE /* horizontalSelectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2DD3C511513115E28402 /* horizontalSelectController.swift */; };
 		85DD28CAFAD79E3B8CDDF85F /* Debugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD263DBBB80767380877A5 /* Debugging.swift */; };
@@ -47,6 +49,7 @@
 		85DD2ABD4DB048A3EC2DF490 /* buttonDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2C5D3D508A6931275758 /* buttonDelegate.swift */; };
 		85DD2B505C697215D2D818DC /* Constraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD28D81A9D1BB3BF8FFBD5 /* Constraint.swift */; };
 		85DD2B6A57C65B1EA20AA823 /* MenuItemDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD21221D7D3B56F29F04C3 /* MenuItemDelegate.swift */; };
+		85DD2BD53DEE678EC6B15729 /* horizontalSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2DBD6229943F9C48C139 /* horizontalSelector.swift */; };
 		85DD2BE8383D6A52A712A7B4 /* transitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD228148A69D018E0E6E6D /* transitionManager.swift */; };
 		85DD2BE930403D89C5A34A33 /* colorFromSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD22141CF1C919B1C3657B /* colorFromSystem.swift */; };
 		85DD2BFF1AD4E1112ED119EC /* overlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD266A19EF82C8CFB1C963 /* overlay.swift */; };
@@ -94,6 +97,7 @@
 		85DD21221D7D3B56F29F04C3 /* MenuItemDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuItemDelegate.swift; path = protocols/MenuItemDelegate.swift; sourceTree = "<group>"; };
 		85DD21304E71FA623F0B4525 /* ConstraintMaker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintMaker.swift; sourceTree = "<group>"; };
 		85DD22141CF1C919B1C3657B /* colorFromSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = colorFromSystem.swift; sourceTree = "<group>"; };
+		85DD222D009817F36BF19C9D /* dateDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = dateDisplay.swift; path = views/dateDisplay.swift; sourceTree = "<group>"; };
 		85DD228148A69D018E0E6E6D /* transitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = transitionManager.swift; sourceTree = "<group>"; };
 		85DD22C0B0EC0ED29F6251ED /* AFDateHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AFDateHelper.swift; path = AFDateHelper/AFDateHelper.swift; sourceTree = "<group>"; };
 		85DD22E1CB17BAA3D2E0A5D9 /* joinButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = joinButton.swift; path = controllers/joinButton.swift; sourceTree = "<group>"; };
@@ -112,6 +116,7 @@
 		85DD27868059972BED2B656E /* buttonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = buttonView.swift; path = views/buttonView.swift; sourceTree = "<group>"; };
 		85DD27ACEAAB289844D30C60 /* ConstraintItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintItem.swift; sourceTree = "<group>"; };
 		85DD27C4B75AE527CF4ECB8A /* createLobbyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = createLobbyView.swift; path = views/createLobbyView.swift; sourceTree = "<group>"; };
+		85DD27E31AD0E3012A386959 /* datePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = datePicker.swift; path = datePicker/datePicker.swift; sourceTree = "<group>"; };
 		85DD28D81A9D1BB3BF8FFBD5 /* Constraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constraint.swift; sourceTree = "<group>"; };
 		85DD28D9F7E47CBB5773C363 /* searcherDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = searcherDelegate.swift; path = protocols/searcherDelegate.swift; sourceTree = "<group>"; };
 		85DD2992D9B81BFE9BCF8B85 /* View+SnapKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+SnapKit.swift"; sourceTree = "<group>"; };
@@ -133,6 +138,7 @@
 		85DD2D4861C2BBF20EE55949 /* users.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = users.swift; path = data/users.swift; sourceTree = "<group>"; };
 		85DD2DA02911862CD98932A6 /* ConstraintDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintDescription.swift; sourceTree = "<group>"; };
 		85DD2DA5E7FD1C1DE09AF62C /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftyJSON.swift; path = pup/SwiftyJSON/Source/SwiftyJSON.swift; sourceTree = SOURCE_ROOT; };
+		85DD2DBD6229943F9C48C139 /* horizontalSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = horizontalSelector.swift; path = data/horizontalSelector.swift; sourceTree = "<group>"; };
 		85DD2DD3C511513115E28402 /* horizontalSelectController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = horizontalSelectController.swift; path = controllers/horizontalSelectController.swift; sourceTree = "<group>"; };
 		85DD2DDAF8450556CC4B1F09 /* swipeDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = swipeDelegate.swift; path = protocols/swipeDelegate.swift; sourceTree = "<group>"; };
 		85DD2E8514C938B94BF216C7 /* EdgeInsets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EdgeInsets.swift; sourceTree = "<group>"; };
@@ -229,6 +235,9 @@
 				85DD2FE2DE6479C5ED1CF81A /* horizontalScrollView.swift */,
 				85DD2DD3C511513115E28402 /* horizontalSelectController.swift */,
 				85DD266A19EF82C8CFB1C963 /* overlay.swift */,
+				85DD2DBD6229943F9C48C139 /* horizontalSelector.swift */,
+				85DD222D009817F36BF19C9D /* dateDisplay.swift */,
+				85DD27E31AD0E3012A386959 /* datePicker.swift */,
 			);
 			path = pup;
 			sourceTree = "<group>";
@@ -560,6 +569,9 @@
 				85DD2D0549CB0795A4CB448B /* horizontalScrollView.swift in Sources */,
 				85DD28BE1047C703D1F36BFE /* horizontalSelectController.swift in Sources */,
 				85DD2BFF1AD4E1112ED119EC /* overlay.swift in Sources */,
+				85DD2BD53DEE678EC6B15729 /* horizontalSelector.swift in Sources */,
+				85DD2894B3A4430DAD16E5D5 /* dateDisplay.swift in Sources */,
+				85DD23443F10E4CA9DD5778C /* datePicker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

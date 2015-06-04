@@ -6,15 +6,18 @@
 import Foundation
 import UIKit
 
-class HorizontalSelectController: UIViewController, SimpleButtonDelegate {
+class HorizontalSelectController: UIViewController, SimpleButtonDelegate, SwipeGestureDelegate {
     var parentController: UIViewController?
     var horizontalView: HorizontalSelectView = HorizontalSelectView();
+    var data = HorizontalData()
+
     var options: Array<String> = []
-    convenience init(parent: UIViewController, options: Array<String>) {
+    convenience init(parent: UIViewController, options: Array<String>, title: String) {
         self.init();
         println("hello im a horizontal selector!")
         parentController = parent;
-        self.options = options;
+        self.data.options = options;
+        self.data.title = title;
 
     }
 
@@ -27,14 +30,30 @@ class HorizontalSelectController: UIViewController, SimpleButtonDelegate {
     override func viewDidLoad() {
         super.viewDidLoad();
 
-        horizontalView.addOptions(options, buttonDelegate: self)
+        horizontalView.addOptions(data.options, title: data.title, delegate: self)
 
 
 
     }
 
-    func setUpView(parentView: UIView, topOffset: Double) {
-        horizontalView.setUpView(parentView, topOffset: topOffset)
+
+    func swiped(direction: String) {
+        switch (direction) {
+            case "left":
+                self.data.currentSelection++;
+            case "right":
+                self.data.currentSelection--;
+            default:
+                break;
+        }
+
+        self.horizontalView.slideLayout(self.data.currentSelection);
+        println(self.data.currentSelection);
+
+    }
+
+    func setUpView(parentView: UIView, bottomOffset: Double) {
+        horizontalView.setUpView(parentView, bottomOffset: bottomOffset)
 
     }
 
@@ -42,6 +61,8 @@ class HorizontalSelectController: UIViewController, SimpleButtonDelegate {
 
     }
     func touchUp(button: NSObject, type: String) {
+        self.data.currentSelection = self.data.getIndexFromString(type);
+        self.horizontalView.slideLayout(self.data.currentSelection);
 
     }
 }

@@ -24,22 +24,26 @@ class Overlay: UIView {
 
         func setDelegate(overlayDelegate: OverlayDelegate) {
             self.overlayDelegate = overlayDelegate;
-            self.userInteractionEnabled = true;
 
             self.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
            self.layer.opacity = 0;
+            self.userInteractionEnabled = false;
+
 
         }
 
         func showOverlay() {
 
             self.layer.opacity = 1;
+            self.userInteractionEnabled = true;
 
 
         }
 
         func hideOverlay() {
             self.layer.opacity = 0;
+            self.userInteractionEnabled = false;
+
         }
 
 

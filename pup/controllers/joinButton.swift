@@ -9,11 +9,11 @@ import UIKit
 
 class JoinButton: UIViewController, SimpleButtonDelegate {
 
-    var parent: SingleLobbyController?
+    var parent: UIViewController?
     var joinButtonView: JoinButtonView = JoinButtonView();
 
 
-    convenience init(parentController: SingleLobbyController) {
+    convenience init(parentController: UIViewController) {
         self.init()
         parent = parentController;
 
@@ -30,6 +30,13 @@ class JoinButton: UIViewController, SimpleButtonDelegate {
     }
 
     func touchDown(button: NSObject, type: String) {
+
+    }
+
+    func setNewView(newView: UIView) {
+        joinButtonView.setUpViews(newView, joinDelegate: self);
+
+
 
     }
 
