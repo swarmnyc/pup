@@ -36,7 +36,8 @@ public class UserServiceImpl implements UserService
 				{
 					if ( userRequestResult.isSuccess() )
 					{
-						callback.success( userRequestResult.getUser() );
+						if ( callback != null )
+							callback.success( userRequestResult.getUser() );
 					}
 					else
 					{
@@ -64,7 +65,8 @@ public class UserServiceImpl implements UserService
 				{
 					if ( userRequestResult.isSuccess() )
 					{
-						callback.success( userRequestResult.getUser() );
+						if ( callback != null )
+							callback.success( userRequestResult.getUser() );
 					}
 					else
 					{
@@ -88,7 +90,8 @@ public class UserServiceImpl implements UserService
 				@Override
 				public void success( final String s, final Response response )
 				{
-					callback.success( s );
+					if ( callback != null )
+						callback.success( s );
 				}
 			}
 		);
@@ -117,7 +120,8 @@ public class UserServiceImpl implements UserService
 				@Override
 				public void success( final Object o, final Response response )
 				{
-					callback.success( o );
+					if ( callback != null )
+						callback.success( o );
 				}
 			}
 		);
@@ -132,7 +136,8 @@ public class UserServiceImpl implements UserService
 				@Override
 				public void success( final Object o, final Response response )
 				{
-					callback.success( o );
+					if ( callback != null )
+						callback.success( o );
 				}
 			}
 		);

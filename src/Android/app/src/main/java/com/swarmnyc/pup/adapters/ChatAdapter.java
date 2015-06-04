@@ -7,10 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.Services.LobbyService;
+import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.StringUtils;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatMessageListener;
@@ -25,38 +29,28 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	private static final int HEADER = 0;
 	private static final int SHARE  = -1;
 	private static final int ITEM   = 1;
+	ChatRoomService   m_chatRoomService;
+	List<ChatMessage> m_chatMessages;
+	LobbyService      m_lobbyService;
 	private Context        m_context;
 	private Lobby          m_lobby;
 	private LayoutInflater m_inflater;
+	private RecyclerView   m_recyclerView;
 
-	ChatRoomService   m_chatRoomService;
-	List<ChatMessage> m_chatMessages;
-	private RecyclerView m_recyclerView;
-
-	public ChatAdapter( final Context context, final ChatRoomService chatRoomService, final Lobby lobby )
+	public ChatAdapter(
+		final Context context, final LobbyService lobbyService, final ChatRoomService chatRoomService, final Lobby
+		lobby
+	)
 	{
 		m_context = context;
 		m_lobby = lobby;
 		m_inflater = (LayoutInflater) m_context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+		m_lobbyService = lobbyService;
 		m_chatMessages = new LinkedList<>();
 
 		m_chatRoomService = chatRoomService;
 		m_chatRoomService.setMessageListener( this );
 		m_chatRoomService.login();
-	}
-
-	@Override
-	public void onAttachedToRecyclerView( final RecyclerView recyclerView )
-	{
-		m_recyclerView = recyclerView;
-		super.onAttachedToRecyclerView( recyclerView );
-	}
-
-	@Override
-	public void onDetachedFromRecyclerView( final RecyclerView recyclerView )
-	{
-		super.onDetachedFromRecyclerView( recyclerView );
-		m_chatRoomService.leave();
 	}
 
 	@Override
@@ -115,6 +109,20 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	}
 
 	@Override
+	public void onAttachedToRecyclerView( final RecyclerView recyclerView )
+	{
+		m_recyclerView = recyclerView;
+		super.onAttachedToRecyclerView( recyclerView );
+	}
+
+	@Override
+	public void onDetachedFromRecyclerView( final RecyclerView recyclerView )
+	{
+		super.onDetachedFromRecyclerView( recyclerView );
+		m_chatRoomService.leave();
+	}
+
+	@Override
 	public void receive( final List<ChatMessage> message )
 	{
 		m_chatMessages.addAll( message );
@@ -145,10 +153,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 		public void setCharMessage( final ChatMessage chatMessage )
 		{
-			if (StringUtils.isEmpty( chatMessage.getUser().getPortraitUrl()) ){
+			if ( StringUtils.isEmpty( chatMessage.getUser().getPortraitUrl() ) )
+			{
 				portrait.setImageResource( R.drawable.default_portrait );
-			}else{
-				Picasso.with( m_context ).load(chatMessage.getUser().getPortraitUrl()).into( portrait );
+			}
+			else
+			{
+				Picasso.with( m_context ).load( chatMessage.getUser().getPortraitUrl() ).into( portrait );
 			}
 
 			nameText.setText( chatMessage.getUser().getUserName() );
@@ -195,9 +206,25 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 	class ShareViewHolder extends RecyclerView.ViewHolder
 	{
-		public ShareViewHolder(
-			final View view
-		)
-		{super( view );}
+		public ShareViewHolder( final View view )
+		{
+			super( view );
+			ButterKnife.inject( this, view );
+		}
+
+		@OnClick( R.id.btn_invite )
+		void invite()
+		{
+			m_lobbyService.invite(
+				m_lobby.getId(), new ServiceCallback()
+				{
+					@Override
+					public void success( final Object value )
+					{
+						Toast.makeText( m_context, "Invite Succeeded", Toast.LENGTH_SHORT ).show();
+					}
+				}
+			);
+		}
 	}
 }

@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Filters;
+using System.Web.Mvc;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
 using SWARM.PuP.Web.Services;
@@ -14,7 +15,7 @@ using SWARM.PuP.Web.ViewModels;
 
 namespace SWARM.PuP.Web.ApiControllers
 {
-    [RoutePrefix("api/Lobby")]
+    [System.Web.Http.RoutePrefix("api/Lobby")]
     public class LobbyController : ApiController
     {
         private const int ShowTimeOffset = -15;
@@ -42,7 +43,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return LobbyViewModel.Load(_lobbyService.Filter(filter));
         }
 
-        [Authorize, Route("My")]
+        [System.Web.Http.Authorize, System.Web.Http.Route("My")]
         public IEnumerable<LobbyViewModel> GetMy([FromUri] LobbyFilter filter)
         {
             filter = filter ?? new LobbyFilter();
@@ -66,7 +67,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return lobby;
         }
 
-        [Authorize, ModelValidate]
+        [System.Web.Http.Authorize, ModelValidate]
         public Lobby Post(Lobby lobby)
         {
             var game = _gameService.GetById(lobby.GameId);
@@ -81,7 +82,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return _lobbyService.Add(lobby, User.Identity.GetPuPUser());
         }
 
-        [Authorize, ModelValidate]
+        [System.Web.Http.Authorize, ModelValidate]
         public IHttpActionResult Put(Lobby lobby)
         {
             var origin = _lobbyService.GetById(lobby.Id);
@@ -95,7 +96,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        [Authorize, Route("Join/{lobbyId}"), HttpPost, ModelValidate]
+        [System.Web.Http.Authorize, System.Web.Http.Route("Join/{lobbyId}"), System.Web.Http.HttpPost, ModelValidate]
         public IHttpActionResult Join(string lobbyId)
         {
             _lobbyService.Join(lobbyId, User.Identity.GetPuPUser());
@@ -103,7 +104,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        [Authorize, Route("Leave/{lobbyId}"), HttpPost, ModelValidate]
+        [System.Web.Http.Authorize, System.Web.Http.Route("Leave/{lobbyId}"), System.Web.Http.HttpPost, ModelValidate]
         public IHttpActionResult Leave(string lobbyId)
         {
             _lobbyService.Leave(lobbyId, User.Identity.GetPuPUser());
@@ -111,7 +112,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        [Authorize, Route("Invite/{lobbyId}"), HttpPost, ModelValidate]
+        [System.Web.Http.Authorize, System.Web.Http.Route("Invite/{lobbyId}"), System.Web.Http.HttpPost, ModelValidate]
         public IHttpActionResult Invite(string lobbyId)
         {
             var user = User.Identity.GetPuPUser();
@@ -132,9 +133,9 @@ namespace SWARM.PuP.Web.ApiControllers
 
         private void ShareToFb(SocialMedium medium, Lobby lobby)
         {
-            //TODO: Refresh Token;
-            object msg = "Let's play " + lobby.Name + " with me.";
-            var url = string.Format("https://graph.facebook.com/{0}/feed?access_token={1}&message={2}", medium.UserId, medium.Token, msg);
+            string msg = HttpUtility.UrlEncode("Let's play " + lobby.Name + " with me.");
+            string link = HttpUtility.UrlEncode(Url.Content("~/lobby/" + lobby.Id));
+            var url = string.Format("https://graph.facebook.com/v2.3/me/feed?access_token={0}&message={1}&link={2}", medium.Token, msg, link);
             WebRequest webRequest = WebRequest.CreateHttp(url);
             webRequest.Method = "POST";
             var response = webRequest.GetResponse();

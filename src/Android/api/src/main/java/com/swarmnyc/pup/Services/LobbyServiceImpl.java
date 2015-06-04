@@ -5,10 +5,9 @@ import com.swarmnyc.pup.RestApis.LobbyRestApi;
 import com.swarmnyc.pup.RestApis.RestApiCallback;
 import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.models.Lobby;
+import retrofit.client.Response;
 
 import java.util.List;
-
-import retrofit.client.Response;
 
 public class LobbyServiceImpl implements LobbyService
 {
@@ -31,7 +30,8 @@ public class LobbyServiceImpl implements LobbyService
 				@Override
 				public void success( Lobby lobby, Response response )
 				{
-					callback.success( lobby );
+					if ( callback != null )
+					{ callback.success( lobby ); }
 				}
 			}
 		);
@@ -52,14 +52,16 @@ public class LobbyServiceImpl implements LobbyService
 				@Override
 				public void success( List<Lobby> list, Response response )
 				{
-					callback.success( list );
+					if ( callback != null )
+					{ callback.success( list ); }
 				}
 			}
 		);
 	}
 
 	@Override
-	public void getMyLobbies(LobbyFilter filter, final ServiceCallback<List<Lobby>> callback
+	public void getMyLobbies(
+		LobbyFilter filter, final ServiceCallback<List<Lobby>> callback
 	)
 	{
 		if ( filter == null ) { filter = new LobbyFilter(); }
@@ -74,37 +76,8 @@ public class LobbyServiceImpl implements LobbyService
 				@Override
 				public void success( List<Lobby> list, Response response )
 				{
-					callback.success( list );
-				}
-			}
-		);
-	}
-
-	@Override
-	public void join( String id, final ServiceCallback callback )
-	{
-		this.lobbyRestApi.join(
-			id, new EmptyRestApiCallback()
-			{
-				@Override
-				public void success( Response response )
-				{
-					callback.success( null );
-				}
-			}
-		);
-	}
-
-	@Override
-	public void leave( String id, final ServiceCallback callback )
-	{
-		this.lobbyRestApi.leave(
-			id, new EmptyRestApiCallback()
-			{
-				@Override
-				public void success( Response response )
-				{
-					callback.success( null );
+					if ( callback != null )
+					{ callback.success( list ); }
 				}
 			}
 		);
@@ -121,9 +94,60 @@ public class LobbyServiceImpl implements LobbyService
 				@Override
 				public void success( final Lobby lobby, final Response response )
 				{
-					callback.success( lobby );
+					if ( callback != null )
+					{ callback.success( lobby ); }
 				}
 			}
 		);
 	}
+
+	@Override
+	public void join( String id, final ServiceCallback callback )
+	{
+		this.lobbyRestApi.join(
+			id, new EmptyRestApiCallback()
+			{
+				@Override
+				public void success( Response response )
+				{
+					if ( callback != null )
+					{ callback.success( null ); }
+				}
+			}
+		);
+	}
+
+	@Override
+	public void leave( String id, final ServiceCallback callback )
+	{
+		this.lobbyRestApi.leave(
+			id, new EmptyRestApiCallback()
+			{
+				@Override
+				public void success( Response response )
+				{
+					if ( callback != null )
+					{ callback.success( null ); }
+				}
+			}
+		);
+	}
+
+	@Override
+	public void invite( final String id, final ServiceCallback callback )
+	{
+		this.lobbyRestApi.invite(
+			id, new EmptyRestApiCallback()
+			{
+				@Override
+				public void success( Response response )
+				{
+					if ( callback != null )
+					{ callback.success( null ); }
+				}
+			}
+		);
+	}
+
+
 }

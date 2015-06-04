@@ -3,6 +3,7 @@ package com.swarmnyc.pup.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +21,8 @@ import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.fragments.MainDrawerFragment;
 import com.uservoice.uservoicesdk.UserVoice;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
 {
 	private static MainActivity instance;
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity
 	Toolbar toolbar;
 	private GoogleAnalytics m_googleAnalytics;
 	private Tracker         m_tracker;
+	private boolean         launchDefault;
 
 	public MainActivity()
 	{
@@ -60,18 +64,30 @@ public class MainActivity extends AppCompatActivity
 		Consts.windowHeight = windowSize.y;
 
 		m_googleAnalytics = GoogleAnalytics.getInstance( this );
-		m_googleAnalytics.setLocalDispatchPeriod(1800);
+		m_googleAnalytics.setLocalDispatchPeriod( 1800 );
 
-		m_tracker = m_googleAnalytics.newTracker("UA-43683040-6");
+		m_tracker = m_googleAnalytics.newTracker( "UA-43683040-6" );
 		m_tracker.enableExceptionReporting( true );
 
 		Navigator.init( this, m_tracker );
-
 
 		if ( !Config.getBool( "ShowedSplash" ) )
 		{
 			Config.setBool( "ShowedSplash", true );
 			startActivity( new Intent( this, SplashActivity.class ) );
+		}
+
+		Intent intent = getIntent();
+		Uri data = intent.getData();
+		launchDefault = true;
+		if ( data != null )
+		{
+			List<String> p = data.getPathSegments();
+			if ( p.size() == 2 && p.get( 0 ).equals( "lobby" ) )
+			{
+				launchDefault = false;
+				Navigator.ToLobby( p.get( 1 ), "From Intend", Consts.KEY_LOBBIES, false );
+			}
 		}
 	}
 
@@ -135,5 +151,10 @@ public class MainActivity extends AppCompatActivity
 		{
 			super.onBackPressed();
 		}
+	}
+
+	public boolean isLaunchDefaultFragment()
+	{
+		return launchDefault;
 	}
 }

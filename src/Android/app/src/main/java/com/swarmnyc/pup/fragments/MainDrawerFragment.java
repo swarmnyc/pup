@@ -1,7 +1,6 @@
 package com.swarmnyc.pup.fragments;
 
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +21,7 @@ import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
+import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.uservoice.uservoicesdk.UserVoice;
@@ -147,7 +147,7 @@ public class MainDrawerFragment extends Fragment
 
 		m_drawerMenuContainer.getLayoutParams().width = (int) ( Consts.windowWidth * 0.90 );
 
-		initializeDrawer( true );
+		initializeDrawer( MainActivity.getInstance().isLaunchDefaultFragment() );
 	}
 
 	public void selectItem( int position )

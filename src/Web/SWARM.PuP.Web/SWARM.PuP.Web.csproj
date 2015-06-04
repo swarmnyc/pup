@@ -149,6 +149,7 @@
     <Compile Include="ApiControllers\ErrorCode.cs" />
     <Compile Include="Components\QueryString.cs" />
     <Compile Include="Components\ModelValidateAttribute.cs" />
+    <Compile Include="Controllers\LobbyController.cs" />
     <Compile Include="Models\SocialMedium.cs" />
     <Compile Include="Security\AuthenticationMiddleware.cs" />
     <Compile Include="Security\DataProtector.cs" />
@@ -216,6 +217,7 @@
     <Compile Include="Services\Quickblox\QuickbloxApiTypes.cs" />
     <Compile Include="Services\Quickblox\SessionResult.cs" />
     <Compile Include="Startup.cs" />
+    <Content Include="Views\Lobby\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />

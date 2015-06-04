@@ -15,9 +15,11 @@ public interface LobbyService {
 
     void getMyLobbies( LobbyFilter filter, ServiceCallback<List<Lobby>> callback );
 
+    void create( Lobby lobby, ServiceCallback<Lobby> callback );
+
     void join(String id, ServiceCallback callback);
 
     void leave(String id, ServiceCallback callback);
 
-	void create( Lobby lobby, ServiceCallback<Lobby> callback );
+    void invite(String id, ServiceCallback callback);
 }

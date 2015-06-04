@@ -32,30 +32,30 @@ import java.util.Locale;
 public class LobbyFragment extends Fragment
 {
 	@Inject
-	LobbyService lobbyService;
+	LobbyService m_lobbyService;
 
 	@Inject
-	ChatService chatService;
+	ChatService m_chatService;
 
-	ChatRoomService chatRoomService;
+	ChatRoomService m_chatRoomService;
 
 	@InjectView( R.id.container )
-	View container;
+	View m_container;
 
 	@InjectView( R.id.panel )
-	ViewGroup textPanel;
+	ViewGroup m_textPanel;
 
 	@InjectView( R.id.btn_join )
-	TextView joinButton;
+	TextView m_joinButton;
 
 	@InjectView( R.id.text_message )
-	EditText messageText;
+	EditText m_messageText;
 
 	@InjectView( R.id.btn_send )
-	View sendButton;
+	View m_sendButton;
 
 	@InjectView( R.id.list_chat )
-	RecyclerView chatList;
+	RecyclerView m_chatList;
 
 	private Lobby          m_lobby;
 	private String         m_source;
@@ -94,7 +94,7 @@ public class LobbyFragment extends Fragment
 
 		setHasOptionsMenu( true );
 		DialogHelper.showProgressDialog( R.string.message_loading );
-		lobbyService.getLobby(
+		m_lobbyService.getLobby(
 			m_lobbyId, new ServiceCallback<Lobby>()
 			{
 				@Override
@@ -113,7 +113,7 @@ public class LobbyFragment extends Fragment
 
 	private void initialize()
 	{
-		container.setVisibility( View.VISIBLE );
+		m_container.setVisibility( View.VISIBLE );
 
 		//title
 		MainActivity.getInstance().getToolbar().setTitle( m_lobby.getName() );
@@ -159,36 +159,36 @@ public class LobbyFragment extends Fragment
 			LobbyUserInfo user = m_lobby.getUser( User.current.getId() );
 			if ( user == null )
 			{
-				joinButton.setVisibility( View.VISIBLE );
-				textPanel.setVisibility( View.GONE );
+				m_joinButton.setVisibility( View.VISIBLE );
+				m_textPanel.setVisibility( View.GONE );
 			}
 			else
 			{
-				joinButton.setVisibility( View.GONE );
-				textPanel.setVisibility( View.VISIBLE );
+				m_joinButton.setVisibility( View.GONE );
+				m_textPanel.setVisibility( View.VISIBLE );
 			}
 		}
 		else
 		{
-			joinButton.setVisibility( View.VISIBLE );
-			textPanel.setVisibility( View.GONE );
+			m_joinButton.setVisibility( View.VISIBLE );
+			m_textPanel.setVisibility( View.GONE );
 		}
 
 		//chat list
-		chatRoomService = chatService.getChatRoomService( getActivity(), m_lobby );
-		chatList.setAdapter( new ChatAdapter( getActivity(), chatRoomService, m_lobby ) );
+		m_chatRoomService = m_chatService.getChatRoomService( getActivity(), m_lobby );
+		m_chatList.setAdapter( new ChatAdapter( getActivity(), m_lobbyService, m_chatRoomService, m_lobby ) );
 		LinearLayoutManager llm = new LinearLayoutManager( getActivity() );
-		chatList.setLayoutManager( llm );
+		m_chatList.setLayoutManager( llm );
 	}
 
 	@OnClick( R.id.btn_send )
 	void send()
 	{
-		String message = messageText.getText().toString().trim();
+		String message = m_messageText.getText().toString().trim();
 		if ( message.length() > 0 )
 		{
-			chatRoomService.SendMessage( message );
-			messageText.setText( "" );
+			m_chatRoomService.SendMessage( message );
+			m_messageText.setText( "" );
 		}
 	}
 
@@ -198,7 +198,7 @@ public class LobbyFragment extends Fragment
 		if ( User.isLoggedIn() )
 		{
 			DialogHelper.showProgressDialog( R.string.message_processing );
-			lobbyService.join(
+			m_lobbyService.join(
 				m_lobby.getId(), new ServiceCallback()
 				{
 					@Override
