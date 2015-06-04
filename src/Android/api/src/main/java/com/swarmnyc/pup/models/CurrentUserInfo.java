@@ -83,4 +83,15 @@ public class CurrentUserInfo extends UserInfo
 	{
 		this.media = media;
 	}
+
+	public boolean hasMedium( String type )
+	{
+		for ( String m : media )
+		{
+			if ( type.equals( m ) )
+			{ return true; }
+		}
+
+		return false;
+	}
 }

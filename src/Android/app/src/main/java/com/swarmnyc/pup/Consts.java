@@ -20,8 +20,10 @@ public class Consts
 	public static final String KEY_LOBBY_SOURCE = "LobbySource";
 	public static final String KEY_LOBBY_ID     = "LobbyId";
 	public static final String KEY_LOBBY_NAME   = "LobbyName";
-	public static final int    CODE_PHOTO       = 74;
-	public final static int    PAGE_SIZE        = 20;
+	public static final String KEY_FACEBOOK     = "Facebook";
+
+	public static final int CODE_PHOTO = 74;
+	public final static int PAGE_SIZE  = 20;
 
 
 	public static int windowWidth;

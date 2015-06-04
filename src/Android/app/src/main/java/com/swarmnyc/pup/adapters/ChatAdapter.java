@@ -12,13 +12,16 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.squareup.picasso.Picasso;
+import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.StringUtils;
+import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatMessageListener;
 import com.swarmnyc.pup.chat.ChatRoomService;
+import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.models.Lobby;
 
 import java.util.LinkedList;
@@ -58,17 +61,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	{
 		if ( viewType == HEADER )
 		{
-			View view = m_inflater.inflate( R.layout.item_lobby_chat_header, null );
+			View view = m_inflater.inflate( R.layout.item_lobby_chat_header, parent, false );
 			return new HeaderViewHolder( view );
 		}
 		else if ( viewType == SHARE )
 		{
-			View view = m_inflater.inflate( R.layout.item_lobby_chat_share, null );
+			View view = m_inflater.inflate( R.layout.item_lobby_chat_share, parent, false );
 			return new ShareViewHolder( view );
 		}
 		else
 		{
-			View view = m_inflater.inflate( R.layout.item_lobby_chat, null );
+			View view = m_inflater.inflate( R.layout.item_lobby_chat, parent, false );
 			return new ItemViewHolder( view );
 		}
 	}
@@ -210,11 +213,33 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 		{
 			super( view );
 			ButterKnife.inject( this, view );
+
+			view.setVisibility( User.isLoggedIn()? View.VISIBLE: View.GONE );
 		}
 
 		@OnClick( R.id.btn_invite )
 		void invite()
 		{
+			if ( User.current.hasMedium( Consts.KEY_FACEBOOK ) )
+			{
+				doInvite();
+			}
+			else
+			{
+				FacebookHelper.getAndSubmitToken(
+					new ServiceCallback()
+					{
+						@Override
+						public void success( final Object value )
+						{
+							doInvite();
+						}
+					}
+				);
+			}
+		}
+
+		private void doInvite(){
 			m_lobbyService.invite(
 				m_lobby.getId(), new ServiceCallback()
 				{

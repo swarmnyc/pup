@@ -1,5 +1,6 @@
 package com.swarmnyc.pup;
 
+import com.swarmnyc.pup.Services.UserService;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.activities.SplashActivity;
 import com.swarmnyc.pup.adapters.ChatAdapter;
@@ -12,6 +13,8 @@ import javax.inject.Singleton;
 @Singleton
 @Component(modules = PuPApiModule.class)
 public interface PuPComponent {
+    UserService getUserService();
+
     void inject(MainActivity mainActivity);
 
     void inject(SplashActivity splashActivity);

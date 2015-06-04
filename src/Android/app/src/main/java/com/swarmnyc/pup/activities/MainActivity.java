@@ -17,6 +17,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.components.DialogHelper;
+import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.fragments.MainDrawerFragment;
 import com.uservoice.uservoicesdk.UserVoice;
@@ -91,6 +92,36 @@ public class MainActivity extends AppCompatActivity
 		}
 	}
 
+	public Toolbar getToolbar()
+	{
+		return toolbar;
+	}
+
+	public boolean isLaunchDefaultFragment()
+	{
+		return launchDefault;
+	}
+
+	@Override
+	protected void onActivityResult( final int requestCode, final int resultCode, final Intent data )
+	{
+		super.onActivityResult( requestCode, resultCode, data );
+		FacebookHelper.checkActivityResult( requestCode, resultCode, data );
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+		if ( MainDrawerFragment.getInstance().isDrawOpens() )
+		{
+			MainDrawerFragment.getInstance().closeDrawers();
+		}
+		else
+		{
+			super.onBackPressed();
+		}
+	}
+
 	public void retrieveMessage( final String message )
 	{
 
@@ -106,9 +137,17 @@ public class MainActivity extends AppCompatActivity
 		toolbar.setVisibility( View.VISIBLE );
 	}
 
-	public Toolbar getToolbar()
+	public void hideIme()
 	{
-		return toolbar;
+		InputMethodManager imm = (InputMethodManager) getSystemService(
+			Context.INPUT_METHOD_SERVICE
+		);
+
+		if ( getCurrentFocus() == null )
+		{ return; }
+		if ( getCurrentFocus().getWindowToken() == null )
+		{ return; }
+		imm.hideSoftInputFromWindow( getCurrentFocus().getWindowToken(), 0 );
 	}
 
 	@Subscribe
@@ -125,36 +164,5 @@ public class MainActivity extends AppCompatActivity
 				}
 			}
 		);
-	}
-
-	public void hideIme()
-	{
-		InputMethodManager imm = (InputMethodManager) getSystemService(
-			Context.INPUT_METHOD_SERVICE
-		);
-
-		if ( getCurrentFocus() == null )
-		{ return; }
-		if ( getCurrentFocus().getWindowToken() == null )
-		{ return; }
-		imm.hideSoftInputFromWindow( getCurrentFocus().getWindowToken(), 0 );
-	}
-
-	@Override
-	public void onBackPressed()
-	{
-		if ( MainDrawerFragment.getInstance().isDrawOpens() )
-		{
-			MainDrawerFragment.getInstance().closeDrawers();
-		}
-		else
-		{
-			super.onBackPressed();
-		}
-	}
-
-	public boolean isLaunchDefaultFragment()
-	{
-		return launchDefault;
 	}
 }
