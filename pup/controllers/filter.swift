@@ -7,7 +7,7 @@ import Foundation
 import UIKit
 
 
-class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonDelegate, PanGestureDelegate, SearcherDelegate {
+class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonDelegate, PanGestureDelegate, SearcherDelegate, OverlayDelegate {
     var isOpen = false;
     var filterView: FilterView = FilterView()
     var parent: LobbyListController?
@@ -15,15 +15,14 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
     var data: Searcher = Searcher();
     var numberOfSelections: Int = 0;
     var searchController: SearchResultsController?;
-
-    convenience init(parentController: LobbyListController, overlayDelegate: OverlayDelegate) {
+    convenience init(parentController: LobbyListController) {
         self.init()
 
         self.view = filterView
         parent = parentController
         filterView.parentView = parent!.view
 
-        filterView.setUpDelegates(self, buttondelegate: self, overlayDelegate: overlayDelegate)
+        filterView.setUpDelegates(self)
         filterView.setUpViews();
         //setUpViews()
         searchController = SearchResultsController(parent: self, searchBar: filterView.search);
@@ -36,6 +35,15 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
 
     }
 
+
+    func hideOverlay() {
+        closeFilter()
+    }
+
+
+    func darkenOverlay() {
+
+    }
 
     func handOffResults(newdata: Array<gameData>) {
         println("display results");

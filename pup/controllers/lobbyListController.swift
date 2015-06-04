@@ -6,7 +6,7 @@
 import Foundation
 import UIKit
 
-class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDataSource, OverlayDelegate, FABDelegate {
+class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDataSource, FABDelegate {
 
     var listView: LobbyListView? //custom view for lobby list
     var table:UITableView! //the table view (may be replaced by collection view)
@@ -39,7 +39,7 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         println("ahhh loading view!")
         listView = LobbyListView()
         self.view = listView
-        listView?.setDelegates(self,dataSource: self, fabDelegate: self, overlayDelegate: self)
+        listView?.setDelegates(self,dataSource: self, fabDelegate: self)
 
         println(listView?.table)
     }
@@ -60,8 +60,8 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
 
 
-        filter = FilterViewController(parentController: self, overlayDelegate: self as OverlayDelegate);
-        sideMenu = SideMenuController(parentController: self, overlayDelegate: self as OverlayDelegate)
+        filter = FilterViewController(parentController: self);
+        sideMenu = SideMenuController(parentController: self)
         self.listView?.swipeDelegate = sideMenu;
 
 
@@ -87,19 +87,7 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
 
-    func darkenOverlay() {
-        self.listView?.darkenOverlay();
-    }
 
-    func hideOverlay() {
-        self.listView?.hideOverlay();
-    }
-
-    func hideEverything() {
-        filter?.closeFilter();
-        sideMenu?.closeMenu();
-        hideOverlay()
-    }
 
     func loadNewLobbies(search: String, platforms: Array<String>) {
 

@@ -17,7 +17,6 @@ class LobbyListView: UIView {
     var swipeDetectionView = UIView()
     var panDetector = UIPanGestureRecognizer()
     var swipeDelegate: PanGestureDelegate?
-    var overlay: Overlay = Overlay()
     var FAB: floatingAction?
     var fabDelegate: FABDelegate?
     var darkened = false;
@@ -45,11 +44,10 @@ class LobbyListView: UIView {
     }
 
 
-    func setDelegates(delegate: UITableViewDelegate, dataSource: UITableViewDataSource, fabDelegate: FABDelegate, overlayDelegate: OverlayDelegate) {
+    func setDelegates(delegate: UITableViewDelegate, dataSource: UITableViewDataSource, fabDelegate: FABDelegate) {
         table.delegate = delegate;
         table.dataSource = dataSource;
         FAB?.fabDelegate = fabDelegate
-        overlay.setDelegate(overlayDelegate)
     }
 
     func setUpTable() {
@@ -76,7 +74,6 @@ class LobbyListView: UIView {
         addSubview(table);
         addSubview(FAB!)
 
-        addSubview(overlay)
         addSubview(swipeDetectionView)
     }
 
@@ -107,37 +104,7 @@ class LobbyListView: UIView {
     }
 
 
-    func darkenOverlay() {
 
-        animateOverlay(1)
-        darkened = true;
-    }
-
-    func hideOverlay() {
-        animateOverlay(0)
-        darkened = false;
-    }
-
-    func toggleOoverlay() {
-        if (darkened) {
-            hideOverlay()
-        } else {
-            darkenOverlay()
-        }
-
-    }
-
-    func animateOverlay(opac: Float) {
-
-        UIView.animateWithDuration(Double(0.5)) {
-
-
-            self.overlay.layer.opacity = opac
-            self.layoutIfNeeded()
-        }
-
-
-    }
 
     func setUpTableConstraints() {
         table.snp_makeConstraints { (make) -> Void in
@@ -152,12 +119,7 @@ class LobbyListView: UIView {
             make.bottom.equalTo(self).offset(0);
             make.width.equalTo(20);
         }
-        overlay.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(self).offset(0)
-            make.top.equalTo(self).offset(0)
-            make.right.equalTo(self).offset(0)
-            make.bottom.equalTo(self).offset(0)
-        }
+
         FAB?.snp_makeConstraints{ (make) -> Void in
             make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
             make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)

@@ -18,7 +18,7 @@ class SideMenuView: UIView {
     var panDetector = UIPanGestureRecognizer()
     var swipeDelegate: PanGestureDelegate?
     var parent: SideMenuController?
-    var overlayDelegate: OverlayDelegate?
+    var overlay: Overlay = Overlay();
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -120,11 +120,13 @@ class SideMenuView: UIView {
 
     func addViews() {
         addSubview(divider)
+        addSubview(divider)
         addSubview(logo)
         addSubview(menuItems[0])
         addSubview(menuItems[1])
         addSubview(menuItems[2])
 
+        self.parentView?.addSubview(overlay)
         self.parentView?.addSubview(self)
 
     }
@@ -136,12 +138,12 @@ class SideMenuView: UIView {
 
     }
 
-    func setUpDelegates(delegate: MenuItemDelegate, overlayDelegate: OverlayDelegate) {
+    func setUpDelegates(delegate: MenuItemDelegate) {
         menuItems[0].setDelegate(delegate);
         menuItems[1].setDelegate(delegate);
         menuItems[2].setDelegate(delegate);
         swipeDelegate = delegate as? PanGestureDelegate;
-        self.overlayDelegate = overlayDelegate
+        overlay.setDelegate(delegate as! OverlayDelegate)
     }
 
 
@@ -152,6 +154,14 @@ class SideMenuView: UIView {
         println(self)
         println(self.parentView)
 
+
+        overlay.snp_remakeConstraints { (make) -> Void in
+            make.right.equalTo(self.parentView!).offset(0)
+            make.left.equalTo(self.parentView!)
+            make.top.equalTo(self.parentView!).offset(0)
+            make.bottom.equalTo(self.parentView!).offset(0)
+
+        }
 
         self.snp_remakeConstraints { (make) -> Void in
             make.right.equalTo(self.parentView!.snp_left).offset(0)
@@ -207,7 +217,6 @@ class SideMenuView: UIView {
 
     func closeMenu() {
 
-        overlayDelegate?.hideOverlay();
 
 
         let shadowAnimation = CABasicAnimation(keyPath: "shadowOpacity")
@@ -232,6 +241,7 @@ class SideMenuView: UIView {
             var trans = CGAffineTransformMakeTranslation(0, 0);
             self.transform = trans;
 
+            self.overlay.hideOverlay()
 
 
 
@@ -244,7 +254,6 @@ class SideMenuView: UIView {
 
 func openMenu() {
 
-    overlayDelegate?.darkenOverlay();
 
     let shadowAnimation = CABasicAnimation(keyPath: "shadowOpacity")
     shadowAnimation.fromValue = self.layer.shadowOpacity
@@ -270,6 +279,8 @@ func openMenu() {
 
         var trans = CGAffineTransformMakeTranslation(self.menuWidth, 0);
         self.transform = trans;
+
+        self.overlay.showOverlay()
 
         self.layer.shadowOpacity = 0.7
         self.parentView?.layoutIfNeeded()

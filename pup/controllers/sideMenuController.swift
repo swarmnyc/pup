@@ -6,7 +6,7 @@
 import Foundation
 import UIKit
 
-class SideMenuController: UIViewController, PanGestureDelegate, UIGestureRecognizerDelegate, MenuItemDelegate {
+class SideMenuController: UIViewController, PanGestureDelegate, UIGestureRecognizerDelegate, MenuItemDelegate, OverlayDelegate {
 
    var sideMenuView: SideMenuView?
 
@@ -19,7 +19,7 @@ class SideMenuController: UIViewController, PanGestureDelegate, UIGestureRecogni
     var isOpen: Bool = false
 
 
-    convenience init(parentController: LobbyListController, overlayDelegate: OverlayDelegate) {
+    convenience init(parentController: LobbyListController) {
 
         self.init();
        parent = parentController
@@ -27,12 +27,19 @@ class SideMenuController: UIViewController, PanGestureDelegate, UIGestureRecogni
         self.sideMenuView = SideMenuView();
         self.view = self.sideMenuView;
         sideMenuView?.setUpView(parent!.view, parent: self)
-        sideMenuView?.setUpDelegates(self, overlayDelegate: overlayDelegate)
+        sideMenuView?.setUpDelegates(self)
 
     }
 
 
+    func hideOverlay() {
+        closeMenu()
+    }
 
+
+    func darkenOverlay() {
+
+    }
 
 
     func toggleState() {

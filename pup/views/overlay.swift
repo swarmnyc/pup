@@ -16,7 +16,7 @@ class Overlay: UIView {
         }
 
         override func touchesEnded( touches: Set<NSObject>, withEvent event: UIEvent) {
-            overlayDelegate?.hideEverything();
+            overlayDelegate?.hideOverlay();
 
 
 
@@ -27,9 +27,22 @@ class Overlay: UIView {
             self.userInteractionEnabled = true;
 
             self.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-            self.layer.opacity = 0;
+           self.layer.opacity = 0;
 
         }
+
+        func showOverlay() {
+
+            self.layer.opacity = 1;
+
+
+        }
+
+        func hideOverlay() {
+            self.layer.opacity = 0;
+        }
+
+
 
 
 

@@ -8,6 +8,6 @@ import Foundation
 protocol OverlayDelegate: class {
     func hideOverlay()
     func darkenOverlay()
-    func hideEverything()
+
 
 }

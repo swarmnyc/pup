@@ -18,7 +18,9 @@ class FilterView: UIView {
     var handle: UIImageView = UIImageView();
     var panDetector = UIPanGestureRecognizer()
     var swipeDelegate: PanGestureDelegate?
+    var overlay: Overlay = Overlay();
     var overlayDelegate: OverlayDelegate?
+
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -83,11 +85,12 @@ class FilterView: UIView {
 
 
 
-    func setUpDelegates(searchdelegate: UISearchBarDelegate, buttondelegate: SimpleButtonDelegate, overlayDelegate: OverlayDelegate) {
-        search.delegate = searchdelegate;
-        self.buttonDelegate = buttondelegate
-        self.swipeDelegate = searchdelegate as? PanGestureDelegate;
-        self.overlayDelegate = overlayDelegate
+    func setUpDelegates(delegate: UISearchBarDelegate) {
+        search.delegate = delegate;
+        self.buttonDelegate = delegate as? SimpleButtonDelegate
+        self.swipeDelegate = delegate as? PanGestureDelegate;
+        overlay.setDelegate(delegate as! OverlayDelegate)
+
     }
 
     func swiped(sender: UIPanGestureRecognizer) {
@@ -140,7 +143,15 @@ class FilterView: UIView {
             make.width.equalTo(fullW)
             make.right.equalTo(self.parentView).offset(0)
             make.top.equalTo(self.parentView).offset(-300)
-            make.height.equalTo(400)
+            make.height.equalTo(self.parentView)
+
+        }
+
+        self.overlay.snp_remakeConstraints { (make) -> Void in
+            make.width.equalTo(self)
+            make.right.equalTo(self).offset(0)
+            make.top.equalTo(self).offset(0)
+            make.bottom.equalTo(self).offset(UIScreen.mainScreen().bounds.size.height)
 
         }
 
@@ -215,6 +226,7 @@ class FilterView: UIView {
         println(parentView)
         println("parentView")
         parentView.addSubview(self)
+        self.addSubview(overlay)
         self.addSubview(whiteBox)
         whiteBox.addSubview(search)
         whiteBox.addSubview(handle)
@@ -231,8 +243,6 @@ class FilterView: UIView {
     func openFilter() {
         search.becomeFirstResponder()
 
-        overlayDelegate?.darkenOverlay()
-
         var fullW: CGFloat = UIScreen.mainScreen().bounds.size.width
 
         UIView.animateWithDuration(Double(0.5)) {
@@ -242,10 +252,15 @@ class FilterView: UIView {
                 make.width.equalTo(fullW)
                 make.right.equalTo(self.parentView).offset(0)
                 make.top.equalTo(self.parentView).offset(-300)
-                make.height.equalTo(UIConstants.justBelowSearchBar + (UIConstants.buttonHeight / 2.0) + UIConstants.verticalPadding + (2 * UIConstants.buttonHeight))
+                //make.height.equalTo(UIConstants.justBelowSearchBar + (UIConstants.buttonHeight / 2.0) + UIConstants.verticalPadding + (2 * UIConstants.buttonHeight))
+                make.height.equalTo(800)
 
 
             }
+            self.overlay.showOverlay()
+
+            // self.overlay.layer.opacity = 1;
+            //self.overlay.showOverlay();
 
 
             self.parentView.layoutIfNeeded()
@@ -261,7 +276,6 @@ class FilterView: UIView {
     func closeFilter() {
         search.resignFirstResponder()
 
-        overlayDelegate?.hideOverlay()
 
         var fullW: CGFloat = UIScreen.mainScreen().bounds.size.width
 
@@ -276,6 +290,7 @@ class FilterView: UIView {
                 make.height.equalTo(400)
 
             }
+            self.overlay.hideOverlay()
             self.parentView.layoutIfNeeded()
         }
 
