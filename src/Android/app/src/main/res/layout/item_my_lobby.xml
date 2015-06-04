@@ -16,7 +16,7 @@
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="90dp"
-            android:background="@color/white"
+            android:background="@color/pup_white"
             tools:layout_marginRight="90dp"
             android:id="@+id/contentPanel"
             android:paddingTop="@dimen/padding_normal"

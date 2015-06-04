@@ -151,9 +151,6 @@ public class LobbyFragment extends Fragment implements Screen
 		);
 
 		MainActivity.getInstance().getToolbar().setSubtitle( subtitle );
-		MainActivity.getInstance()
-		            .getToolbar()
-		            .setSubtitleTextColor( getResources().getColor( R.color.pup_teal_light ) );
 
 		//joinLobby button and text panel
 		if ( User.isLoggedIn() )
