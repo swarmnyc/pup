@@ -6,7 +6,7 @@
 import Foundation
 import UIKit
 
-class SearchResultsController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class SearchResultsController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, SimpleButtonDelegate {
 
     var resultsView: SearchResultsView?
     var parentController: UIViewController?
@@ -37,6 +37,16 @@ class SearchResultsController: UIViewController, UICollectionViewDataSource, UIC
 
     }
 
+
+
+    func touchUp(button: NSObject, type: String) {
+        println("touched up request game")
+    }
+
+    func touchDown(button: NSObject, type: String) {
+        println("touched down request game")
+    }
+
     func giveResults(data: Array<gameData>) {
 
             println(data.count)
@@ -49,8 +59,8 @@ class SearchResultsController: UIViewController, UICollectionViewDataSource, UIC
 
     }
 
-    func displayResults(searchBar: UISearchBar) {
-        resultsView?.openResults(searchBar)
+    func displayResults() {
+        resultsView?.openResults()
     }
 
     func hideResults() {
@@ -69,14 +79,22 @@ class SearchResultsController: UIViewController, UICollectionViewDataSource, UIC
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("searchResult", forIndexPath: indexPath) as! SearchResultsViewCell
-        cell.backgroundColor = UIColor.orangeColor()
         cell.frame.size = CGSize(width: self.view.frame.size.width, height: 45)
         cell.frame.origin.x = 0;
         println(self.data![indexPath.row])
         println(indexPath.row);
         cell.setUpCell(self.data![indexPath.row])
+        cell.layer.shouldRasterize = true;
+        cell.layer.rasterizationScale = UIScreen.mainScreen().scale;
+
         //cell.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 45);
         return cell
+    }
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        var selectedCell = collectionView.cellForItemAtIndexPath(indexPath) as? SearchResultsViewCell;
+        println(selectedCell?.gameName.text!)
+        self.searchBar?.text = selectedCell?.gameName.text!
+        self.hideResults();
     }
 
 

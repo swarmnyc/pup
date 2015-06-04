@@ -15,6 +15,7 @@ struct appColors {
     var PS4 = "#04a4ef"
     var PS3 = "#9391b4"
     var PC = "#1e1e1e"
+    var lightGray = "#f1f1f1"
 }
 
 
@@ -87,5 +88,11 @@ struct UIValues {
     var verticalPadding = 11.0
     var buttonHeight = 75.0;
     var justBelowSearchBar = 75.0;
+    var lobbyImageHeight = 250.0;
+    var halfLobbyImage: Double {
+        get {
+            return self.lobbyImageHeight/2
+        }
+    }
 }
 

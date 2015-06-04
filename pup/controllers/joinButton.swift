@@ -24,8 +24,12 @@ class JoinButton: UIViewController, SimpleButtonDelegate {
         println("self view")
     }
 
-    func touchUpInside(button: Button) {
+    func touchUp(button: NSObject, type: String) {
 
+
+    }
+
+    func touchDown(button: NSObject, type: String) {
 
     }
 

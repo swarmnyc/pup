@@ -10,20 +10,20 @@ import UIKit
 class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonDelegate, PanGestureDelegate, SearcherDelegate {
     var isOpen = false;
     var filterView: FilterView = FilterView()
-    var parent: UIViewController = UIViewController()
+    var parent: LobbyListController?
     var searchActive : Bool = false
     var data: Searcher = Searcher();
     var numberOfSelections: Int = 0;
     var searchController: SearchResultsController?;
 
-    convenience init(parentController: UIViewController) {
+    convenience init(parentController: LobbyListController, overlayDelegate: OverlayDelegate) {
         self.init()
 
         self.view = filterView
         parent = parentController
-        filterView.parentView = parent.view
+        filterView.parentView = parent!.view
 
-        filterView.setUpDelegates(self, buttondelegate: self)
+        filterView.setUpDelegates(self, buttondelegate: self, overlayDelegate: overlayDelegate)
         filterView.setUpViews();
         //setUpViews()
         searchController = SearchResultsController(parent: self, searchBar: filterView.search);
@@ -39,28 +39,32 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
 
     func handOffResults(newdata: Array<gameData>) {
         println("display results");
-        searchController?.displayResults(filterView.search);
         searchController?.giveResults(newdata);
-
+        searchController?.displayResults();
 
     }
 
-    func touchUpInside(button: Button) { //from button delegate
-        var added = setSelectionCount(button.checked)
-        println(button.currentTitle!);
-        if (added) {
-            data.addPlatformToSearch(button.currentTitle!);
+    func touchUp(button: NSObject, type: String) { //from button delegate
+        var theButton = button as! Button
+        var added = setSelectionCount(theButton.checked)
+        println(theButton.currentTitle!);
+        if (!added) {
+            data.removePlatformFromSearch(theButton.currentTitle!);
         } else {
-            data.removePlatformFromSearch(button.currentTitle!);
 
+            data.addPlatformToSearch(theButton.currentTitle!);
         }
         setDimOfOtherButtons()
 
     }
 
+    func touchDown(button: NSObject, type: String) {
+
+    }
+
 
     func setSelectionCount(isChecked: Bool) -> Bool {
-        if (isChecked) {
+        if (!isChecked) {
             numberOfSelections++
             return true
         } else {
@@ -79,6 +83,7 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
     }
 
     func setDimOfOtherButtons() {
+        println("number of selections: \(numberOfSelections)")
         if (numberOfSelections>0) {
             filterView.dimInactiveButtons()
         } else {
@@ -87,6 +92,10 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
 
 
     }
+
+
+
+
 
 
     func toggleState() {
@@ -101,6 +110,12 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
         }
         println(isOpen)
         println(filterView.platforms[0])
+    }
+
+    func closeFilter() {
+        isOpen = false
+        filterView.closeFilter()
+        searchController?.hideResults();
     }
 
 
@@ -124,6 +139,8 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         searchActive = false;
         println("searchButtonClicked")
+        data.setSearchTerm(searchBar.text)
+        parent?.loadNewLobbies(searchBar.text, platforms: data.platforms);
         toggleState();
     }
 

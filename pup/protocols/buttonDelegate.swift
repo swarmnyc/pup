@@ -7,7 +7,13 @@ import Foundation
 import UIKit
 
 protocol SimpleButtonDelegate: class {
-    func touchUpInside(button: Button)
+    func touchDown(button: NSObject, type: String)
+    func touchUp(button: NSObject, type: String)
 
 
+}
+
+protocol FABDelegate: class {
+    func touchDown()
+    func touchUp()
 }

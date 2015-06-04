@@ -15,7 +15,7 @@ class Searcher {
     var data: Array<gameData> = [];
     var delegate: SearcherDelegate?
     var platforms: Array<String> = [];
-
+    var searchTerm: String = ""
     init() {
 
 
@@ -39,6 +39,10 @@ class Searcher {
         println(platforms);
     }
 
+    func setSearchTerm(name: String) {
+        searchTerm = name;
+    }
+
     func search(name: String) {
         println("searching!!!!")
         if (name == "") {
@@ -53,18 +57,21 @@ class Searcher {
             }
 
             let requestUrl = NSURL(string: "\(urls.games)\(suffix)")
+            if (requestUrl != nil) {
+                let task = NSURLSession.sharedSession().dataTaskWithURL(requestUrl!) {
+                    (data, response, error) in
+                    println(error)
+                    let jsonResponse = JSON(data: data)
+                    // println(jsonResponse)
+                    //self.createGamesArray(jsonResponse)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.createGamesArray(jsonResponse);
+                    })
+                }
 
-            let task = NSURLSession.sharedSession().dataTaskWithURL(requestUrl!) {
-                (data, response, error) in
-                println(error)
-                let jsonResponse = JSON(data: data)
-                println(jsonResponse)
-                self.createGamesArray(jsonResponse)
-
+                task.resume();
+                println(suffix);
             }
-
-            task.resume();
-            println(suffix);
 
 
         }
@@ -95,6 +102,7 @@ class Searcher {
             self.data.append(gameData(State: State, Tags: Tags, Name: Name, ThumbnailPictureUrl: ThumbnailPictureUrl, PictureUrl: PictureUrl, Description: Description, ReleaseDateUtc: ReleaseDateUtc, Rank: Rank, Platforms: Platforms))
         }
 
+        println("the results have been structured")
         self.delegate?.handOffResults(self.data);
     }
 

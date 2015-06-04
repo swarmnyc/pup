@@ -16,7 +16,7 @@ class gameCell: UITableViewCell {
     var textRightBottom: UIView = UIView()
 
     var title:UILabel = UILabel()
-    var desc: UITextView = UITextView()
+    var desc: SelectableTextView = SelectableTextView()
     var imgView: UIImageView = UIImageView()
     var img: UIImage = UIImage()
     var tags: UILabel = UILabel()
@@ -202,7 +202,7 @@ class gameCell: UITableViewCell {
         desc.text = data.Description
         self.desc.font = UIFont.systemFontOfSize(11.0)
         desc.editable = false
-        desc.selectable = false
+        desc.userInteractionEnabled = false
         desc.scrollEnabled = false
         desc.textContainerInset = UIEdgeInsetsZero
         desc.textContainer.lineFragmentPadding = 0

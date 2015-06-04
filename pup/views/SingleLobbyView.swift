@@ -124,7 +124,7 @@ class SingleLobbyView: UIView {
             make.top.equalTo(self).offset(0)
             make.left.equalTo(self).offset(0)
             make.right.equalTo(self).offset(0)
-            make.height.equalTo(250)
+            make.height.equalTo(UIConstants.lobbyImageHeight)
         }
 
 

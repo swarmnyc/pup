@@ -51,6 +51,8 @@ class Button: UIButton {
     }
 
     func toggleSelected(sender: Button!) {
+        buttonDelegate?.touchUp(sender, type: "platform")
+
         if (checked) {
             checked = false
 
@@ -61,7 +63,6 @@ class Button: UIButton {
 
         }
         setSelectionStyle()
-        buttonDelegate?.touchUpInside(sender)
 
 
 
@@ -78,8 +79,15 @@ class Button: UIButton {
     }
 
     func makeItDarkerAgain() {
+        println("make it darker again")
         setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
 
+    }
+
+    func uncheck() {
+        checked = false;
+        backgroundColor = UIColor.whiteColor()
+        setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
     }
 
     func setSelectionStyle() {

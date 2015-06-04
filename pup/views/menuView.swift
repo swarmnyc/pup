@@ -17,6 +17,8 @@ class SideMenuView: UIView {
     var menuWidth: CGFloat = UIScreen.mainScreen().bounds.size.width * 0.9;
     var panDetector = UIPanGestureRecognizer()
     var swipeDelegate: PanGestureDelegate?
+    var parent: SideMenuController?
+    var overlayDelegate: OverlayDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -74,8 +76,9 @@ class SideMenuView: UIView {
 
 
 
-    func setUpView(parentView: UIView) {
+    func setUpView(parentView: UIView, parent: SideMenuController) {
         parentView.bringSubviewToFront(self);
+        self.parent = parent;
         self.backgroundColor = UIColor(rgba: "#F5F6F6");
 
         self.panDetector.addTarget(self, action: "swiped:");
@@ -133,11 +136,12 @@ class SideMenuView: UIView {
 
     }
 
-    func setUpDelegates(delegate: MenuItemDelegate) {
+    func setUpDelegates(delegate: MenuItemDelegate, overlayDelegate: OverlayDelegate) {
         menuItems[0].setDelegate(delegate);
         menuItems[1].setDelegate(delegate);
         menuItems[2].setDelegate(delegate);
         swipeDelegate = delegate as? PanGestureDelegate;
+        self.overlayDelegate = overlayDelegate
     }
 
 
@@ -203,6 +207,9 @@ class SideMenuView: UIView {
 
     func closeMenu() {
 
+        overlayDelegate?.hideOverlay();
+
+
         let shadowAnimation = CABasicAnimation(keyPath: "shadowOpacity")
         shadowAnimation.fromValue = self.layer.shadowOpacity
         shadowAnimation.toValue = 0
@@ -236,6 +243,8 @@ class SideMenuView: UIView {
     }
 
 func openMenu() {
+
+    overlayDelegate?.darkenOverlay();
 
     let shadowAnimation = CABasicAnimation(keyPath: "shadowOpacity")
     shadowAnimation.fromValue = self.layer.shadowOpacity

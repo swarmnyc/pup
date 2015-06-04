@@ -15,9 +15,10 @@ class FilterView: UIView {
     var search = UISearchBar()
     var platforms: Array<Button> = [];
     var buttonDelegate: SimpleButtonDelegate? = nil
-    var handle: UIView = UIView();
+    var handle: UIImageView = UIImageView();
     var panDetector = UIPanGestureRecognizer()
     var swipeDelegate: PanGestureDelegate?
+    var overlayDelegate: OverlayDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -56,10 +57,15 @@ class FilterView: UIView {
 //        search.textColor = UIColor.whiteColor()
 
         self.backgroundColor = UIColor.clearColor()
-        self.clipsToBounds = true;
+        self.clipsToBounds = false;
+
+        let handleImage = UIImage(named: "pullBar")
+        handle.image = handleImage
+        handle.contentMode = UIViewContentMode.ScaleAspectFill;
 
         whiteBox.backgroundColor = UIColor.whiteColor();
-        whiteBox.clipsToBounds = true;
+        whiteBox.clipsToBounds = false;
+
 
         for i in 0...appData.platforms.count-1 {
             platforms.append(Button())
@@ -77,11 +83,11 @@ class FilterView: UIView {
 
 
 
-    func setUpDelegates(searchdelegate: UISearchBarDelegate, buttondelegate: SimpleButtonDelegate) {
+    func setUpDelegates(searchdelegate: UISearchBarDelegate, buttondelegate: SimpleButtonDelegate, overlayDelegate: OverlayDelegate) {
         search.delegate = searchdelegate;
         self.buttonDelegate = buttondelegate
         self.swipeDelegate = searchdelegate as? PanGestureDelegate;
-
+        self.overlayDelegate = overlayDelegate
     }
 
     func swiped(sender: UIPanGestureRecognizer) {
@@ -137,11 +143,12 @@ class FilterView: UIView {
             make.height.equalTo(400)
 
         }
+
         self.whiteBox.snp_remakeConstraints { (make) -> Void in
             make.width.equalTo(fullW)
             make.right.equalTo(self.parentView).offset(0)
             make.top.equalTo(self.parentView).offset(-300)
-            make.height.equalTo(300)
+            make.bottom.equalTo(self.platforms[4].snp_bottom).offset(0)
 
         }
 
@@ -194,6 +201,12 @@ class FilterView: UIView {
             make.width.equalTo(thirdW)
 
         }
+        self.handle.snp_remakeConstraints { (make) -> Void in
+            make.top.equalTo(self.platforms[4].snp_bottom)
+            make.left.equalTo(self.whiteBox)
+            make.right.equalTo(self.whiteBox)
+            make.height.greaterThanOrEqualTo(3)
+        }
 
 
     }
@@ -204,7 +217,7 @@ class FilterView: UIView {
         parentView.addSubview(self)
         self.addSubview(whiteBox)
         whiteBox.addSubview(search)
-
+        whiteBox.addSubview(handle)
         for i in 0...appData.platforms.count-1 {
 
             whiteBox.addSubview(platforms[i])
@@ -218,11 +231,21 @@ class FilterView: UIView {
     func openFilter() {
         search.becomeFirstResponder()
 
+        overlayDelegate?.darkenOverlay()
 
+        var fullW: CGFloat = UIScreen.mainScreen().bounds.size.width
 
         UIView.animateWithDuration(Double(0.5)) {
             var trans = CGAffineTransformMakeTranslation(0, 300);
             self.self.transform = trans;
+            self.snp_remakeConstraints { (make) -> Void in
+                make.width.equalTo(fullW)
+                make.right.equalTo(self.parentView).offset(0)
+                make.top.equalTo(self.parentView).offset(-300)
+                make.height.equalTo(UIConstants.justBelowSearchBar + (UIConstants.buttonHeight / 2.0) + UIConstants.verticalPadding + (2 * UIConstants.buttonHeight))
+
+            }
+
 
             self.parentView.layoutIfNeeded()
             }
@@ -240,11 +263,21 @@ class FilterView: UIView {
     func closeFilter() {
         search.resignFirstResponder()
 
+        overlayDelegate?.hideOverlay()
+
+        var fullW: CGFloat = UIScreen.mainScreen().bounds.size.width
+
         UIView.animateWithDuration(Double(0.5)) {
             var trans = CGAffineTransformMakeTranslation(0, 0);
             self.self.transform = trans;
 
+            self.snp_remakeConstraints { (make) -> Void in
+                make.width.equalTo(fullW)
+                make.right.equalTo(self.parentView).offset(0)
+                make.top.equalTo(self.parentView).offset(-300)
+                make.height.equalTo(400)
 
+            }
             self.parentView.layoutIfNeeded()
         }
 

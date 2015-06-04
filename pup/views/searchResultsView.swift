@@ -11,21 +11,39 @@ class SearchResultsView: UIView {
     var parentView: UIView?
     var results: UICollectionView?
     var searchBar: UISearchBar?
+    var gameMissing: GameMissingView = GameMissingView()
+    var plusSign: UIImageView = UIImageView()
+    var maxHeight = 225.0;
+    var maxHeightResults = 180.0;
+
 
     func setUpView(parent: UIViewController, parentView: UIView, searchBar: UISearchBar) {
-        self.parentView = parentView;
-        //parentView?.addSubview(self);
+        self.parentView = parentView; //set values that are passed in
         self.searchBar = searchBar
-       // self.backgroundColor = UIColor.blackColor();
 
+        self.searchBar?.enablesReturnKeyAutomatically = false //enable the search button at all times
+
+
+
+
+        gameMissing.setDelegate(parent as! SimpleButtonDelegate) //request game cell
+        gameMissing.backgroundColor = UIColor(rgba: colors.lightGray)
+        let plus = UIImage(named: "plus")
+        plusSign.image = plus;
+        plusSign.contentMode = UIViewContentMode.ScaleAspectFill
+
+
+        self.clipsToBounds = true;                                  //lets get this table going
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsetsZero;
         layout.itemSize = CGSize(width: 250, height: 45);
+        layout.minimumInteritemSpacing = 0.0;
+        layout.minimumLineSpacing = 0.0;
         results = UICollectionView(frame: self.frame, collectionViewLayout: layout)
         results!.dataSource = parent as? UICollectionViewDataSource;
         results!.delegate = parent as? UICollectionViewDelegate
         results!.registerClass(SearchResultsViewCell.self, forCellWithReuseIdentifier: "searchResult")
-        results!.backgroundColor = UIColor(rgba: colors.mainGrey)
+        results!.backgroundColor = UIColor(rgba: colors.lightGray)
 
         self.addViews();
         self.setUpConstraints();
@@ -35,68 +53,129 @@ class SearchResultsView: UIView {
 
 
 
+
+
     func addViews() {
         self.addSubview(results!);
         self.parentView?.addSubview(self);
+        gameMissing.addSubview(plusSign)
+        self.addSubview(gameMissing);
     }
 
 
     func setUpConstraints() {
-
-        self.snp_makeConstraints{(make) -> Void in
+        println("results set up constraints!")
+        println(self.maxHeightResults)
+        println(self.maxHeight)
+        self.snp_remakeConstraints{(make) -> Void in
             make.left.equalTo(self.searchBar!.snp_left).offset(0)
             make.top.equalTo(self.searchBar!.snp_bottom).offset(0)
             make.right.equalTo(self.searchBar!.snp_right).offset(0)
             make.height.equalTo(0)
         }
 
-        results!.snp_makeConstraints{ (make) -> Void in
+        results!.snp_remakeConstraints{ (make) -> Void in
             make.left.equalTo(self).offset(0)
             make.top.equalTo(self).offset(0)
             make.right.equalTo(self).offset(0)
-            make.bottom.equalTo(self).offset(0)
+            make.height.equalTo(self.maxHeightResults)
 
 
+        }
+
+        gameMissing.snp_remakeConstraints{ (make) -> Void in
+            make.bottom.equalTo(results!.snp_bottom).offset(45)
+            make.left.equalTo(self).offset(0)
+            make.right.equalTo(self).offset(0)
+            make.height.equalTo(45)
+        }
+
+        plusSign.snp_makeConstraints{ (make) -> Void in
+            make.left.equalTo(gameMissing).offset(UIConstants.horizontalPadding * 1.25)
+            make.top.equalTo(gameMissing).offset(UIConstants.horizontalPadding * 1.25)
+            make.bottom.equalTo(gameMissing).offset(-UIConstants.horizontalPadding * 1.25)
+            make.right.equalTo(gameMissing.snp_left).offset(45 - UIConstants.horizontalPadding * 1.25)
         }
 
     }
 
 
-    func openResults(searchBar: UISearchBar) {
+    func openResults() {
         println("opening it!!! (the search results should be animating)")
-        self.snp_remakeConstraints {
-            (make) -> Void in
-            make.left.equalTo(self.searchBar!.snp_left).offset(0)
-            make.top.equalTo(self.searchBar!.snp_bottom).offset(0)
-            make.right.equalTo(self.searchBar!.snp_right).offset(0)
-            make.height.equalTo(180)
+
+        UIView.animateWithDuration(Double(0.5)) {
+            self.snp_updateConstraints{(make) -> Void in
+
+                make.height.equalTo(self.getHeight())
+            }
+            self.gameMissing.snp_remakeConstraints{ (make) -> Void in
+                make.bottom.equalTo(self).offset(0)
+                make.left.equalTo(self).offset(0)
+                make.right.equalTo(self).offset(0)
+                make.height.equalTo(45)
+            }
+            self.parentView?.setNeedsLayout();
         }
-        self.parentView?.layoutIfNeeded()
-//        UIView.animateWithDuration(Double(0.5)) {
-//            self.snp_remakeConstraints {
-//                (make) -> Void in
-//                make.left.equalTo(self.searchBar!.snp_left).offset(0)
-//                make.top.equalTo(self.searchBar!.snp_bottom).offset(0)
-//                make.right.equalTo(self.searchBar!.snp_right).offset(0)
-//                make.height.equalTo(180)
-//            }
-//            self.parentView?.layoutIfNeeded()
-//
-//        }
     }
 
     func closeResults() {
-        UIView.animateWithDuration(Double(0.5)) {
-            self.snp_remakeConstraints {
-                (make) -> Void in
-                make.left.equalTo(self.searchBar!.snp_left).offset(0)
-                make.top.equalTo(self.searchBar!.snp_bottom).offset(0)
-                make.right.equalTo(self.searchBar!.snp_right).offset(0)
-                make.height.equalTo(0)
-            }
-            self.parentView?.layoutIfNeeded()
+        println("!!!!closing results!!!!!")
+    UIView.animateWithDuration(Double(0.5)) {
+        self.snp_updateConstraints{(make) -> Void in
 
+            make.height.equalTo(0)
         }
+           self.parentView?.setNeedsLayout();
+        }
+
+
+
+
+    }
+
+    func getHeight() -> Float {
+        let parentController = results!.delegate as! SearchResultsController;
+        println(parentController.data)
+        println(parentController.data?.count)
+        let count: Int? = parentController.data?.count
+        if (count != nil) {
+            var height = (Float(count!)+1) * 45.0;
+            if (height > Float(self.maxHeight)) {
+                return Float(self.maxHeight);
+            }
+
+            return height;
+        } else {
+
+
+            return Float(self.maxHeight)
+        }
+    }
+
+
+
+}
+
+
+
+class GameMissingView: UIView {
+
+    var simpleButtonDelegate: SimpleButtonDelegate?
+
+    override func touchesBegan( touches: Set<NSObject>, withEvent event: UIEvent) {
+        simpleButtonDelegate?.touchDown(self, type: "missing");
+
+    }
+
+    override func touchesEnded( touches: Set<NSObject>, withEvent event: UIEvent) {
+        simpleButtonDelegate?.touchUp(self, type: "missing");
+
+
+    }
+
+    func setDelegate(simpleButtonDelegate: SimpleButtonDelegate) {
+        self.simpleButtonDelegate = simpleButtonDelegate;
+        self.userInteractionEnabled = true;
     }
 
 

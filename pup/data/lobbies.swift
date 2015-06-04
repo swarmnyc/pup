@@ -95,29 +95,42 @@ class lobbyList {  //collection of all the current games
 
     }
 
+    func makeNewRequest(search: String, platforms: Array<String>) {
+        var suffix = "?search=\(search)";
+        if (platforms.count > 0) {
+            for (var i = 0; i < platforms.count; i++) {
+                suffix += "&platforms=\(platforms[i])";
+            }
+        }
 
+        println(suffix);
+        getLobbies(searchTerms: suffix);
+    }
 
     func getLobbies(searchTerms: String = "", applyChange: Bool = true) {
 
         var urlAppend = "";
         if searchTerms != "" {
-            urlAppend = "lobby?search=\(searchTerms)";
+            urlAppend = "lobby\(searchTerms)";
         } else {
             urlAppend = "lobby"
         }
-
-        println("\(urls.apiBase)\(urlAppend)")
-        let requestUrl = NSURL(string: "\(urls.apiBase)\(urlAppend)")
-
-        let task = NSURLSession.sharedSession().dataTaskWithURL(requestUrl!) {(data, response, error) in
-            println(error)
-            let jsonResponse = JSON(data: data)
-            if (applyChange) {
-                self.updateData(jsonResponse);
+        var urlAppendEncoded = urlAppend.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())
+        var url = "\(urls.apiBase)\(urlAppendEncoded!)"
+        println(url)
+        let requestUrl = NSURL(string: url)
+        if (requestUrl != nil) {
+            let task = NSURLSession.sharedSession().dataTaskWithURL(requestUrl!) {
+                (data, response, error) in
+                println(error)
+                let jsonResponse = JSON(data: data)
+                if (applyChange) {
+                    self.updateData(jsonResponse);
+                }
             }
-        }
 
-        task.resume();
+            task.resume();
+        }
 
 
     }
@@ -164,7 +177,7 @@ class lobbyList {  //collection of all the current games
 
         dispatch_async(dispatch_get_main_queue(),{
             self.parent.updateData()
-
+            self.updated = false;
         })
 
 

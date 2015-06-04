@@ -6,23 +6,23 @@
 import Foundation
 import UIKit
 
-class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDataSource, OverlayDelegate, FABDelegate {
 
-    var listView: LobbyListView = LobbyListView()
+    var listView: LobbyListView? //custom view for lobby list
+    var table:UITableView! //the table view (may be replaced by collection view)
+    var filter: FilterViewController! //controller for the filter
 
+    var sideMenu: SideMenuController! //control for the menu
 
-    var table:UITableView!
+    var updateTimer: NSTimer = NSTimer();  //timer to check for updated data
 
-    var filter: FilterViewController!
+    lazy var model: lobbyList = lobbyList(parentView: self);  //model
 
-    var sideMenu: SideMenuController!
+    var transitionManager = TransitionManager()
 
-    var updateTimer: NSTimer = NSTimer();
-
-
-
-    lazy var listOfGames: lobbyList = lobbyList(parentView: self);
-
+    convenience init() {
+        self.init();
+    }
 
     required init(coder aDecoder: NSCoder)
     {
@@ -37,10 +37,11 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
     override func loadView() {
         println("ahhh loading view!")
+        listView = LobbyListView()
         self.view = listView
-        listView.setDelegates(self,dataSource: self)
+        listView?.setDelegates(self,dataSource: self, fabDelegate: self, overlayDelegate: self)
 
-        println(listView.table)
+        println(listView?.table)
     }
 
     override func viewDidLoad() {
@@ -59,14 +60,26 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
 
 
-        filter = FilterViewController(parentController: self);
-        sideMenu = SideMenuController(parentController: self)
-        self.listView.swipeDelegate = sideMenu;
+        filter = FilterViewController(parentController: self, overlayDelegate: self as OverlayDelegate);
+        sideMenu = SideMenuController(parentController: self, overlayDelegate: self as OverlayDelegate)
+        self.listView?.swipeDelegate = sideMenu;
 
 
 
     }
 
+
+    func touchDown() {
+        println("woooh")
+        listView?.pushFab()
+
+    }
+    func touchUp() {
+        print("hooooo")
+        listView?.releaseFab()
+        let createLobby = CreateLobbyController()
+        self.navigationController?.pushViewController(createLobby, animated: true)
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -74,26 +87,51 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
 
+    func darkenOverlay() {
+        self.listView?.darkenOverlay();
+    }
 
+    func hideOverlay() {
+        self.listView?.hideOverlay();
+    }
+
+    func hideEverything() {
+        filter?.closeFilter();
+        sideMenu?.closeMenu();
+        hideOverlay()
+    }
+
+    func loadNewLobbies(search: String, platforms: Array<String>) {
+
+        println(search)
+        println(platforms)
+        model.makeNewRequest(search, platforms: platforms)
+
+    }
 
     func updateData() {
-        listView.table.reloadData()
+        listView?.table.reloadData()
+    }
+
+
+    func lobbyCount() -> Int {
+        return self.model.games.count
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        println("count \(self.listOfGames.games.count)")
-        return self.listOfGames.games.count;
+        println("count \(lobbyCount())")
+        return lobbyCount();
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //var cell:UITableViewCell = self.tableV.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
         //cell.textLabel.text = self.items[indexPath.row]
-        if !self.listOfGames.games[indexPath.row].isBreakdown {
+        if !self.model.games[indexPath.row].isBreakdown {
             let cell: gameCell = gameCell();
-            cell.setCell(self.listOfGames.games[indexPath.row])
+            cell.setCell(self.model.games[indexPath.row])
             return cell
         } else {
             let cell: headerCell = headerCell();
-            cell.setCell(self.listOfGames.games[indexPath.row])
+            cell.setCell(self.model.games[indexPath.row])
             return cell
 
         }
@@ -102,7 +140,7 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
     func tableView(tlableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if !self.listOfGames.games[indexPath.row].isBreakdown {
+        if !self.model.games[indexPath.row].isBreakdown {
             return 119.0;
         } else {
             return 26.0;
@@ -117,9 +155,10 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         var selectedCell = tableView.cellForRowAtIndexPath(indexPath) as? gameCell;
 
 
-        println(self.listOfGames.games[indexPath.row])
-        if (self.listOfGames.games[indexPath.row].isBreakdown == false) {
-            let lobbyView = SingleLobbyController(info: self.listOfGames.games[indexPath.row])
+        println(self.model.games[indexPath.row])
+        if (self.model.games[indexPath.row].isBreakdown == false) {
+            let lobbyView = SingleLobbyController(info: self.model.games[indexPath.row])
+
             self.navigationController?.pushViewController(lobbyView, animated: true)
         }
     }
@@ -131,11 +170,11 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 //    }
 
 
+
+
     func openFilter() {
         println("opening it")
         filter.toggleState()
-
-
 
     }
 

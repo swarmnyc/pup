@@ -12,23 +12,27 @@ class SideMenuController: UIViewController, PanGestureDelegate, UIGestureRecogni
 
     var data: singleLobby = singleLobby();
 
-    var parent: UIViewController = UIViewController()
+    var parent: LobbyListController?
 
     var logInButton: JoinButton? = nil
 
     var isOpen: Bool = false
 
 
-    convenience init(parentController: UIViewController) {
+    convenience init(parentController: LobbyListController, overlayDelegate: OverlayDelegate) {
 
         self.init();
        parent = parentController
+
         self.sideMenuView = SideMenuView();
         self.view = self.sideMenuView;
-        sideMenuView?.setUpView(parent.view)
-        sideMenuView?.setUpDelegates(self)
+        sideMenuView?.setUpView(parent!.view, parent: self)
+        sideMenuView?.setUpDelegates(self, overlayDelegate: overlayDelegate)
 
     }
+
+
+
 
 
     func toggleState() {
@@ -40,6 +44,11 @@ class SideMenuController: UIViewController, PanGestureDelegate, UIGestureRecogni
             sideMenuView?.openMenu()
         }
 
+    }
+
+    func closeMenu() {
+        isOpen = false
+        sideMenuView?.closeMenu()
     }
 
     func swiped(sender: UIPanGestureRecognizer) {
@@ -58,7 +67,7 @@ class SideMenuController: UIViewController, PanGestureDelegate, UIGestureRecogni
             toggleState();
             if (name=="Settings") {
                 let lobbyView = UIViewController();
-                self.parent.navigationController?.pushViewController(lobbyView, animated: true)
+                self.parent?.navigationController?.pushViewController(lobbyView, animated: true)
             }
         }
     }

@@ -34,7 +34,7 @@ class JoinButtonView: Button {
 
     override func touchesEnded( touches: Set<NSObject>, withEvent event: UIEvent) {
         self.backgroundColor = UIColor(rgba: colors.orange)
-        delegate?.touchUpInside(self)
+        delegate?.touchUp(self, type: "join")
 
 
     }
