@@ -270,7 +270,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 		private void remove()
 		{
 			//Log.d( "Remove", "LobbyId:" + m_lobby.getId() );
-			if ( m_lobby.getUser( User.current.getId() ).getIsOwner() )
+			if ( m_lobby.getDwellingUser( User.current.getId() ).getIsOwner() )
 			{
 				Toast.makeText( m_activity, R.string.message_leave_room_owner, Toast.LENGTH_LONG ).show();
 			}

@@ -18,6 +18,7 @@ import com.swarmnyc.pup.StringUtils;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MemberFragment extends Fragment
@@ -61,8 +62,8 @@ public class MemberFragment extends Fragment
 			super( itemView );
 			m_activity = activity;
 
-			m_portraitView =(ImageView) itemView.findViewById( R.id.img_portrait );
-			m_nameText =(TextView) itemView.findViewById( R.id.text_name );
+			m_portraitView = (ImageView) itemView.findViewById( R.id.img_portrait );
+			m_nameText = (TextView) itemView.findViewById( R.id.text_name );
 		}
 
 		public void setUser( final LobbyUserInfo user )
@@ -84,16 +85,20 @@ public class MemberFragment extends Fragment
 
 	private class MemberAdapter extends RecyclerView.Adapter<MemberViewHolder>
 	{
-		private final LayoutInflater      m_inflater;
-		private       Activity            m_activity;
-		private       List<LobbyUserInfo> m_users;
+		private final LayoutInflater m_inflater;
+		private       Activity       m_activity;
+		private List<LobbyUserInfo> m_users = new ArrayList<>();
 
 		public MemberAdapter( final Activity activity, final List<LobbyUserInfo> users )
 		{
 			m_activity = activity;
 			m_inflater = activity.getLayoutInflater();
 
-			m_users = users;
+			for ( LobbyUserInfo user : users )
+			{
+				if ( !user.getIsLeave() )
+				{ m_users.add( user ); }
+			}
 		}
 
 
