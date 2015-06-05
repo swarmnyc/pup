@@ -162,7 +162,6 @@
     <Compile Include="Services\IImageService.cs" />
     <Compile Include="Services\ImageService.cs" />
     <Compile Include="Models\CurrentUserInfo.cs" />
-    <Compile Include="ViewModels\LobbyViewModel.cs" />
     <Compile Include="ApiControllers\UserController.cs" />
     <Compile Include="Models\PuPTaggable.cs" />
     <Compile Include="Models\UserInfo.cs" />
@@ -218,6 +217,7 @@
     <Compile Include="Services\Quickblox\QuickbloxApiTypes.cs" />
     <Compile Include="Services\Quickblox\SessionResult.cs" />
     <Compile Include="Startup.cs" />
+    <Content Include="Content\User\Cool.txt" />
     <Content Include="Views\Lobby\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -290,7 +290,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\User\" />
     <Folder Include="Views\Game\" />
   </ItemGroup>
   <ItemGroup>

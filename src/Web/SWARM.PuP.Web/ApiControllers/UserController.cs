@@ -35,7 +35,7 @@ namespace SWARM.PuP.Web.ApiControllers
         {
             string errorMessage = null;
             PuPUser user = null;
-
+            
             user = _userService.Find(model.Email, model.Password);
 
             RequestContext.Principal = new ClaimsPrincipal(new PuPClaimsIdentity(user));

@@ -81,12 +81,22 @@ namespace SWARM.PuP.Web.Services
         public void Join(string lobbyId, PuPUser user)
         {
             var lobby = GetById(lobbyId);
-            lobby.Users.Add(new LobbyUserInfo
+            var rejoinUser = lobby.Users.FirstOrDefault(x => x.Id == user.Id);
+            if (rejoinUser == null)
             {
-                Id = user.Id,
-                PortraitUrl = user.PortraitUrl,
-                UserName = user.GetUserName(lobby.Platform)
-            });
+                //join;
+                lobby.Users.Add(new LobbyUserInfo
+                {
+                    Id = user.Id,
+                    PortraitUrl = user.PortraitUrl,
+                    UserName = user.GetUserName(lobby.Platform)
+                });
+            }
+            else
+            {
+                //rejoin 
+                rejoinUser.IsLeave = false;
+            }
 
             _chatService.JoinRoom(lobby, new[] { user });
             Update(lobby);
@@ -122,17 +132,18 @@ namespace SWARM.PuP.Web.Services
         {
             if (string.IsNullOrWhiteSpace(filter.Order))
             {
-                return (Lobby x) => x.StartTimeUtc;
+                return x => x.StartTimeUtc;
             }
             switch (filter.Order.ToLower())
             {
                 case "name":
-                    return (Lobby x) => x.Name;
+                    return x => x.Name;
                 case "popular":
-                    return (Lobby x) => x.Users.Count;
+                    return x => x.Users.Count;
                 case "starttime":
+                    return x => x.StartTimeUtc;
                 default:
-                    return (Lobby x) => x.StartTimeUtc;
+                    return x => x.StartTimeUtc;
             }
         }
     }

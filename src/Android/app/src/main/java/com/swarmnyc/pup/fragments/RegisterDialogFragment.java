@@ -1,9 +1,7 @@
 package com.swarmnyc.pup.fragments;
 
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,33 +17,30 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.soundcloud.android.crop.Crop;
-import com.swarmnyc.pup.*;
+import com.swarmnyc.pup.PuPApplication;
+import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.Services.UserService;
+import com.swarmnyc.pup.StringUtils;
+import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.components.DialogHelper;
+import com.swarmnyc.pup.components.PhotoHelper;
 import com.swarmnyc.pup.models.CurrentUserInfo;
 
 import javax.inject.Inject;
-import java.io.File;
 
 public class RegisterDialogFragment extends DialogFragment
 {
-	private boolean goHome = true;
-
 	@Inject
 	UserService m_userService;
-
 	@InjectView( R.id.text_email )
-	EditText m_emailText;
-
+	EditText    m_emailText;
 	@InjectView( R.id.text_name )
-	EditText m_nameText;
-
+	EditText    m_nameText;
 	@InjectView( R.id.img_portrait )
-	ImageView m_portrait;
-
+	ImageView   m_portrait;
 	Uri m_portraitUri;
-
+	private boolean goHome = true;
 	private AlertDialog m_dialog;
 
 	public void setGoHomeAfterLogin( boolean goHome )
@@ -69,6 +64,30 @@ public class RegisterDialogFragment extends DialogFragment
 		return m_dialog;
 	}
 
+	@OnClick( R.id.btn_cancel )
+	void cancel()
+	{
+		this.dismiss();
+	}
+
+	@OnClick( R.id.btn_join )
+	void join()
+	{
+		if ( vaild() )
+		{
+			userRegister();
+		}
+	}
+
+	private boolean vaild()
+	{
+		boolean result = StringUtils.isNotEmpty( this.m_emailText.getText().toString() )
+		                 && StringUtils.isNotEmpty( this.m_nameText.getText().toString() )
+		                 && android.util.Patterns.EMAIL_ADDRESS.matcher( this.m_emailText.getText() ).matches();
+
+		return result;
+	}
+
 	private void userRegister()
 	{
 		String path = null;
@@ -90,7 +109,10 @@ public class RegisterDialogFragment extends DialogFragment
 
 		DialogHelper.showProgressDialog( R.string.message_processing );
 		m_userService.register(
-			m_emailText.getText().toString(), m_nameText.getText().toString(), path, new ServiceCallback<CurrentUserInfo>()
+			m_emailText.getText().toString(),
+			m_nameText.getText().toString(),
+			path,
+			new ServiceCallback<CurrentUserInfo>()
 			{
 				@Override
 				public void success( final CurrentUserInfo value )
@@ -103,51 +125,17 @@ public class RegisterDialogFragment extends DialogFragment
 		);
 	}
 
-	private boolean vaild()
-	{
-		boolean result = StringUtils.isNotEmpty( this.m_emailText.getText().toString() )
-		                 && StringUtils.isNotEmpty( this.m_nameText.getText().toString() )
-		                 && android.util.Patterns.EMAIL_ADDRESS.matcher( this.m_emailText.getText() ).matches();
-
-		return result;
-	}
-
-	@OnClick( R.id.btn_cancel )
-	void cancel()
-	{
-		this.dismiss();
-	}
-
-	@OnClick( R.id.btn_join )
-	void join()
-	{
-		if ( vaild() )
-		{
-			userRegister();
-		}
-	}
-
 	@OnClick( {R.id.img_camera, R.id.img_portrait} )
 	void choosePortrait()
 	{
-		DialogHelper.showOptions(
-			new String[]{"Take a new photo", "Choose from gallery"}, new DialogInterface.OnClickListener()
+		PhotoHelper.startPhotoIntent(
+			this, new ServiceCallback<Uri>()
 			{
 				@Override
-				public void onClick( final DialogInterface dialog, final int which )
+				public void success( final Uri uri )
 				{
-					if ( which == 0 )
-					{
-						Intent takePicture = new Intent( MediaStore.ACTION_IMAGE_CAPTURE );
-						startActivityForResult( takePicture, Consts.CODE_PHOTO );
-					}
-					else
-					{
-						Intent pickPhoto = new Intent(
-							Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-						);
-						startActivityForResult( pickPhoto, Consts.CODE_PHOTO );
-					}
+					m_portraitUri = uri;
+					m_portrait.setImageURI( m_portraitUri );
 				}
 			}
 		);
@@ -156,24 +144,15 @@ public class RegisterDialogFragment extends DialogFragment
 	@Override
 	public void onActivityResult( final int requestCode, final int resultCode, final Intent data )
 	{
-		if ( requestCode == Consts.CODE_PHOTO )
-		{
-			if ( resultCode == Activity.RESULT_OK )
-			{
-				Uri destination = Uri.fromFile(new File(getActivity().getCacheDir(), "cropped"));
-				Crop.of(data.getData(), destination ).asSquare().withMaxSize( 1000, 1000 ).start( getActivity(), this );
-			}
-		}
-		else if(requestCode == Crop.REQUEST_CROP){
-			if ( resultCode == Activity.RESULT_OK )
-			{
-				m_portraitUri = Crop.getOutput( data );
-				m_portrait.setImageURI( m_portraitUri );
-			}
-		}else
+		super.onActivityResult( requestCode, resultCode, data );
 
-		{
-			super.onActivityResult( requestCode, resultCode, data );
-		}
+		PhotoHelper.catchPhotoIntent( requestCode, resultCode, data );
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		PhotoHelper.close();
+		super.onDestroy();
 	}
 }

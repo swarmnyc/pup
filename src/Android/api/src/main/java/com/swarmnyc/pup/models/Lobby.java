@@ -94,9 +94,18 @@ public class Lobby extends Taggable implements PicturedModel {
         this.users = users;
     }
 
-    public LobbyUserInfo getUser(String userId) {
+    public LobbyUserInfo getUser( String userId ) {
         for (LobbyUserInfo user : users) {
             if (user.id.equals(userId))
+                return user;
+        }
+
+        return null;
+    }
+
+    public LobbyUserInfo getDwellingUser( String userId ) {
+        for (LobbyUserInfo user : users) {
+            if (user.id.equals(userId) && !user.isLeave)
                 return user;
         }
 
@@ -119,5 +128,15 @@ public class Lobby extends Taggable implements PicturedModel {
         }
 
         return null;
+    }
+
+    public boolean isDwellingUser( final String userId )
+    {
+        for (LobbyUserInfo user : users) {
+            if (user.id.equals(userId) && !user.isLeave)
+                return true;
+        }
+
+        return false;
     }
 }

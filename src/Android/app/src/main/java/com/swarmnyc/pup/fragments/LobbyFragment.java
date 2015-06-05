@@ -99,12 +99,20 @@ public class LobbyFragment extends Fragment implements Screen
 					@Override
 					public void success( final Object value )
 					{
-						LobbyUserInfo user = new LobbyUserInfo();
-						user.setId( User.current.getId() );
-						user.setUserName( User.current.getUserName() );
-						user.setPortraitUrl( User.current.getPortraitUrl() );
+						LobbyUserInfo user = m_lobby.getUser( User.current.getId() );
+						if ( user == null )
+						{
+							user = new LobbyUserInfo();
+							user.setId( User.current.getId() );
+							user.setUserName( User.current.getUserName() );
+							user.setPortraitUrl( User.current.getPortraitUrl() );
+							m_lobby.getUsers().add( user );
+						}
+						else
+						{
+							user.setIsLeave( false );
+						}
 
-						m_lobby.getUsers().add( user );
 						initialize();
 						DialogHelper.hide();
 					}
@@ -117,6 +125,74 @@ public class LobbyFragment extends Fragment implements Screen
 			registerDialogFragment.setGoHomeAfterLogin( false );
 			registerDialogFragment.show( this.getFragmentManager(), null );
 		}
+	}
+
+	private void initialize()
+	{
+		m_container.setVisibility( View.VISIBLE );
+
+		//title
+		MainActivity.getInstance().getToolbar().setTitle( m_lobby.getName() );
+
+		//subtitle
+		long offset = m_lobby.getStartTime().getTime() - TimeUtils.todayTimeMillis();
+		String time;
+		if ( offset < 0 )
+		{
+			SimpleDateFormat format = new SimpleDateFormat( "MMM dd @ h:m a", Locale.getDefault() );
+			time = "Started " + format.format( m_lobby.getStartTime() );
+		}
+		else if ( offset < TimeUtils.day_in_millis )
+		{
+			SimpleDateFormat format = new SimpleDateFormat( "@ h:m a", Locale.getDefault() );
+			time = "Today " + format.format( m_lobby.getStartTime() );
+		}
+		else if ( offset < TimeUtils.week_in_millis )
+		{
+			SimpleDateFormat format = new SimpleDateFormat( "EEEE @ h:m a", Locale.getDefault() );
+			time = format.format( m_lobby.getStartTime() );
+		}
+		else
+		{
+			SimpleDateFormat format = new SimpleDateFormat( "MMM dd @ h:m a", Locale.getDefault() );
+			time = format.format( m_lobby.getStartTime() );
+		}
+
+		Spanned subtitle = Html.fromHtml(
+			String.format(
+				"<small>%s: %s</small>", m_lobby.getPlatform(), time
+			)
+		);
+
+		MainActivity.getInstance().getToolbar().setSubtitle( subtitle );
+
+		//joinLobby button and text panel
+		if ( User.isLoggedIn() )
+		{
+			LobbyUserInfo user = m_lobby.getDwellingUser( User.current.getId() );
+			if ( user == null )
+			{
+				m_joinButton.setVisibility( View.VISIBLE );
+				m_textPanel.setVisibility( View.GONE );
+			}
+			else
+			{
+				m_joinButton.setVisibility( View.GONE );
+				m_textPanel.setVisibility( View.VISIBLE );
+			}
+		}
+		else
+		{
+			m_joinButton.setVisibility( View.VISIBLE );
+			m_textPanel.setVisibility( View.GONE );
+		}
+
+		//chat list
+		m_chatRoomService = m_chatService.getChatRoomService( getActivity(), m_lobby );
+		m_chatList.setAdapter( new ChatAdapter( getActivity(), m_lobbyService, m_chatRoomService, m_lobby ) );
+		m_chatList.setLayoutManager( new LinearLayoutManager( getActivity() ) );
+		m_chatList.addItemDecoration( new DividerItemDecoration( getActivity(), DividerItemDecoration.VERTICAL_LIST
+		                              ) );
 	}
 
 	@Override
@@ -170,74 +246,6 @@ public class LobbyFragment extends Fragment implements Screen
 				}
 			}
 		);
-	}
-
-	private void initialize()
-	{
-		m_container.setVisibility( View.VISIBLE );
-
-		//title
-		MainActivity.getInstance().getToolbar().setTitle( m_lobby.getName() );
-
-		//subtitle
-		long offset = m_lobby.getStartTime().getTime() - TimeUtils.todayTimeMillis();
-		String time;
-		if ( offset < 0 )
-		{
-			SimpleDateFormat format = new SimpleDateFormat( "MMM dd @ h:m a", Locale.getDefault() );
-			time = "Started " + format.format( m_lobby.getStartTime() );
-		}
-		else if ( offset < TimeUtils.day_in_millis )
-		{
-			SimpleDateFormat format = new SimpleDateFormat( "@ h:m a", Locale.getDefault() );
-			time = "Today " + format.format( m_lobby.getStartTime() );
-		}
-		else if ( offset < TimeUtils.week_in_millis )
-		{
-			SimpleDateFormat format = new SimpleDateFormat( "EEEE @ h:m a", Locale.getDefault() );
-			time = format.format( m_lobby.getStartTime() );
-		}
-		else
-		{
-			SimpleDateFormat format = new SimpleDateFormat( "MMM dd @ h:m a", Locale.getDefault() );
-			time = format.format( m_lobby.getStartTime() );
-		}
-
-		Spanned subtitle = Html.fromHtml(
-			String.format(
-				"<small>%s: %s</small>", m_lobby.getPlatform(), time
-			)
-		);
-
-		MainActivity.getInstance().getToolbar().setSubtitle( subtitle );
-
-		//joinLobby button and text panel
-		if ( User.isLoggedIn() )
-		{
-			LobbyUserInfo user = m_lobby.getUser( User.current.getId() );
-			if ( user == null )
-			{
-				m_joinButton.setVisibility( View.VISIBLE );
-				m_textPanel.setVisibility( View.GONE );
-			}
-			else
-			{
-				m_joinButton.setVisibility( View.GONE );
-				m_textPanel.setVisibility( View.VISIBLE );
-			}
-		}
-		else
-		{
-			m_joinButton.setVisibility( View.VISIBLE );
-			m_textPanel.setVisibility( View.GONE );
-		}
-
-		//chat list
-		m_chatRoomService = m_chatService.getChatRoomService( getActivity(), m_lobby );
-		m_chatList.setAdapter( new ChatAdapter( getActivity(), m_lobbyService, m_chatRoomService, m_lobby ) );
-		m_chatList.setLayoutManager( new LinearLayoutManager( getActivity() ) );
-		m_chatList.addItemDecoration( new DividerItemDecoration( getActivity(), DividerItemDecoration.VERTICAL_LIST
-		                              ) );
 	}
 
 	@Override
