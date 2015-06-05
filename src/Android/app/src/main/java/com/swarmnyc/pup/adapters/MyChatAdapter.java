@@ -1,6 +1,7 @@
 package com.swarmnyc.pup.adapters;
 
 import android.app.Activity;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.picasso.Picasso;
@@ -21,6 +23,7 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
+import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.models.Lobby;
 
@@ -267,24 +270,54 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 		private void remove()
 		{
 			//Log.d( "Remove", "LobbyId:" + m_lobby.getId() );
-			m_lobbies.remove( this.getAdapterPosition() );
-			notifyItemRemoved( this.getAdapterPosition() );
-			m_lobbyService.leave(
-				m_lobby.getId(), new ServiceCallback()
+			if ( m_lobby.getUser( User.current.getId() ).getIsOwner() )
+			{
+				Toast.makeText( m_activity, R.string.message_leave_room_owner, Toast.LENGTH_LONG ).show();
+			}
+			else
+			{
+				m_lobbies.remove( this.getAdapterPosition() );
+				notifyItemRemoved( this.getAdapterPosition() );
+				m_lobbyService.leave(
+					m_lobby.getId(), new ServiceCallback()
+					{
+						@Override
+						public void success( final Object value )
+						{
+							showUndo();
+						}
+					}
+				);
+			}
+		}
+
+		private void showUndo()
+		{
+			Snackbar snackbar = Snackbar.make( m_recyclerView, R.string.message_leave_room, Snackbar.LENGTH_LONG );
+			snackbar.setAction(
+				R.string.text_undo, new View.OnClickListener()
 				{
 					@Override
-					public void success( final Object value )
+					public void onClick( final View v )
 					{
-
+						m_lobbyService.join(
+							m_lobby.getId(), new ServiceCallback()
+							{
+								@Override
+								public void success( final Object value )
+								{
+								    m_lobbies.add( m_lobby );
+									notifyDataSetChanged();
+								}
+							}
+						);
 					}
 				}
 			);
-
-			//TODO: Snackbar
-			/*Snackbar
-				.make(m_recyclerView , "Test", Snackbar.LENGTH_LONG )
-				//.setAction(R.string.snackbar_action, myOnClickListener)
-				.show();*/
+			snackbar.getView().setPadding( 0, 30, 0, 30 );
+			snackbar.setActionTextColor( m_activity.getResources().getColor( R.color.pup_white ) );
+			snackbar.getView().setBackgroundResource( R.color.pup_orange );
+			snackbar.show();
 		}
 
 		public void setLobby( final Lobby lobby )

@@ -6,7 +6,7 @@
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/your_pup_name"
+            android:text="@string/label_your_pup_name"
             style="@style/text_label"
             android:layout_marginBottom="@dimen/margin_normal"
             android:id="@+id/label_name"/>
@@ -74,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/text_label"
-                android:text="@string/social_connection"/>
+                android:text="@string/label_social_connection"/>
 
         <Switch
                 android:layout_width="match_parent"

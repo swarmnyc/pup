@@ -108,7 +108,7 @@ public class SettingsFragment extends Fragment implements Screen
 		super.onViewCreated( view, savedInstanceState );
 		ButterKnife.inject( this, view );
 		PuPApplication.getInstance().getComponent().inject( this );
-		MainActivity.getInstance().getToolbar().setTitle( R.string.settings );
+		MainActivity.getInstance().getToolbar().setTitle( R.string.label_settings );
 		MainActivity.getInstance().getToolbar().setSubtitle( null );
 
 		if ( StringUtils.isNotEmpty( User.current.getPortraitUrl() ) )
