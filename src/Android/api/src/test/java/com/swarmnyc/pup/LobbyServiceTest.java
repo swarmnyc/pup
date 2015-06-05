@@ -36,7 +36,8 @@ public class LobbyServiceTest
 	{
 		final CountDownLatch signal = new CountDownLatch( 1 );
 
-		LobbyFilter filter = new LobbyFilter();
+		final LobbyFilter filter = new LobbyFilter();
+		filter.setPageIndex( 0 );
 		filter.setPageSize( 3 );
 
 		//		filter.setGame(
@@ -59,21 +60,43 @@ public class LobbyServiceTest
 			filter, new ServiceCallback<List<Lobby>>()
 			{
 				@Override
-				public void success( List<Lobby> value )
+				public void success( final List<Lobby> page0 )
 				{
-					Assert.assertTrue( value.size() > 0 );
-					signal.countDown();
+					Assert.assertTrue( page0.size() > 0 );
+					Assert.assertEquals( 3, page0.size() );
+
+					filter.setPageIndex( 1 );
+					m_lobbyService.getLobbies(
+						filter, new ServiceCallback<List<Lobby>>()
+						{
+							@Override
+							public void success( List<Lobby> page1 )
+							{
+								Assert.assertTrue( page1.size() > 0 );
+								Assert.assertEquals( 3, page1.size() );
+
+								Assert.assertNotEquals( page0.get( 0 ).getId(), page1.get( 0 ).getId() );
+								Assert.assertNotEquals( page0.get( 1 ).getId(), page1.get( 1 ).getId() );
+								Assert.assertNotEquals( page0.get( 2 ).getId(), page1.get( 2 ).getId() );
+
+								signal.countDown();
+							}
+						}
+					);
 				}
 			}
 		);
 
-		signal.await( 5, TimeUnit.SECONDS );
+		if (! signal.await( 5, TimeUnit.SECONDS ))
+		{
+			Assert.fail();
+		}
 	}
 
 	@Test
 	public void createLobbyTest() throws Exception
 	{
-		final int count = 10;
+		final int count = 5;
 		TestHelper.ensureLoggedin();
 		final CountDownLatch signal = new CountDownLatch( count );
 
@@ -103,7 +126,7 @@ public class LobbyServiceTest
 						lobby.setPlayStyle( i%2 ==0 ? PlayStyle.Casual : PlayStyle.Normal );
 						lobby.setDescription( "Random Test: "  + i);
 						final Calendar instance = Calendar.getInstance();
-						instance.add( Calendar.HOUR, 20 );
+						instance.add( Calendar.MINUTE, 20 );
 						lobby.setStartTime( instance.getTime() );
 						m_lobbyService.create(
 							lobby, new ServiceCallback<Lobby>()

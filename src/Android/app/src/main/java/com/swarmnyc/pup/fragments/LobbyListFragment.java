@@ -32,6 +32,7 @@ import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
+import com.swarmnyc.pup.adapters.EndlessRecyclerOnScrollListener;
 import com.swarmnyc.pup.components.*;
 import com.swarmnyc.pup.models.Game;
 import com.swarmnyc.pup.models.GamePlatform;
@@ -45,22 +46,14 @@ import java.util.List;
 
 public class LobbyListFragment extends Fragment implements Screen
 {
-	@InjectView( R.id.txt_game_serach )
-	public AutoCompleteTextView   m_gameSearch;
-	@InjectView( R.id.layout_sliding_panel )
-	public SlidingUpPanelLayout   m_slidingPanel;
-	@InjectView( R.id.list_lobby )
-	public RecyclerView           m_lobbyRecyclerView;
-	@InjectView( R.id.btn_create_lobby )
-	public ImageButton            m_createLobbyButton;
-	@InjectView( R.id.platform_select )
-	public GamePlatformSelectView m_gamePlatformSelectView;
-	@InjectView( R.id.layout_empty_results )
-	public ViewGroup              m_emptyResults;
-	@Inject
-	GameService  gameService;
-	@Inject
-	LobbyService lobbyService;
+	@InjectView( R.id.txt_game_serach ) public      AutoCompleteTextView   m_gameSearch;
+	@InjectView( R.id.layout_sliding_panel ) public SlidingUpPanelLayout   m_slidingPanel;
+	@InjectView( R.id.list_lobby ) public           RecyclerView           m_lobbyRecyclerView;
+	@InjectView( R.id.btn_create_lobby ) public     ImageButton            m_createLobbyButton;
+	@InjectView( R.id.platform_select ) public      GamePlatformSelectView m_gamePlatformSelectView;
+	@InjectView( R.id.layout_empty_results ) public ViewGroup              m_emptyResults;
+	@Inject                                         GameService            gameService;
+	@Inject                                         LobbyService           lobbyService;
 	float m_panelSize = 0.0f;
 	LayoutInflater inflater;
 	private MainActivity        activity;
@@ -69,6 +62,7 @@ public class LobbyListFragment extends Fragment implements Screen
 	private LobbyFilter m_lobbyFilter = new LobbyFilter();
 	private GameFilter  m_gameFilter  = new GameFilter();
 	private AutoCompleteForPicturedModelAdapter<Game> gameAdapter;
+	private EndlessRecyclerOnScrollListener           m_endlessRecyclerOnScrollListener;
 
 	public LobbyListFragment()
 	{
@@ -115,7 +109,7 @@ public class LobbyListFragment extends Fragment implements Screen
 					{
 						m_slidingPanel.setPanelState( SlidingUpPanelLayout.PanelState.COLLAPSED );
 					}
-					reloadData();
+					reloadData( 0 );
 				}
 			}
 		);
@@ -153,7 +147,7 @@ public class LobbyListFragment extends Fragment implements Screen
 				{
 					m_lobbyFilter.setGame( gameAdapter.getItem( position ) );
 
-					reloadData();
+					reloadData( 0 );
 					hideKeyboard();
 					m_slidingPanel.setPanelState( SlidingUpPanelLayout.PanelState.COLLAPSED );
 
@@ -186,7 +180,7 @@ public class LobbyListFragment extends Fragment implements Screen
 					if ( s.length() == 0 )
 					{
 						m_lobbyFilter.setGame( null );
-						reloadData();
+						reloadData( 0 );
 					}
 				}
 			}
@@ -259,7 +253,22 @@ public class LobbyListFragment extends Fragment implements Screen
 		m_lobbyRecyclerView.setAdapter( m_lobbyAdapter );
 
 		mLayoutManager = new LinearLayoutManager( getActivity() );
+
 		m_lobbyRecyclerView.setLayoutManager( mLayoutManager );
+
+		m_endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener( mLayoutManager )
+		{
+			@Override
+			public void onLoadMore( int current_page )
+			{
+				// do something...
+				reloadData( current_page );
+			}
+		};
+		m_lobbyRecyclerView.addOnScrollListener(
+			m_endlessRecyclerOnScrollListener
+		);
+
 
 		if ( null != savedInstanceState )
 		{
@@ -274,7 +283,7 @@ public class LobbyListFragment extends Fragment implements Screen
 	@Override
 	public void onStart()
 	{
-		reloadData();
+		reloadData( 0 );
 
 		super.onStart();
 		MainDrawerFragment.getInstance().highLight( Consts.KEY_LOBBIES );
@@ -319,8 +328,13 @@ public class LobbyListFragment extends Fragment implements Screen
 		return super.onOptionsItemSelected( item );
 	}
 
-	private void reloadData()
+	private void reloadData( final int current_page )
 	{
+		m_lobbyFilter.setPageIndex( current_page );
+		if ( current_page == 0 )
+		{
+			m_endlessRecyclerOnScrollListener.reset();
+		}
 		final ContentLoadingProgressBar progressDialog = new ContentLoadingProgressBar( getActivity() );
 		progressDialog.show();
 		if ( m_emptyResults.getVisibility() == View.VISIBLE ) // Hide empty results before loading
@@ -334,9 +348,16 @@ public class LobbyListFragment extends Fragment implements Screen
 				@Override
 				public void success( List<Lobby> lobbies )
 				{
-					m_lobbyAdapter.setLobbies( lobbies );
+					if ( current_page == 0 )
+					{
+						m_lobbyAdapter.setLobbies( lobbies );
+					}
+					else
+					{
+						m_lobbyAdapter.addLobbies( lobbies );
+					}
 					progressDialog.hide();
-					if ( lobbies.size() == 0 )
+					if ( current_page == 0 && lobbies.size() == 0 )
 					{
 						com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(
 							getActivity(), m_emptyResults
@@ -409,6 +430,13 @@ public class LobbyListFragment extends Fragment implements Screen
 			notifyDataSetChanged();
 		}
 
+		public void addLobbies( final List<Lobby> lobbies )
+		{
+			final int start = m_lobbies.size();
+			m_lobbies.addAll( lobbies );
+			notifyItemRangeInserted(start, lobbies.size());
+		}
+
 		@Override
 		public ViewHolder onCreateViewHolder(
 			final ViewGroup viewGroup, final int i
@@ -434,6 +462,7 @@ public class LobbyListFragment extends Fragment implements Screen
 		{
 			return m_lobbies.size();
 		}
+
 
 		// Provide a reference to the views for each data item
 		// Complex data items may need more than one view per item, and
@@ -464,7 +493,9 @@ public class LobbyListFragment extends Fragment implements Screen
 				);
 			}
 		}
-	}	@Override
+	}
+
+	@Override
 	public String toString()
 	{
 		return "Lobby List";
