@@ -29,14 +29,16 @@
                 android:maxLines="3"
                 tools:text="Message"
                 android:layout_toLeftOf="@+id/btn_send"
-                android:gravity="bottom"/>
+                android:gravity="bottom"
+                android:layout_marginLeft="@dimen/margin_half"/>
         <Button
                 android:id="@+id/btn_send"
-                android:text="Send"
+                android:text="@string/text_send"
                 android:layout_height="45dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/text_message"
-                style="@style/button_text"/>
+                style="@style/button_text"
+                android:layout_width="55dp"/>
         <View style="@style/horizontal_line_bold" />
     </RelativeLayout>
 

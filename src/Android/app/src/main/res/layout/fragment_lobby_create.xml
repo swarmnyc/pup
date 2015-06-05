@@ -144,7 +144,8 @@
                 android:layout_margin="@dimen/margin_normal"
                 android:textSize="@dimen/text_small"
                 android:textColorHint="@color/pup_light"
-                android:gravity="top"/>
+                android:gravity="top"
+                android:lines="5"/>
 
         <Button
                 android:id="@+id/btn_submit"

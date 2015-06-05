@@ -5,7 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.*;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.*;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import com.swarmnyc.pup.components.Screen;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
+import com.swarmnyc.pup.view.DividerItemDecoration;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
@@ -65,12 +67,62 @@ public class LobbyFragment extends Fragment implements Screen
 	private MemberFragment m_memberFragment;
 	private String         m_lobbyId;
 
-	@Override
-	public View onCreateView(
-		final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState
-	)
+	@OnClick( R.id.btn_send )
+	void send()
 	{
-		return inflater.inflate( R.layout.fragment_lobby, container, false );
+		String message = m_messageText.getText().toString().trim();
+		if ( message.length() > 0 )
+		{
+			m_chatRoomService.SendMessage( message );
+			m_messageText.setText( "" );
+		}
+	}
+
+	@Subscribe
+	public void postUserChanged( UserChangedEvent event )
+	{
+		if ( User.isLoggedIn() )
+		{
+			joinLobby();
+		}
+	}
+
+	@OnClick( R.id.btn_join )
+	void joinLobby()
+	{
+		if ( User.isLoggedIn() )
+		{
+			DialogHelper.showProgressDialog( R.string.message_processing );
+			m_lobbyService.join(
+				m_lobby.getId(), new ServiceCallback()
+				{
+					@Override
+					public void success( final Object value )
+					{
+						LobbyUserInfo user = new LobbyUserInfo();
+						user.setId( User.current.getId() );
+						user.setUserName( User.current.getUserName() );
+						user.setPortraitUrl( User.current.getPortraitUrl() );
+
+						m_lobby.getUsers().add( user );
+						initialize();
+						DialogHelper.hide();
+					}
+				}
+			);
+		}
+		else
+		{
+			RegisterDialogFragment registerDialogFragment = new RegisterDialogFragment();
+			registerDialogFragment.setGoHomeAfterLogin( false );
+			registerDialogFragment.show( this.getFragmentManager(), null );
+		}
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Lobby: " + m_lobbyName;
 	}
 
 	@Override
@@ -82,6 +134,13 @@ public class LobbyFragment extends Fragment implements Screen
 		m_source = args.getString( Consts.KEY_LOBBY_SOURCE );
 	}
 
+	@Override
+	public View onCreateView(
+		final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState
+	)
+	{
+		return inflater.inflate( R.layout.fragment_lobby, container, false );
+	}
 
 	@Override
 	public void onViewCreated(
@@ -176,77 +235,9 @@ public class LobbyFragment extends Fragment implements Screen
 		//chat list
 		m_chatRoomService = m_chatService.getChatRoomService( getActivity(), m_lobby );
 		m_chatList.setAdapter( new ChatAdapter( getActivity(), m_lobbyService, m_chatRoomService, m_lobby ) );
-		LinearLayoutManager llm = new LinearLayoutManager( getActivity() );
-		m_chatList.setLayoutManager( llm );
-	}
-
-	@OnClick( R.id.btn_send )
-	void send()
-	{
-		String message = m_messageText.getText().toString().trim();
-		if ( message.length() > 0 )
-		{
-			m_chatRoomService.SendMessage( message );
-			m_messageText.setText( "" );
-		}
-	}
-
-	@OnClick( R.id.btn_join )
-	void joinLobby()
-	{
-		if ( User.isLoggedIn() )
-		{
-			DialogHelper.showProgressDialog( R.string.message_processing );
-			m_lobbyService.join(
-				m_lobby.getId(), new ServiceCallback()
-				{
-					@Override
-					public void success( final Object value )
-					{
-						LobbyUserInfo user = new LobbyUserInfo();
-						user.setId( User.current.getId() );
-						user.setUserName( User.current.getUserName() );
-						user.setPortraitUrl( User.current.getPortraitUrl() );
-
-						m_lobby.getUsers().add( user );
-						initialize();
-						DialogHelper.hide();
-					}
-				}
-			);
-		}
-		else
-		{
-			RegisterDialogFragment registerDialogFragment = new RegisterDialogFragment();
-			registerDialogFragment.setGoHomeAfterLogin( false );
-			registerDialogFragment.show( this.getFragmentManager(), null );
-		}
-	}
-
-	@Override
-	public void onCreateOptionsMenu( final Menu menu, final MenuInflater inflater )
-	{
-		inflater.inflate( R.menu.menu_lobby, menu );
-	}
-
-	@Override
-	public boolean onOptionsItemSelected( final MenuItem item )
-	{
-		if ( item.getItemId()== R.id.menu_members ){
-			MainDrawerFragment.getInstance().showRightDrawer();
-			return true;
-		}else {
-			return super.onOptionsItemSelected( item );
-		}
-	}
-
-	@Subscribe
-	public void postUserChanged( UserChangedEvent event )
-	{
-		if ( User.isLoggedIn() )
-		{
-			joinLobby();
-		}
+		m_chatList.setLayoutManager( new LinearLayoutManager( getActivity() ) );
+		m_chatList.addItemDecoration( new DividerItemDecoration( getActivity(), DividerItemDecoration.VERTICAL_LIST
+		                              ) );
 	}
 
 	@Override
@@ -266,8 +257,22 @@ public class LobbyFragment extends Fragment implements Screen
 	}
 
 	@Override
-	public String toString()
+	public void onCreateOptionsMenu( final Menu menu, final MenuInflater inflater )
 	{
-		return "Lobby: " + m_lobbyName;
+		inflater.inflate( R.menu.menu_lobby, menu );
+	}
+
+	@Override
+	public boolean onOptionsItemSelected( final MenuItem item )
+	{
+		if ( item.getItemId() == R.id.menu_members )
+		{
+			MainDrawerFragment.getInstance().showRightDrawer();
+			return true;
+		}
+		else
+		{
+			return super.onOptionsItemSelected( item );
+		}
 	}
 }

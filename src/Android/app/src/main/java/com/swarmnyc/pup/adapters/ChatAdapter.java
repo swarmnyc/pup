@@ -138,6 +138,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 	class ItemViewHolder extends RecyclerView.ViewHolder
 	{
+		@InjectView( R.id.contentPanel )
+		ViewGroup container;
+
 		@InjectView( R.id.img_portrait )
 		ImageView portrait;
 
@@ -167,6 +170,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 			nameText.setText( chatMessage.getUser().getUserName() );
 			messageText.setText( chatMessage.getBody() );
+
+			if ( chatMessage.getUser().getId().equals( User.current.getId() ) ){
+				container.setBackgroundResource( R.color.pup_my_chat );
+			}else {
+				container.setBackgroundResource( R.color.pup_white );
+			}
+
 		}
 	}
 

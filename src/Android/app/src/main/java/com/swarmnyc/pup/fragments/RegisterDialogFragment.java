@@ -112,6 +112,12 @@ public class RegisterDialogFragment extends DialogFragment
 		return result;
 	}
 
+	@OnClick( R.id.btn_cancel )
+	void cancel()
+	{
+		this.dismiss();
+	}
+
 	@OnClick( R.id.btn_join )
 	void join()
 	{

@@ -98,7 +98,7 @@ namespace SWARM.PuP.Web.Services
             var lobbyUser = lobby.Users.First(x => x.Id == user.Id);
             lobbyUser.IsLeave = true;
 
-           /* if (lobbyUser.IsOwner)
+            if (lobbyUser.IsOwner)
             {
                 // Change Ownership, choose the first one.
                 var newOwner = lobby.Users.FirstOrDefault(x => !x.IsLeave && !x.IsOwner);
@@ -112,7 +112,7 @@ namespace SWARM.PuP.Web.Services
                 }
             }
 
-            lobbyUser.IsOwner = false;*/
+            lobbyUser.IsOwner = false;
 
             _chatService.LeaveRoom(lobby, new[] { user });
             Update(lobby);
