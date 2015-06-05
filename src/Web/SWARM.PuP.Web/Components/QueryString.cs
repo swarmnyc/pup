@@ -99,11 +99,11 @@ namespace System.Web
         {
             string existingValue = base[name];
             if (string.IsNullOrEmpty(existingValue))
-                base.Add(name, HttpUtility.UrlEncodeUnicode(value));
+                base.Add(name, HttpUtility.UrlEncode(value));
             else if (isUnique)
-                base[name] = HttpUtility.UrlEncodeUnicode(value);
+                base[name] = HttpUtility.UrlEncode(value);
             else
-                base[name] += "," + HttpUtility.UrlEncodeUnicode(value);
+                base[name] += "," + HttpUtility.UrlEncode(value);
             return this;
         }
 
@@ -179,7 +179,7 @@ namespace System.Web
                 if (!string.IsNullOrEmpty(base.Keys[i]))
                 {
                     foreach (string val in base[base.Keys[i]].Split(','))
-                        builder.Append((builder.Length == 0) ? "?" : "&").Append(HttpUtility.UrlEncodeUnicode(base.Keys[i])).Append("=").Append(val);
+                        builder.Append((builder.Length == 0) ? "?" : "&").Append(HttpUtility.UrlEncode(base.Keys[i])).Append("=").Append(val);
                 }
             }
             return builder.ToString();

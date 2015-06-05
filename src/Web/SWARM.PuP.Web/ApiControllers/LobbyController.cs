@@ -22,16 +22,14 @@ namespace SWARM.PuP.Web.ApiControllers
 
         private readonly IGameService _gameService;
         private readonly ILobbyService _lobbyService;
-        private readonly IUserService _userService;
 
-        public LobbyController(IUserService userService, ILobbyService lobbyService, IGameService gameService)
+        public LobbyController(ILobbyService lobbyService, IGameService gameService)
         {
-            _userService = userService;
             _lobbyService = lobbyService;
             _gameService = gameService;
         }
 
-        public IEnumerable<LobbyViewModel> Get([FromUri] LobbyFilter filter)
+        public IEnumerable<Lobby> Get([FromUri] LobbyFilter filter)
         {
             filter = filter ?? new LobbyFilter();
 
@@ -40,16 +38,16 @@ namespace SWARM.PuP.Web.ApiControllers
                 filter.StartTimeUtc = DateTime.UtcNow.AddMinutes(ShowTimeOffset);
             }
 
-            return LobbyViewModel.Load(_lobbyService.Filter(filter));
+            return _lobbyService.Filter(filter);
         }
 
         [System.Web.Http.Authorize, System.Web.Http.Route("My")]
-        public IEnumerable<LobbyViewModel> GetMy([FromUri] LobbyFilter filter)
+        public IEnumerable<Lobby> GetMy([FromUri] LobbyFilter filter)
         {
             filter = filter ?? new LobbyFilter();
             filter.UserId = User.Identity.GetPuPUser().Id;
             filter.OrderDirection = ListSortDirection.Descending;
-            return LobbyViewModel.Load(_lobbyService.Filter(filter));
+            return _lobbyService.Filter(filter);
         }
 
         [ModelValidate]
