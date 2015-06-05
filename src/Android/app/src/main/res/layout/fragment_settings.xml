@@ -44,7 +44,7 @@
             android:hint="@string/hint_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_marginLeft="12dp"
             android:layout_alignTop="@+id/img_portrait"
             android:layout_toRightOf="@+id/img_portrait"
             android:layout_toEndOf="@+id/img_portrait"
@@ -56,9 +56,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/pup_light"
-            android:layout_alignBottom="@+id/img_camera"
-            android:layout_alignLeft="@+id/text_name"
-            android:layout_alignStart="@+id/text_name"/>
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_toRightOf="@+id/img_portrait"
+            android:layout_toEndOf="@+id/img_portrait"
+            android:layout_alignBottom="@+id/img_camera"/>
 
     <LinearLayout
             android:id="@+id/contentPanel"

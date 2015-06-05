@@ -6,11 +6,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
@@ -45,11 +46,11 @@ import java.util.List;
 public class LobbyListFragment extends Fragment implements Screen
 {
 	@InjectView( R.id.txt_game_serach )
-	public AutoCompleteTextView m_gameSearch;
+	public AutoCompleteTextView   m_gameSearch;
 	@InjectView( R.id.layout_sliding_panel )
-	public SlidingUpPanelLayout m_slidingPanel;
+	public SlidingUpPanelLayout   m_slidingPanel;
 	@InjectView( R.id.list_lobby )
-	public RecyclerView m_lobbyRecyclerView;
+	public RecyclerView           m_lobbyRecyclerView;
 	@InjectView( R.id.btn_create_lobby )
 	public ImageButton            m_createLobbyButton;
 	@InjectView( R.id.platform_select )
@@ -57,7 +58,7 @@ public class LobbyListFragment extends Fragment implements Screen
 	@InjectView( R.id.layout_empty_results )
 	public ViewGroup              m_emptyResults;
 	@Inject
-	GameService gameService;
+	GameService  gameService;
 	@Inject
 	LobbyService lobbyService;
 	float m_panelSize = 0.0f;
@@ -359,12 +360,11 @@ public class LobbyListFragment extends Fragment implements Screen
 	private void updateTitle()
 	{
 		final String title = null == m_lobbyFilter.getGame() ? "All Lobbies" : m_lobbyFilter.getGame().getName();
-		final ActionBar actionBar = ( (AppCompatActivity) getActivity() ).getSupportActionBar();
+		final Toolbar actionBar = MainActivity.getInstance().getToolbar();
 		actionBar.setTitle( title );
 		actionBar.setSubtitle( null );
 
 		if ( m_lobbyFilter.getPlatforms().size() > 0 )
-		{ ; }
 		{
 			List<GamePlatform> platforms = new ArrayList<>( m_lobbyFilter.getPlatforms() );
 
@@ -381,9 +381,11 @@ public class LobbyListFragment extends Fragment implements Screen
 				stringBuilder.append( GamePlatformUtils.labelForPlatform( getActivity(), platform ) );
 
 			}
-			actionBar.setSubtitle( stringBuilder.toString() );
-		}
 
+			Spanned subtitle = Html.fromHtml( String.format( "<small>%s</small>", stringBuilder.toString() ) );
+
+			actionBar.setSubtitle( subtitle );
+		}
 	}
 
 	private class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.ViewHolder>
@@ -451,15 +453,18 @@ public class LobbyListFragment extends Fragment implements Screen
 						@Override
 						public void onClick( final View v )
 						{
-							Navigator.ToLobby( lobbyListItemView.getLobby().getId(),lobbyListItemView.getLobby().getName(), Consts.KEY_LOBBIES, false );
+							Navigator.ToLobby(
+								lobbyListItemView.getLobby().getId(),
+								lobbyListItemView.getLobby().getName(),
+								Consts.KEY_LOBBIES,
+								false
+							);
 						}
 					}
 				);
 			}
 		}
-	}
-
-	@Override
+	}	@Override
 	public String toString()
 	{
 		return "Lobby List";

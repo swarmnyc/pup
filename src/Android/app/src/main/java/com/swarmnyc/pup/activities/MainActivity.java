@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity
 	private static MainActivity instance;
 
 	@InjectView( R.id.toolbar )
-	Toolbar toolbar;
+	Toolbar m_toolbar;
 	private GoogleAnalytics m_googleAnalytics;
 	private Tracker         m_tracker;
 	private boolean         launchDefault;
@@ -64,6 +64,9 @@ public class MainActivity extends AppCompatActivity
 		Consts.windowWidth = windowSize.x;
 		Consts.windowHeight = windowSize.y;
 
+
+		m_toolbar.setSubtitleTextColor( getResources().getColor( R.color.pup_grey ) );
+
 		m_googleAnalytics = GoogleAnalytics.getInstance( this );
 		m_googleAnalytics.setLocalDispatchPeriod( 1800 );
 
@@ -94,7 +97,7 @@ public class MainActivity extends AppCompatActivity
 
 	public Toolbar getToolbar()
 	{
-		return toolbar;
+		return m_toolbar;
 	}
 
 	public boolean isLaunchDefaultFragment()
@@ -129,12 +132,12 @@ public class MainActivity extends AppCompatActivity
 
 	public void hideToolbar()
 	{
-		toolbar.setVisibility( View.GONE );
+		m_toolbar.setVisibility( View.GONE );
 	}
 
 	public void showToolbar()
 	{
-		toolbar.setVisibility( View.VISIBLE );
+		m_toolbar.setVisibility( View.VISIBLE );
 	}
 
 	public void hideIme()
