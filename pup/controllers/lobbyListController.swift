@@ -9,7 +9,6 @@ import UIKit
 class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDataSource, FABDelegate {
 
     var listView: LobbyListView? //custom view for lobby list
-    var table:UITableView! //the table view (may be replaced by collection view)
     var filter: FilterViewController! //controller for the filter
 
     var sideMenu: SideMenuController! //control for the menu
@@ -57,6 +56,9 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         let menuImage = UIImage(named: "hamburgerMenu")
 
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: menuImage, style: UIBarButtonItemStyle.Plain, target: self, action: "openMenu")
+
+        self.listView?.table.registerClass(gameCell.self, forCellReuseIdentifier: "gamecell")
+        self.listView?.table.registerClass(headerCell.self, forCellReuseIdentifier: "headercell")
 
 
 
@@ -114,11 +116,14 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         //var cell:UITableViewCell = self.tableV.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
         //cell.textLabel.text = self.items[indexPath.row]
         if !self.model.games[indexPath.row].isBreakdown {
-            let cell: gameCell = gameCell();
+
+            let cell = tableView.dequeueReusableCellWithIdentifier("gamecell", forIndexPath:indexPath) as! gameCell
+
             cell.setCell(self.model.games[indexPath.row])
             return cell
         } else {
-            let cell: headerCell = headerCell();
+
+            var cell:headerCell = tableView.dequeueReusableCellWithIdentifier("headercell") as! headerCell
             cell.setCell(self.model.games[indexPath.row])
             return cell
 

@@ -17,16 +17,66 @@ class CreateLobbyView: UIView {
     var containerView: UIView = UIView()
     var dateDisplay: DateDisplayView = DateDisplayView();
     var timeDisplay: TimeDisplayView = TimeDisplayView();
-
+    var descriptionEditor: DescriptionEditor = DescriptionEditor();
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
         backgroundColor=UIColor.whiteColor()
 
-
-
     }
+
+
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+
+    func shortenView(notification: NSNotification) {
+        println("shortening view")
+        if (descriptionEditor.firstResponderCheck()) {
+            UIView.animateWithDuration(0.5) {
+                var keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
+                var keyboardHeight = keyboardSize!.height;
+                var newSize = self.scrollView.frame.height - keyboardHeight;
+
+                self.scrollView.snp_remakeConstraints {
+                    (make) -> Void in
+                    make.left.equalTo(self).offset(0)
+                    make.top.equalTo(self).offset(0)
+                    make.right.equalTo(self).offset(0)
+                    make.height.equalTo(newSize)
+                }
+
+
+
+                self.layoutIfNeeded()
+            }
+
+
+            var bottomOffset = CGPointMake(0, self.scrollView.contentSize.height - self.scrollView.bounds.size.height);
+            scrollView.setContentOffset(bottomOffset, animated: false)
+        }
+    }
+
+    func restoreView() {
+        UIView.animateWithDuration(0.5) {
+
+            self.scrollView.snp_remakeConstraints {
+                (make) -> Void in
+                make.left.equalTo(self).offset(0)
+                make.top.equalTo(self).offset(0)
+                make.right.equalTo(self).offset(0)
+                make.bottom.equalTo(self).offset(0)
+
+            }
+
+
+
+            self.layoutIfNeeded()
+        }
+    }
+
 
     func setImage(imageUrl: String) {
 
@@ -42,10 +92,18 @@ class CreateLobbyView: UIView {
 
     }
 
+
+
+
     func setUpView(parentController: CreateLobbyController) {
 
         var buttonDelegate = parentController as SimpleButtonDelegate;
         var searchDelegate = parentController as UISearchBarDelegate;
+
+        descriptionEditor.setDelegate(parentController as UITextViewDelegate)
+        descriptionEditor.setUpView()
+
+
         for i in 0...appData.platforms.count-1 {
             platforms.append(Button())
             platforms[i].setUpButton(appData.platforms[i], delegate: buttonDelegate)
@@ -70,7 +128,6 @@ class CreateLobbyView: UIView {
         pickSystemText.textAlignment = NSTextAlignment.Center
         addViews()
         layoutViews()
-
         //self.scrollView.contentSize = CGSize(width:scrollView.bounds.size.width, height: 1900);
         self.scrollView.indicatorStyle = .Default
 
@@ -94,6 +151,7 @@ class CreateLobbyView: UIView {
         self.containerView.addSubview(pickSystemText)
         self.containerView.addSubview(dateDisplay)
         self.containerView.addSubview(timeDisplay)
+        self.containerView.addSubview(descriptionEditor)
 
         for i in 0...appData.platforms.count-1 {
             self.containerView.addSubview(platforms[i])
@@ -203,6 +261,14 @@ class CreateLobbyView: UIView {
 
         }
 
+        self.descriptionEditor.snp_remakeConstraints { (make) -> Void in
+            make.left.equalTo(self.containerView).offset(0)
+            make.bottom.equalTo(self.containerView).offset(-120)
+            make.right.equalTo(self.containerView).offset(0)
+            make.height.equalTo(90)
+
+        }
+
         dateDisplay.layoutView()
         timeDisplay.layoutView()
 
@@ -217,11 +283,87 @@ class CreateLobbyView: UIView {
     }
 
 
+
+
+
+
+
+
+}
+
+class DescriptionEditor: UIView {
+    var title: UILabel = UILabel();
+    var descriptionField: UITextView = UITextView();
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
+    }
+
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
 
+
+    func setDelegate(delegate: UITextViewDelegate) {
+        descriptionField.delegate = delegate;
+
+
+    }
+
+
+    func setUpView() {
+        backgroundColor=UIColor.whiteColor()
+        self.title.text = "Description";
+        self.title.font = self.title.font.fontWithSize(10);
+        self.title.textColor = UIColor(rgba: colors.mainGrey)
+        self.title.textAlignment = NSTextAlignment.Center
+
+        self.descriptionField.text = UIConstants.descriptionPlaceholder
+        self.descriptionField.font = self.descriptionField.font.fontWithSize(11.0)
+        self.descriptionField.textColor = UIColor(rgba: colors.mainGrey)
+        self.descriptionField.returnKeyType = .Done
+        addViews()
+        addConstraints()
+    }
+
+    func addViews() {
+        self.addSubview(self.title)
+        self.addSubview(self.descriptionField)
+    }
+
+
+    func addConstraints() {
+
+        var titleHeight = 20;
+
+        title.snp_remakeConstraints { (make) -> Void in
+            make.left.equalTo(self).offset(0)
+            make.right.equalTo(self).offset(0)
+            make.top.equalTo(self).offset(0)
+            make.height.equalTo(titleHeight)
+
+        }
+        descriptionField.snp_remakeConstraints { (make) -> Void in
+            make.left.equalTo(self).offset(UIConstants.horizontalPadding)
+            make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
+            make.top.equalTo(self).offset(titleHeight)
+            make.height.equalTo(70)
+
+        }
+
+
+    }
+
+
+    func firstResponderCheck() -> Bool {
+        if (descriptionField.isFirstResponder()) {
+            return true
+        } else {
+            return false
+        }
+    }
 
 
 

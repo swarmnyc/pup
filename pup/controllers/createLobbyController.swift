@@ -6,7 +6,7 @@
 import Foundation
 import UIKit
 
-class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarDelegate, SearcherDelegate, UIScrollViewDelegate, UITextFieldDelegate {
+class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarDelegate, SearcherDelegate, UIScrollViewDelegate, UITextViewDelegate {
 
     var createView: CreateLobbyView = CreateLobbyView()
     var searchController: SearchResultsController?;
@@ -52,8 +52,87 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
             logInButton?.setNewView(createView.containerView)
         }
 
+
+        registerForKeyboardNotifications()
     }
 
+
+
+    //Get text from the description editor
+    func textViewShouldEndEditing(textView: UITextView) -> Bool {
+        println(textView.text)
+
+
+        textView.resignFirstResponder();
+        return true
+    }
+
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        if (text == "\n") {
+            textView.resignFirstResponder()
+
+            if (textView.text == "" || textView.text == "\n") {
+                textView.text = UIConstants.descriptionPlaceholder;
+            }
+
+            return false
+        }
+
+        return true
+
+    }
+
+    func keyboardWillShow(notification: NSNotification)
+    {
+       println("keyboard opened!")
+        println(notification)
+        createView.shortenView(notification)
+
+    }
+
+    func keyboardWillBeHidden(notification: NSNotification)
+    {
+      createView.restoreView();
+
+    }
+
+    func registerForKeyboardNotifications() {
+        NSNotificationCenter.defaultCenter().addObserver(
+        self,
+                selector: "keyboardWillShow:",
+                name: UIKeyboardWillShowNotification,
+                object: nil)
+
+        NSNotificationCenter.defaultCenter().addObserver(
+        self,
+                selector: "keyboardWillBeHidden:",
+                name: UIKeyboardWillHideNotification,
+                object: nil)
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().removeObserver(self,
+                name: UIKeyboardDidShowNotification,
+                object: nil)
+
+        NSNotificationCenter.defaultCenter().removeObserver(self,
+                name: UIKeyboardWillHideNotification,
+                object: nil)
+    }
+
+
+    func textViewDidBeginEditing(textView: UITextView) {
+
+        println(textView.text)
+        if (textView.text == UIConstants.descriptionPlaceholder) {
+            textView.text = "";
+        }
+        textView.becomeFirstResponder();
+    }
+
+
+
+    //get game data from the game search drop down
     func retreiveData(data: gameData) {
         var imageURL: String = data.PictureUrl
         println(imageURL)
@@ -63,12 +142,16 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
 
     }
 
+
+    //give results to the drop down
     func handOffResults(data: Array<gameData>) {
         println("display results");
         searchController?.giveResults(data);
         searchController?.displayResults();
     }
 
+
+    //touched a platform, here is the name and the button object
     func touchUp(button: NSObject, type: String) { //from button delegate
         println(type);
         var theButton = button as! Button
@@ -79,11 +162,15 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
        println(theButton.currentTitle!)
     }
 
+
+    //touched down on a platform
     func touchDown(button: NSObject, type: String) {
         var theButton = button as! Button
         println(theButton.currentTitle!)
     }
 
+
+    //close the keyboard and the search results
     func closeEverything() {
         createView.closeKeyboard();
         searchController?.resultsView?.closeResults()

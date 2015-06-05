@@ -52,6 +52,8 @@ class LobbyListView: UIView {
 
     func setUpTable() {
         table.separatorInset = UIEdgeInsetsZero
+
+
         self.panDetector.addTarget(self, action: "swiped:");
 
         self.swipeDetectionView.addGestureRecognizer(panDetector);
