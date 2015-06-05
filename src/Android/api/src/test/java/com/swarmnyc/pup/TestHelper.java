@@ -23,7 +23,7 @@ import javax.naming.AuthenticationException;
 public class TestHelper
 {
 	public static String UserToken;
-	public static final String PUP_API_URL = "http://pup.azurewebsites.net/api/";
+	public static final String PUP_API_URL = "http://pup-secondary.azurewebsites.net/api/";
 	private static RestAdapter restAdapter;
 
 	public static <T> T getRestApi( Class<T> cla )
