@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.swarmnyc.pup.RestApis.RestApiCallback;
 import com.swarmnyc.pup.RestApis.UserRestApi;
-import com.swarmnyc.pup.models.LoggedInUser;
+import com.swarmnyc.pup.viewmodels.UserRequestResult;
 import org.junit.Assert;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -62,12 +62,12 @@ public class TestHelper
 		final CountDownLatch signal = new CountDownLatch( 1 );
 
 		userRestApi.login(
-			"hello@swarmnyc.com", "swarmnyc", new RestApiCallback<LoggedInUser>()
+			"hello@swarmnyc.com", "swarmnyc", new RestApiCallback<UserRequestResult>()
 			{
 				@Override
-				public void success( LoggedInUser loggedInUser, Response response )
+				public void success( UserRequestResult loggedInUser, Response response )
 				{
-					UserToken = loggedInUser.getAccessToken();
+					UserToken = loggedInUser.getUser().getAccessToken();
 					signal.countDown();
 				}
 
