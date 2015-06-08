@@ -1,10 +1,13 @@
 package com.swarmnyc.pup.view;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,7 +22,7 @@ import com.swarmnyc.pup.models.Lobby;
 /**
  * TODO: document your custom view class.
  */
-public class LobbyListItemView extends RelativeLayout
+public class LobbyListItemView extends FrameLayout
 {
 
 	@InjectView( R.id.img_game )
@@ -51,6 +54,8 @@ public class LobbyListItemView extends RelativeLayout
 		);
 		final View view = infalter.inflate( R.layout.item_lobby, this, true );
 		ButterKnife.inject( this, view );
+
+
 	}
 
 	public LobbyListItemView( Context context, AttributeSet attrs )
@@ -73,6 +78,9 @@ public class LobbyListItemView extends RelativeLayout
 	public void setLobby( final Lobby lobby )
 	{
 		m_lobby = lobby;
+
+
+
 
 		if ( StringUtils.isNotEmpty( lobby.getPictureUrl() ) )
 		{
