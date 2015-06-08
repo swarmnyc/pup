@@ -4,6 +4,7 @@ package com.swarmnyc.pup.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
@@ -85,6 +87,17 @@ public class LobbyListFragment extends Fragment implements Screen
 
 	}
 
+
+	@Override
+	public void onCreate(
+		@Nullable
+		final Bundle savedInstanceState
+	)
+	{
+		Log.d( "LobbyListFragment", String.format( "onCreate (savedInstanceState = %s)",savedInstanceState ));
+
+		super.onCreate( savedInstanceState );
+	}
 
 	@Override
 	public View onCreateView(
@@ -287,10 +300,25 @@ public class LobbyListFragment extends Fragment implements Screen
 	}
 
 	@Override
+	public void onViewCreated(
+		final View view,
+		@Nullable
+		final Bundle savedInstanceState
+	)
+	{
+		Log.d(
+			"LobbyListFragment", String.format( "onViewCreated (%s, savedInstanceState = %s)",view,
+			savedInstanceState));
+		if (null == savedInstanceState)
+		{
+			reloadData( 0 );
+		}
+		super.onViewCreated( view, savedInstanceState );
+	}
+
+	@Override
 	public void onStart()
 	{
-		reloadData( 0 );
-
 		super.onStart();
 		MainDrawerFragment.getInstance().highLight( Consts.KEY_LOBBIES );
 	}
