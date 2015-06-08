@@ -4,13 +4,12 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
-import android.support.multidex.MultiDexApplication;
 import android.view.Display;
 
 import com.swarmnyc.pup.components.*;
 import com.uservoice.uservoicesdk.UserVoice;
 
-public class PuPApplication extends MultiDexApplication
+public class PuPApplication extends Application
 {
     private static PuPApplication instance;
     private PuPComponent component;
