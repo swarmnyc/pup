@@ -42,6 +42,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 			{
 				loading = false;
 				previousTotal = totalItemCount;
+				onLoadComplete(current_page);
 			}
 		}
 		if ( !loading && ( totalItemCount - visibleItemCount ) <= ( firstVisibleItem + visibleThreshold ) )
@@ -51,16 +52,15 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 			// Do something
 			current_page++;
 
-			Log.d(
-				"EndlessRecyclerOnScrollListener", String.format(
-					"onScrolled : dy = %s", dy
-				)
-			);
 			onLoadMore( current_page );
 
 			loading = true;
 		}
 	}
+
+
+	public abstract void onLoadComplete( final int current_page );
+
 
 	public abstract void onLoadMore( int current_page );
 

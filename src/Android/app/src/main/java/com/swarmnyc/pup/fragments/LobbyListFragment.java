@@ -15,9 +15,7 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
-import android.widget.ImageButton;
+import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -43,6 +41,7 @@ import com.swarmnyc.pup.view.LobbyListItemView;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 public class LobbyListFragment extends Fragment implements Screen
 {
@@ -63,6 +62,7 @@ public class LobbyListFragment extends Fragment implements Screen
 	private GameFilter  m_gameFilter  = new GameFilter();
 	private AutoCompleteForPicturedModelAdapter<Game> gameAdapter;
 	private EndlessRecyclerOnScrollListener           m_endlessRecyclerOnScrollListener;
+	private LayoutInflater                            m_layoutInflater;
 
 	public LobbyListFragment()
 	{
@@ -91,7 +91,7 @@ public class LobbyListFragment extends Fragment implements Screen
 		LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
 	)
 	{
-
+		m_layoutInflater = inflater;
 		PuPApplication.getInstance().getComponent().inject( this );
 		View view = inflater.inflate( R.layout.fragment_lobby_list, container, false );
 		ButterKnife.inject( this, view );
@@ -259,6 +259,12 @@ public class LobbyListFragment extends Fragment implements Screen
 		m_endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener( mLayoutManager )
 		{
 			@Override
+			public void onLoadComplete( final int current_page )
+			{
+				m_lobbyAdapter.onLoadComplete( current_page );
+			}
+
+			@Override
 			public void onLoadMore( int current_page )
 			{
 				// do something...
@@ -335,6 +341,10 @@ public class LobbyListFragment extends Fragment implements Screen
 		{
 			m_endlessRecyclerOnScrollListener.reset();
 		}
+		else
+		{
+			m_lobbyAdapter.onLoading( current_page );
+		}
 		final ContentLoadingProgressBar progressDialog = new ContentLoadingProgressBar( getActivity() );
 		progressDialog.show();
 		if ( m_emptyResults.getVisibility() == View.VISIBLE ) // Hide empty results before loading
@@ -409,14 +419,27 @@ public class LobbyListFragment extends Fragment implements Screen
 		}
 	}
 
-	private class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.ViewHolder>
+	private static class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.BaseViewHolder>
 	{
 		Context m_context;
 		private List<Lobby> m_lobbies = new ArrayList<>();
+		boolean m_isLoading = false;
+		private LayoutInflater m_layoutInflater;
+
+
+		enum ItemViewType
+		{
+			RegularView,
+			LoadingView,
+		}
+
 
 		private LobbyAdapter( final Context context )
 		{
 			m_context = context;
+
+			m_layoutInflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+
 		}
 
 		public List<Lobby> getLobbies()
@@ -428,27 +451,57 @@ public class LobbyListFragment extends Fragment implements Screen
 		{
 			m_lobbies = lobbies;
 			notifyDataSetChanged();
+			onLoadComplete( 0 );
 		}
 
 		public void addLobbies( final List<Lobby> lobbies )
 		{
 			final int start = m_lobbies.size();
 			m_lobbies.addAll( lobbies );
-			notifyItemRangeInserted(start, lobbies.size());
+			notifyItemRangeInserted( start, lobbies.size() );
+			onLoadComplete( 0 );
+		}
+
+		public void onLoadComplete( final int current_page )
+		{
+			if (m_isLoading)
+			{
+				m_isLoading = false;
+				notifyItemRemoved( m_lobbies.size() );
+			}
+		}
+
+		public void onLoading( final int current_page )
+		{
+			m_isLoading = true;
+			notifyItemInserted( m_lobbies.size() );
 		}
 
 		@Override
-		public ViewHolder onCreateViewHolder(
-			final ViewGroup viewGroup, final int i
+		public BaseViewHolder onCreateViewHolder(
+			final ViewGroup viewGroup, final int viewType
 		)
 		{
-			return new ViewHolder( new LobbyListItemView( m_context ) );
+			switch ( ItemViewType.values()[viewType] )
+			{
+				case RegularView:
+					return new LobbyViewHolder( new LobbyListItemView( m_context ) );
+				case LoadingView:
+					return new LoadingMoreViewHolder( m_layoutInflater.inflate( R.layout.item_loading, null ) );
+			}
+			return null;
 		}
 
 		@Override
-		public void onBindViewHolder( final ViewHolder viewHolder, final int i )
+		public void onBindViewHolder( final BaseViewHolder viewHolder, final int i )
 		{
-			viewHolder.m_lobbyListItemView.setLobby( m_lobbies.get( i ) );
+			if ( viewHolder instanceof LobbyViewHolder )
+			{
+				( (LobbyViewHolder) viewHolder ).m_lobbyListItemView.setLobby( m_lobbies.get( i ) );
+			}
+			else if ( viewHolder instanceof LoadingMoreViewHolder )
+			{
+			}
 		}
 
 		@Override
@@ -460,19 +513,59 @@ public class LobbyListFragment extends Fragment implements Screen
 		@Override
 		public int getItemCount()
 		{
+			if ( m_isLoading )
+			{
+				return m_lobbies.size() + 1;
+			}
 			return m_lobbies.size();
 		}
 
 
+		@Override
+		public int getItemViewType( final int position )
+		{
+			if ( m_isLoading && position >= m_lobbies.size() )
+			{
+				return ItemViewType.LoadingView.ordinal();
+			}
+			else if ( position < m_lobbies.size() )
+			{
+				return ItemViewType.RegularView.ordinal();
+			}
+			return super.getItemViewType( position );
+		}
+
+		public abstract class BaseViewHolder extends RecyclerView.ViewHolder
+		{
+			public BaseViewHolder( final View itemView )
+			{
+				super( itemView );
+			}
+		}
+
+		public class LoadingMoreViewHolder extends BaseViewHolder
+		{
+			// each data item is just a string in this case
+			public View m_progressBar;
+
+			public LoadingMoreViewHolder( final View view )
+			{
+				super( view );
+				m_progressBar = view;
+				view.setLayoutParams( new RecyclerView.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT,
+				                                                     ViewGroup.LayoutParams.WRAP_CONTENT ) );
+			}
+		}
+
 		// Provide a reference to the views for each data item
 		// Complex data items may need more than one view per item, and
 		// you provide access to all the views for a data item in a view holder
-		public class ViewHolder extends RecyclerView.ViewHolder
+		public class LobbyViewHolder extends BaseViewHolder
 		{
 			// each data item is just a string in this case
 			public LobbyListItemView m_lobbyListItemView;
 
-			public ViewHolder( final LobbyListItemView lobbyListItemView )
+			public LobbyViewHolder( final LobbyListItemView lobbyListItemView )
 			{
 				super( lobbyListItemView );
 				m_lobbyListItemView = lobbyListItemView;

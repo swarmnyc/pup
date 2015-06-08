@@ -126,7 +126,7 @@ public class LobbyServiceTest
 						lobby.setPlayStyle( i%2 ==0 ? PlayStyle.Casual : PlayStyle.Normal );
 						lobby.setDescription( "Random Test: "  + i);
 						final Calendar instance = Calendar.getInstance();
-						instance.add( Calendar.MINUTE, 20 );
+						instance.add( Calendar.HOUR, 20 );
 						lobby.setStartTime( instance.getTime() );
 						m_lobbyService.create(
 							lobby, new ServiceCallback<Lobby>()

@@ -71,5 +71,6 @@
     <string name="time_in_minutes">in %d minutes</string>
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
+    <string name="msg_loading_more_lobbies">Loading more games...</string>
 
 </resources>
