@@ -6,14 +6,17 @@
 import Foundation
 import UIKit
 
-protocol SimpleButtonDelegate: class {
+public protocol SimpleButtonDelegate {
     func touchDown(button: NSObject, type: String)
     func touchUp(button: NSObject, type: String)
-
 
 }
 
 protocol FABDelegate: class {
     func fabTouchDown()
     func fabTouchUp()
+}
+
+protocol ImageButtonDelegate: class {
+    func touched(image: ImageViewButton)
 }

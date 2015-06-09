@@ -17,11 +17,11 @@ class SingleLobbyController: UIViewController {
 
     var logInButton: JoinButton? = nil
 
-    convenience init(info: lobbyData) {
+    convenience init(info: LobbyData) {
 
         self.init();
         println(info);
-        println(info.Name);
+        println(info.name);
         data.data = info;
 
 
@@ -44,31 +44,37 @@ class SingleLobbyController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.whiteColor()
-        self.title = data.data.Name;
+        self.title = data.data.name;
         println("view did load")
         currentUser.setPage("Single Lobby")
 
-        let requestUrl = NSURL(string: "\(urls.lobbies)\(data.data.id)")
+        self.data.getDetailed({
+            lobbyView?.setUpViews(self.data)
+        }, failure: {
 
-        let task = NSURLSession.sharedSession().dataTaskWithURL(requestUrl!) {(data, response, error) in
-            println(error)
-            let jsonResponse = JSON(data: data)
-            self.data.addDetailed(jsonResponse)
-            // println(jsonResponse)
+        })
+      //  let requestUrl = NSURL(string: "\(urls.lobbies)\(data.data.id)")
 
-            dispatch_async(dispatch_get_main_queue(),{
+//        let task = NSURLSession.sharedSession().dataTaskWithURL(requestUrl!) {(data, response, error) in
+//            println(error)
+////            let jsonResponse = JSON(data: data)
+////            self.data.addDetailed(jsonResponse)
+////            // println(jsonResponse)
+////
+////            dispatch_async(dispatch_get_main_queue(),{
+////
+////                self.lobbyView?.setUpViews(self.data)
+////
+////            })
+//        }
 
-                self.lobbyView?.setUpViews(self.data)
-
-            })
-        }
-
-        task.resume()
+      //  task.resume()
 
 
 
         if (currentUser.loggedIn() == false) {
            logInButton = JoinButton(parentController: self)
+            logInButton?.onSuccessJoin = joinLobby
         }
 
 
@@ -91,6 +97,11 @@ class SingleLobbyController: UIViewController {
 
 
 
+    }
+
+
+    func joinLobby() {
+        println("joining this lobby")
     }
 
     override func didReceiveMemoryWarning() {

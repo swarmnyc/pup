@@ -4,25 +4,29 @@
 //
 
 import Foundation
+import Alamofire
 
-struct lobbyData {
-    var GameId = "5553c9f460635b5368e5a1d8"
-    var id = "391837284737198374ech1"
-    var Name = "Destiny"
-    var PictureUrl = "http://upload.wikimedia.org/wikipedia/en/thumb/b/be/Destiny_box_art.png/220px-Destiny_box_art.png"
-    var ThumbnailPictureUrl = "http://upload.wikimedia.org/wikipedia/en/thumb/b/be/Destiny_box_art.png/220px-Destiny_box_art.png"
-    var Description = "The combat in this game was the one time in my life I ever became legitimately engraged playing a videogame. Need help!"
-    var Platform = "PS3"
-    var PlayStyle = "Normal"
-    var SkillLevel = "Intermediate"
-    var startTimeUtc = "2015-05-13T22:24:41.000Z"
-    var isBreakdown = false
-    var breakdownTitle = "Happening Soon (2)"
-    var users: Array<singleLobbyUser> = []
-    var owner = singleLobbyUser()
+
+class LobbyData {
+
+    var gameId:String = ""
+    var id:String = "232"
+    var name:String = ""
+    var pictureUrl:String = ""
+    var thumbnailPictureUrl:String = ""
+    var description:String = ""
+    var platform:String = ""
+    var playStyle:String = ""
+    var skillLevel:String = ""
+    var startTimeUtc:String = ""
+    var isBreakdown:Bool = false;
+    var breakdownTitle:String = ""
+    var users: Array<SingleLobbyUser> = []
+    var owner = SingleLobbyUser()
+
     var getTagText: String {
         get {
-            return "\(PlayStyle), \(SkillLevel)"
+            return "\(playStyle), \(skillLevel)"
         }
     }
     var timeInHuman: String {
@@ -49,20 +53,63 @@ struct lobbyData {
         }
     }
 
+
+    init(data: NSDictionary) {
+        println(data)
+
+        gameId = data["gameId"] as! String
+        id = data["id"] as! String
+        name = data["name"] as! String
+        pictureUrl = data["pictureUrl"] as! String
+        thumbnailPictureUrl = data["thumbnailPictureUrl"] as! String
+        description = data["description"] as! String
+        description = data["description"] as! String
+        platform = data["platform"] as! String
+        platform = data["platform"] as! String
+        playStyle = data["playStyle"] as! String
+        skillLevel = data["skillLevel"] as! String
+        startTimeUtc = data["startTimeUtc"] as! String
+
+
+
+    }
+
+    init() {
+
+        var isBreakdown = true
+        var breakdownTitle = "Happening Soon (2)"
+    }
+
 }
 
 
-struct singleLobbyUser {
+class SingleLobbyUser {
     var isLeave = false
     var id = "-1"
     var isOwner = false
     var name = ""
+
+    init() {
+
+    }
+
+    init(data: NSDictionary) {
+
+        println(data)
+
+        isLeave = data["isLeave"] as! Bool
+        isOwner = data["isOwner"] as! Bool
+        id = data["id"] as! String
+        name = data["userName"] as! String
+
+    }
+
 }
 
 
 
-class lobbyList {  //collection of all the current games
-    var games: Array<lobbyData>;
+class LobbyList {  //collection of all the current games
+    var games: Array<LobbyData>;
 
     var updated: Bool = false;
     var parent: LobbyListController;
@@ -71,31 +118,13 @@ class lobbyList {  //collection of all the current games
 
         parent = parentView;
 
-        games = Array<lobbyData>();
-//        for i in 0...15 {
-//
-//            games.append(lobbyData());
-//            if (i==0 || i==4 || i==10) {
-//                games[i].isBreakdown = true;
-//                if (i==4) {
-//                    games[i].breakdownTitle = "Tomorrow (5)"
-//                } else if (i==10) {
-//                    games[i].breakdownTitle = "Later This Week (50)"
-//                }
-//
-//            }
-//
-//        }
-
-
-        getLobbies();
-
+        games = Array<LobbyData>();
 
 
 
     }
 
-    func makeNewRequest(search: String, platforms: Array<String>) {
+    func makeNewRequest(search: String, platforms: Array<String>) -> String {
         var suffix = "?search=\(search)";
         if (platforms.count > 0) {
             for (var i = 0; i < platforms.count; i++) {
@@ -104,10 +133,12 @@ class lobbyList {  //collection of all the current games
         }
 
         println(suffix);
-        getLobbies(searchTerms: suffix);
+        return suffix;
+        //getLobbies(searchTerms: suffix);
     }
 
-    func getLobbies(searchTerms: String = "", applyChange: Bool = true) {
+    func getLobbies(search: String, platforms: Array<String>, applyChange: Bool = true, success: () -> Void, failure: () -> Void) {
+        var searchTerms = makeNewRequest(search, platforms: platforms);
 
         var urlAppend = "";
         if searchTerms != "" {
@@ -120,65 +151,44 @@ class lobbyList {  //collection of all the current games
         println(url)
         let requestUrl = NSURL(string: url)
         if (requestUrl != nil) {
-            let task = NSURLSession.sharedSession().dataTaskWithURL(requestUrl!) {
-                (data, response, error) in
-                println(error)
-                let jsonResponse = JSON(data: data)
-                if (applyChange) {
-                    self.updateData(jsonResponse);
-                }
-            }
 
-            task.resume();
+
+
+
+            Alamofire.request(.GET, url).responseJSON { (request, response, responseJSON, error) in
+                var resp: NSArray = responseJSON! as! NSArray
+
+                println(resp);
+
+                self.updateData(resp);
+                success();
+                self.updated = false;
+            };
+
+
+
+
         }
 
 
     }
 
 
-    func updateData(data: JSON) {  //update data and call a redraw in the UI
+    func updateData(data: NSArray) {  //update data and call a redraw in the UI
         println(data)
         games.removeAll();
-        for (index: String, subJson: JSON) in data {
-            println(subJson["pictureUrl"].stringValue)
-
-            var GameId: String = subJson["gameId"].stringValue;
-            var id: String = subJson["id"].stringValue
-            var Name: String = subJson["name"].stringValue
-            var PictureUrl: String = subJson["pictureUrl"].stringValue
-            var ThumbnailPictureUrl: String = subJson["thumbnailPictureUrl"].stringValue
-            var Description: String = subJson["description"].stringValue
-            var Platform: String = subJson["platform"].stringValue
-            var PlayStyle: String = subJson["playStyle"].stringValue
-            var SkillLevel: String = subJson["skillLevel"].stringValue
-            var startTimeUtc: String = subJson["startTimeUtc"].stringValue
-
-            games.append(lobbyData(GameId: GameId, id: id, Name: Name, PictureUrl: PictureUrl, ThumbnailPictureUrl: ThumbnailPictureUrl, Description: Description, Platform: Platform, PlayStyle: PlayStyle, SkillLevel: SkillLevel, startTimeUtc: startTimeUtc, isBreakdown: false, breakdownTitle: "", users: [], owner: singleLobbyUser()))
-
-
-//            var GameId = "5553c9f460635b5368e5a1d8"
-//            var Name = "Destiny"
-//            var PictureUrl = "http://upload.wikimedia.org/wikipedia/en/thumb/b/be/Destiny_box_art.png/220px-Destiny_box_art.png"
-//            var ThumbnailPictureUrl = "http://upload.wikimedia.org/wikipedia/en/thumb/b/be/Destiny_box_art.png/220px-Destiny_box_art.png"
-//            var Description = "The combat in this game was the one time in my life I ever became legitimately engraged playing a videogame. Need help!"
-//            var Platform = "PS3"
-//            var PlayStyle = "Normal"
-//            var SkillLevel = "Intermediate"
-//            var startTimeUtc = "2015-05-13T22:24:41.000Z"
-//            var isBreakdown = false
-//            var breakdownTitle = "Happening Soon (2)"
-
-
-            println("----")
-        }
 
         println(games)
         updated = true;
 
-        dispatch_async(dispatch_get_main_queue(),{
-            self.parent.updateData()
-            self.updated = false;
-        })
+
+        for (var i = 0; i<data.count; i++) {
+
+            games.append(LobbyData(data: data[i] as! NSDictionary))
+
+        }
+
+
 
 
     }

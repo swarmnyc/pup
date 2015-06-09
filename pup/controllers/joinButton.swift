@@ -11,12 +11,14 @@ class JoinButton: UIViewController, SimpleButtonDelegate {
 
     var parent: UIViewController?
     var joinButtonView: JoinButtonView = JoinButtonView();
-
+    var registrationController: RegistrationController?;
+    var onSuccessJoin: (() -> Void)?
 
     convenience init(parentController: UIViewController) {
         self.init()
         parent = parentController;
-
+        registrationController = RegistrationController(parentController: self as UIViewController)
+        registrationController?.setUpView()
         self.view = joinButtonView
         joinButtonView.setUpViews(parent!.view, joinDelegate: self);
 
@@ -25,9 +27,31 @@ class JoinButton: UIViewController, SimpleButtonDelegate {
     }
 
     func touchUp(button: NSObject, type: String) {
+        println("touched")
+       // parent?.view.addSubview(registrationController.view)
+        println(parent!.view)
+
+
+
+
+        registrationController?.addParentConstraints(parent!.view);
+        registrationController?.onSuccessJoin = onSuccessJoin;
 
 
     }
+
+
+
+
+
+    func removeRegistrationView() {
+        registrationController?.view.removeFromSuperview()
+        self.view.removeFromSuperview()
+    }
+
+
+
+
 
     func touchDown(button: NSObject, type: String) {
 

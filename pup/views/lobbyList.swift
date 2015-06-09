@@ -14,12 +14,10 @@ import UIKit
 class LobbyListView: UIView {
 
     var table: UITableView = UITableView()
-    var swipeDetectionView = UIView()
-    var panDetector = UIPanGestureRecognizer()
-    var swipeDelegate: PanGestureDelegate?
-    var FAB: floatingAction?
+
+
+    var floatingActionButton: floatingAction?
     var fabDelegate: FABDelegate?
-    var darkened = false;
 
 
     override init(frame: CGRect) {
@@ -47,36 +45,35 @@ class LobbyListView: UIView {
     func setDelegates(delegate: UITableViewDelegate, dataSource: UITableViewDataSource, fabDelegate: FABDelegate) {
         table.delegate = delegate;
         table.dataSource = dataSource;
-        FAB?.fabDelegate = fabDelegate
+        floatingActionButton?.fabDelegate = fabDelegate
     }
 
     func setUpTable() {
         table.separatorInset = UIEdgeInsetsZero
 
 
-        self.panDetector.addTarget(self, action: "swiped:");
-
-        self.swipeDetectionView.addGestureRecognizer(panDetector);
-        self.swipeDetectionView.userInteractionEnabled = true;
 
 
-        let singleTap = UITapGestureRecognizer(target: self, action: Selector("tapDetected"))
-        singleTap.numberOfTapsRequired = 1
+//        let singleTap = UITapGestureRecognizer(target: self, action: Selector("tapDetected"))
+//        singleTap.numberOfTapsRequired = 1
 
 
 
         let fabImage = UIImage(named: "FAB")
-        FAB = floatingAction()
-        FAB?.image = fabImage;
-        FAB?.contentMode = UIViewContentMode.ScaleAspectFill
-        FAB?.clipsToBounds = true;
-        FAB?.userInteractionEnabled = true
+        floatingActionButton = floatingAction()
+        floatingActionButton?.image = fabImage;
+        floatingActionButton?.contentMode = UIViewContentMode.ScaleAspectFill
+        floatingActionButton?.clipsToBounds = true;
+        floatingActionButton?.userInteractionEnabled = true
 
 
         addSubview(table);
-        addSubview(FAB!)
+        addSubview(floatingActionButton!)
 
-        addSubview(swipeDetectionView)
+        //addSubview(swipeDetectionView)
+
+        self.setTranslatesAutoresizingMaskIntoConstraints(true)
+
     }
 
 
@@ -84,7 +81,7 @@ class LobbyListView: UIView {
 
         UIView.animateWithDuration(Double(0.3)) {
             let trans = CGAffineTransformMakeScale(1.1, 1.1);
-            self.FAB?.transform = trans;
+            self.floatingActionButton?.transform = trans;
             self.layoutIfNeeded()
         }
 
@@ -93,17 +90,12 @@ class LobbyListView: UIView {
     func releaseFab() {
         UIView.animateWithDuration(Double(0.2)) {
             let trans = CGAffineTransformMakeScale(1.0, 1.0);
-            self.FAB?.transform = trans;
+            self.floatingActionButton?.transform = trans;
             self.layoutIfNeeded()
         }
 
     }
 
-    func swiped(sender: UIPanGestureRecognizer) {
-        println("haha!")
-        self.swipeDelegate?.swiped(sender);
-
-    }
 
 
 
@@ -115,19 +107,15 @@ class LobbyListView: UIView {
             make.top.equalTo(self).offset(0)
             make.bottom.equalTo(self).offset(0)
         }
-        swipeDetectionView.snp_makeConstraints { (make) -> Void in
-            make.left.equalTo(self).offset(0);
-            make.top.equalTo(self).offset(0);
-            make.bottom.equalTo(self).offset(0);
-            make.width.equalTo(20);
-        }
 
-        FAB?.snp_makeConstraints{ (make) -> Void in
+        floatingActionButton?.snp_makeConstraints{ (make) -> Void in
             make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
             make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)
             make.width.equalTo(50)
             make.height.equalTo(50)
         }
+
+        self.setTranslatesAutoresizingMaskIntoConstraints(true)
     }
 
 

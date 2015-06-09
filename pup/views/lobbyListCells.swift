@@ -5,7 +5,7 @@
 
 import Foundation
 import UIKit
-
+import Haneke
 class gameCell: UITableViewCell {
 
 
@@ -41,9 +41,8 @@ class gameCell: UITableViewCell {
 
 
 
-    func setCell(item: lobbyData) {
+    func setCell(item: LobbyData) {
 
-        setUpViews(item)
 
         imageAndPlatform.addSubview(imgView)
         imageAndPlatform.addSubview(platform)
@@ -62,6 +61,8 @@ class gameCell: UITableViewCell {
         self.contentView.addSubview(textRightBottom)
 
         setUpConstraints();
+
+        setUpViews(item)
 
 
 
@@ -154,6 +155,8 @@ class gameCell: UITableViewCell {
             make.height.equalTo(UIConstants.dividerWidth)
         }
 
+        self.setNeedsDisplay()
+
 
     }
 
@@ -171,35 +174,37 @@ class gameCell: UITableViewCell {
 
     }
 
-    func setUpViews(data: lobbyData) {
+    func setUpViews(data: LobbyData) {
 
         selectionStyle = UITableViewCellSelectionStyle.None
 
-        var url = NSURL(string: data.PictureUrl)
+        var url = NSURL(string: data.pictureUrl)
 
-        var request:NSURLRequest = NSURLRequest(URL: url!)
-        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
-            self.img = UIImage(data: data) as UIImage!
-            self.imgView.image = self.img;
-            self.imgView.contentMode = UIViewContentMode.ScaleAspectFill;
-            self.imgView.clipsToBounds = true;
-        })
+       // var request:NSURLRequest = NSURLRequest(URL: url!)
+        imgView.frame.size = CGSizeMake(400, 400);
+        self.imgView.hnk_setImageFromURL(url!)
+//        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
+//            self.img = UIImage(data: data) as UIImage!
+//            self.imgView.image = self.img;
+//            self.imgView.contentMode = UIViewContentMode.ScaleAspectFill;
+//            self.imgView.clipsToBounds = true;
+//        })
 
 
-        platform.text = data.Platform;
+        platform.text = data.platform;
         platform.textAlignment = NSTextAlignment.Center
         platform.font = platform.font.fontWithSize(9)
         platform.textColor = UIColor.whiteColor();
-        platform.backgroundColor = UIColor(rgba: colorFromSystem(data.Platform))
+        platform.backgroundColor = UIColor(rgba: colorFromSystem(data.platform))
 
 
-        title.text = data.Name
+        title.text = data.name
         title.setTranslatesAutoresizingMaskIntoConstraints(false)
         title.font = title.font.fontWithSize(16)
         title.layoutMargins = UIEdgeInsetsZero
 
 
-        desc.text = data.Description
+        desc.text = data.description
         self.desc.font = UIFont.systemFontOfSize(11.0)
         desc.editable = false
         desc.userInteractionEnabled = false
@@ -242,7 +247,7 @@ class headerCell: UITableViewCell {
     var title:UILabel = UILabel()
 
 
-    var data = lobbyData()
+    var data = LobbyData()
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -260,7 +265,7 @@ class headerCell: UITableViewCell {
 
 
 
-    func setCell(item: lobbyData) {
+    func setCell(item: LobbyData) {
 
 
         self.selectionStyle = UITableViewCellSelectionStyle.None
@@ -298,7 +303,7 @@ class headerCell: UITableViewCell {
 
 
 
-    func setUpViews(data: lobbyData) {
+    func setUpViews(data: LobbyData) {
         title.text = data.breakdownTitle
         title.font = title.font.fontWithSize(10)
 

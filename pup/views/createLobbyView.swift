@@ -11,7 +11,7 @@ class CreateLobbyView: UIView {
     var headerImage: UIImageView = UIImageView();
     var searchBar: UISearchBar = UISearchBar();
     var pickSystemText: UILabel = UILabel();
-    var platforms: Array<Button> = [];
+    var platforms: Array<PlatformButtonToggle> = [];
 
     var scrollView: UIScrollView = UIScrollView()
     var containerView: UIView = UIView()
@@ -105,7 +105,7 @@ class CreateLobbyView: UIView {
 
 
         for i in 0...appData.platforms.count-1 {
-            platforms.append(Button())
+            platforms.append(PlatformButtonToggle())
             platforms[i].setUpButton(appData.platforms[i], delegate: buttonDelegate)
         }
 
@@ -322,7 +322,7 @@ class DescriptionEditor: UIView {
 
         self.descriptionField.text = UIConstants.descriptionPlaceholder
         self.descriptionField.font = self.descriptionField.font.fontWithSize(11.0)
-        self.descriptionField.textColor = UIColor(rgba: colors.mainGrey)
+        self.descriptionField.textColor = UIColor(rgba: colors.lightGray).darkerColor(0.5)
         self.descriptionField.returnKeyType = .Done
         addViews()
         addConstraints()

@@ -7,7 +7,7 @@ import Foundation
 import UIKit
 
 
-class JoinButtonView: Button {
+class JoinButtonView: PlatformButtonToggle {
 
     var topLabel: UILabel = UILabel();
     var bottomLabel: UILabel = UILabel()
@@ -68,6 +68,7 @@ class JoinButtonView: Button {
     }
 
     func setUpConstraints(parentView: UIView) {
+        parentView.addSubview(self)
         self.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(parentView).offset(0)
             make.right.equalTo(parentView).offset(0)

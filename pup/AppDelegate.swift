@@ -18,6 +18,9 @@ var currentUser: User = User()
 
 var appData: miscData = miscData()
 
+//let cache = Shared.JSONCache
+//let cache = Haneke.sharedJSONCache
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -31,12 +34,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window!.backgroundColor = UIColor.whiteColor()
         self.window!.makeKeyAndVisible()
         
-        var studyController: LobbyListController? = LobbyListController(nibName: nil, bundle: nil)
-        self.nav = UINavigationController(rootViewController: studyController!)
-        
+       // var menuController: MenuNavigationController? = MenuNavigationController( menuTableViewController: MenuTableController(), contentViewController: LobbyListController())
+        self.nav = MenuNavigationController( menuTableViewController: MenuTableController(), contentViewController: LobbyListController())
+        self.nav!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(rgba: colors.tealMain)]
+         self.nav!.navigationBar.tintColor = UIColor(rgba: colors.tealMain)
         self.window!.rootViewController = self.nav
-        self.nav!.setNavigationBarHidden(false, animated: false)
-        self.nav!.title = "All Games"
+         self.nav!.setNavigationBarHidden(false, animated: false)
+        //self.nav!.title = "All Games"
         return true
     }
 

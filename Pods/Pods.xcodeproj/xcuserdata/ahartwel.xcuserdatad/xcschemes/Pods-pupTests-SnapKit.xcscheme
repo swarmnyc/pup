@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A62617567B5143EFC04D534C"
+               BlueprintIdentifier = "25B4CB2903E1811E8F7194F2"
                BuildableName = "SnapKit.framework"
                BlueprintName = "Pods-pupTests-SnapKit"
                ReferencedContainer = "container:Pods.xcodeproj">

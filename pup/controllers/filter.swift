@@ -7,14 +7,16 @@ import Foundation
 import UIKit
 
 
-class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonDelegate, PanGestureDelegate, SearcherDelegate, OverlayDelegate {
+class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonDelegate, PanGestureDelegate, SearchResultsDelegate, OverlayDelegate {
     var isOpen = false;
     var filterView: FilterView = FilterView()
     var parent: LobbyListController?
     var searchActive : Bool = false
-    var data: Searcher = Searcher();
+    var data: SearchResultsModel = SearchResultsModel();
     var numberOfSelections: Int = 0;
     var searchController: SearchResultsController?;
+
+
     convenience init(parentController: LobbyListController) {
         self.init()
 
@@ -57,7 +59,7 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
     }
 
     func touchUp(button: NSObject, type: String) { //from button delegate
-        var theButton = button as! Button
+        var theButton = button as! PlatformButtonToggle
         var added = setSelectionCount(theButton.checked)
         println(theButton.currentTitle!);
         if (!added) {
@@ -165,7 +167,9 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
         if (searchText == "") {
             searchController?.hideResults();
         } else {
-            data.search(searchText);
+            data.search(searchText, success: handOffResults, failure: {
+                println("failure in search")
+            });
         }
 
     }

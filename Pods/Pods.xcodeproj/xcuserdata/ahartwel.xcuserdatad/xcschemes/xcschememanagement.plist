@@ -4,12 +4,27 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Pods-pup-Alamofire.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-pup-ENSwiftSideMenu.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-pup-HanekeSwift.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-pup-SnapKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-pup-SwiftyJSON.xcscheme</key>
+		<key>Pods-pup-SwiftHTTP.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -19,12 +34,27 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-pupTests-Alamofire.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-pupTests-ENSwiftSideMenu.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-pupTests-HanekeSwift.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-pupTests-SnapKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-pupTests-SwiftyJSON.xcscheme</key>
+		<key>Pods-pupTests-SwiftHTTP.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -34,35 +64,125 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-pupTests2-Alamofire.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-pupTests2-ENSwiftSideMenu.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-pupTests2-HanekeSwift.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-pupTests2-SnapKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-pupTests2-SwiftHTTP.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-pupTests2.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>7BC454DF577F94835AB95599</key>
+		<key>020E8E67612B19BDDEB24E64</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>903D56662F05B306B5F09C2C</key>
+		<key>0CD0D81FCBE5B092D7592F77</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A279C7F6EB61DC58ACAFA9A1</key>
+		<key>120E51890F0E88BDBF088058</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A62617567B5143EFC04D534C</key>
+		<key>15D8B73FA25EA8B9E40DA320</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A82C40FF92F04FF9929BDB89</key>
+		<key>25B4CB2903E1811E8F7194F2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AD4AEB444637AD85B019A567</key>
+		<key>431A29CD77BB5EC7A112D644</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>56DFAB37F183799E4822F039</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>62EDC9B3CBB8BD4A125E3420</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>656E07E00723B38C6E0519AD</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>678B48DBB952B09065112C1E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>80B17605AC7191288AC28B59</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>886B4E8653009ACD1CC09D25</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>90A7AE94A03956BB706F271F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>995900E9035F7943EF256CF3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>ABF69DC09411C3FD58E365DC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BD1D44C2669F75768F3C0510</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BD761F9DE7F3C26296879287</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D2D5E3508923BE4191DBE126</key>
 		<dict>
 			<key>primary</key>
 			<true/>

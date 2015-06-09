@@ -39,12 +39,16 @@ class SearchResultsViewCell: UICollectionViewCell {
         var url = NSURL(string: data.ThumbnailPictureUrl)
         var request:NSURLRequest = NSURLRequest(URL: url!)
         gameImg.backgroundColor = UIColor.blackColor();
-        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
-            var img = UIImage(data: data) as UIImage!
-            self.gameImg.image = img;
-            self.gameImg.contentMode = UIViewContentMode.ScaleAspectFill;
-            self.gameImg.clipsToBounds = true;
-        })
+        gameImg.frame.size = CGSizeMake(45, 45);
+        self.gameImg.hnk_setImageFromURL(url!)
+        self.gameImg.clipsToBounds = true;
+
+//        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
+//            var img = UIImage(data: data) as UIImage!
+//            self.gameImg.image = img;
+//            self.gameImg.contentMode = UIViewContentMode.ScaleAspectFill;
+//            self.gameImg.clipsToBounds = true;
+//        })
 
 
         gameImg.snp_makeConstraints{ (make) -> Void in

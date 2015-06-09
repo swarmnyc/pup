@@ -1,0 +1,6 @@
+framework module ENSwiftSideMenu {
+  umbrella header "Pods-pupTests2-ENSwiftSideMenu-umbrella.h"
+
+  export *
+  module * { export * }
+}

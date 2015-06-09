@@ -6,13 +6,15 @@
 import Foundation
 import UIKit
 
-class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarDelegate, SearcherDelegate, UIScrollViewDelegate, UITextViewDelegate {
+class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarDelegate, SearchResultsDelegate, UIScrollViewDelegate, UITextViewDelegate {
 
     var createView: CreateLobbyView = CreateLobbyView()
     var searchController: SearchResultsController?;
-    var data: Searcher = Searcher();
+    var data: SearchResultsModel = SearchResultsModel();
+
     var playStyle: HorizontalSelectController?
     var gamerSkill: HorizontalSelectController?
+
     var logInButton: JoinButton? = nil
 
     required init(coder aDecoder: NSCoder)
@@ -35,21 +37,27 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
         super.viewDidLoad()
         currentUser.setPage("Create Lobby")
 
+        //set up search results controller
         searchController = SearchResultsController(parent: self, searchBar: createView.searchBar);
+
+        //set up scrolling selectors
         playStyle = HorizontalSelectController(parent: self, options: ["NORMAL", "HARDCORE", "3L337", "PRO"], title: "PLAY STYLE")
         gamerSkill = HorizontalSelectController(parent: self, options: ["NOOB", "CASUAL", "3L337", "PRO"], title: "GAMER SKILL")
-        //scrollView.panGestureRecognizer.requireGestureRecognizerToFail(mySwipe)
 
         createView.containerView.addSubview(playStyle!.view)
         createView.containerView.addSubview(gamerSkill!.view)
+
         playStyle?.setUpView(self.createView.containerView, bottomOffset:  300.0)
         gamerSkill?.setUpView(self.createView.containerView, bottomOffset: 200.0)
+
         view.addSubview(searchController!.view)
+
         data.delegate = self;
 
         if (currentUser.loggedIn() == false) {
             logInButton = JoinButton(parentController: self)
             logInButton?.setNewView(createView.containerView)
+            logInButton?.onSuccessJoin = createLobby;
         }
 
 
@@ -57,6 +65,9 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
     }
 
 
+    func createLobby() {
+        println("createLobby")
+    }
 
     //Get text from the description editor
     func textViewShouldEndEditing(textView: UITextView) -> Bool {
@@ -154,7 +165,7 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
     //touched a platform, here is the name and the button object
     func touchUp(button: NSObject, type: String) { //from button delegate
         println(type);
-        var theButton = button as! Button
+        var theButton = button as! PlatformButtonToggle
         closeEverything();
 
         createView.uncheckAllPlatforms()
@@ -165,7 +176,7 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
 
     //touched down on a platform
     func touchDown(button: NSObject, type: String) {
-        var theButton = button as! Button
+        var theButton = button as! PlatformButtonToggle
         println(theButton.currentTitle!)
     }
 
@@ -213,7 +224,9 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
         if (searchText == "") {
             searchController?.hideResults();
         } else {
-            data.search(searchText);
+            data.search(searchText, success: handOffResults, failure: {
+                println("failure with search")
+            });
         }
 
 

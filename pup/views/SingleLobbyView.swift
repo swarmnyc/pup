@@ -68,7 +68,7 @@ class SingleLobbyView: UIView {
 
     func setUpViews(data: singleLobby) {
 
-        var url = NSURL(string: data.data.PictureUrl)
+        var url = NSURL(string: data.data.pictureUrl)
 
         var request:NSURLRequest = NSURLRequest(URL: url!)
         NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
@@ -79,7 +79,7 @@ class SingleLobbyView: UIView {
         })
 
         lobbyTitle.text = "\(data.data.owner.name)'s \n" +
-                "\(data.data.Name)";
+                "\(data.data.name)";
         lobbyTitle.backgroundColor = UIColor.clearColor()
         lobbyTitle.textColor = UIColor.whiteColor()
         lobbyTitle.font = lobbyTitle.font.fontWithSize(19)
@@ -100,7 +100,7 @@ class SingleLobbyView: UIView {
 
 
 
-        desc.text = data.data.Description
+        desc.text = data.data.description
         desc.font = UIFont.systemFontOfSize(13.0)
         desc.editable = false
         desc.userInteractionEnabled = false;

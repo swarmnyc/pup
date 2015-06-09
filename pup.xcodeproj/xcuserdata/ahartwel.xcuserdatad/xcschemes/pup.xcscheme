@@ -34,6 +34,20 @@
                ReferencedContainer = "container:pup.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2CE1376E1B2604360016A5D5"
+               BuildableName = "pupTests2.xctest"
+               BlueprintName = "pupTests2"
+               ReferencedContainer = "container:pup.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -49,6 +63,16 @@
                BlueprintIdentifier = "2CCC7F5D1B0A451400C16A85"
                BuildableName = "pupTests.xctest"
                BlueprintName = "pupTests"
+               ReferencedContainer = "container:pup.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2CE1376E1B2604360016A5D5"
+               BuildableName = "pupTests2.xctest"
+               BlueprintName = "pupTests2"
                ReferencedContainer = "container:pup.xcodeproj">
             </BuildableReference>
          </TestableReference>

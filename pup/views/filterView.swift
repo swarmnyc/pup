@@ -13,7 +13,7 @@ class FilterView: UIView {
     var whiteBox = UIView()
     var parentView = UIView()
     var search = UISearchBar()
-    var platforms: Array<Button> = [];
+    var platforms: Array<PlatformButtonToggle> = [];
     var buttonDelegate: SimpleButtonDelegate? = nil
     var handle: UIImageView = UIImageView();
     var panDetector = UIPanGestureRecognizer()
@@ -70,7 +70,7 @@ class FilterView: UIView {
 
 
         for i in 0...appData.platforms.count-1 {
-            platforms.append(Button())
+            platforms.append(PlatformButtonToggle())
             platforms[i].setUpButton(appData.platforms[i], delegate: self.buttonDelegate!)
         }
         self.panDetector.addTarget(self, action: "swiped:");

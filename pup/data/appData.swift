@@ -97,5 +97,7 @@ struct UIValues {
     }
 
     var descriptionPlaceholder = "Let people know what you're looking for, the region (or dungeon) name of the particular game you want to get through, your play style, and whether this is a PVP or friendly server, etc."
+    var usernamePlaceholder = "Unique username"
+    var emailPlaceholder = "cats@cats.com"
 }
 

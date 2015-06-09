@@ -9,19 +9,17 @@ import UIKit
 class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDataSource, FABDelegate {
 
     var listView: LobbyListView? //custom view for lobby list
+
     var filter: FilterViewController! //controller for the filter
 
-    var sideMenu: SideMenuController! //control for the menu
 
-    var updateTimer: NSTimer = NSTimer();  //timer to check for updated data
 
-    lazy var model: lobbyList = lobbyList(parentView: self);  //model
+    var parentController: UIViewController?
 
-    var transitionManager = TransitionManager()
+    lazy var model: LobbyList = LobbyList(parentView: self);  //model
 
-    convenience init() {
-        self.init();
-    }
+   // var transitionManager = TransitionManager()
+
 
     required init(coder aDecoder: NSCoder)
     {
@@ -35,49 +33,53 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
     override func loadView() {
-        println("ahhh loading view!")
+        println("loading lobby list view!")
         listView = LobbyListView()
         self.view = listView
         listView?.setDelegates(self,dataSource: self, fabDelegate: self)
-
-        println(listView?.table)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         currentUser.setPage("Find A Game");
         self.title = "All Games";
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(rgba: colors.tealMain)]
-        self.navigationController?.navigationBar.tintColor = UIColor(rgba: colors.tealMain)
-        let filterImage = UIImage(named: "filter")
 
+
+
+        let filterImage = UIImage(named: "filter")
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: filterImage, style: UIBarButtonItemStyle.Plain, target: self, action: "openFilter")
 
+
         let menuImage = UIImage(named: "hamburgerMenu")
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: menuImage, style: UIBarButtonItemStyle.Plain, target: navigationController, action: "toggleSideMenu")
 
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: menuImage, style: UIBarButtonItemStyle.Plain, target: self, action: "openMenu")
 
+        //register the cell classes so we can reuse them
         self.listView?.table.registerClass(gameCell.self, forCellReuseIdentifier: "gamecell")
         self.listView?.table.registerClass(headerCell.self, forCellReuseIdentifier: "headercell")
 
-
-
+        //load the filter and the side menu
         filter = FilterViewController(parentController: self);
-        sideMenu = SideMenuController(parentController: self)
-        self.listView?.swipeDelegate = sideMenu;
+
+        model.getLobbies("", platforms: [], applyChange: true, success: self.updateData, failure: {
+            println("failed...")
+        })
+
 
 
 
     }
 
 
+
     func fabTouchDown() {
-        println("woooh")
+
         listView?.pushFab()
 
     }
     func fabTouchUp() {
-        print("hooooo")
+
         listView?.releaseFab()
         let createLobby = CreateLobbyController()
         self.navigationController?.pushViewController(createLobby, animated: true)
@@ -93,9 +95,11 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
     func loadNewLobbies(search: String, platforms: Array<String>) {
 
-        println(search)
-        println(platforms)
-        model.makeNewRequest(search, platforms: platforms)
+//        println(search)
+//        println(platforms)
+        model.getLobbies(search, platforms: platforms, applyChange: true, success: self.updateData, failure: {
+            println("failed...")
+        })
 
     }
 
@@ -156,14 +160,6 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
 
-//    func tableView(tableView: UITableView, didUnhighlightRowAtIndexPath indexPath: NSIndexPath) {
-//        var cell:gameCell = tableView.cellForRowAtIndexPath(indexPath) as! gameCell;
-//        cell.highlightCell()
-//
-//    }
-
-
-
 
     func openFilter() {
         println("opening it")
@@ -171,10 +167,7 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
     }
 
-    func openMenu() {
-        println("openMenu");
-        sideMenu.toggleState()
-    }
+
 
 
 

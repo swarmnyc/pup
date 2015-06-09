@@ -4,16 +4,16 @@
 //
 
 import Foundation
+import Alamofire
 
 
 
 
 
-
-class Searcher {
+class SearchResultsModel {
 
     var data: Array<gameData> = [];
-    var delegate: SearcherDelegate?
+    var delegate: SearchResultsDelegate?
     var platforms: Array<String> = [];
     var searchTerm: String = ""
 
@@ -46,7 +46,7 @@ class Searcher {
         searchTerm = name;
     }
 
-    func search(name: String) {
+    func search(name: String, success: (newdata: Array<gameData>) -> Void, failure: () -> Void) {
         println("searching!!!!")
         if (name == "") {
             println("sorry no searching")
@@ -61,18 +61,18 @@ class Searcher {
 
             let requestUrl = NSURL(string: "\(urls.games)\(suffix)")
             if (requestUrl != nil) {
-                let task = NSURLSession.sharedSession().dataTaskWithURL(requestUrl!) {
-                    (data, response, error) in
-                    println(error)
-                    let jsonResponse = JSON(data: data)
-                    // println(jsonResponse)
-                    //self.createGamesArray(jsonResponse)
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.createGamesArray(jsonResponse);
-                    })
-                }
 
-                task.resume();
+
+                Alamofire.request(.GET, requestUrl!).responseJSON { (request, response, responseJSON, error) in
+                    var resp = responseJSON as! NSArray
+                   // println(resp)
+                    self.createGamesArray(resp);
+
+                    success(newdata: self.data);
+
+                };
+
+
                 println(suffix);
             }
 
@@ -81,38 +81,22 @@ class Searcher {
     }
 
 
-    func createGamesArray(data: JSON) {
+    func createGamesArray(data: NSArray) {
         self.data = [];
 
-        for (index: String, subJson: JSON) in data {
-            var Name: String = subJson["name"].stringValue;
-            var ThumbnailPictureUrl: String = subJson["thumbnailPictureUrl"].stringValue;
-            var PictureUrl: String = subJson["pictureUrl"].stringValue;
-            var Description: String = subJson["description"].stringValue;
-            var ReleaseDateUtc: String = subJson["releaseDateUtc"].stringValue;
-            var Rank: Int = subJson["rank"].intValue;
-
-            var Platforms: Array<String> = [];
-            for (platformIndex: String, platformJson: JSON) in subJson["platforms"] {
-                Platforms.append(platformJson.stringValue)
-            }
-            var Tags: Array<String> = [];
-            for (platformIndex: String, tagsJson: JSON) in subJson["tags"] {
-                Tags.append(tagsJson.stringValue)
-            }
-
-            var State: String = subJson["state"].stringValue;
-            self.data.append(gameData(State: State, Tags: Tags, Name: Name, ThumbnailPictureUrl: ThumbnailPictureUrl, PictureUrl: PictureUrl, Description: Description, ReleaseDateUtc: ReleaseDateUtc, Rank: Rank, Platforms: Platforms))
+        for (var i = 0; i<data.count; i++) {
+            println("Creating Games")
+            self.data.append(gameData(data: data[i] as! NSDictionary));
         }
 
-        println("the results have been structured")
-        self.delegate?.handOffResults(self.data);
+
+//        self.delegate?.handOffResults(self.data);
     }
 
 
 }
 
-struct gameData {
+class gameData {
     var State = "activated"
     var Tags = []
     var Name = "Battlefield 4"
@@ -123,6 +107,23 @@ struct gameData {
     var Rank = 0
     var Platforms = ["PS4", "PS3","XBOX360", "XBOXONE"];
 
+
+    init(data: NSDictionary) {
+
+        State = data["state"] as! String
+        Tags = data["tags"] as! NSArray
+        Name = data["name"] as! String
+        ThumbnailPictureUrl = data["thumbnailPictureUrl"] as! String
+        PictureUrl = data["pictureUrl"] as! String
+        Platforms = data["platforms"] as! Array<String>
+        Rank = data["rank"] as! Int
+
+
+    }
+
+    init() {
+
+    }
 
 }
 

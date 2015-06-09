@@ -11,7 +11,7 @@ class SearchResultsController: UIViewController, UICollectionViewDataSource, UIC
     var resultsView: SearchResultsView?
     var parentController: UIViewController?
     var searchBar: UISearchBar?
-    var results: JSON?
+    var results: NSDictionary?
     var data: Array<gameData>?
     convenience init(parent: UIViewController, searchBar: UISearchBar) {
         self.init();
@@ -98,7 +98,7 @@ class SearchResultsController: UIViewController, UICollectionViewDataSource, UIC
         self.hideResults();
 
 
-        var searcherDelegate = parentController! as? SearcherDelegate
+        var searcherDelegate = parentController! as? SearchResultsDelegate
         searcherDelegate!.retreiveData(data![indexPath.item])
         println(data![indexPath.row])
 

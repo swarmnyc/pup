@@ -5,7 +5,7 @@
 
 import Foundation
 
-protocol SearcherDelegate: class {
+protocol SearchResultsDelegate: class {
     func handOffResults(data: Array<gameData>)
     func retreiveData(data: gameData)
 
