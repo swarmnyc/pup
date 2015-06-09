@@ -10,6 +10,11 @@
 
     <string name="facebook_app_id">1651868985031195</string>
 
+    <string name="twitter_key">tuPdqGWSqvDNRC8TrcJ1dyuSd</string>
+    <string name="twitter_key_secret">oAjcN1hXSo0AZw9XauXU6qbwcR5FDBYnAvSHygFKbE2wg9kcxs</string>
+    
+    <string name="fabric_app_key">6e9cbc0476f528edefc80e2daf875075623c2aa9</string>
+
     <integer name="menu_item_default">0</integer>
     <integer name="menu_item_default_for_user">1</integer>
 </resources>

@@ -12,6 +12,7 @@ namespace SWARM.PuP.Web.Models
         public string UserId { get; set; }
         [Required]
         public string Token { get; set; }
+        public string Secret { get; set; }
         [Required]
         public DateTime ExpireAtUtc { get; set; }
 

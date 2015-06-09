@@ -1,12 +1,10 @@
 package com.swarmnyc.pup.RestApis;
 
+import com.swarmnyc.pup.models.SocialMedium;
 import com.swarmnyc.pup.viewmodels.UserRequestResult;
 
-import retrofit.Callback;
 import retrofit.http.*;
 import retrofit.mime.TypedFile;
-
-import java.util.Date;
 
 public interface UserRestApi
 {
@@ -56,14 +54,8 @@ public interface UserRestApi
 	@FormUrlEncoded
 	@POST( "/User/Medium" )
 	void addMedium(
-		@Field( "type" )
-		String type,
-		@Field( "userId" )
-		String userId,
-		@Field( "token" )
-		String token,
-		@Field( "ExpireAtUtc" )
-		String expireAt,
+		@Body
+		SocialMedium token,
 		RestApiCallback callback
 	);
 

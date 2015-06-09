@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -23,6 +24,7 @@ import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.PhotoHelper;
 import com.swarmnyc.pup.components.Screen;
+import com.swarmnyc.pup.components.TwitterHelper;
 
 import javax.inject.Inject;
 
@@ -39,6 +41,9 @@ public class SettingsFragment extends Fragment implements Screen
 
 	@InjectView( R.id.switch_facebook )
 	Switch m_fbSwitch;
+
+	@InjectView( R.id.switch_twitter )
+	Switch m_twSwitch;
 
 	@Override
 	public String toString()
@@ -78,6 +83,8 @@ public class SettingsFragment extends Fragment implements Screen
 		m_nameText.setText( User.current.getUserName() );
 
 		m_fbSwitch.setChecked( User.current.hasMedium( Consts.KEY_FACEBOOK ) );
+		m_twSwitch.setChecked( User.current.hasMedium( Consts.KEY_TWITTER ) );
+
 	}
 
 	@Override
@@ -133,11 +140,44 @@ public class SettingsFragment extends Fragment implements Screen
 	{
 		if ( m_fbSwitch.isChecked() )
 		{
-			FacebookHelper.getAndSubmitToken( null );
+			FacebookHelper.startLoginRequire( null );
 		}
 		else
 		{
-			User.removeMedium( Consts.KEY_FACEBOOK );
+			m_userService.deleteFacebookToken(
+				new ServiceCallback()
+				{
+					@Override
+					public void success( final Object value )
+					{
+						User.removeMedium( Consts.KEY_FACEBOOK );
+						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
+					}
+				}
+			);
+		}
+	}
+
+	@OnClick( R.id.switch_twitter )
+	void connectToTwitter()
+	{
+		if ( m_fbSwitch.isChecked() )
+		{
+			TwitterHelper.startLoginRequire( null );
+		}
+		else
+		{
+			m_userService.deleteTwitterToken(
+				new ServiceCallback()
+				{
+					@Override
+					public void success( final Object value )
+					{
+						User.removeMedium( Consts.KEY_TWITTER );
+						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
+					}
+				}
+			);
 		}
 	}
 }

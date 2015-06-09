@@ -236,7 +236,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 			}
 			else
 			{
-				FacebookHelper.getAndSubmitToken(
+				FacebookHelper.startLoginRequire(
 					new ServiceCallback()
 					{
 						@Override

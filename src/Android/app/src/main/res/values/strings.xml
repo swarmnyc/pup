@@ -59,6 +59,7 @@
     <string name="text_undo">Undo</string>
     <string name="text_user_name_info">We\'ll be adding integrations for additional systems</string>
     <string name="text_facebook">Facebook</string>
+    <string name="text_twitter">Twitter</string>
 
     <string name="message_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
     <string name="message_lobby_creating">Creating</string>
@@ -67,9 +68,12 @@
     <string name="message_processing">Processing</string>
     <string name="message_leave_room">You\'ve just left the chat room.</string>
     <string name="message_leave_room_owner">You cannot leave this chat because you are the owner.</string>
+    <string name="message_connect_success">Connected</string>
+    <string name="message_connect_failure">Connection Failure</string>
+    <string name="message_disconnect_success">Disconnected</string>
+    <string name="message_disconnect_failure">Disconnection Failure</string>
 
     <string name="time_in_minutes">in %d minutes</string>
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
-
 </resources>

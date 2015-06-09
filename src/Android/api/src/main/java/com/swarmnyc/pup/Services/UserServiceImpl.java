@@ -5,12 +5,14 @@ import com.swarmnyc.pup.RestApis.RestApiCallback;
 import com.swarmnyc.pup.RestApis.UserRestApi;
 import com.swarmnyc.pup.StringUtils;
 import com.swarmnyc.pup.models.CurrentUserInfo;
+import com.swarmnyc.pup.models.SocialMedium;
 import com.swarmnyc.pup.viewmodels.UserRequestResult;
 import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 
 import java.io.File;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class UserServiceImpl implements UserService
 {
@@ -37,7 +39,7 @@ public class UserServiceImpl implements UserService
 					if ( userRequestResult.isSuccess() )
 					{
 						if ( callback != null )
-							callback.success( userRequestResult.getUser() );
+						{ callback.success( userRequestResult.getUser() ); }
 					}
 					else
 					{
@@ -66,7 +68,7 @@ public class UserServiceImpl implements UserService
 					if ( userRequestResult.isSuccess() )
 					{
 						if ( callback != null )
-							callback.success( userRequestResult.getUser() );
+						{ callback.success( userRequestResult.getUser() ); }
 					}
 					else
 					{
@@ -91,7 +93,7 @@ public class UserServiceImpl implements UserService
 				public void success( final Object s, final Response response )
 				{
 					if ( callback != null )
-						callback.success( s );
+					{ callback.success( s ); }
 				}
 			}
 		);
@@ -102,7 +104,7 @@ public class UserServiceImpl implements UserService
 		final String userId, final String token, final Date expireAt, final ServiceCallback callback
 	)
 	{
-		addMedium("Facebook", userId, token, expireAt,callback);
+		addMedium( "Facebook", userId, token, null, expireAt, callback );
 	}
 
 	@Override
@@ -111,22 +113,19 @@ public class UserServiceImpl implements UserService
 		deleteMedium( "Facebook", callback );
 	}
 
-	private void addMedium(
-		final String type, final String userId, final String token, final Date expireAt, final ServiceCallback callback
+	@Override
+	public void addTwitterToken(
+		final String userId, final String token, final String secret, final ServiceCallback callback
 	)
 	{
-		m_userApi.addMedium(
-			type, userId, token,StringUtils.toDateString( expireAt ) , new RestApiCallback() {
-				@Override
-				public void success( final Object o, final Response response )
-				{
-					if ( callback != null )
-						callback.success( o );
-				}
-			}
-		);
+		addMedium( "Twitter", userId, token, secret, new GregorianCalendar( 2100, 1, 1 ).getTime(), callback );
 	}
 
+	@Override
+	public void deleteTwitterToken( final ServiceCallback callback )
+	{
+		deleteMedium( "Twitter", callback );
+	}
 
 	private void deleteMedium( final String type, final ServiceCallback callback )
 	{
@@ -137,7 +136,37 @@ public class UserServiceImpl implements UserService
 				public void success( final Object o, final Response response )
 				{
 					if ( callback != null )
-						callback.success( o );
+					{ callback.success( o ); }
+				}
+			}
+		);
+	}
+
+	private void addMedium(
+		final String type,
+		final String userId,
+		final String token,
+		final String secret,
+		final Date expireAt,
+		final ServiceCallback callback
+	)
+	{
+
+		SocialMedium ot = new SocialMedium();
+		ot.setType( type );
+		ot.setUserId( userId );
+		ot.setToken( token );
+		ot.setSecret( secret );
+		ot.setExpireAt( expireAt );
+
+		m_userApi.addMedium(
+			ot, new RestApiCallback()
+			{
+				@Override
+				public void success( final Object o, final Response response )
+				{
+					if ( callback != null )
+					{ callback.success( o ); }
 				}
 			}
 		);
