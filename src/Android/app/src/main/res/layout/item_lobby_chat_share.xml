@@ -3,12 +3,30 @@
               android:layout_width="match_parent"
               android:layout_height="200dp"
         android:padding="20dp">
-<ImageButton
-        android:id="@+id/btn_invite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:src="@drawable/facebook_share_button"
-        android:text="Invite"
-        android:layout_centerInParent="true"/>
+    <ImageButton
+        android:id="@+id/btn_facebook"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ico_facebook"
+        android:adjustViewBounds="false"
+        android:background="@android:color/transparent"/>
+
+    <ImageButton
+            android:id="@+id/btn_twitter"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ico_twitter"
+            android:adjustViewBounds="false"
+            android:background="@android:color/transparent"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/btn_facebook"
+            android:layout_marginLeft="@dimen/margin_normal"/>
+    <Button
+            android:id="@+id/btn_invite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Invite"
+            android:layout_centerInParent="true"/>
 </RelativeLayout>

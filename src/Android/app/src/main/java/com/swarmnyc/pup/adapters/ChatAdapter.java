@@ -22,8 +22,10 @@ import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatMessageListener;
 import com.swarmnyc.pup.chat.ChatRoomService;
 import com.swarmnyc.pup.components.FacebookHelper;
+import com.swarmnyc.pup.components.TwitterHelper;
 import com.swarmnyc.pup.models.Lobby;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -219,47 +221,103 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 	class ShareViewHolder extends RecyclerView.ViewHolder
 	{
+		@InjectView( R.id.btn_facebook )
+		View m_facebookButton;
+
+		@InjectView( R.id.btn_twitter )
+		View m_twitterButton;
+
 		public ShareViewHolder( final View view )
 		{
 			super( view );
 			ButterKnife.inject( this, view );
 
-			view.setVisibility( User.isLoggedIn()? View.VISIBLE: View.GONE );
+			view.setVisibility( User.isLoggedIn() ? View.VISIBLE : View.GONE );
+
+			if ( User.isLoggedIn() )
+			{
+				setButtonState( User.current.hasMedium( Consts.KEY_FACEBOOK ), m_facebookButton );
+				setButtonState( User.current.hasMedium( Consts.KEY_TWITTER ), m_twitterButton );
+			}
+		}
+
+		@OnClick( R.id.btn_facebook )
+		void tapOnFacebook()
+		{
+			if ( m_facebookButton.isActivated() ){
+				setButtonState( false, m_facebookButton );
+			} else {
+				if ( User.current.hasMedium( Consts.KEY_FACEBOOK ) ){
+					setButtonState( true, m_facebookButton );
+				} else {
+					FacebookHelper.startLoginRequire(
+						new ServiceCallback()
+						{
+							@Override
+							public void success( final Object value )
+							{
+								setButtonState( true, m_facebookButton );
+							}
+						}
+					);
+				}
+			}
+		}
+
+		@OnClick( R.id.btn_twitter )
+		void tapOnTwitter()
+		{
+			if ( m_twitterButton.isActivated() ){
+				setButtonState( false, m_twitterButton );
+			} else {
+				if ( User.current.hasMedium( Consts.KEY_TWITTER ) ){
+					setButtonState( true, m_twitterButton );
+				} else {
+					TwitterHelper.startLoginRequire(
+						new ServiceCallback()
+						{
+							@Override
+							public void success( final Object value )
+							{
+								setButtonState( true, m_twitterButton );
+							}
+						}
+					);
+				}
+			}
 		}
 
 		@OnClick( R.id.btn_invite )
 		void invite()
 		{
-			if ( User.current.hasMedium( Consts.KEY_FACEBOOK ) )
-			{
-				doInvite();
-			}
-			else
-			{
-				FacebookHelper.startLoginRequire(
-					new ServiceCallback()
+			List<String> types = new ArrayList<>();
+			if ( m_facebookButton.isActivated() )
+				types.add( Consts.KEY_FACEBOOK );
+
+			if ( m_twitterButton.isActivated() )
+				types.add( Consts.KEY_TWITTER );
+
+			if ( types.size() ==0){
+				Toast.makeText( m_context, "You need to choose at least one social medium", Toast.LENGTH_SHORT ).show();
+			}else {
+				m_lobbyService.invite(
+					m_lobby.getId(), types, new ServiceCallback()
 					{
 						@Override
 						public void success( final Object value )
 						{
-							doInvite();
+							Toast.makeText( m_context, "Invite Succeeded", Toast.LENGTH_SHORT ).show();
 						}
 					}
 				);
 			}
+
 		}
 
-		private void doInvite(){
-			m_lobbyService.invite(
-				m_lobby.getId(), new ServiceCallback()
-				{
-					@Override
-					public void success( final Object value )
-					{
-						Toast.makeText( m_context, "Invite Succeeded", Toast.LENGTH_SHORT ).show();
-					}
-				}
-			);
+		private void setButtonState( boolean share, View button )
+		{
+			button.setActivated( share );
+			button.setAlpha( share ? 1f : 0.5f );
 		}
 	}
 }

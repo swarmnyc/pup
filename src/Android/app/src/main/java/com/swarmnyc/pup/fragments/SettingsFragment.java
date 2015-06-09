@@ -161,7 +161,7 @@ public class SettingsFragment extends Fragment implements Screen
 	@OnClick( R.id.switch_twitter )
 	void connectToTwitter()
 	{
-		if ( m_fbSwitch.isChecked() )
+		if ( m_twSwitch.isChecked() )
 		{
 			TwitterHelper.startLoginRequire( null );
 		}

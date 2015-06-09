@@ -134,10 +134,10 @@ public class LobbyServiceImpl implements LobbyService
 	}
 
 	@Override
-	public void invite( final String id, final ServiceCallback callback )
+	public void invite( final String id, final List<String> types, final ServiceCallback callback )
 	{
 		this.lobbyRestApi.invite(
-			id, new EmptyRestApiCallback()
+			id,types, new EmptyRestApiCallback()
 			{
 				@Override
 				public void success( Response response )

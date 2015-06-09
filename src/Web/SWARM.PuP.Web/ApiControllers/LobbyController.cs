@@ -3,23 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Filters;
-using System.Web.Mvc;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
 using SWARM.PuP.Web.Services;
-using SWARM.PuP.Web.ViewModels;
+using TwitterOAuth.Enum;
+using TwitterOAuth.Impl;
 
 namespace SWARM.PuP.Web.ApiControllers
 {
-    [System.Web.Http.RoutePrefix("api/Lobby")]
+    [RoutePrefix("api/Lobby")]
     public class LobbyController : ApiController
     {
         private const int ShowTimeOffset = -15;
-
         private readonly IGameService _gameService;
         private readonly ILobbyService _lobbyService;
 
@@ -41,7 +39,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return _lobbyService.Filter(filter);
         }
 
-        [System.Web.Http.Authorize, System.Web.Http.Route("My")]
+        [Authorize, Route("My")]
         public IEnumerable<Lobby> GetMy([FromUri] LobbyFilter filter)
         {
             filter = filter ?? new LobbyFilter();
@@ -65,7 +63,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return lobby;
         }
 
-        [System.Web.Http.Authorize, ModelValidate]
+        [Authorize, ModelValidate]
         public Lobby Post(Lobby lobby)
         {
             var game = _gameService.GetById(lobby.GameId);
@@ -80,7 +78,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return _lobbyService.Add(lobby, User.Identity.GetPuPUser());
         }
 
-        [System.Web.Http.Authorize, ModelValidate]
+        [Authorize, ModelValidate]
         public IHttpActionResult Put(Lobby lobby)
         {
             var origin = _lobbyService.GetById(lobby.Id);
@@ -94,7 +92,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        [System.Web.Http.Authorize, System.Web.Http.Route("Join/{lobbyId}"), System.Web.Http.HttpPost, ModelValidate]
+        [Authorize, Route("Join/{lobbyId}"), HttpPost, ModelValidate]
         public IHttpActionResult Join(string lobbyId)
         {
             _lobbyService.Join(lobbyId, User.Identity.GetPuPUser());
@@ -102,7 +100,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        [System.Web.Http.Authorize, System.Web.Http.Route("Leave/{lobbyId}"), System.Web.Http.HttpPost, ModelValidate]
+        [Authorize, Route("Leave/{lobbyId}"), HttpPost, ModelValidate]
         public IHttpActionResult Leave(string lobbyId)
         {
             _lobbyService.Leave(lobbyId, User.Identity.GetPuPUser());
@@ -110,18 +108,27 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        [System.Web.Http.Authorize, System.Web.Http.Route("Invite/{lobbyId}"), System.Web.Http.HttpPost, ModelValidate]
-        public IHttpActionResult Invite(string lobbyId)
+        [Authorize, Route("Invite/{lobbyId}"), HttpPost, ModelValidate]
+        public IHttpActionResult Invite(string lobbyId, [FromUri] IEnumerable<SocialMediumType> types)
         {
             var user = User.Identity.GetPuPUser();
             var lobby = _lobbyService.GetById(lobbyId);
 
-            foreach (var medium in user.Media)
+            foreach (var type in types)
             {
-                switch (medium.Type)
+                var medium = user.Media.FirstOrDefault(x => x.Type == type);
+                if (medium == null)
                 {
-                    case "Facebook":
+                    continue;
+                }
+
+                switch (type)
+                {
+                    case SocialMediumType.Facebook:
                         ShareToFb(medium, lobby);
+                        break;
+                    case SocialMediumType.Twitter:
+                        ShareToTwitter(medium, lobby);
                         break;
                 }
             }
@@ -129,15 +136,38 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
+        private void ShareToTwitter(SocialMedium medium, Lobby lobby)
+        {
+            //TODO: Move to Config and Error Control
+            var msg = GetMessage(lobby) + " " + Url.Content("~/lobby/" + lobby.Id);
+            var authRequest = new TwitterOAuthClient
+            {
+                ConsumerKey = "tuPdqGWSqvDNRC8TrcJ1dyuSd",
+                ConsumerSecret = "oAjcN1hXSo0AZw9XauXU6qbwcR5FDBYnAvSHygFKbE2wg9kcxs",
+                Token = medium.Token,
+                TokenSecret = medium.Secret
+            };
+
+            authRequest.OAuthWebRequest(RequestMethod.POST, "https://api.twitter.com/1.1/statuses/update.json",
+                "status=" + msg);
+        }
+
         private void ShareToFb(SocialMedium medium, Lobby lobby)
         {
-            string msg = HttpUtility.UrlEncode("Let's play " + lobby.Name + " with me.");
-            string link = HttpUtility.UrlEncode(Url.Content("~/lobby/" + lobby.Id));
-            var url = string.Format("https://graph.facebook.com/v2.3/me/feed?access_token={0}&message={1}&link={2}", medium.Token, msg, link);
+            //TODO: Error Control
+            var msg = HttpUtility.UrlEncode(GetMessage(lobby));
+            var link = HttpUtility.UrlEncode(Url.Content("~/lobby/" + lobby.Id));
+            var url = string.Format("https://graph.facebook.com/v2.3/me/feed?access_token={0}&message={1}&link={2}",
+                medium.Token, msg, link);
             WebRequest webRequest = WebRequest.CreateHttp(url);
             webRequest.Method = "POST";
             var response = webRequest.GetResponse();
             response.GetResponseStream();
+        }
+
+        private static string GetMessage(Lobby lobby)
+        {
+            return "Let's play " + lobby.Name + " with me.";
         }
     }
 }

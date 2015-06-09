@@ -151,7 +151,6 @@ public class UserServiceImpl implements UserService
 		final ServiceCallback callback
 	)
 	{
-
 		SocialMedium ot = new SocialMedium();
 		ot.setType( type );
 		ot.setUserId( userId );

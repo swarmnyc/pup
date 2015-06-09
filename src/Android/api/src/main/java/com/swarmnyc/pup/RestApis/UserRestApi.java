@@ -51,7 +51,6 @@ public interface UserRestApi
 		RestApiCallback callback
 	);
 
-	@FormUrlEncoded
 	@POST( "/User/Medium" )
 	void addMedium(
 		@Body
@@ -59,10 +58,9 @@ public interface UserRestApi
 		RestApiCallback callback
 	);
 
-	@FormUrlEncoded
-	@DELETE( "/User/Medium" )
+	@DELETE( "/User/Medium/{Type}" )
 	void deleteMedium(
-		@Field( "type" )
+		@Path( "Type" )
 		String type,
 		RestApiCallback callback
 	);

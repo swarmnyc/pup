@@ -22,6 +22,8 @@ import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.components.TwitterHelper;
 import com.swarmnyc.pup.fragments.MainDrawerFragment;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.uservoice.uservoicesdk.UserVoice;
 import io.fabric.sdk.android.Fabric;
 
@@ -56,10 +58,7 @@ public class MainActivity extends AppCompatActivity
 		ButterKnife.inject( this );
 		PuPApplication.getInstance().getComponent().inject( this );
 		EventBus.getBus().register( this );
-
-		com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config( "swarmnyc.uservoice.com" );
-		config.setForumId( 272754 );
-		UserVoice.init( config, this );
+		m_toolbar.setSubtitleTextColor( getResources().getColor( R.color.pup_grey ) );
 
 		Display display = getWindowManager().getDefaultDisplay();
 		Point windowSize = new Point();
@@ -67,10 +66,7 @@ public class MainActivity extends AppCompatActivity
 		Consts.windowWidth = windowSize.x;
 		Consts.windowHeight = windowSize.y;
 
-		Fabric.with( this, new Crashlytics() ); // Exception Report
-
-		m_toolbar.setSubtitleTextColor( getResources().getColor( R.color.pup_grey ) );
-
+		//Google
 		m_googleAnalytics = GoogleAnalytics.getInstance( this );
 		m_googleAnalytics.setLocalDispatchPeriod( 1800 );
 
@@ -97,6 +93,19 @@ public class MainActivity extends AppCompatActivity
 				Navigator.ToLobby( p.get( 1 ), "From Intend", Consts.KEY_LOBBIES, false );
 			}
 		}
+
+		//User Voice
+		com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config( "swarmnyc.uservoice.com" );
+		config.setForumId( 272754 );
+		UserVoice.init( config, this );
+
+		//Twitter and exception report
+		TwitterAuthConfig twConfig = new TwitterAuthConfig(
+			getString( R.string.twitter_key ),
+			getString( R.string.twitter_key_secret )
+		);
+
+		Fabric.with( this, new Crashlytics(), new TwitterCore( twConfig ) );
 	}
 
 	public Toolbar getToolbar()
