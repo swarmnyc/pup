@@ -2,25 +2,25 @@ package com.swarmnyc.pup.models;
 
 public class LobbyUserInfo extends UserInfo
 {
-	Boolean isOwner;
-	Boolean isLeave;
+	boolean isOwner;
+	boolean isLeave;
 
-	public Boolean getIsOwner()
+	public boolean getIsOwner()
 	{
 		return isOwner;
 	}
 
-	public void setIsOwner( final Boolean isOwner )
+	public void setIsOwner( final boolean isOwner )
 	{
 		this.isOwner = isOwner;
 	}
 
-	public Boolean getIsLeave()
+	public boolean getIsLeave()
 	{
 		return isLeave;
 	}
 
-	public void setIsLeave( final Boolean isLeave )
+	public void setIsLeave( final boolean isLeave )
 	{
 		this.isLeave = isLeave;
 	}
