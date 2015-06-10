@@ -105,7 +105,7 @@ public class SettingsFragment extends Fragment implements Screen
 	void choosePortrait()
 	{
 		PhotoHelper.startPhotoIntent(
-			this, new ServiceCallback<Uri>()
+			this, new AsyncCallback<Uri>()
 			{
 				@Override
 				public void success( final Uri uri )
@@ -140,7 +140,16 @@ public class SettingsFragment extends Fragment implements Screen
 	{
 		if ( m_fbSwitch.isChecked() )
 		{
-			FacebookHelper.startLoginRequire( null );
+			FacebookHelper.startLoginRequire(
+				new AsyncCallback()
+				{
+					@Override
+					public void failure()
+					{
+						m_fbSwitch.setChecked( false );
+					}
+				}
+			);
 		}
 		else
 		{
@@ -163,7 +172,16 @@ public class SettingsFragment extends Fragment implements Screen
 	{
 		if ( m_twSwitch.isChecked() )
 		{
-			TwitterHelper.startLoginRequire( null );
+			TwitterHelper.startLoginRequire(
+				new AsyncCallback()
+				{
+					@Override
+					public void failure()
+					{
+						m_twSwitch.setChecked( false );
+					}
+				}
+			);
 		}
 		else
 		{

@@ -5,12 +5,10 @@ import android.widget.Toast;
 import com.facebook.*;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.swarmnyc.pup.Consts;
-import com.swarmnyc.pup.PuPApplication;
+import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.Services.UserService;
-import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.activities.MainActivity;
 
 import java.util.Arrays;
@@ -19,7 +17,7 @@ public class FacebookHelper
 {
 	static CallbackManager callbackManager;
 
-	public static void startLoginRequire( final ServiceCallback serviceCallback )
+	public static void startLoginRequire( final AsyncCallback callback )
 	{
 		if ( callbackManager == null )
 		{
@@ -45,8 +43,8 @@ public class FacebookHelper
 									Toast.makeText( MainActivity.getInstance(), R.string.message_connect_success, Toast.LENGTH_LONG )
 									     .show();
 
-									if ( serviceCallback != null )
-									{ serviceCallback.success( null ); }
+									if ( callback != null )
+									{ callback.success( ); }
 								}
 							}
 						);
@@ -55,12 +53,13 @@ public class FacebookHelper
 					@Override
 					public void onCancel()
 					{
-
+						callback.failure();
 					}
 
 					@Override
 					public void onError( final FacebookException e )
 					{
+						callback.failure();
 						Toast.makeText( MainActivity.getInstance(),R.string.message_connect_failure, Toast.LENGTH_LONG ).show();
 					}
 				}
