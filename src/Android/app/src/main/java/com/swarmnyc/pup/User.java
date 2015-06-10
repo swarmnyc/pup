@@ -65,4 +65,9 @@ public class User
 		current.getMedia().remove( type );
 		Config.setString( KEY_USER, gson.toJson( current ) );
 	}
+
+	public static void update()
+	{
+		Config.setString( KEY_USER, gson.toJson( current ) );
+	}
 }

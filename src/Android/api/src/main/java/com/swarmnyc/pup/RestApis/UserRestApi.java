@@ -48,7 +48,7 @@ public interface UserRestApi
 	void updatePortrait(
 		@Part( "portrait" )
 		TypedFile portrait,
-		RestApiCallback callback
+		RestApiCallback<String> callback
 	);
 
 	@POST( "/User/Medium" )

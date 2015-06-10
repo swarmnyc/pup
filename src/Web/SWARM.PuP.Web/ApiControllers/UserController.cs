@@ -34,9 +34,8 @@ namespace SWARM.PuP.Web.ApiControllers
         public IHttpActionResult Login(LoginViewModel model)
         {
             string errorMessage = null;
-            PuPUser user = null;
-            
-            user = _userService.Find(model.Email, model.Password);
+
+            var user = _userService.Find(model.Email, model.Password);
 
             RequestContext.Principal = new ClaimsPrincipal(new PuPClaimsIdentity(user));
 
@@ -148,8 +147,8 @@ namespace SWARM.PuP.Web.ApiControllers
             var stream = new MemoryStream(file.Buffer);
             _imageService.CreateThumbnailTo(stream,
                 HostingEnvironment.MapPath(url));
-
-            return Ok();
+            
+            return Ok(Url.Content(url));
         }
 
         [Authorize]

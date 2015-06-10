@@ -129,7 +129,17 @@ public class SettingsFragment extends Fragment implements Screen
 						path = cursor.getString( idx );
 					}
 
-					m_userService.updatePortrait( path, null );
+					m_userService.updatePortrait(
+						path, new ServiceCallback<String>()
+						{
+							@Override
+							public void success( final String value )
+							{
+							    User.current.setPortraitUrl( value );
+								User.update();
+							}
+						}
+					);
 				}
 			}
 		);
