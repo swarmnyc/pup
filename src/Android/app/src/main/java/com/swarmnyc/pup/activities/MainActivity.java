@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.squareup.otto.Subscribe;
@@ -22,10 +21,7 @@ import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.components.TwitterHelper;
 import com.swarmnyc.pup.fragments.MainDrawerFragment;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterCore;
 import com.uservoice.uservoicesdk.UserVoice;
-import io.fabric.sdk.android.Fabric;
 
 import java.util.List;
 
@@ -98,14 +94,6 @@ public class MainActivity extends AppCompatActivity
 		com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config( "swarmnyc.uservoice.com" );
 		config.setForumId( 272754 );
 		UserVoice.init( config, this );
-
-		//Twitter and exception report
-		TwitterAuthConfig twConfig = new TwitterAuthConfig(
-			getString( R.string.twitter_key ),
-			getString( R.string.twitter_key_secret )
-		);
-
-		Fabric.with( this, new Crashlytics(), new TwitterCore( twConfig ) );
 	}
 
 	public Toolbar getToolbar()

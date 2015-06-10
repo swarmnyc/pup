@@ -11,12 +11,9 @@ import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.Services.UserService;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.activities.MainActivity;
-import com.swarmnyc.pup.models.SocialMedium;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.*;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
+import io.fabric.sdk.android.Fabric;
 
 public class TwitterHelper
 {
@@ -25,6 +22,14 @@ public class TwitterHelper
 
 	public static void startLoginRequire( final ServiceCallback serviceCallback )
 	{
+		//Twitter and exception report
+		TwitterAuthConfig twConfig = new TwitterAuthConfig(
+			MainActivity.getInstance().getString( R.string.twitter_key ),
+			MainActivity.getInstance().getString( R.string.twitter_key_secret )
+		);
+
+		Fabric.with( MainActivity.getInstance(), new TwitterCore( twConfig ) );
+
 		TwitterHelper.serviceCallback = serviceCallback;
 
 		TwitterAuthClient client = new TwitterAuthClient();
