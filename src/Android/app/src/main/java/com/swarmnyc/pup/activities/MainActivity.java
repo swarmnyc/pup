@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import butterknife.ButterKnife;
@@ -141,19 +142,6 @@ public class MainActivity extends AppCompatActivity
 		m_toolbar.setVisibility( View.VISIBLE );
 	}
 
-	public void hideIme()
-	{
-		InputMethodManager imm = (InputMethodManager) getSystemService(
-			Context.INPUT_METHOD_SERVICE
-		);
-
-		if ( getCurrentFocus() == null )
-		{ return; }
-		if ( getCurrentFocus().getWindowToken() == null )
-		{ return; }
-		imm.hideSoftInputFromWindow( getCurrentFocus().getWindowToken(), 0 );
-	}
-
 	@Subscribe
 	public void runtimeError( final RuntimeException exception )
 	{
@@ -168,5 +156,26 @@ public class MainActivity extends AppCompatActivity
 				}
 			}
 		);
+	}
+
+	@Override
+	public boolean dispatchTouchEvent( final MotionEvent ev )
+	{
+		hideIme();
+		return super.dispatchTouchEvent( ev );
+	}
+
+	public void hideIme()
+	{
+		if ( getCurrentFocus() == null )
+		{ return; }
+		if ( getCurrentFocus().getWindowToken() == null )
+		{ return; }
+
+		InputMethodManager imm = (InputMethodManager) getSystemService(
+			Context.INPUT_METHOD_SERVICE
+		);
+
+		imm.hideSoftInputFromWindow( getCurrentFocus().getWindowToken(), 0 );
 	}
 }

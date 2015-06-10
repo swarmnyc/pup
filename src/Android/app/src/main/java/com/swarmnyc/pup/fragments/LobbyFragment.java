@@ -191,8 +191,14 @@ public class LobbyFragment extends Fragment implements Screen
 		m_chatRoomService = m_chatService.getChatRoomService( getActivity(), m_lobby );
 		m_chatList.setAdapter( new ChatAdapter( getActivity(), m_lobbyService, m_chatRoomService, m_lobby ) );
 		m_chatList.setLayoutManager( new LinearLayoutManager( getActivity() ) );
-		m_chatList.addItemDecoration( new DividerItemDecoration( getActivity(), DividerItemDecoration.VERTICAL_LIST
-		                              ) );
+		/*m_chatList.addItemDecoration(
+			new DividerItemDecoration(
+				getActivity(), DividerItemDecoration.VERTICAL_LIST
+			)
+		);*/
+
+		//refresh member
+		m_memberFragment.refresh();
 	}
 
 	@Override

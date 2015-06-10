@@ -17,6 +17,7 @@ import com.quickblox.users.model.QBUser;
 import com.swarmnyc.pup.Config;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
+import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
@@ -69,7 +70,7 @@ public class QuickbloxChatRoomService extends ChatRoomService
 	}
 
 	@Override
-	public void login()
+	public void login( final Action callback )
 	{
 		QBUser user = new QBUser();
 		if ( User.isLoggedIn() && m_lobby.isDwellingUser( User.current.getId() ) )
@@ -89,14 +90,14 @@ public class QuickbloxChatRoomService extends ChatRoomService
 				@Override
 				public boolean handleMessage( final Message msg )
 				{
-					joinRoom();
+					joinRoom( callback );
 					return true;
 				}
 			}
 		);
 	}
 
-	private void joinRoom()
+	private void joinRoom( final Action callback )
 	{
 		if ( m_chat != null && m_chat.isJoined() )
 		{ return; }
@@ -115,6 +116,17 @@ public class QuickbloxChatRoomService extends ChatRoomService
 				@Override
 				public void onSuccess()
 				{
+					m_activity.runOnUiThread(
+						new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								callback.call( null );
+							}
+						}
+					);
+
 					m_chat.addMessageListener(
 						new QBMessageListener()
 						{
@@ -189,14 +201,14 @@ public class QuickbloxChatRoomService extends ChatRoomService
 
 	private LobbyUserInfo getLobbyUserInfo( final QBChatMessage chatMessage )
 	{
-		String userId = (String)chatMessage.getProperty( "userId" );
+		String userId = (String) chatMessage.getProperty( "userId" );
 		LobbyUserInfo user = m_lobby.getUser( userId );
 
 		if ( user == null )
 		{
 			user = new LobbyUserInfo();
 			user.setId( userId );
-			user.setUserName( (String)chatMessage.getProperty( "userName" ) );
+			user.setUserName( (String) chatMessage.getProperty( "userName" ) );
 		}
 		return user;
 	}
