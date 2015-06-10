@@ -84,7 +84,6 @@ public class SettingsFragment extends Fragment implements Screen
 
 		m_fbSwitch.setChecked( User.current.hasMedium( Consts.KEY_FACEBOOK ) );
 		m_twSwitch.setChecked( User.current.hasMedium( Consts.KEY_TWITTER ) );
-
 	}
 
 	@Override

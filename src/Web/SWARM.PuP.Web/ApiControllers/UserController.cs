@@ -147,7 +147,9 @@ namespace SWARM.PuP.Web.ApiControllers
             var stream = new MemoryStream(file.Buffer);
             _imageService.CreateThumbnailTo(stream,
                 HostingEnvironment.MapPath(url));
-            
+
+            _userService.UpdatePortrait(User.Identity.GetPuPUser(), url);
+
             return Ok(Url.Content(url));
         }
 
