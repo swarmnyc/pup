@@ -84,7 +84,6 @@ public class SettingsFragment extends Fragment implements Screen
 
 		m_fbSwitch.setChecked( User.current.hasMedium( Consts.KEY_FACEBOOK ) );
 		m_twSwitch.setChecked( User.current.hasMedium( Consts.KEY_TWITTER ) );
-
 	}
 
 	@Override
@@ -105,7 +104,7 @@ public class SettingsFragment extends Fragment implements Screen
 	void choosePortrait()
 	{
 		PhotoHelper.startPhotoIntent(
-			this, new ServiceCallback<Uri>()
+			this, new AsyncCallback<Uri>()
 			{
 				@Override
 				public void success( final Uri uri )
@@ -129,7 +128,17 @@ public class SettingsFragment extends Fragment implements Screen
 						path = cursor.getString( idx );
 					}
 
-					m_userService.updatePortrait( path, null );
+					m_userService.updatePortrait(
+						path, new ServiceCallback<String>()
+						{
+							@Override
+							public void success( final String value )
+							{
+							    User.current.setPortraitUrl( value );
+								User.update();
+							}
+						}
+					);
 				}
 			}
 		);
@@ -140,7 +149,16 @@ public class SettingsFragment extends Fragment implements Screen
 	{
 		if ( m_fbSwitch.isChecked() )
 		{
-			FacebookHelper.startLoginRequire( null );
+			FacebookHelper.startLoginRequire(
+				new AsyncCallback()
+				{
+					@Override
+					public void failure()
+					{
+						m_fbSwitch.setChecked( false );
+					}
+				}
+			);
 		}
 		else
 		{
@@ -163,7 +181,16 @@ public class SettingsFragment extends Fragment implements Screen
 	{
 		if ( m_twSwitch.isChecked() )
 		{
-			TwitterHelper.startLoginRequire( null );
+			TwitterHelper.startLoginRequire(
+				new AsyncCallback()
+				{
+					@Override
+					public void failure()
+					{
+						m_twSwitch.setChecked( false );
+					}
+				}
+			);
 		}
 		else
 		{

@@ -15,6 +15,8 @@
     
     <string name="fabric_app_key">6e9cbc0476f528edefc80e2daf875075623c2aa9</string>
 
+    <string name="uservoice_id">swarmnyc.uservoice.com</string>
+
     <integer name="menu_item_default">0</integer>
     <integer name="menu_item_default_for_user">1</integer>
 </resources>

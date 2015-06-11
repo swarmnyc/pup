@@ -114,6 +114,7 @@
     <Compile Include="ApiControllers\GameControllerTests.cs" />
     <None Include="ApiControllers\UserControllerTests.cs" />
     <Compile Include="ApiControllers\LobbyControllerTests.cs" />
+    <Compile Include="Services\UserServiceTests.cs" />
     <Compile Include="Services\GameServiceTests.cs" />
     <Compile Include="Services\LobbyServiceTests.cs" />
     <Compile Include="Services\QuickbloxChatServiceTest.cs" />

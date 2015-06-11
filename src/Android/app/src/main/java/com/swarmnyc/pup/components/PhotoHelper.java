@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import com.soundcloud.android.crop.Crop;
+import com.swarmnyc.pup.AsyncCallback;
 import com.swarmnyc.pup.Services.ServiceCallback;
 
 import java.io.File;
@@ -19,11 +20,11 @@ public class PhotoHelper
 {
 	public static final int CODE_CAMERA = 74;
 	public static final int CODE_PHOTO  = 75;
-	private static ServiceCallback<Uri> m_callback;
+	private static AsyncCallback<Uri> m_callback;
 	private static Fragment             m_fragment;
 	private static Uri                  m_photo;
 
-	public static void startPhotoIntent( Fragment fragment, ServiceCallback<Uri> callback )
+	public static void startPhotoIntent( Fragment fragment, AsyncCallback<Uri> callback )
 	{
 		m_fragment = fragment;
 		m_callback = callback;

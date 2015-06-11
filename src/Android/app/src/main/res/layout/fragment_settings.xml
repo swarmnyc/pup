@@ -8,6 +8,7 @@
             android:layout_height="wrap_content"
             android:text="@string/label_your_pup_name"
             style="@style/text_label"
+            android:layout_marginTop="0dp"
             android:layout_marginBottom="@dimen/margin_normal"
             android:id="@+id/label_name"/>
 
@@ -80,13 +81,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/text_facebook"
-                android:id="@+id/switch_facebook"/>
+                android:id="@+id/switch_facebook"
+                android:layout_marginTop="@dimen/margin_half"/>
 
         <Switch
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/text_twitter"
-                android:id="@+id/switch_twitter"/>
+                android:id="@+id/switch_twitter"
+                android:layout_marginTop="@dimen/margin_half"/>
     </LinearLayout>
 
 

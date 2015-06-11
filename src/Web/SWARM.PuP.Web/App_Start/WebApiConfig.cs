@@ -11,6 +11,14 @@ namespace SWARM.PuP.Web
 {
     public static class WebApiConfig
     {
+        private class ReadonlyFormMultipartEncodedMediaTypeFormatter : FormMultipartEncodedMediaTypeFormatter
+        {
+            public override bool CanWriteType(Type type)
+            {
+                return false;
+            }
+        }
+
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
@@ -31,7 +39,8 @@ namespace SWARM.PuP.Web
             config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new {id = RouteParameter.Optional}
                 );
             
-            config.Formatters.Add(new FormMultipartEncodedMediaTypeFormatter());
+            config.Formatters.Add(new ReadonlyFormMultipartEncodedMediaTypeFormatter());
+            
             config.Formatters.Remove(config.Formatters.XmlFormatter);
         }
     }

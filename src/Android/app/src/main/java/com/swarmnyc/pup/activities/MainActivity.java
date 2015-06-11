@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity
 		}
 
 		//User Voice
-		com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config( "swarmnyc.uservoice.com" );
+		com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config( getString( R.string.uservoice_id ) );
 		config.setForumId( 272754 );
 		UserVoice.init( config, this );
 	}

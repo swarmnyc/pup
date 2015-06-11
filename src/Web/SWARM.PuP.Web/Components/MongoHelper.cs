@@ -76,6 +76,11 @@ namespace MongoDB
             return GetDatabase().GetCollection<T>(collectionName);
         }
 
+        public static MongoCollection GetCollection(string collectionName)
+        {
+            return GetDatabase().GetCollection(collectionName);
+        }
+
         public static IMongoQuery ToMongoQuery<T>(this IQueryable<T> query)
         {
             MongoQueryable<T> mongoQueryable = query as MongoQueryable<T>;

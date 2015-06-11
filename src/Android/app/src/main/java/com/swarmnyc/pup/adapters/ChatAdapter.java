@@ -12,12 +12,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.squareup.picasso.Picasso;
-import com.swarmnyc.pup.Consts;
-import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
-import com.swarmnyc.pup.StringUtils;
-import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatMessageListener;
 import com.swarmnyc.pup.chat.ChatRoomService;
@@ -280,10 +277,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 				else
 				{
 					FacebookHelper.startLoginRequire(
-						new ServiceCallback()
+						new AsyncCallback()
 						{
 							@Override
-							public void success( final Object value )
+							public void success( )
 							{
 								setButtonState( true, m_facebookButton );
 							}
@@ -309,10 +306,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 				else
 				{
 					TwitterHelper.startLoginRequire(
-						new ServiceCallback()
+						new AsyncCallback()
 						{
 							@Override
-							public void success( final Object value )
+							public void success( )
 							{
 								setButtonState( true, m_twitterButton );
 							}
