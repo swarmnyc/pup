@@ -22,8 +22,10 @@ import com.swarmnyc.pup.adapters.ChatAdapter;
 import com.swarmnyc.pup.chat.ChatRoomService;
 import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.components.DialogHelper;
+import com.swarmnyc.pup.components.GamePlatformUtils;
 import com.swarmnyc.pup.components.Screen;
 import com.swarmnyc.pup.events.UserChangedEvent;
+import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 import com.swarmnyc.pup.view.DividerItemDecoration;
@@ -160,7 +162,7 @@ public class LobbyFragment extends Fragment implements Screen
 
 		Spanned subtitle = Html.fromHtml(
 			String.format(
-				"<small>%s: %s</small>", m_lobby.getPlatform(), time
+				"<small>%s: %s</small>", GamePlatformUtils.labelForPlatform(getActivity(), m_lobby.getPlatform()) , time
 			)
 		);
 

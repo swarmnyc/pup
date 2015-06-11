@@ -24,6 +24,7 @@ import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.User;
+import com.swarmnyc.pup.components.GamePlatformUtils;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.models.Lobby;
 
@@ -329,7 +330,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 
 			m_description.setText( lobby.getDescription() );
 
-			m_platform.setText( lobby.getPlatform().toString() );
+			m_platform.setText( GamePlatformUtils.labelResIdForPlatform( lobby.getPlatform() ) );
 
 			m_gameTime.setText(
 				DateUtils.getRelativeTimeSpanString( lobby.getStartTime().getTime() )
