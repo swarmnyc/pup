@@ -202,6 +202,11 @@ public class QuickbloxChatRoomService extends ChatRoomService
 	private LobbyUserInfo getLobbyUserInfo( final QBChatMessage chatMessage )
 	{
 		String userId = (String) chatMessage.getProperty( "userId" );
+		if ( userId == null )
+		{
+			userId = Config.getConfigString( R.string.QB_APP_DEFAULT_USER );
+		}
+
 		LobbyUserInfo user = m_lobby.getUser( userId );
 
 		if ( user == null )

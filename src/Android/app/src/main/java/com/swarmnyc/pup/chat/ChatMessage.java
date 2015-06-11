@@ -1,5 +1,7 @@
 package com.swarmnyc.pup.chat;
 
+import com.swarmnyc.pup.Config;
+import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.models.UserInfo;
 
 public class ChatMessage
@@ -21,5 +23,10 @@ public class ChatMessage
 	public UserInfo getUser()
 	{
 		return m_user;
+	}
+
+	public boolean isSystemMessage()
+	{
+		return  m_user == null || m_user.getId().equals(Config.getConfigString( R.string.QB_APP_DEFAULT_USER  )) ;
 	}
 }
