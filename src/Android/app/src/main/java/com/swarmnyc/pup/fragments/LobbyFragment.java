@@ -64,7 +64,6 @@ public class LobbyFragment extends Fragment implements Screen
 	RecyclerView m_chatList;
 
 	private Lobby          m_lobby;
-	private String         m_source;
 	private String         m_lobbyName;
 	private MemberFragment m_memberFragment;
 	private String         m_lobbyId;
@@ -215,7 +214,6 @@ public class LobbyFragment extends Fragment implements Screen
 		super.setArguments( args );
 		m_lobbyId = args.getString( Consts.KEY_LOBBY_ID );
 		m_lobbyName = args.getString( Consts.KEY_LOBBY_NAME );
-		m_source = args.getString( Consts.KEY_LOBBY_SOURCE );
 	}
 
 	@Override
@@ -261,7 +259,7 @@ public class LobbyFragment extends Fragment implements Screen
 	{
 		super.onStart();
 		EventBus.getBus().register( this );
-		MainDrawerFragment.getInstance().highLight( m_source );
+		MainDrawerFragment.getInstance().highLight( null );
 	}
 
 	@Override

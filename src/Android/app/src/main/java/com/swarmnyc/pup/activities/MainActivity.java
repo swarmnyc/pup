@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
 			if ( p.size() == 2 && p.get( 0 ).equals( "lobby" ) )
 			{
 				launchDefault = false;
-				Navigator.ToLobby( p.get( 1 ), "From Intend", Consts.KEY_LOBBIES, false );
+				Navigator.ToLobby( p.get( 1 ), "From Intend", false );
 			}
 		}
 

@@ -215,7 +215,6 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 						Navigator.ToLobby(
 							m_currentViewHolder.m_lobby.getId(),
 							m_currentViewHolder.m_lobby.getName(),
-							Consts.KEY_MY_LOBBIES,
 							false
 						);
 					}

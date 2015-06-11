@@ -109,12 +109,11 @@ public class Navigator
 		To( LobbyListFragment.class, null, true );
 	}
 
-	public static void ToLobby( final String id, final String name, final String from, boolean pop )
+	public static void ToLobby( final String id, final String name, boolean pop )
 	{
 		Bundle bundle = new Bundle();
 		bundle.putString( Consts.KEY_LOBBY_ID, id );
 		bundle.putString( Consts.KEY_LOBBY_NAME, name );
-		bundle.putString( Consts.KEY_LOBBY_SOURCE, from );
 
 		if ( pop )
 		{

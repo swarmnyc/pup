@@ -606,7 +606,6 @@ public class LobbyListFragment extends Fragment implements Screen
 							Navigator.ToLobby(
 								lobbyListItemView.getLobby().getId(),
 								lobbyListItemView.getLobby().getName(),
-								Consts.KEY_LOBBIES,
 								false
 							);
 						}

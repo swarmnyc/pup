@@ -112,6 +112,7 @@ public class SettingsFragment extends Fragment implements Screen
 					String path;
 
 					m_portrait.setImageURI( uri );
+					Picasso.with( getActivity() ).invalidate( uri );
 
 					Cursor cursor = getActivity().getContentResolver().query(
 						uri, null, null, null, null
