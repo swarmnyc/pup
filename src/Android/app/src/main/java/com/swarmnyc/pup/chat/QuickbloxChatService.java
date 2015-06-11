@@ -2,19 +2,15 @@ package com.swarmnyc.pup.chat;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.model.QBSession;
 import com.quickblox.chat.QBChatService;
-import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.core.QBSettings;
 import com.quickblox.users.model.QBUser;
-import com.swarmnyc.pup.BuildConfig;
-import com.swarmnyc.pup.Config;
-import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.User;
+import com.swarmnyc.pup.*;
+import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.models.Lobby;
 import org.jivesoftware.smack.SmackException;
 
@@ -22,10 +18,9 @@ import java.util.List;
 
 public class QuickbloxChatService implements ChatService
 {
-	private QBChatService    m_chatService;
-	private String           m_appId;
-	private QBUser           m_user;
-	private Handler.Callback m_callback;
+	private QBChatService m_chatService;
+	private QBUser        m_user;
+	private AsyncCallback m_callback;
 
 	public QBUser getUser()
 	{
@@ -47,16 +42,16 @@ public class QuickbloxChatService implements ChatService
 			user.setPassword( Config.getConfigString( R.string.QB_APP_PW ) );
 		}
 
-		login( activity, user, null );
+		login( activity, user, new AsyncCallback());
 	}
 
-	public void login( final Activity activity, QBUser user, final Handler.Callback callback )
+	protected void login( final Activity activity, QBUser user, AsyncCallback callback )
 	{
 		m_callback = callback;
 		if ( m_user != null)
 		{
 			if ( m_user.getLogin().equals( user.getLogin() )  ){
-				callback.handleMessage( null );
+				m_callback.success();
 				return;
 			}else{
 				try
@@ -72,10 +67,12 @@ public class QuickbloxChatService implements ChatService
 
 		//Login API
 		QBChatService.setDebugEnabled( BuildConfig.DEBUG );
-		m_appId = Config.getConfigString( R.string.QB_APP_ID );
 		QBSettings.getInstance().fastConfigInit(
-			m_appId, Config.getConfigString( R.string.QB_APP_KEY ), Config.getConfigString( R.string.QB_APP_SECRET )
+			Config.getConfigString( R.string.QB_APP_ID ),
+			Config.getConfigString( R.string.QB_APP_KEY ),
+			Config.getConfigString( R.string.QB_APP_SECRET )
 		);
+
 		if ( !QBChatService.isInitialized() )
 		{
 			QBChatService.init( activity );
@@ -105,12 +102,6 @@ public class QuickbloxChatService implements ChatService
 						}
 					);
 				}
-
-				@Override
-				public void onError( List<String> strings )
-				{
-					Log.e( "Chat", "Create Session failed" );
-				}
 			}
 		);
 	}
@@ -123,19 +114,7 @@ public class QuickbloxChatService implements ChatService
 				@Override
 				public void onSuccess()
 				{
-			    /*try {
-                    m_chatService.startAutoSendPresence(60);
-                } catch (SmackException.NotLoggedInException e) {
-                    e.printStackTrace();
-                }*/
-					if ( m_callback != null )
-					{ m_callback.handleMessage( null ); }
-				}
-
-				@Override
-				public void onError( List list )
-				{
-					Log.e( "ChatService", list.get( 0 ).toString() );
+					 m_callback.success();
 				}
 			}
 		);

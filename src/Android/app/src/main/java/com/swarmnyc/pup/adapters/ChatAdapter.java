@@ -1,6 +1,7 @@
 package com.swarmnyc.pup.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,6 @@ import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatMessageListener;
 import com.swarmnyc.pup.chat.ChatRoomService;
-import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.TwitterHelper;
 import com.swarmnyc.pup.models.Lobby;
@@ -29,10 +29,10 @@ import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ChatMessageListener
 {
-	private static final int HEADER   = 0;
-	private static final int SHARE    = -1;
-	private static final int LOADDING = -2;
-	private static final int ITEM     = 1;
+	private static final int HEADER = 0;
+	private static final int SHARE  = -1;
+	private static final int SYSTEM = -2;
+	private static final int ITEM   = 1;
 	ChatRoomService   m_chatRoomService;
 	List<ChatMessage> m_chatMessages;
 	LobbyService      m_lobbyService;
@@ -55,15 +55,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 		m_chatRoomService = chatRoomService;
 		m_chatRoomService.setMessageListener( this );
 		m_chatRoomService.login(
-			new Action()
-			{
-				@Override
-				public void call( final Object value )
-				{
-					isloaded = true;
-					notifyDataSetChanged();
-				}
-			}
 		);
 	}
 
@@ -80,10 +71,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 			View view = m_inflater.inflate( R.layout.item_lobby_chat_share, parent, false );
 			return new ShareViewHolder( view );
 		}
-		else if ( viewType == LOADDING )
+		else if ( viewType == SYSTEM )
 		{
-			View view = m_inflater.inflate( R.layout.item_lobby_chat_loading, parent, false );
-			return new LoadingViewHolder( view );
+			View view = m_inflater.inflate( R.layout.item_lobby_chat_system, parent, false );
+			return new SystemViewHolder( view );
 		}
 		else
 		{
@@ -97,7 +88,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	{
 		if ( ItemViewHolder.class.isInstance( holder ) )
 		{
-			( (ItemViewHolder) holder ).setCharMessage( m_chatMessages.get( position - 1 ) );
+			( (ItemViewHolder) holder ).setCharMessage( getChatMessage( position ) );
+		}
+		else if ( SystemViewHolder.class.isInstance( holder ) )
+		{
+			if ( m_chatMessages.size() > 0 )
+			{ ( (SystemViewHolder) holder ).setMessage( getChatMessage( position ) ); }
 		}
 	}
 
@@ -109,11 +105,22 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 			if ( isloaded )
 			{ return position == HEADER ? HEADER : SHARE; }
 			else
-			{ return position == HEADER ? HEADER : LOADDING; }
+			{ return position == HEADER ? HEADER : SYSTEM; }
 		}
 		else
 		{
-			return position == HEADER ? HEADER : ITEM;
+			if ( position == HEADER )
+			{
+				return HEADER;
+			}
+			else if ( getChatMessage( position ).isSystemMessage() )
+			{
+				return SYSTEM;
+			}
+			else
+			{
+				return ITEM;
+			}
 		}
 	}
 
@@ -144,9 +151,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 		m_chatRoomService.leave();
 	}
 
+	private ChatMessage getChatMessage( final int location ) {return m_chatMessages.get( location - 1 );}
+
 	@Override
 	public void receive( final List<ChatMessage> message )
 	{
+		isloaded = true;
+
 		m_chatMessages.addAll( message );
 		notifyDataSetChanged();
 
@@ -197,7 +208,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 			{
 				container.setBackgroundResource( R.color.pup_white );
 			}
-
 		}
 	}
 
@@ -241,10 +251,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	class ShareViewHolder extends RecyclerView.ViewHolder
 	{
 		@InjectView( R.id.btn_facebook )
-		View m_facebookButton;
+		ImageView m_facebookButton;
 
 		@InjectView( R.id.btn_twitter )
-		View m_twitterButton;
+		ImageView m_twitterButton;
 
 		public ShareViewHolder( final View view )
 		{
@@ -255,10 +265,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 			setButtonState( User.current.hasMedium( Consts.KEY_TWITTER ), m_twitterButton );
 		}
 
-		private void setButtonState( boolean share, View button )
+		private void setButtonState( boolean share, ImageView button )
 		{
 			button.setActivated( share );
-			button.setAlpha( share ? 1f : 0.5f );
+			button.setColorFilter( Color.argb( share ? 0 : 0xAA, 0, 0, 0 ) );
 		}
 
 		@OnClick( R.id.btn_facebook )
@@ -280,7 +290,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 						new AsyncCallback()
 						{
 							@Override
-							public void success( )
+							public void success()
 							{
 								setButtonState( true, m_facebookButton );
 							}
@@ -309,7 +319,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 						new AsyncCallback()
 						{
 							@Override
-							public void success( )
+							public void success()
 							{
 								setButtonState( true, m_twitterButton );
 							}
@@ -346,15 +356,19 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 					}
 				);
 			}
-
 		}
 	}
 
-	class LoadingViewHolder extends RecyclerView.ViewHolder
+	class SystemViewHolder extends RecyclerView.ViewHolder
 	{
-		public LoadingViewHolder( final View view )
+		public SystemViewHolder( final View view )
 		{
 			super( view );
+		}
+
+		public void setMessage( final ChatMessage chatMessage )
+		{
+			( (TextView) itemView ).setText( chatMessage.getBody() );
 		}
 	}
 }

@@ -2,22 +2,20 @@ package com.swarmnyc.pup.chat;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import com.quickblox.chat.QBChat;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBGroupChat;
 import com.quickblox.chat.exception.QBChatException;
-import com.quickblox.chat.listeners.QBMessageListener;
+import com.quickblox.chat.listeners.QBMessageListenerImpl;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.model.QBUser;
+import com.swarmnyc.pup.AsyncCallback;
 import com.swarmnyc.pup.Config;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
-import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
@@ -59,18 +57,14 @@ public class QuickbloxChatRoomService extends ChatRoomService
 			chatMessage.setSaveToHistory( true );
 			m_chat.sendMessage( chatMessage );
 		}
-		catch ( XMPPException e )
-		{
-			e.printStackTrace();
-		}
-		catch ( SmackException.NotConnectedException e )
+		catch ( XMPPException | SmackException.NotConnectedException e )
 		{
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void login( final Action callback )
+	public void login()
 	{
 		QBUser user = new QBUser();
 		if ( User.isLoggedIn() && m_lobby.isDwellingUser( User.current.getId() ) )
@@ -85,19 +79,18 @@ public class QuickbloxChatRoomService extends ChatRoomService
 		}
 
 		m_quickbloxChatService.login(
-			m_activity, user, new Handler.Callback()
+			m_activity, user, new AsyncCallback()
 			{
 				@Override
-				public boolean handleMessage( final Message msg )
+				public void success()
 				{
-					joinRoom( callback );
-					return true;
+					joinRoom();
 				}
 			}
 		);
 	}
 
-	private void joinRoom( final Action callback )
+	private void joinRoom()
 	{
 		if ( m_chat != null && m_chat.isJoined() )
 		{ return; }
@@ -107,9 +100,47 @@ public class QuickbloxChatRoomService extends ChatRoomService
 		m_dialog.setUserId( m_quickbloxChatService.getUser().getId() );
 
 		m_chat = QBChatService.getInstance().getGroupChatManager().createGroupChat( m_dialog.getRoomJid() );
+		m_chat.addMessageListener(
+			new QBMessageListenerImpl()
+			{
+				@Override
+				public void processMessage( final QBChat sender, final QBChatMessage chatMessage )
+				{
+					m_activity.runOnUiThread(
+						new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								List<ChatMessage> messages = new ArrayList<>();
+								LobbyUserInfo user = getLobbyUserInfo( chatMessage );
+
+								messages.add( new ChatMessage( user, chatMessage.getBody() ) );
+								QuickbloxChatRoomService.this.listener.receive( messages );
+							}
+						}
+					);
+				}
+
+				@Override
+				public void processError( final QBChat sender, final QBChatException exception, final QBChatMessage message )
+				{
+					m_activity.runOnUiThread(
+						new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								DialogHelper.showError( "chat error: " + exception.toString() );
+							}
+						}
+					);
+				}
+			}
+		);
 
 		DiscussionHistory history = new DiscussionHistory();
-		history.setMaxStanzas( 100 );
+		history.setMaxStanzas( 0 );
 		m_chat.join(
 			history, new QBEntityCallbackImpl()
 			{
@@ -122,60 +153,7 @@ public class QuickbloxChatRoomService extends ChatRoomService
 							@Override
 							public void run()
 							{
-								callback.call( null );
-							}
-						}
-					);
-
-					m_chat.addMessageListener(
-						new QBMessageListener()
-						{
-							@Override
-							public void processMessage( QBChat chat, final QBChatMessage chatMessage )
-							{
-								m_activity.runOnUiThread(
-									new Runnable()
-									{
-										@Override
-										public void run()
-										{
-											List<ChatMessage> messages = new ArrayList<>();
-											LobbyUserInfo user = getLobbyUserInfo( chatMessage );
-
-											messages.add( new ChatMessage( user, chatMessage.getBody() ) );
-											QuickbloxChatRoomService.this.listener.receive( messages );
-										}
-									}
-								);
-							}
-
-							@Override
-							public void processError(
-								QBChat qbChat, final QBChatException e, QBChatMessage qbChatMessage
-							)
-							{
-								m_activity.runOnUiThread(
-									new Runnable()
-									{
-										@Override
-										public void run()
-										{
-											DialogHelper.showError( "chat error: " + e.toString() );
-										}
-									}
-								);
-							}
-
-							@Override
-							public void processMessageDelivered( QBChat qbChat, String s )
-							{
-
-							}
-
-							@Override
-							public void processMessageRead( QBChat qbChat, String s )
-							{
-
+								loadChatHistory();
 							}
 						}
 					);
@@ -202,20 +180,23 @@ public class QuickbloxChatRoomService extends ChatRoomService
 	private LobbyUserInfo getLobbyUserInfo( final QBChatMessage chatMessage )
 	{
 		String userId = (String) chatMessage.getProperty( "userId" );
-		if ( userId == null )
+		if ( userId == null || userId.equals( Config.getConfigString( R.string.QB_APP_DEFAULT_USER ) ) )
 		{
-			userId = Config.getConfigString( R.string.QB_APP_DEFAULT_USER );
+			return null;
 		}
-
-		LobbyUserInfo user = m_lobby.getUser( userId );
-
-		if ( user == null )
+		else
 		{
-			user = new LobbyUserInfo();
-			user.setId( userId );
-			user.setUserName( (String) chatMessage.getProperty( "userName" ) );
+			LobbyUserInfo user = m_lobby.getUser( userId );
+
+			if ( user == null )
+			{
+				user = new LobbyUserInfo();
+				user.setId( userId );
+				user.setUserName( (String) chatMessage.getProperty( "userName" ) );
+			}
+
+			return user;
 		}
-		return user;
 	}
 
 	@Override
@@ -228,11 +209,7 @@ public class QuickbloxChatRoomService extends ChatRoomService
 				m_chat.leave();
 			}
 		}
-		catch ( XMPPException e )
-		{
-			e.printStackTrace();
-		}
-		catch ( SmackException.NotConnectedException e )
+		catch ( XMPPException | SmackException.NotConnectedException e )
 		{
 			e.printStackTrace();
 		}

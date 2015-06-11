@@ -75,8 +75,9 @@ public class LobbyFragment extends Fragment implements Screen
 		if ( message.length() > 0 )
 		{
 			m_chatRoomService.SendMessage( message );
-			m_messageText.setText( "" );
 		}
+
+		m_messageText.setText( "" );
 	}
 
 	@Subscribe
@@ -140,22 +141,22 @@ public class LobbyFragment extends Fragment implements Screen
 		String time;
 		if ( offset < 0 )
 		{
-			SimpleDateFormat format = new SimpleDateFormat( "MMM dd @ h:m a", Locale.getDefault() );
+			SimpleDateFormat format = new SimpleDateFormat( "MMM dd @ h:mm a", Locale.getDefault() );
 			time = "Started " + format.format( m_lobby.getStartTime() );
 		}
 		else if ( offset < TimeUtils.day_in_millis )
 		{
-			SimpleDateFormat format = new SimpleDateFormat( "@ h:m a", Locale.getDefault() );
+			SimpleDateFormat format = new SimpleDateFormat( "@ h:mm a", Locale.getDefault() );
 			time = "Today " + format.format( m_lobby.getStartTime() );
 		}
 		else if ( offset < TimeUtils.week_in_millis )
 		{
-			SimpleDateFormat format = new SimpleDateFormat( "EEEE @ h:m a", Locale.getDefault() );
+			SimpleDateFormat format = new SimpleDateFormat( "EEEE @ h:mm a", Locale.getDefault() );
 			time = format.format( m_lobby.getStartTime() );
 		}
 		else
 		{
-			SimpleDateFormat format = new SimpleDateFormat( "MMM dd @ h:m a", Locale.getDefault() );
+			SimpleDateFormat format = new SimpleDateFormat( "MMM dd @ h:mm a", Locale.getDefault() );
 			time = format.format( m_lobby.getStartTime() );
 		}
 

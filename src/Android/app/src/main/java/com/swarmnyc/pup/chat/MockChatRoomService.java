@@ -3,7 +3,6 @@ package com.swarmnyc.pup.chat;
 import android.os.Handler;
 import android.os.Message;
 import com.swarmnyc.pup.User;
-import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 
 import java.util.ArrayList;
@@ -52,12 +51,6 @@ public class MockChatRoomService extends ChatRoomService
 	}
 
 	@Override
-	public void login( final Action callback )
-	{
-		m_handler.sendEmptyMessageDelayed( 0, 1000 );
-	}
-
-	@Override
 	public void leave()
 	{
 	}
@@ -65,5 +58,11 @@ public class MockChatRoomService extends ChatRoomService
 	@Override
 	public void loadChatHistory()
 	{
+	}
+
+	@Override
+	public void login()
+	{
+		m_handler.sendEmptyMessageDelayed( 0, 1000 );
 	}
 }

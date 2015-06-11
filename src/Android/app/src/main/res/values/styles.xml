@@ -22,6 +22,12 @@
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/pup_white</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/pup_orange</item>
+
+        <!-- colorAccent is used as the default value for colorControlActivated,
+             which is used to tint widgets -->
+        <item name="colorAccent">@color/pup_orange</item>
     </style>
 
     <style name="MainActionBar" parent="ThemeOverlay.AppCompat.ActionBar">

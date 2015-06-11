@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="200dp"
-        android:padding="20dp">
+              android:layout_height="wrap_content"
+        android:padding="@dimen/padding_normal">
+    <TextView
+            android:id="@+id/text_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/pup_light"
+            android:layout_marginBottom="@dimen/margin_normal"
+            android:text="@string/text_invite"/>
     <ImageButton
         android:id="@+id/btn_facebook"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:scaleType="centerCrop"
+        android:layout_below="@+id/text_message"
         android:src="@drawable/ico_facebook"
         android:adjustViewBounds="false"
         android:background="@android:color/transparent"/>
@@ -17,16 +27,17 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:scaleType="centerCrop"
+            android:layout_below="@+id/text_message"
             android:src="@drawable/ico_twitter"
             android:adjustViewBounds="false"
             android:background="@android:color/transparent"
-            android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/btn_facebook"
             android:layout_marginLeft="@dimen/margin_normal"/>
     <Button
             android:id="@+id/btn_invite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_facebook"
             android:text="Invite"
             android:layout_centerInParent="true"/>
 </RelativeLayout>
