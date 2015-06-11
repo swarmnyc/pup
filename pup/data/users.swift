@@ -12,6 +12,9 @@ struct userInfo {
     var accessToken = ""
     var userId = ""
     var name = ""
+    var tags = [["" : ""]]
+    var QBChatId = ""
+    var QBChatUserName = ""
 }
 
 
@@ -39,6 +42,8 @@ class User {
                 println("the access token")
                 data.userId = localStorage.valueForKey("userId") as! String
                 data.name = localStorage.valueForKey("name") as! String
+                data.QBChatId = localStorage.valueForKey("QBChatId") as! String
+                data.QBChatUserName = localStorage.valueForKey("QBChatUserName") as! String
 
             }
 
@@ -53,6 +58,8 @@ class User {
         localStorage.setObject(self.data.accessToken,forKey: "accessToken")
         localStorage.setObject(self.data.userId,forKey: "userId")
         localStorage.setObject(self.data.name,forKey: "name")
+        localStorage.setObject(self.data.QBChatId,forKey: "QBChatId")
+        localStorage.setObject(self.data.QBChatUserName,forKey: "QBChatUserName")
         localStorage.setBool(self.data.loggedIn, forKey: "loggedIn")
 
     }
@@ -106,6 +113,20 @@ class User {
     }
 
 
+    func saveData(userData: NSDictionary) {
+        println(userData["accessToken"]!)
+
+        self.data.loggedIn = true;
+        self.data.accessToken = userData["accessToken"]! as! String;
+        self.data.name = userData["userName"]! as! String;
+        self.data.userId = userData["id"]! as! String;
+        self.data.tags = userData["tags"] as! Array<Dictionary<String, String>>
+        self.data.QBChatId = self.data.tags[0]["value"] as! String!
+        self.data.QBChatUserName = self.data.tags[1]["value"] as! String!
+        println(self.data)
+        self.setLocalStorage()
+    }
+
 
     func register(registrationData: (image: UIImage?, username: String, email: String), success: () -> Void) {
 
@@ -127,12 +148,7 @@ class User {
                  if (resp["success"] as! Bool) {
                      println(userData["accessToken"]!)
 
-                     self.data.loggedIn = true;
-                     self.data.accessToken = userData["accessToken"]! as! String;
-                     self.data.name = userData["userName"]! as! String;
-                     self.data.userId = userData["id"]! as! String;
-                    println(self.data)
-                     self.setLocalStorage()
+                     self.saveData(userData)
 
                      success()
                  }
@@ -144,18 +160,32 @@ class User {
 
             var image:UIImage = registrationData.image!
 
-            let imageData:NSData = UIImageJPEGRepresentation(image, 1.0)
+            let imageData:NSData = NSData(data: UIImageJPEGRepresentation(image, 1.0))
+
+            SRWebClient.POST(appURLS().register)
+            .data(imageData, fieldName:"portriat", data:parameters)
+            .send({(response:AnyObject!, status:Int) -> Void in
+                println("success");
+                var resp = response as! Dictionary<String, AnyObject>
+                var userData = resp["data"] as! Dictionary<String, AnyObject>
+
+                println(resp)
+                println(userData)
+                if (resp["success"] as! Bool) {
+
+                    self.saveData(userData)
+
+                    success()
+                }
+
+            },failure:{(error:NSError!) -> Void in
+                println("failure")
+
+                //process failure response
+            })
 
 
-            SRWebClient.POST(urls.register)
-           // .data(image64String, fieldName:"portrait", data: parameters)
-//            .send({(response:AnyObject!, status:Int) -> Void in
-//                println(response)
-//                //process success response
-//            },failure:{(error:NSError!) -> Void in
-//                println(error)
-//                //process failure response
-//            })
+
 
         }
 

@@ -158,7 +158,7 @@ public class SRWebClient : NSObject
             self.urlRequest?.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField:"Content-Type")
 
             if(data != nil && data!.count > 0) {
-                postData += "--\(boundary)\r\n"
+               // postData += "--\(boundary)\r\n"
                 for (key, value : AnyObject) in data! {
                     if let value = value as? String {
                         postData += "--\(boundary)\r\n"

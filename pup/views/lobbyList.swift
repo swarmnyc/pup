@@ -109,7 +109,7 @@ class LobbyListView: UIView {
         }
 
         floatingActionButton?.snp_makeConstraints{ (make) -> Void in
-            make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
+            make.centerX.equalTo(self)
             make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)
             make.width.equalTo(50)
             make.height.equalTo(50)

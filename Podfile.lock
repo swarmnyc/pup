@@ -2,21 +2,27 @@ PODS:
   - Alamofire (1.2.2)
   - ENSwiftSideMenu (0.0.6)
   - HanekeSwift (0.9.1)
+  - QuickBlox (2.2.4)
   - SnapKit (0.10.0)
   - SwiftHTTP (0.9.5)
+  - SwiftLoader (0.2.2)
 
 DEPENDENCIES:
   - Alamofire (~> 1.2)
   - ENSwiftSideMenu (~> 0.0)
   - HanekeSwift
+  - QuickBlox
   - SnapKit (~> 0.10.0)
   - SwiftHTTP (~> 0.9.4)
+  - SwiftLoader
 
 SPEC CHECKSUMS:
   Alamofire: 11a6022f5089887d92ffb5a3014c97a0a915ab98
   ENSwiftSideMenu: c21151418a1d03fdf413fd4921d522f064d29e7a
   HanekeSwift: 50d37bfbc4432edc649167e538c259feccb4a2bb
+  QuickBlox: 1774dc7413673be23a21d0e80228d3bf67ab4d35
   SnapKit: 53696873f2cf84a15e8d7d0d9729ed4381196b16
   SwiftHTTP: cd7b248bc07db02926ff54cf19b580b78f7abfa1
+  SwiftLoader: 9c5e547ae8e00b1c1079139492d6a273c7f73171
 
 COCOAPODS: 0.37.1

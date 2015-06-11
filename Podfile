@@ -10,6 +10,8 @@ target 'pup' do
   pod 'Alamofire', '~> 1.2'
   pod 'HanekeSwift'
   pod 'ENSwiftSideMenu', '~> 0.0'
+  pod 'SwiftLoader'
+  pod 'QuickBlox'
 end
 
 target 'pupTests' do
@@ -18,6 +20,8 @@ target 'pupTests' do
   pod 'Alamofire', '~> 1.2'
   pod 'HanekeSwift'
   pod 'ENSwiftSideMenu', '~> 0.0'
+  pod 'SwiftLoader'
+  pod 'QuickBlox'
 end
 
 target 'pupTests2' do
@@ -26,5 +30,7 @@ target 'pupTests2' do
   pod 'Alamofire', '~> 1.2'
   pod 'HanekeSwift'
   pod 'ENSwiftSideMenu', '~> 0.0'
+  pod 'SwiftLoader'
+  pod 'QuickBlox'
 end
 

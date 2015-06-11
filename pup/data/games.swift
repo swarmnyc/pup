@@ -106,7 +106,7 @@ class gameData {
     var ReleaseDateUtc = ""
     var Rank = 0
     var Platforms = ["PS4", "PS3","XBOX360", "XBOXONE"];
-
+    var id = ""
 
     init(data: NSDictionary) {
 
@@ -117,7 +117,7 @@ class gameData {
         PictureUrl = data["pictureUrl"] as! String
         Platforms = data["platforms"] as! Array<String>
         Rank = data["rank"] as! Int
-
+        id = data["id"] as! String
 
     }
 

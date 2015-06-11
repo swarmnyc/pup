@@ -20,6 +20,9 @@ class SingleLobbyView: UIView {
     var desc: UITextView = UITextView()
     var divider: UIView = UIView()
 
+    var joinLobbyButton: UIButton = UIButton();
+
+    var isMember = false;
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -62,11 +65,22 @@ class SingleLobbyView: UIView {
 
         addSubview(topContentBox)
         addSubview(descBox)
+        if (!isMember) {
+            addSubview(joinLobbyButton)
+        }
 
 
     }
 
+
+    func setUpDelegates(parentController: UIViewController) {
+        joinLobbyButton.addTarget(parentController as! SingleLobbyController, action: "joinLobby", forControlEvents: .TouchUpInside)
+    }
+
     func setUpViews(data: singleLobby) {
+
+        isMember = data.isMember
+
 
         var url = NSURL(string: data.data.pictureUrl)
 
@@ -77,6 +91,12 @@ class SingleLobbyView: UIView {
             self.lobbyImg.contentMode = UIViewContentMode.ScaleAspectFill;
             self.lobbyImg.clipsToBounds = true;
         })
+
+
+        if (!isMember) {
+            joinLobbyButton.setTitle("Join Lobby", forState: .Normal)
+            joinLobbyButton.setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
+        }
 
         lobbyTitle.text = "\(data.data.owner.name)'s \n" +
                 "\(data.data.name)";
@@ -185,6 +205,19 @@ class SingleLobbyView: UIView {
             make.height.equalTo(UIConstants.dividerWidth);
 
         }
+
+        if (!isMember) {
+            self.joinLobbyButton.snp_remakeConstraints {
+                (make) -> Void in
+                make.left.equalTo(self).offset(0)
+                make.right.equalTo(self).offset(0)
+                make.bottom.equalTo(self).offset(0)
+                make.height.equalTo(58)
+
+            }
+        }
+
+
 
     }
 

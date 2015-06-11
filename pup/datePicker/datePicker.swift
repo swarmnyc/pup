@@ -44,8 +44,8 @@ class DatePickerDialog: UIView {
     }
 
     /* Create the dialog view, and animate opening the dialog */
-    func show(#title: String, datePickerMode: UIDatePickerMode = .DateAndTime, callback: ((date: NSDate) -> Void)) {
-        show(title: title, doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: datePickerMode, callback: callback)
+    func show(#title: String, datePickerMode: UIDatePickerMode = .DateAndTime, defaultDate: NSDate, callback: ((date: NSDate) -> Void)) {
+        show(title: title, doneButtonTitle: "Done", cancelButtonTitle: "Cancel", defaultDate: defaultDate, datePickerMode: datePickerMode, callback: callback)
     }
 
     func show(#title: String, doneButtonTitle: String, cancelButtonTitle: String, defaultDate: NSDate = NSDate(), datePickerMode: UIDatePickerMode = .DateAndTime, callback: ((date: NSDate) -> Void)) {

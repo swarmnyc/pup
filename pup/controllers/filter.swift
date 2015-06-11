@@ -99,7 +99,7 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
     func setDimOfOtherButtons() {
         println("number of selections: \(numberOfSelections)")
         if (numberOfSelections>0) {
-            filterView.dimInactiveButtons()
+            filterView.dimUncheckedButtons()
         } else {
             filterView.darkenAllButtons()
         }

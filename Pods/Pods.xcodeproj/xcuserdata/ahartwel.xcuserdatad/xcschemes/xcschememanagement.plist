@@ -29,6 +29,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-pup-SwiftLoader.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-pup.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -55,6 +60,11 @@
 			<false/>
 		</dict>
 		<key>Pods-pupTests-SwiftHTTP.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-pupTests-SwiftLoader.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -89,6 +99,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-pupTests2-SwiftLoader.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-pupTests2.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -96,97 +111,6 @@
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
-	<dict>
-		<key>020E8E67612B19BDDEB24E64</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>0CD0D81FCBE5B092D7592F77</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>120E51890F0E88BDBF088058</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>15D8B73FA25EA8B9E40DA320</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>25B4CB2903E1811E8F7194F2</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>431A29CD77BB5EC7A112D644</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>56DFAB37F183799E4822F039</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>62EDC9B3CBB8BD4A125E3420</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>656E07E00723B38C6E0519AD</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>678B48DBB952B09065112C1E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>80B17605AC7191288AC28B59</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>886B4E8653009ACD1CC09D25</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>90A7AE94A03956BB706F271F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>995900E9035F7943EF256CF3</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>ABF69DC09411C3FD58E365DC</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>BD1D44C2669F75768F3C0510</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>BD761F9DE7F3C26296879287</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>D2D5E3508923BE4191DBE126</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-	</dict>
+	<dict/>
 </dict>
 </plist>

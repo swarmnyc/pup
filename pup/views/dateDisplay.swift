@@ -11,6 +11,10 @@ class DateDisplayView: UIView, UITextFieldDelegate {
     var title: UILabel = UILabel();
     var text: UITextField = UITextField();
 
+    var successfulChange: ((newDate: NSDate) -> (NSDate))?
+
+    var currentDate: NSDate = NSDate();
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -62,8 +66,11 @@ class DateDisplayView: UIView, UITextFieldDelegate {
         println("woooooooooh yeeeeeeeaaahhhhhhh")
 
 
-        DatePickerDialog().show(title: "DatePicker", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Date) {
+        DatePickerDialog().show(title: "DatePicker", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Date, defaultDate: currentDate) {
             (date) -> Void in
+
+            var newestTime = self.successfulChange!(newDate: date)
+            self.currentDate = newestTime;
             textField.text = "\(date.toString(dateStyle: .ShortStyle, timeStyle: .NoStyle, doesRelativeDateFormatting: true))"
         }
 
@@ -94,13 +101,24 @@ class TimeDisplayView: DateDisplayView {
     }
 
 
+    func setNewText(newestTime: NSDate) {
+        if (newestTime.minutesAfterDate(NSDate()) <= 20) {
+            self.text.text = "in 20 Minutes"
+        } else {
+            self.text.text = "\(newestTime.toString(dateStyle: .NoStyle, timeStyle: .ShortStyle, doesRelativeDateFormatting: true))"
+        }
+    }
+
+
     override func textFieldShouldBeginEditing(textField: UITextField) -> Bool{
         println("woooooooooh yeeeeeeeaaahhhhhhh")
 
 
-        DatePickerDialog().show(title: "DatePicker", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Time) {
+        DatePickerDialog().show(title: "DatePicker", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Time, defaultDate: currentDate) {
             (date) -> Void in
-            textField.text = "\(date.toString(dateStyle: .NoStyle, timeStyle: .ShortStyle, doesRelativeDateFormatting: true))"
+            var newestTime = self.successfulChange!(newDate: date)
+            self.currentDate = newestTime;
+           self.setNewText(newestTime)
         }
 
         return false

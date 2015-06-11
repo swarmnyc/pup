@@ -12,6 +12,7 @@ class PlatformButtonToggle: UIButton {
 
     var buttonDelegate: SimpleButtonDelegate? = nil
 
+    var active: Bool = true
 
     var returnType: String = "platform";
 
@@ -44,6 +45,36 @@ class PlatformButtonToggle: UIButton {
     }
 
 
+    func hideIfNotNeeded(possiblePlatforms: Array<String>) {
+        var hidden = true;
+
+        for (var i = 0; i<possiblePlatforms.count; i++) {
+            println(self.currentTitle!)
+
+                if (appData.platformDict[self.currentTitle!] == possiblePlatforms[i]) {
+                    hidden = false;
+                    println("it's good")
+                    println(self.currentTitle!)
+                }
+
+//                if ((appData.platformDict[appData.platforms[p]] == possiblePlatforms[i]) && (appData.platformDict[appData.platforms[p]] == self.currentTitle!)) {
+//                    hidden = false;
+//                    println("it's good")
+//                    println(self.currentTitle!)
+//                }
+
+        }
+
+        if (hidden) {
+            makeInactive()
+        } else {
+            makeActive()
+        }
+
+
+    }
+
+
     func buttonAction(sender: PlatformButtonToggle!) {
         toggleSelected(sender)
 
@@ -54,26 +85,44 @@ class PlatformButtonToggle: UIButton {
     }
 
     func toggleSelected(sender: PlatformButtonToggle!) {
-        buttonDelegate?.touchUp(sender, type: returnType)
 
-        if (checked) {
-            checked = false
+        if (active) {
+            buttonDelegate?.touchUp(sender, type: returnType)
+
+            if (checked) {
+                checked = false
 
 
-        } else {
-            checked = true
+            } else {
+                checked = true
+
+
+            }
+            setSelectionStyle()
 
 
         }
-        setSelectionStyle()
-
-
-
 
 
     }
 
-    func dimIfInactive() {
+
+    func makeInactive() {
+
+        active=true;
+        uncheck();
+
+        active = false;
+        setTitleColor(UIColor(rgba: colors.lightGray), forState: .Normal)
+    }
+
+    func makeActive() {
+        active = true
+        uncheck();
+        setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
+    }
+
+    func dimIfUnchecked() {
         if (checked==false) {
             println("dimmed")
             setTitleColor(UIColor(rgba: colors.mainGrey).lighterColor(0.9), forState: .Normal)
@@ -88,9 +137,11 @@ class PlatformButtonToggle: UIButton {
     }
 
     func uncheck() {
-        checked = false;
-        backgroundColor = UIColor.whiteColor()
-        setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
+        if (active) {
+            checked = false;
+            backgroundColor = UIColor.whiteColor()
+            setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
+        }
     }
 
     func setSelectionStyle() {

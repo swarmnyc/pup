@@ -52,6 +52,10 @@ class HorizontalSelectController: UIViewController, SimpleButtonDelegate, SwipeG
 
     }
 
+    func getCurrentSelection() -> String {
+        return self.horizontalView.getSelected(self.data.currentSelection)
+    }
+
     func setUpView(parentView: UIView, bottomOffset: Double) {
         horizontalView.setUpView(parentView, bottomOffset: bottomOffset)
 

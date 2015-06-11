@@ -10,7 +10,7 @@ import Alamofire
 class singleLobby {
     var data = LobbyData();
     var empty = false;
-
+    var isMember = false;
     init() {
 
     }
@@ -29,6 +29,28 @@ class singleLobby {
 
         return false;
 
+
+    }
+
+
+    func joinLobby(success: () -> Void, failure: () -> Void) {
+
+
+        let URL = NSURL(string: urls.joinLobby + self.data.id)!
+        let mutableURLRequest = NSMutableURLRequest(URL: URL)
+        mutableURLRequest.HTTPMethod = "POST"
+
+        var JSONSerializationError: NSError? = nil
+        //mutableURLRequest.HTTPBody = urlEnd;
+        mutableURLRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        mutableURLRequest.setValue("Bearer \(currentUser.data.accessToken)", forHTTPHeaderField: "Authorization")
+
+        Alamofire.request(mutableURLRequest).responseJSON { (request, response, JSON, error) in
+            success();
+            println(error)
+            println("---")
+            println(JSON)
+        }
 
     }
 
@@ -53,25 +75,19 @@ class singleLobby {
         var user = detailed["users"] as! NSArray
 
         for (var i = 0; i<user.count; i++) {
+
+            if user[i]["userName"] as! String == currentUser.data.name {
+                isMember = true;
+
+            }
+
             if (user[i]["isOwner"] as! Bool) {
                 data.owner = SingleLobbyUser(data: user[i] as! NSDictionary)
             } else {
                 data.users.append(SingleLobbyUser(data: user[i] as! NSDictionary));
             }
         }
-//        var user = detailed["users"] as! NSDictionary
-//        for (var i = 0;)
-//        for (index: String, subJson: JSON) in detailed["users"] {
-//            //println(subJson)
-//            var isLeave = subJson["isLeave"].boolValue
-//            var isOwner = subJson["isOwner"].boolValue
-//            var id = subJson["id"].stringValue
-//            var name = subJson["userName"].stringValue
-//            if (isOwner) {
-//                data.owner = SingleLobbyUser(isLeave: isLeave, id: id, isOwner: isOwner, name: name)
-//            }
-//            data.users.append(SingleLobbyUser(isLeave: isLeave,  id: id, isOwner: isOwner, name: name))
-//        }
+
 
     }
 

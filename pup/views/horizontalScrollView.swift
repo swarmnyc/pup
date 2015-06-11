@@ -165,6 +165,11 @@ class HorizontalSelectView: UIView {
     }
 
 
+    func getSelected(selected: Int) -> String {
+        return self.options[selected].text!;
+
+    }
+
     func setSelected(selected: Int) {
 
         for (var i = 0; i<self.options.count; i++) {

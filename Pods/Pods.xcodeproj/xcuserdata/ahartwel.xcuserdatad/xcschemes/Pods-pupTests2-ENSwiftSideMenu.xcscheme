@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "886B4E8653009ACD1CC09D25"
+               BlueprintIdentifier = "B77FC79523B46FF3D4EE59DB"
                BuildableName = "ENSwiftSideMenu.framework"
                BlueprintName = "Pods-pupTests2-ENSwiftSideMenu"
                ReferencedContainer = "container:Pods.xcodeproj">

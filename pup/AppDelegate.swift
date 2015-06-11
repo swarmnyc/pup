@@ -8,6 +8,8 @@
 //
 
 import UIKit
+import SwiftLoader
+
 var colors: appColors = appColors();
 
 var urls: appURLS = appURLS();
@@ -18,6 +20,8 @@ var currentUser: User = User()
 
 var appData: miscData = miscData()
 
+
+
 //let cache = Shared.JSONCache
 //let cache = Haneke.sharedJSONCache
 
@@ -27,7 +31,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var nav:UINavigationController?
-    
+
+
+
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
 

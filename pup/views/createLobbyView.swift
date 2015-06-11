@@ -15,14 +15,16 @@ class CreateLobbyView: UIView {
 
     var scrollView: UIScrollView = UIScrollView()
     var containerView: UIView = UIView()
-    var dateDisplay: DateDisplayView = DateDisplayView();
-    var timeDisplay: TimeDisplayView = TimeDisplayView();
+    var dateDisplay: DateDisplayView?
+    var timeDisplay: TimeDisplayView?
     var descriptionEditor: DescriptionEditor = DescriptionEditor();
+    var createLobbyButton: UIButton = UIButton();
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
         backgroundColor=UIColor.whiteColor()
+
 
     }
 
@@ -30,6 +32,17 @@ class CreateLobbyView: UIView {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+
+
+    func hideInactivePlatforms(possiblePlatforms: Array<String>) {
+
+        for (var i = 0; i<platforms.count; i++) {
+            platforms[i].hideIfNotNeeded(possiblePlatforms);
+        }
+
+    }
+
+
 
 
     func shortenView(notification: NSNotification) {
@@ -78,6 +91,8 @@ class CreateLobbyView: UIView {
     }
 
 
+
+
     func setImage(imageUrl: String) {
 
         var url = NSURL(string: imageUrl)
@@ -95,10 +110,14 @@ class CreateLobbyView: UIView {
 
 
 
-    func setUpView(parentController: CreateLobbyController) {
+    func setUpView(parentController: CreateLobbyController, dateDisplay: DateDisplayView, timeDisplay: TimeDisplayView) {
 
         var buttonDelegate = parentController as SimpleButtonDelegate;
         var searchDelegate = parentController as UISearchBarDelegate;
+        createLobbyButton.addTarget(parentController, action: "createLobby", forControlEvents: .TouchUpInside)
+
+        createLobbyButton.setTitle("Join Lobby", forState: .Normal)
+        createLobbyButton.setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
 
         descriptionEditor.setDelegate(parentController as UITextViewDelegate)
         descriptionEditor.setUpView()
@@ -119,9 +138,10 @@ class CreateLobbyView: UIView {
 
         headerImage.backgroundColor = UIColor.blackColor();
 
-
-        dateDisplay.setUpView()
-        timeDisplay.setUpView()
+        self.dateDisplay = dateDisplay
+        self.timeDisplay = timeDisplay
+        self.dateDisplay?.setUpView()
+        self.timeDisplay?.setUpView()
 
         pickSystemText.text = "PICK A SYSTEM";
         pickSystemText.font = pickSystemText.font.fontWithSize(11.0);
@@ -149,9 +169,10 @@ class CreateLobbyView: UIView {
         self.containerView.addSubview(headerImage);
         self.containerView.addSubview(searchBar);
         self.containerView.addSubview(pickSystemText)
-        self.containerView.addSubview(dateDisplay)
-        self.containerView.addSubview(timeDisplay)
+        self.containerView.addSubview(dateDisplay!)
+        self.containerView.addSubview(timeDisplay!)
         self.containerView.addSubview(descriptionEditor)
+        self.containerView.addSubview(createLobbyButton)
 
         for i in 0...appData.platforms.count-1 {
             self.containerView.addSubview(platforms[i])
@@ -245,7 +266,7 @@ class CreateLobbyView: UIView {
 
         }
 
-        self.dateDisplay.snp_remakeConstraints { (make) -> Void in
+        self.dateDisplay!.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.containerView).offset(0)
             make.top.equalTo(self.platforms[4].snp_bottom).offset(UIConstants.verticalPadding)
             make.right.equalTo(self.containerView).offset(0)
@@ -253,9 +274,9 @@ class CreateLobbyView: UIView {
 
         }
 
-        self.timeDisplay.snp_remakeConstraints { (make) -> Void in
+        self.timeDisplay!.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.containerView).offset(0)
-            make.top.equalTo(self.dateDisplay.snp_bottom).offset(UIConstants.verticalPadding)
+            make.top.equalTo(self.dateDisplay!.snp_bottom).offset(UIConstants.verticalPadding)
             make.right.equalTo(self.containerView).offset(0)
             make.height.equalTo(90)
 
@@ -269,12 +290,22 @@ class CreateLobbyView: UIView {
 
         }
 
-        dateDisplay.layoutView()
-        timeDisplay.layoutView()
+        self.createLobbyButton.snp_remakeConstraints { (make) -> Void in
+            make.left.equalTo(self.containerView).offset(0)
+            make.right.equalTo(self.containerView).offset(0)
+            make.bottom.equalTo(self.containerView).offset(0)
+            make.height.equalTo(58)
+
+        }
+
+        dateDisplay!.layoutView()
+        timeDisplay!.layoutView()
 
 
 
     }
+
+
 
     func uncheckAllPlatforms() {
         for i in 0...appData.platforms.count-1 {

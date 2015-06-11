@@ -6,6 +6,7 @@
 import Foundation
 import UIKit
 import QuartzCore
+import SwiftLoader
 
 class SingleLobbyController: UIViewController {
 
@@ -37,6 +38,7 @@ class SingleLobbyController: UIViewController {
     override func loadView()
     {
         self.lobbyView = SingleLobbyView();
+        lobbyView?.setUpDelegates(self)
         self.view = self.lobbyView;
     }
 
@@ -49,33 +51,19 @@ class SingleLobbyController: UIViewController {
         currentUser.setPage("Single Lobby")
 
         self.data.getDetailed({
-            lobbyView?.setUpViews(self.data)
+            self.lobbyView?.setUpViews(self.data)
+
+            if (currentUser.loggedIn() == false) {
+                self.logInButton = JoinButton(parentController: self)
+                self.logInButton?.onSuccessJoin = self.joinLobby
+            }
+
         }, failure: {
 
         })
-      //  let requestUrl = NSURL(string: "\(urls.lobbies)\(data.data.id)")
-
-//        let task = NSURLSession.sharedSession().dataTaskWithURL(requestUrl!) {(data, response, error) in
-//            println(error)
-////            let jsonResponse = JSON(data: data)
-////            self.data.addDetailed(jsonResponse)
-////            // println(jsonResponse)
-////
-////            dispatch_async(dispatch_get_main_queue(),{
-////
-////                self.lobbyView?.setUpViews(self.data)
-////
-////            })
-//        }
-
-      //  task.resume()
 
 
 
-        if (currentUser.loggedIn() == false) {
-           logInButton = JoinButton(parentController: self)
-            logInButton?.onSuccessJoin = joinLobby
-        }
 
 
 
@@ -102,6 +90,22 @@ class SingleLobbyController: UIViewController {
 
     func joinLobby() {
         println("joining this lobby")
+        var config = SwiftLoader.Config()
+        config.size = 150
+        config.spinnerColor = UIColor(rgba: colors.orange)
+        config.backgroundColor = UIColor(rgba: colors.mainGrey)
+
+        SwiftLoader.setConfig(config);
+        SwiftLoader.show(title: "Loading...", animated: true)
+        data.joinLobby({
+            println("successfully joined")
+            self.lobbyView?.joinLobbyButton.removeFromSuperview();
+            SwiftLoader.hide()
+        }, failure: {
+            println("failed")
+            SwiftLoader.hide()
+        })
+
     }
 
     override func didReceiveMemoryWarning() {

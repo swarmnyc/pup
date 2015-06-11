@@ -23,7 +23,8 @@ class LobbyData {
     var breakdownTitle:String = ""
     var users: Array<SingleLobbyUser> = []
     var owner = SingleLobbyUser()
-
+    var tags = []
+    var QBChateRoomId: String = ""
     var getTagText: String {
         get {
             return "\(playStyle), \(skillLevel)"
@@ -62,15 +63,18 @@ class LobbyData {
         name = data["name"] as! String
         pictureUrl = data["pictureUrl"] as! String
         thumbnailPictureUrl = data["thumbnailPictureUrl"] as! String
-        description = data["description"] as! String
-        description = data["description"] as! String
+        if (data["description"] != nil) {
+            description = data["description"] as! String
+        }
         platform = data["platform"] as! String
         platform = data["platform"] as! String
         playStyle = data["playStyle"] as! String
         skillLevel = data["skillLevel"] as! String
         startTimeUtc = data["startTimeUtc"] as! String
-
-
+        tags = data["tags"] as! Array<Dictionary<String, String>>
+        QBChateRoomId = tags[0]["value"] as! String
+        println(tags[0])
+        println(QBChateRoomId)
 
     }
 
@@ -156,6 +160,7 @@ class LobbyList {  //collection of all the current games
 
 
             Alamofire.request(.GET, url).responseJSON { (request, response, responseJSON, error) in
+
                 var resp: NSArray = responseJSON! as! NSArray
 
                 println(resp);

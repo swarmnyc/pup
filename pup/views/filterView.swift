@@ -37,11 +37,11 @@ class FilterView: UIView {
 
 
 
-    func dimInactiveButtons() {
+    func dimUncheckedButtons() {
         println("dimming")
         for i in 0...appData.platforms.count-1 {
 
-            platforms[i].dimIfInactive()
+            platforms[i].dimIfUnchecked()
 
         }
     }

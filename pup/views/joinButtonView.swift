@@ -63,7 +63,7 @@ class JoinButtonView: PlatformButtonToggle {
         addSubview(topLabel)
         addSubview(bottomLabel)
         parentView.addSubview(self)
-
+        parentView.bringSubviewToFront(self)
 
     }
 

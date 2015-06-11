@@ -114,6 +114,7 @@
 		85DD2D0549CB0795A4CB448B /* horizontalScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2FE2DE6479C5ED1CF81A /* horizontalScrollView.swift */; };
 		85DD2D07CF454E8D5D135FFB /* ConstraintAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD20F1DE2CB692EA098B2F /* ConstraintAttributes.swift */; };
 		85DD2D46FD764FFB08807954 /* createLobbyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2C5A26754E9EEB02E8F9 /* createLobbyController.swift */; };
+		85DD2DCC8C6E33DED8EF8987 /* errorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD27F3E7DC0D3E93059A12 /* errorAlert.swift */; };
 		85DD2DCE811E5EAE2E729E3A /* joinButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD22E1CB17BAA3D2E0A5D9 /* joinButton.swift */; };
 		85DD2E033BE6E2E2297094ED /* NetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD252C01D5A13C68981CC9 /* NetData.swift */; };
 		85DD2E066EEA6EB05975778A /* joinButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2F60BC55361AC5C0222B /* joinButtonView.swift */; };
@@ -122,6 +123,7 @@
 		85DD2E7A191936F70E69E916 /* createLobbyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD27C4B75AE527CF4ECB8A /* createLobbyView.swift */; };
 		85DD2EE98D3FF35DCC423ABD /* ParameterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD22A56C2D2B7DE91931C7 /* ParameterEncoding.swift */; };
 		85DD2F1191EF8338EB29C62C /* settingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD23472B559B5911C5614F /* settingsController.swift */; };
+		85DD2F6A81EFA0D9372ECA7B /* errorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD27F3E7DC0D3E93059A12 /* errorAlert.swift */; };
 		85DD2F75F62A6A813B2EDA4A /* ConstraintDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2DA02911862CD98932A6 /* ConstraintDescription.swift */; };
 		85DD2F8C3048F494207B135C /* LayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD29F3BC4E4E112590B364 /* LayoutConstraint.swift */; };
 		85DD2FC34F263F39112594D4 /* HTTPResponseSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2401CFE977F69642CFBE /* HTTPResponseSerializer.swift */; };
@@ -209,6 +211,7 @@
 		85DD27ACEAAB289844D30C60 /* ConstraintItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintItem.swift; sourceTree = "<group>"; };
 		85DD27C4B75AE527CF4ECB8A /* createLobbyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = createLobbyView.swift; path = views/createLobbyView.swift; sourceTree = "<group>"; };
 		85DD27E31AD0E3012A386959 /* datePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = datePicker.swift; path = datePicker/datePicker.swift; sourceTree = "<group>"; };
+		85DD27F3E7DC0D3E93059A12 /* errorAlert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = errorAlert.swift; sourceTree = "<group>"; };
 		85DD28B7F6AF40194C68913F /* NetUploadTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetUploadTask.swift; sourceTree = "<group>"; };
 		85DD28D81A9D1BB3BF8FFBD5 /* Constraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constraint.swift; sourceTree = "<group>"; };
 		85DD28D9F7E47CBB5773C363 /* searcherDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = searcherDelegate.swift; path = protocols/searcherDelegate.swift; sourceTree = "<group>"; };
@@ -483,6 +486,7 @@
 				85DD228148A69D018E0E6E6D /* transitionManager.swift */,
 				85DD22DCD70AD4F7485D0CDF /* emailTesting.swift */,
 				85DD221A5EDDBA6CD05235E0 /* formDataLibrary.swift */,
+				85DD27F3E7DC0D3E93059A12 /* errorAlert.swift */,
 			);
 			path = helperFunctions;
 			sourceTree = "<group>";
@@ -874,6 +878,7 @@
 				85DD21A292BBF60EF9519721 /* ENSideMenuNavigationController.swift in Sources */,
 				85DD2F1191EF8338EB29C62C /* settingsController.swift in Sources */,
 				85DD244E83A1D47A31C288AB /* settingsView.swift in Sources */,
+				85DD2DCC8C6E33DED8EF8987 /* errorAlert.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -920,6 +925,7 @@
 				85DD2958249B8679231639DE /* NetDownloadTask.swift in Sources */,
 				85DD2FFE5A053ACFC263AFBB /* NetResponseData.swift in Sources */,
 				85DD2B03F52BBF1719795DED /* NetRequestSerialization.swift in Sources */,
+				85DD2F6A81EFA0D9372ECA7B /* errorAlert.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

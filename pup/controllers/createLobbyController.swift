@@ -5,6 +5,7 @@
 
 import Foundation
 import UIKit
+import SwiftLoader
 
 class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarDelegate, SearchResultsDelegate, UIScrollViewDelegate, UITextViewDelegate {
 
@@ -12,10 +13,15 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
     var searchController: SearchResultsController?;
     var data: SearchResultsModel = SearchResultsModel();
 
+    var newLobbyModel: LobbyCreationModel = LobbyCreationModel();
     var playStyle: HorizontalSelectController?
     var gamerSkill: HorizontalSelectController?
 
-    var logInButton: JoinButton? = nil
+    var logInButton: JoinButton?
+
+
+    var dateDisplay: DateDisplayView = DateDisplayView();
+    var timeDisplay: TimeDisplayView = TimeDisplayView();
 
     required init(coder aDecoder: NSCoder)
     {
@@ -29,7 +35,7 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
     }
 
     override func loadView() {
-        createView.setUpView(self);
+        createView.setUpView(self, dateDisplay: dateDisplay, timeDisplay: timeDisplay);
        self.view = self.createView
     }
 
@@ -46,6 +52,7 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
 
         createView.containerView.addSubview(playStyle!.view)
         createView.containerView.addSubview(gamerSkill!.view)
+        setUpDateCallbacks(updateDate, newTime: updateTime)
 
         playStyle?.setUpView(self.createView.containerView, bottomOffset:  300.0)
         gamerSkill?.setUpView(self.createView.containerView, bottomOffset: 200.0)
@@ -65,8 +72,69 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
     }
 
 
+    func updateTimeText(newDate: NSDate) {
+        timeDisplay.setNewText(newDate)
+    }
+
+    func updateDates(newDate: NSDate) {
+        timeDisplay.currentDate = newDate;
+        dateDisplay.currentDate = newDate;
+    }
+
+
+    func setUpDateCallbacks(newDate: (newDate: NSDate) -> NSDate, newTime: (newDate: NSDate) -> NSDate) {
+        dateDisplay.successfulChange = newDate;
+        timeDisplay.successfulChange = newTime;
+    }
+
+    func updateDate(newDate: NSDate) -> NSDate {
+        println(newDate)
+        newLobbyModel.changeDateDay(newDate)
+        updateTimeText(newLobbyModel.startTime)
+        updateDates(newLobbyModel.startTime)
+        return newLobbyModel.startTime
+    }
+
+    func updateTime(newTime: NSDate) -> NSDate {
+        println(newTime)
+        newLobbyModel.changeDateTime(newTime)
+        updateDates(newLobbyModel.startTime)
+        return newLobbyModel.startTime
+    }
+
+
     func createLobby() {
+
+        newLobbyModel.PlayStyle = playStyle?.getCurrentSelection();
+        newLobbyModel.GamerSkill = gamerSkill?.getCurrentSelection();
+        if (newLobbyModel.checkData()) {
+            var config = SwiftLoader.Config()
+            config.size = 150
+            config.spinnerColor = UIColor(rgba: colors.orange)
+            config.backgroundColor = UIColor(rgba: colors.mainGrey)
+
+            SwiftLoader.setConfig(config);
+            SwiftLoader.show(title: "Loading...", animated: true)
+            newLobbyModel.createRequest(moveToLobby, failure: {})
+        } else {
+
+            var alert = Error(alertTitle: "Could Not Create Lobby", alertText: "Make sure to fill out all of the fields")
+
+        }
         println("createLobby")
+    }
+
+
+    func moveToLobby(newLobby: LobbyData) {
+        let lobbyView = SingleLobbyController(info: newLobby)
+       // self.navigationController?.popViewControllerAnimated(false)
+        //autoreleasepool()
+        var viewControllerArray = NSMutableArray();
+        viewControllerArray.setArray(self.navigationController?.viewControllers as! [AnyObject]!)
+
+        viewControllerArray.replaceObjectAtIndex(viewControllerArray.count - 1,withObject: lobbyView)
+        SwiftLoader.hide()
+        self.navigationController?.setViewControllers(viewControllerArray as [AnyObject], animated: true)
     }
 
     //Get text from the description editor
@@ -75,6 +143,8 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
 
 
         textView.resignFirstResponder();
+        newLobbyModel.description = textView.text;
+
         return true
     }
 
@@ -149,7 +219,15 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
         println(imageURL)
         println("got it!")
         createView.setImage(imageURL);
+        //GAME SELECT PLATFORM FILTERING HERE
 
+        newLobbyModel.possiblePlatforms = data.Platforms;
+
+        createView.hideInactivePlatforms(data.Platforms)
+
+        println(data.Platforms)
+        println("platform formatting")
+        newLobbyModel.gameId = data.id;
 
     }
 
@@ -169,6 +247,9 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
         closeEverything();
 
         createView.uncheckAllPlatforms()
+
+        newLobbyModel.selectedPlatform = theButton.currentTitle!
+
         println(theButton)
        println(theButton.currentTitle!)
     }

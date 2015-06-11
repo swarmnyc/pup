@@ -24,11 +24,12 @@ struct miscData {
     var platforms: Array<String> = ["Steam or PC", "XBOX 360", "XBOX ONE", "PS3", "PS4"]
     var platformDict = ["Steam or PC": "Steam", "XBOX 360": "Xbox360", "XBOX ONE": "XboxOne", "PS3": "PS3", "PS4": "PS4"];
 
+
 }
 
 
 struct appURLS {
-    var apiBase = "http://pup-secondary.azurewebsites.net/api/"
+    var apiBase = "http://pup-dev.azurewebsites.net/api/"
     var lobbies: String {
         get {
           return  "\(apiBase)lobby/"
