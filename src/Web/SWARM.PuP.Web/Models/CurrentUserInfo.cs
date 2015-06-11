@@ -25,7 +25,7 @@ namespace SWARM.PuP.Web.ViewModels
         
         public IEnumerable<PuPTag> Tags { get; set; }
 
-        public IEnumerable<string> Media { get; set; }
+        public IEnumerable<SocialMediumType> Media { get; set; }
     }
 
     public class CurrentUserToken : CurrentUserInfo

@@ -4,14 +4,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SWARM.PuP.Web.Models
 {
+    public enum SocialMediumType
+    {
+        Facebook,
+        Twitter
+    }
+
     public class SocialMedium
     {
         [Required]
-        public string Type { get; set; }
+        public SocialMediumType Type { get; set; }
         [Required]
         public string UserId { get; set; }
         [Required]
         public string Token { get; set; }
+        public string Secret { get; set; }
         [Required]
         public DateTime ExpireAtUtc { get; set; }
 
@@ -34,7 +41,7 @@ namespace SWARM.PuP.Web.Models
 
         public override string ToString()
         {
-            return Type;
+            return Type.ToString();
         }
     }
 }

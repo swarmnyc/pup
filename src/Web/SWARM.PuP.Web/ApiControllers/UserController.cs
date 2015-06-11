@@ -195,7 +195,7 @@ namespace SWARM.PuP.Web.ApiControllers
         }
 
         [Authorize, HttpDelete, Route("Medium/{type}"), ModelValidate]
-        public IHttpActionResult DeleteMedium(string type)
+        public IHttpActionResult DeleteMedium(SocialMediumType type)
         {
             var user = User.Identity.GetPuPUser();
             user.Media.Remove(user.Media.First(x => x.Type == type));

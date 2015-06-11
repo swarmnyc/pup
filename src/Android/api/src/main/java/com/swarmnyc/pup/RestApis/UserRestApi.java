@@ -1,12 +1,10 @@
 package com.swarmnyc.pup.RestApis;
 
+import com.swarmnyc.pup.models.SocialMedium;
 import com.swarmnyc.pup.viewmodels.UserRequestResult;
 
-import retrofit.Callback;
 import retrofit.http.*;
 import retrofit.mime.TypedFile;
-
-import java.util.Date;
 
 public interface UserRestApi
 {
@@ -53,24 +51,16 @@ public interface UserRestApi
 		RestApiCallback callback
 	);
 
-	@FormUrlEncoded
 	@POST( "/User/Medium" )
 	void addMedium(
-		@Field( "type" )
-		String type,
-		@Field( "userId" )
-		String userId,
-		@Field( "token" )
-		String token,
-		@Field( "ExpireAtUtc" )
-		String expireAt,
+		@Body
+		SocialMedium token,
 		RestApiCallback callback
 	);
 
-	@FormUrlEncoded
-	@DELETE( "/User/Medium" )
+	@DELETE( "/User/Medium/{Type}" )
 	void deleteMedium(
-		@Field( "type" )
+		@Path( "Type" )
 		String type,
 		RestApiCallback callback
 	);

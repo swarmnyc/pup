@@ -7,6 +7,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.PuPApplication;
+import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.Services.UserService;
 import com.swarmnyc.pup.User;
@@ -18,7 +19,7 @@ public class FacebookHelper
 {
 	static CallbackManager callbackManager;
 
-	public static void getAndSubmitToken( final ServiceCallback serviceCallback )
+	public static void startLoginRequire( final ServiceCallback serviceCallback )
 	{
 		if ( callbackManager == null )
 		{
@@ -33,6 +34,7 @@ public class FacebookHelper
 					{
 						AccessToken at = loginResult.getAccessToken();
 						UserService userService = PuPApplication.getInstance().getComponent().getUserService();
+
 						userService.addFacebookToken(
 							at.getUserId(), at.getToken(), at.getExpires(), new ServiceCallback()
 							{
@@ -40,7 +42,7 @@ public class FacebookHelper
 								public void success( final Object value )
 								{
 									User.addMedium( Consts.KEY_FACEBOOK );
-									Toast.makeText( MainActivity.getInstance(), "Connected", Toast.LENGTH_LONG )
+									Toast.makeText( MainActivity.getInstance(), R.string.message_connect_success, Toast.LENGTH_LONG )
 									     .show();
 
 									if ( serviceCallback != null )
@@ -59,7 +61,7 @@ public class FacebookHelper
 					@Override
 					public void onError( final FacebookException e )
 					{
-						Toast.makeText( MainActivity.getInstance(), "Connection Failed", Toast.LENGTH_LONG ).show();
+						Toast.makeText( MainActivity.getInstance(),R.string.message_connect_failure, Toast.LENGTH_LONG ).show();
 					}
 				}
 			);
@@ -71,7 +73,7 @@ public class FacebookHelper
 	}
 
 
-	public static void checkActivityResult( final int requestCode, final int resultCode, final Intent data )
+	public static void handleActivityResult( final int requestCode, final int resultCode, final Intent data )
 	{
 		if ( callbackManager != null )
 		{ callbackManager.onActivityResult( requestCode, resultCode, data ); }

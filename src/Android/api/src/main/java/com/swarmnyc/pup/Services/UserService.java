@@ -27,4 +27,10 @@ public interface UserService
     void deleteFacebookToken(
         ServiceCallback callback
     );
+
+    void addTwitterToken( String userId, String token, String secret, ServiceCallback callback );
+
+    void deleteTwitterToken(
+        ServiceCallback callback
+    );
 }

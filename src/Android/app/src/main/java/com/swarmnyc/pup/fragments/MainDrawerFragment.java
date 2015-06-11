@@ -289,6 +289,8 @@ public class MainDrawerFragment extends Fragment
 
 	public void showRightDrawer()
 	{
-		m_drawerLayout.openDrawer( GravityCompat.END );
+		if ( m_drawerLayout.getDrawerLockMode( GravityCompat.END )!= DrawerLayout.LOCK_MODE_LOCKED_CLOSED ){
+			m_drawerLayout.openDrawer( GravityCompat.END );
+		}
 	}
 }

@@ -81,6 +81,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/text_facebook"
                 android:id="@+id/switch_facebook"/>
+
+        <Switch
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_twitter"
+                android:id="@+id/switch_twitter"/>
     </LinearLayout>
 
 

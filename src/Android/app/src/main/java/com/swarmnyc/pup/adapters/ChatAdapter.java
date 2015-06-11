@@ -21,17 +21,21 @@ import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatMessageListener;
 import com.swarmnyc.pup.chat.ChatRoomService;
+import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.FacebookHelper;
+import com.swarmnyc.pup.components.TwitterHelper;
 import com.swarmnyc.pup.models.Lobby;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ChatMessageListener
 {
-	private static final int HEADER = 0;
-	private static final int SHARE  = -1;
-	private static final int ITEM   = 1;
+	private static final int HEADER   = 0;
+	private static final int SHARE    = -1;
+	private static final int LOADDING = -2;
+	private static final int ITEM     = 1;
 	ChatRoomService   m_chatRoomService;
 	List<ChatMessage> m_chatMessages;
 	LobbyService      m_lobbyService;
@@ -39,10 +43,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	private Lobby          m_lobby;
 	private LayoutInflater m_inflater;
 	private RecyclerView   m_recyclerView;
+	private boolean        isloaded;
 
 	public ChatAdapter(
-		final Context context, final LobbyService lobbyService, final ChatRoomService chatRoomService, final Lobby
-		lobby
+		final Context context, final LobbyService lobbyService, final ChatRoomService chatRoomService, final Lobby lobby
 	)
 	{
 		m_context = context;
@@ -53,7 +57,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 		m_chatRoomService = chatRoomService;
 		m_chatRoomService.setMessageListener( this );
-		m_chatRoomService.login();
+		m_chatRoomService.login(
+			new Action()
+			{
+				@Override
+				public void call( final Object value )
+				{
+					isloaded = true;
+					notifyDataSetChanged();
+				}
+			}
+		);
 	}
 
 	@Override
@@ -68,6 +82,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 		{
 			View view = m_inflater.inflate( R.layout.item_lobby_chat_share, parent, false );
 			return new ShareViewHolder( view );
+		}
+		else if ( viewType == LOADDING )
+		{
+			View view = m_inflater.inflate( R.layout.item_lobby_chat_loading, parent, false );
+			return new LoadingViewHolder( view );
 		}
 		else
 		{
@@ -90,7 +109,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	{
 		if ( m_chatMessages.size() == 0 )
 		{
-			return position == HEADER ? HEADER : SHARE;
+			if ( isloaded )
+			{ return position == HEADER ? HEADER : SHARE; }
+			else
+			{ return position == HEADER ? HEADER : LOADDING; }
 		}
 		else
 		{
@@ -103,7 +125,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	{
 		if ( m_chatMessages.size() == 0 )
 		{
-			return 2;
+			return m_lobby.isDwellingUser( User.current.getId() ) ? 2 : 1;
 		}
 		else
 		{
@@ -134,7 +156,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 		//TODO: Better Scrolling
 		m_recyclerView.scrollToPosition( m_chatMessages.size() );
 	}
-
 
 	class ItemViewHolder extends RecyclerView.ViewHolder
 	{
@@ -171,9 +192,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 			nameText.setText( chatMessage.getUser().getUserName() );
 			messageText.setText( chatMessage.getBody() );
 
-			if ( chatMessage.getUser().getId().equals( User.current.getId() ) ){
+			if ( chatMessage.getUser().getId().equals( User.current.getId() ) )
+			{
 				container.setBackgroundResource( R.color.pup_my_chat );
-			}else {
+			}
+			else
+			{
 				container.setBackgroundResource( R.color.pup_white );
 			}
 
@@ -219,47 +243,121 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 	class ShareViewHolder extends RecyclerView.ViewHolder
 	{
+		@InjectView( R.id.btn_facebook )
+		View m_facebookButton;
+
+		@InjectView( R.id.btn_twitter )
+		View m_twitterButton;
+
 		public ShareViewHolder( final View view )
 		{
 			super( view );
 			ButterKnife.inject( this, view );
 
-			view.setVisibility( User.isLoggedIn()? View.VISIBLE: View.GONE );
+			setButtonState( User.current.hasMedium( Consts.KEY_FACEBOOK ), m_facebookButton );
+			setButtonState( User.current.hasMedium( Consts.KEY_TWITTER ), m_twitterButton );
+		}
+
+		private void setButtonState( boolean share, View button )
+		{
+			button.setActivated( share );
+			button.setAlpha( share ? 1f : 0.5f );
+		}
+
+		@OnClick( R.id.btn_facebook )
+		void tapOnFacebook()
+		{
+			if ( m_facebookButton.isActivated() )
+			{
+				setButtonState( false, m_facebookButton );
+			}
+			else
+			{
+				if ( User.current.hasMedium( Consts.KEY_FACEBOOK ) )
+				{
+					setButtonState( true, m_facebookButton );
+				}
+				else
+				{
+					FacebookHelper.startLoginRequire(
+						new ServiceCallback()
+						{
+							@Override
+							public void success( final Object value )
+							{
+								setButtonState( true, m_facebookButton );
+							}
+						}
+					);
+				}
+			}
+		}
+
+		@OnClick( R.id.btn_twitter )
+		void tapOnTwitter()
+		{
+			if ( m_twitterButton.isActivated() )
+			{
+				setButtonState( false, m_twitterButton );
+			}
+			else
+			{
+				if ( User.current.hasMedium( Consts.KEY_TWITTER ) )
+				{
+					setButtonState( true, m_twitterButton );
+				}
+				else
+				{
+					TwitterHelper.startLoginRequire(
+						new ServiceCallback()
+						{
+							@Override
+							public void success( final Object value )
+							{
+								setButtonState( true, m_twitterButton );
+							}
+						}
+					);
+				}
+			}
 		}
 
 		@OnClick( R.id.btn_invite )
 		void invite()
 		{
-			if ( User.current.hasMedium( Consts.KEY_FACEBOOK ) )
+			List<String> types = new ArrayList<>();
+			if ( m_facebookButton.isActivated() )
+			{ types.add( Consts.KEY_FACEBOOK ); }
+
+			if ( m_twitterButton.isActivated() )
+			{ types.add( Consts.KEY_TWITTER ); }
+
+			if ( types.size() == 0 )
 			{
-				doInvite();
+				Toast.makeText( m_context, "You need to choose at least one social medium", Toast.LENGTH_SHORT ).show();
 			}
 			else
 			{
-				FacebookHelper.getAndSubmitToken(
-					new ServiceCallback()
+				m_lobbyService.invite(
+					m_lobby.getId(), types, new ServiceCallback()
 					{
 						@Override
 						public void success( final Object value )
 						{
-							doInvite();
+							Toast.makeText( m_context, "Invite Succeeded", Toast.LENGTH_SHORT ).show();
 						}
 					}
 				);
 			}
-		}
 
-		private void doInvite(){
-			m_lobbyService.invite(
-				m_lobby.getId(), new ServiceCallback()
-				{
-					@Override
-					public void success( final Object value )
-					{
-						Toast.makeText( m_context, "Invite Succeeded", Toast.LENGTH_SHORT ).show();
-					}
-				}
-			);
+		}
+	}
+
+	class LoadingViewHolder extends RecyclerView.ViewHolder
+	{
+		public LoadingViewHolder( final View view )
+		{
+			super( view );
 		}
 	}
 }

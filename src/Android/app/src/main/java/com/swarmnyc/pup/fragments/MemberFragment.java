@@ -50,6 +50,12 @@ public class MemberFragment extends Fragment
 		m_lobby = lobby;
 	}
 
+	public void refresh()
+	{
+		if ( this.isAdded() )
+		{ m_memberList.setAdapter( new MemberAdapter( this.getActivity(), m_lobby.getUsers() ) ); }
+	}
+
 	private class MemberViewHolder extends RecyclerView.ViewHolder
 	{
 		private LobbyUserInfo m_user;
