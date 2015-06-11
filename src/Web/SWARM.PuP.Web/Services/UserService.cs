@@ -38,6 +38,11 @@ namespace SWARM.PuP.Web.Services
             return GetSingle(x => x.Email.ToLower() == email.ToLower());
         }
 
+        public PuPUser FindByNameOrEmail(string email, string username)
+        {
+            return GetSingle(x => x.Email.ToLower() == email.ToLower() || x.UserName.ToLower() == username.ToLower());
+        }
+
         public bool CheckExist(string email, string username)
         {
             return

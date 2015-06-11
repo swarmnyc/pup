@@ -45,7 +45,7 @@ namespace SWARM.PuP.Web.ApiControllers
             }
 
 
-            return ResponseMessage(GenerateCurrentUserInfoMessage(user, errorMessage));
+            return UserInfoResult(user, errorMessage);
         }
 
         [HttpPost]
@@ -88,20 +88,25 @@ namespace SWARM.PuP.Web.ApiControllers
             {
                 return BadRequest();
             }
-
-            var response = GenerateCurrentUserInfoMessage(user, "");
-            return ResponseMessage(response);
+            
+            return UserInfoResult(user, "");
         }
 
         [HttpPost]
         [Route("~/api/Register"), ModelValidate]
-        public ResponseMessageResult Register(RegisterViewModel model)
+        public IHttpActionResult Register(RegisterViewModel model)
         {
             string errorMessage = null;
-            PuPUser user = null;
-            if (_userService.CheckExist(model.Email, model.UserName))
+            PuPUser user = _userService.FindByNameOrEmail(model.Email, model.UserName);
+            if (user != null)
             {
-                errorMessage = ErrorCode.E002Exist;
+                // If username and email are the same, then login 
+                if (!user.Email.Equals(model.Email, StringComparison.CurrentCultureIgnoreCase) || 
+                    !user.UserName.Equals(model.UserName, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    user = null;
+                    errorMessage = ErrorCode.E002Exist;
+                }
             }
             else
             {
@@ -126,7 +131,7 @@ namespace SWARM.PuP.Web.ApiControllers
                 user = _userService.Add(user);
             }
 
-            return ResponseMessage(GenerateCurrentUserInfoMessage(user, errorMessage));
+            return UserInfoResult(user, errorMessage);
         }
 
         private static string GetUserPortraitUrl(PuPUser user)
@@ -205,7 +210,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        private HttpResponseMessage GenerateCurrentUserInfoMessage(PuPUser user, string errorMessage)
+        private IHttpActionResult UserInfoResult(PuPUser user, string errorMessage)
         {
             var response = Request.CreateResponse(HttpStatusCode.OK);
             var result = new RequestResult<CurrentUserToken>();
@@ -237,7 +242,7 @@ namespace SWARM.PuP.Web.ApiControllers
                 NoCache = true
             };
 
-            return response;
+            return new ResponseMessageResult(response);
         }
     }
 }
