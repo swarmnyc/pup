@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0EE049F280A2C6E63E0BDB01"
+               BlueprintIdentifier = "B4DF9013E78B5D5F76F0F74B"
                BuildableName = "SwiftHTTP.framework"
                BlueprintName = "Pods-pupTests-SwiftHTTP"
                ReferencedContainer = "container:Pods.xcodeproj">

@@ -21,7 +21,6 @@ target 'pupTests' do
   pod 'HanekeSwift'
   pod 'ENSwiftSideMenu', '~> 0.0'
   pod 'SwiftLoader'
-  pod 'QuickBlox'
 end
 
 target 'pupTests2' do

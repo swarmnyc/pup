@@ -14,7 +14,7 @@ struct userInfo {
     var name = ""
     var tags = [["" : ""]]
     var QBChatId = ""
-    var QBChatUserName = ""
+
 }
 
 
@@ -43,7 +43,6 @@ class User {
                 data.userId = localStorage.valueForKey("userId") as! String
                 data.name = localStorage.valueForKey("name") as! String
                 data.QBChatId = localStorage.valueForKey("QBChatId") as! String
-                data.QBChatUserName = localStorage.valueForKey("QBChatUserName") as! String
 
             }
 
@@ -59,8 +58,7 @@ class User {
         localStorage.setObject(self.data.userId,forKey: "userId")
         localStorage.setObject(self.data.name,forKey: "name")
         localStorage.setObject(self.data.QBChatId,forKey: "QBChatId")
-        localStorage.setObject(self.data.QBChatUserName,forKey: "QBChatUserName")
-        localStorage.setBool(self.data.loggedIn, forKey: "loggedIn")
+             localStorage.setBool(self.data.loggedIn, forKey: "loggedIn")
 
     }
 
@@ -122,7 +120,6 @@ class User {
         self.data.userId = userData["id"]! as! String;
         self.data.tags = userData["tags"] as! Array<Dictionary<String, String>>
         self.data.QBChatId = self.data.tags[0]["value"] as! String!
-        self.data.QBChatUserName = self.data.tags[1]["value"] as! String!
         println(self.data)
         self.setLocalStorage()
     }

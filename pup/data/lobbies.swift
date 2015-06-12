@@ -163,7 +163,7 @@ class LobbyList {  //collection of all the current games
 
                 var resp: NSArray = responseJSON! as! NSArray
 
-                println(resp);
+               // println(resp);
 
                 self.updateData(resp);
                 success();

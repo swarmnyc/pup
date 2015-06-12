@@ -5,13 +5,15 @@
 
 import Foundation
 import UIKit
-
+import SwiftLoader
 class RegistrationController: UIViewController, UITextFieldDelegate, ImageButtonDelegate, UIImagePickerControllerDelegate,UINavigationControllerDelegate, RegistrationDelegate {
 
 
     var parentController: UIViewController?
     var registrationView: RegistrationView = RegistrationView();
     var onSuccessJoin: (() -> (Void))?
+    var submitting = false;
+
 
     convenience init(parentController: UIViewController) {
         self.init()
@@ -50,7 +52,17 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
 
     func registerClicked() {
         println("register")
-        registerUser();
+        var config = SwiftLoader.Config()
+        config.size = 150
+        config.spinnerColor = UIColor(rgba: colors.orange)
+        config.backgroundColor = UIColor(rgba: colors.mainGrey)
+
+        SwiftLoader.setConfig(config);
+        SwiftLoader.show(title: "Loading...", animated: true)
+        if (submitting==false) {
+            self.submitting=true;
+            registerUser();
+        }
     }
 
     func closeClicked() {
@@ -66,7 +78,10 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
         println(parentController)
         sideMenuController()?.sideMenu?.reloadData();
         registrationView.hide()
+        SwiftLoader.hide()
+
        // parentController?.removeRegistrationView()
+        self.submitting=false;
         onSuccessJoin!();
     }
 
@@ -181,7 +196,7 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
             if (textField.text == "") {
                 textField.text==UIConstants.emailPlaceholder
             } else {
-              registerUser();
+              registerClicked();
             }
         }
 

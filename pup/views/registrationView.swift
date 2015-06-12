@@ -123,6 +123,7 @@ class RegistrationView: UIView {
     }
 
     func hide() {
+        self.layer.opacity = 0;
        self.removeFromSuperview()
     }
 

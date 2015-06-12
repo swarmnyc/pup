@@ -153,6 +153,7 @@
 
 /* Begin PBXFileReference section */
 		00CCF211B0941FA1D18D3B65 /* Pods_pupTests2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pupTests2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C3897331B2A176600868048 /* pup-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pup-Bridging-Header.h"; sourceTree = "<group>"; };
 		2CCC7F491B0A451400C16A85 /* pup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pup.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CCC7F4D1B0A451400C16A85 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CCC7F4E1B0A451400C16A85 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -198,6 +199,7 @@
 		85DD2401CFE977F69642CFBE /* HTTPResponseSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPResponseSerializer.swift; sourceTree = "<group>"; };
 		85DD247410FFEEC9AB25B772 /* lobbyList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = lobbyList.swift; path = views/lobbyList.swift; sourceTree = "<group>"; };
 		85DD24CD5DCCCA3067A93E89 /* HTTPTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPTask.swift; sourceTree = "<group>"; };
+		85DD24FE962F075571314E81 /* pup-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "pup-Bridging-Header.h"; path = "pup/pup-Bridging-Header.h"; sourceTree = "<group>"; };
 		85DD250C500EFF5FF2F84027 /* searchResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = searchResultsController.swift; path = controllers/searchResultsController.swift; sourceTree = "<group>"; };
 		85DD252C01D5A13C68981CC9 /* NetData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetData.swift; sourceTree = "<group>"; };
 		85DD256BD3A49C314605295B /* selectableTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = selectableTextView.swift; path = views/selectableTextView.swift; sourceTree = "<group>"; };
@@ -299,6 +301,7 @@
 				2CCC7F4A1B0A451400C16A85 /* Products */,
 				74C8B9494AD741D32EB84BEA /* Pods */,
 				4739BB928A5BC208D58F1ED0 /* Frameworks */,
+				85DD24FE962F075571314E81 /* pup-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -366,6 +369,7 @@
 				85DD2F9A7ABFFCD1A7EAA394 /* Library */,
 				85DD23472B559B5911C5614F /* settingsController.swift */,
 				85DD2BD649B18EA543224FA5 /* settingsView.swift */,
+				2C3897331B2A176600868048 /* pup-Bridging-Header.h */,
 			);
 			path = pup;
 			sourceTree = "<group>";
@@ -1034,6 +1038,7 @@
 				INFOPLIST_FILE = pup/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "pup/pup-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1046,6 +1051,7 @@
 				INFOPLIST_FILE = pup/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "pup/pup-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

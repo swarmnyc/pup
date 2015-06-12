@@ -116,7 +116,7 @@ class CreateLobbyView: UIView {
         var searchDelegate = parentController as UISearchBarDelegate;
         createLobbyButton.addTarget(parentController, action: "createLobby", forControlEvents: .TouchUpInside)
 
-        createLobbyButton.setTitle("Join Lobby", forState: .Normal)
+        createLobbyButton.setTitle("Create Lobby", forState: .Normal)
         createLobbyButton.setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
 
         descriptionEditor.setDelegate(parentController as UITextViewDelegate)

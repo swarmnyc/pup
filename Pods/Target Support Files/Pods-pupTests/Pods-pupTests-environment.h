@@ -24,12 +24,6 @@
 #define COCOAPODS_VERSION_MINOR_HanekeSwift 9
 #define COCOAPODS_VERSION_PATCH_HanekeSwift 1
 
-// QuickBlox
-#define COCOAPODS_POD_AVAILABLE_QuickBlox
-#define COCOAPODS_VERSION_MAJOR_QuickBlox 2
-#define COCOAPODS_VERSION_MINOR_QuickBlox 2
-#define COCOAPODS_VERSION_PATCH_QuickBlox 4
-
 // SnapKit
 #define COCOAPODS_POD_AVAILABLE_SnapKit
 #define COCOAPODS_VERSION_MAJOR_SnapKit 0

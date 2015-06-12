@@ -14,6 +14,7 @@ class SingleLobbyController: UIViewController {
 
     var data: singleLobby = singleLobby();
 
+    var submitting = false;
 
 
     var logInButton: JoinButton? = nil
@@ -97,14 +98,20 @@ class SingleLobbyController: UIViewController {
 
         SwiftLoader.setConfig(config);
         SwiftLoader.show(title: "Loading...", animated: true)
-        data.joinLobby({
-            println("successfully joined")
-            self.lobbyView?.joinLobbyButton.removeFromSuperview();
-            SwiftLoader.hide()
-        }, failure: {
-            println("failed")
-            SwiftLoader.hide()
-        })
+        if (submitting==false) {
+            submitting = true;
+            data.joinLobby({
+                self.submitting = false;
+                println("successfully joined")
+                self.lobbyView?.joinLobbyButton.removeFromSuperview();
+                SwiftLoader.hide()
+            }, failure: {
+                println("failed")
+                SwiftLoader.hide()
+                self.submitting = false;
+            })
+
+        }
 
     }
 
