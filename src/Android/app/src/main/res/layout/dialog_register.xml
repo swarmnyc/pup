@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/margin_normal"
-                android:textSize="@dimen/text_label"
+                android:textSize="@dimen/text12"
                 android:text="@string/hint_signup"
                 android:id="@+id/textView"
                 android:layout_alignTop="@+id/img_portrait"

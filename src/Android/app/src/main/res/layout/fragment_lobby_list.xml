@@ -98,7 +98,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/label_select_preferred_system"
-                    android:textSize="@dimen/text_label"
+                    android:textSize="@dimen/text12"
                     android:textColor="@color/pup_orange"
                     android:layout_marginLeft="@dimen/margin_normal"
                     android:layout_marginStart="@dimen/margin_normal"

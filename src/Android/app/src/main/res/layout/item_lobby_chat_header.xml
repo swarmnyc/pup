@@ -28,7 +28,7 @@
             android:layout_alignBottom="@id/img_game"
             android:layout_margin="@dimen/margin_normal"
             android:textColor="@color/pup_white"
-            android:textSize="@dimen/text_bigger"
+            android:textSize="@dimen/text20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

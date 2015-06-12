@@ -31,6 +31,8 @@ import com.swarmnyc.pup.view.GamePlatformSelectView;
 import com.swarmnyc.pup.view.HorizontalSpinner;
 
 import javax.inject.Inject;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CreateLobbyFragment extends Fragment
@@ -375,13 +377,8 @@ public class CreateLobbyFragment extends Fragment
 				s = this.getActivity().getString( R.string.text_tomorrow );
 				break;
 			default:
-				s = String.format(
-					"%s %d",
-					m_selectedDate.getDisplayName( Calendar.MONTH, Calendar.SHORT, Locale.US ),
-					m_selectedDate.get(
-						Calendar.DAY_OF_MONTH
-					)
-				);
+				SimpleDateFormat format = new SimpleDateFormat("MMM dd",Locale.getDefault());
+				s = format.format(m_selectedDate.getTime());
 				break;
 		}
 
@@ -403,14 +400,8 @@ public class CreateLobbyFragment extends Fragment
 		}
 		else
 		{
-			s = String.format(
-				"%d:%d %s",
-				hour,
-				min,
-				hour >= 12
-				? this.getActivity().getString( R.string.time_pm )
-				: this.getActivity().getString( R.string.time_am )
-			);
+			SimpleDateFormat format = new SimpleDateFormat("h:mm a",Locale.getDefault());
+			s = format.format(m_selectedDate.getTime());
 		}
 
 		m_timeText.setText( s );

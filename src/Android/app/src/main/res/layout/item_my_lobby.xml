@@ -55,7 +55,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_small"
+                android:textSize="@dimen/text11"
                 tools:text="XBOX"
                 android:id="@+id/txt_platform"
                 android:textColor="@color/pup_light"
@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/pup_teal"
-                android:textSize="@dimen/text_small"
+                android:textSize="@dimen/text11"
                 android:textStyle="bold"
                 tools:text="17 mins"
                 android:layout_marginTop="50dp"/>

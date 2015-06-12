@@ -36,7 +36,7 @@
                 android:imeOptions="actionDone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_bigger"
+                android:textSize="@dimen/text20"
                 android:hint="@string/hint_game_name"
                 android:textColorHint="@color/pup_white"/>
 
@@ -142,7 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_normal"
-                android:textSize="@dimen/text_small"
+                android:textSize="@dimen/text13"
                 android:textColorHint="@color/pup_light"
                 android:gravity="top"
                 android:lines="5"/>

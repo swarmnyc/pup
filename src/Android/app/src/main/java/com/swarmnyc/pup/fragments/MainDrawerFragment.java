@@ -172,7 +172,8 @@ public class MainDrawerFragment extends Fragment
 					fragment = LobbyListFragment.class;
 					break;
 				case Consts.KEY_FEEDBACK:
-					UserVoice.launchUserVoice( this.getActivity() );
+					//UserVoice.launchUserVoice( this.getActivity() );
+					UserVoice.launchPostIdea(this.getActivity());
 					break;
 				case Consts.KEY_SETTINGS:
 					fragment = SettingsFragment.class;
