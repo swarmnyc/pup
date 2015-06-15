@@ -61,7 +61,7 @@ public class MockChatRoomService extends ChatRoomService
 	}
 
 	@Override
-	public void login()
+	public void login( final boolean loadHistory )
 	{
 		m_handler.sendEmptyMessageDelayed( 0, 1000 );
 	}

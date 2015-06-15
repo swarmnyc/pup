@@ -24,9 +24,11 @@ import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.GamePlatformUtils;
 import com.swarmnyc.pup.components.Screen;
+import com.swarmnyc.pup.events.LobbyUserChanged;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
+import com.swarmnyc.pup.view.DividerItemDecoration;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
@@ -65,6 +67,7 @@ public class LobbyFragment extends Fragment implements Screen
 	private String         m_lobbyName;
 	private MemberFragment m_memberFragment;
 	private String         m_lobbyId;
+	private ChatAdapter    m_chatAdapter;
 
 	@OnClick( R.id.btn_send )
 	void send()
@@ -92,39 +95,17 @@ public class LobbyFragment extends Fragment implements Screen
 	{
 		if ( User.isLoggedIn() )
 		{
-			if ( m_lobby.isDwellingUser( User.current.getId() ) )
-			{
-				initialize();
-			}
-			else
-			{
-				DialogHelper.showProgressDialog( R.string.message_processing );
-				m_lobbyService.join(
-					m_lobby.getId(), new ServiceCallback()
+			DialogHelper.showProgressDialog( R.string.message_processing );
+			m_lobbyService.join(
+				m_lobby.getId(), new ServiceCallback()
+				{
+					@Override
+					public void success( final Object value )
 					{
-						@Override
-						public void success( final Object value )
-						{
-							LobbyUserInfo user = m_lobby.getUser( User.current.getId() );
-							if ( user == null )
-							{
-								user = new LobbyUserInfo();
-								user.setId( User.current.getId() );
-								user.setUserName( User.current.getUserName() );
-								user.setPortraitUrl( User.current.getPortraitUrl() );
-								m_lobby.getUsers().add( user );
-							}
-							else
-							{
-								user.setIsLeave( false );
-							}
-
-							initialize();
-							DialogHelper.hide();
-						}
+						DialogHelper.hide();
 					}
-				);
-			}
+				}
+			);
 		}
 		else
 		{
@@ -134,45 +115,17 @@ public class LobbyFragment extends Fragment implements Screen
 		}
 	}
 
-	private void initialize()
+	@Subscribe
+	public void postUserChanged( LobbyUserChanged changed )
 	{
-		m_container.setVisibility( View.VISIBLE );
-
-		//title
-		MainActivity.getInstance().getToolbar().setTitle( m_lobby.getName() );
-
-		//subtitle
-		long offset = m_lobby.getStartTime().getTime() - TimeUtils.todayTimeMillis();
-		String time;
-		if ( offset < 0 )
+		if ( changed.isCurrentUser() )
 		{
-			SimpleDateFormat format = new SimpleDateFormat( "MMM dd @ h:mm a", Locale.getDefault() );
-			time = "Started " + format.format( m_lobby.getStartTime() );
+			initialize2( false );
 		}
-		else if ( offset < TimeUtils.day_in_millis )
-		{
-			SimpleDateFormat format = new SimpleDateFormat( "@ h:mm a", Locale.getDefault() );
-			time = "Today " + format.format( m_lobby.getStartTime() );
-		}
-		else if ( offset < TimeUtils.week_in_millis )
-		{
-			SimpleDateFormat format = new SimpleDateFormat( "EEEE @ h:mm a", Locale.getDefault() );
-			time = format.format( m_lobby.getStartTime() );
-		}
-		else
-		{
-			SimpleDateFormat format = new SimpleDateFormat( "MMM dd @ h:mm a", Locale.getDefault() );
-			time = format.format( m_lobby.getStartTime() );
-		}
+	}
 
-		Spanned subtitle = Html.fromHtml(
-			String.format(
-				"<small>%s: %s</small>", GamePlatformUtils.labelForPlatform( getActivity(), m_lobby.getPlatform() ), time
-			)
-		);
-
-		MainActivity.getInstance().getToolbar().setSubtitle( subtitle );
-
+	private void initialize2( final boolean loadHistory )
+	{
 		//joinLobby button and text panel
 		if ( User.isLoggedIn() )
 		{
@@ -194,18 +147,8 @@ public class LobbyFragment extends Fragment implements Screen
 			m_textPanel.setVisibility( View.GONE );
 		}
 
-		//chat list
 		m_chatRoomService = m_chatService.getChatRoomService( getActivity(), m_lobby );
-		m_chatList.setAdapter( new ChatAdapter( getActivity(), m_lobbyService, m_chatRoomService, m_lobby ) );
-		m_chatList.setLayoutManager( new LinearLayoutManager( getActivity() ) );
-		/*m_chatList.addItemDecoration(
-			new DividerItemDecoration(
-				getActivity(), DividerItemDecoration.VERTICAL_LIST
-			)
-		);*/
-
-		//refresh member
-		m_memberFragment.refresh();
+		m_chatAdapter.setChatRoomService( m_chatRoomService, loadHistory );
 	}
 
 	@Override
@@ -258,6 +201,60 @@ public class LobbyFragment extends Fragment implements Screen
 				}
 			}
 		);
+	}
+
+	private void initialize()
+	{
+		m_container.setVisibility( View.VISIBLE );
+
+		//title
+		MainActivity.getInstance().getToolbar().setTitle( m_lobby.getName() );
+
+		//subtitle
+		long offset = m_lobby.getStartTime().getTime() - TimeUtils.todayTimeMillis();
+		String time;
+		if ( offset < 0 )
+		{
+			SimpleDateFormat format = new SimpleDateFormat( "MMM dd @ h:mm a", Locale.getDefault() );
+			time = "Started " + format.format( m_lobby.getStartTime() );
+		}
+		else if ( offset < TimeUtils.day_in_millis )
+		{
+			SimpleDateFormat format = new SimpleDateFormat( "@ h:mm a", Locale.getDefault() );
+			time = "Today " + format.format( m_lobby.getStartTime() );
+		}
+		else if ( offset < TimeUtils.week_in_millis )
+		{
+			SimpleDateFormat format = new SimpleDateFormat( "EEEE @ h:mm a", Locale.getDefault() );
+			time = format.format( m_lobby.getStartTime() );
+		}
+		else
+		{
+			SimpleDateFormat format = new SimpleDateFormat( "MMM dd @ h:mm a", Locale.getDefault() );
+			time = format.format( m_lobby.getStartTime() );
+		}
+
+		Spanned subtitle = Html.fromHtml(
+			String.format(
+				"<small>%s: %s</small>", GamePlatformUtils.labelForPlatform( getActivity(), m_lobby.getPlatform() ), time
+			)
+		);
+
+		MainActivity.getInstance().getToolbar().setSubtitle( subtitle );
+
+		m_chatAdapter = new ChatAdapter( getActivity(), m_lobbyService, m_lobby );
+		m_chatList.setAdapter( m_chatAdapter );
+		m_chatList.setLayoutManager( new LinearLayoutManager( getActivity() ) );
+		m_chatList.addItemDecoration(
+			new DividerItemDecoration(
+				getActivity(), DividerItemDecoration.VERTICAL_LIST
+			)
+		);
+
+		//refresh member
+		m_memberFragment.refresh();
+
+		initialize2( true );
 	}
 
 	@Override

@@ -6,7 +6,7 @@ public abstract class ChatRoomService
 
 	public abstract void SendMessage( String message );
 
-	public abstract void login();
+	public abstract void login( final boolean loadHistory );
 
 	public abstract void leave();
 

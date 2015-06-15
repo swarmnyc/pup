@@ -108,14 +108,14 @@ namespace SWARM.PuP.Web.Tests.Services
             }
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void Real_QuickbloxChatService_SendMessage_Test()
         {
             try
             {
                 QuickbloxChatService s = new QuickbloxChatService();
 
-                s.SendMessage(new Lobby()
+                s.SendSystemMessage(new Lobby()
                 {
                     Tags = new List<PuPTag>()
                     {
@@ -128,6 +128,6 @@ namespace SWARM.PuP.Web.Tests.Services
                 var error = e.Response.ReadAll();
                 Assert.Fail(error);
             }
-        }
+        }*/
     }
 }

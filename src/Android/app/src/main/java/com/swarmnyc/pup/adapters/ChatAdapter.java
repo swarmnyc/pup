@@ -12,6 +12,7 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.LobbyService;
@@ -21,7 +22,10 @@ import com.swarmnyc.pup.chat.ChatMessageListener;
 import com.swarmnyc.pup.chat.ChatRoomService;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.TwitterHelper;
+import com.swarmnyc.pup.events.LobbyUserChanged;
 import com.swarmnyc.pup.models.Lobby;
+import com.swarmnyc.pup.models.LobbyUserInfo;
+import com.swarmnyc.pup.models.UserInfo;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -40,10 +44,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	private Lobby          m_lobby;
 	private LayoutInflater m_inflater;
 	private RecyclerView   m_recyclerView;
-	private boolean        isloaded;
+	private boolean        m_isloaded;
 
 	public ChatAdapter(
-		final Context context, final LobbyService lobbyService, final ChatRoomService chatRoomService, final Lobby lobby
+		final Context context, final LobbyService lobbyService, final Lobby lobby
 	)
 	{
 		m_context = context;
@@ -51,11 +55,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 		m_inflater = (LayoutInflater) m_context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 		m_lobbyService = lobbyService;
 		m_chatMessages = new LinkedList<>();
+	}
 
+	public void setChatRoomService( final ChatRoomService chatRoomService, boolean loadHistory )
+	{
 		m_chatRoomService = chatRoomService;
 		m_chatRoomService.setMessageListener( this );
-		m_chatRoomService.login(
-		);
+		m_chatRoomService.login( loadHistory );
 	}
 
 	@Override
@@ -102,7 +108,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	{
 		if ( m_chatMessages.size() == 0 )
 		{
-			if ( isloaded )
+			if ( m_isloaded )
 			{ return position == HEADER ? HEADER : SHARE; }
 			else
 			{ return position == HEADER ? HEADER : SYSTEM; }
@@ -154,11 +160,62 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 	private ChatMessage getChatMessage( final int location ) {return m_chatMessages.get( location - 1 );}
 
 	@Override
-	public void receive( final List<ChatMessage> message )
+	public void receive( final List<ChatMessage> messages )
 	{
-		isloaded = true;
+		m_isloaded = true;
 
-		m_chatMessages.addAll( message );
+		if ( messages.size() == 1 )
+		{
+			ChatMessage cm = messages.get( 0 );
+			if ( cm.isNewMessage() && cm.isSystemMessage() && cm.getCode() != null )
+			{
+				boolean isCurrentUser = false;
+				//Join and Left System messages.
+				if ( cm.getCode().equals( "Join" ) && cm.getCodeBody() != null )
+				{
+					Gson g = new Gson();
+					UserInfo[] users = g.fromJson( cm.getCodeBody(), UserInfo[].class );
+					for ( UserInfo u : users )
+					{
+						isCurrentUser = u.getId().equals( User.current.getId() );
+						LobbyUserInfo user = m_lobby.getUser( u.getId() );
+						if ( user == null )
+						{
+							user = new LobbyUserInfo();
+							user.setId( u.getId() );
+							user.setUserName( u.getUserName() );
+							user.setPortraitUrl( u.getPortraitUrl() );
+							m_lobby.getUsers().add( user );
+						}
+						else
+						{
+							//rejoin
+							user.setIsLeave( false );
+						}
+					}
+
+					EventBus.getBus().post( new LobbyUserChanged( isCurrentUser ) );
+				}
+				else if ( cm.getCode().equals( "Leave" ) && cm.getCodeBody() != null )
+				{
+					Gson g = new Gson();
+					UserInfo[] users = g.fromJson( cm.getCodeBody(), UserInfo[].class );
+					for ( UserInfo u : users )
+					{
+						LobbyUserInfo user = m_lobby.getUser( u.getId() );
+						if ( user != null )
+						{
+							//rejoin
+							user.setIsLeave( true );
+						}
+					}
+
+					EventBus.getBus().post( new LobbyUserChanged( false ) );
+				}
+
+			}
+		}
+		m_chatMessages.addAll( messages );
 		notifyDataSetChanged();
 
 		//TODO: Better Scrolling

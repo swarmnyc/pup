@@ -8,7 +8,6 @@ namespace SWARM.PuP.Web.Services
         void CreateUser(PuPUser user);
         void CreateRoomForLobby(PuPUser owner, Lobby lobby);
         void DeleteUser(PuPUser user);
-        void SendMessage(Lobby lobby, string message);
         void JoinRoom(Lobby lobby, IEnumerable<PuPUser> users);
         void LeaveRoom(Lobby lobby, IEnumerable<PuPUser> users);
     }

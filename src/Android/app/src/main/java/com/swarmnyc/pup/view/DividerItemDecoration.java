@@ -73,7 +73,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 		final int left = parent.getPaddingLeft();
 		final int right = parent.getWidth() - parent.getPaddingRight();
 
-		final int childCount = parent.getChildCount();
+		final int childCount = parent.getChildCount()-1;
 		for (int i = 0; i < childCount; i++) {
 			final View child = parent.getChildAt(i);
 			final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
@@ -89,7 +89,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 		final int top = parent.getPaddingTop();
 		final int bottom = parent.getHeight() - parent.getPaddingBottom();
 
-		final int childCount = parent.getChildCount();
+		final int childCount = parent.getChildCount()-1;
 		for (int i = 0; i < childCount; i++) {
 			final View child = parent.getChildAt(i);
 			final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child

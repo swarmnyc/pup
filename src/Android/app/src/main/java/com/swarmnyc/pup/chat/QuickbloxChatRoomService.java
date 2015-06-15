@@ -52,7 +52,7 @@ public class QuickbloxChatRoomService extends ChatRoomService
 			QBChatMessage chatMessage = new QBChatMessage();
 			chatMessage.setBody( message );
 			chatMessage.setProperty( "userId", User.current.getId() );
-			chatMessage.setProperty( "userName", User.current.getUserName() );
+			//chatMessage.setProperty( "userName", User.current.getUserName() );
 			chatMessage.setDateSent( new Date().getTime() / 1000 );
 			chatMessage.setSaveToHistory( true );
 			m_chat.sendMessage( chatMessage );
@@ -64,7 +64,7 @@ public class QuickbloxChatRoomService extends ChatRoomService
 	}
 
 	@Override
-	public void login()
+	public void login( final boolean loadHistory )
 	{
 		QBUser user = new QBUser();
 		if ( User.isLoggedIn() && m_lobby.isDwellingUser( User.current.getId() ) )
@@ -84,13 +84,13 @@ public class QuickbloxChatRoomService extends ChatRoomService
 				@Override
 				public void success()
 				{
-					joinRoom();
+					joinRoom( loadHistory );
 				}
 			}
 		);
 	}
 
-	private void joinRoom()
+	private void joinRoom( final boolean loadHistory )
 	{
 		if ( m_chat != null && m_chat.isJoined() )
 		{ return; }
@@ -115,7 +115,15 @@ public class QuickbloxChatRoomService extends ChatRoomService
 								List<ChatMessage> messages = new ArrayList<>();
 								LobbyUserInfo user = getLobbyUserInfo( chatMessage );
 
-								messages.add( new ChatMessage( user, chatMessage.getBody() ) );
+								messages.add(
+									new ChatMessage(
+										user,
+										chatMessage.getBody(),
+										true,
+										String.valueOf( chatMessage.getProperty( "code" ) ),
+										String.valueOf( chatMessage.getProperty( "codeBody" ) )
+									)
+								);
 								QuickbloxChatRoomService.this.listener.receive( messages );
 							}
 						}
@@ -147,16 +155,19 @@ public class QuickbloxChatRoomService extends ChatRoomService
 				@Override
 				public void onSuccess()
 				{
-					m_activity.runOnUiThread(
-						new Runnable()
-						{
-							@Override
-							public void run()
+					if ( loadHistory )
+					{
+						m_activity.runOnUiThread(
+							new Runnable()
 							{
-								loadChatHistory();
+								@Override
+								public void run()
+								{
+									loadChatHistory();
+								}
 							}
-						}
-					);
+						);
+					}
 				}
 
 				@Override

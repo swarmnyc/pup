@@ -125,10 +125,6 @@
     <Content Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\SWARM.PuP.Web\setting.config">
-      <Link>setting.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="MockData\import_games.csv" />
     <None Include="MockData\import_games.json" />
     <None Include="MockData\users.json">

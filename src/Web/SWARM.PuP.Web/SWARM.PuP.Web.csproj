@@ -221,6 +221,7 @@
     <Compile Include="Services\Quickblox\QuickbloxApiTypes.cs" />
     <Compile Include="Services\Quickblox\SessionResult.cs" />
     <Compile Include="Startup.cs" />
+    <Content Include="Content\pup.png" />
     <Content Include="Content\User\Cool.txt" />
     <Content Include="Views\Lobby\Index.cshtml" />
   </ItemGroup>
