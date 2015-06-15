@@ -99,11 +99,11 @@ namespace SWARM.PuP.Web.Services.Quickblox
             switch (code)
             {
                 case SystemMessageCode.Join:
-                    message = $"{string.Join(", ", users.Select(x => x.UserName).ToArray())} joined this lobby";
+                    message = string.Format("{0} joined this lobby", string.Join(", ", users.Select(x => x.UserName).ToArray()));
                     codeBody = users.Select(x => new { x.Id, x.UserName, x.PortraitUrl }).ToJson();
                     break;
                 case SystemMessageCode.Leave:
-                    message = $"{string.Join(", ", users.Select(x => x.UserName).ToArray())} left this lobby";
+                    message = string.Format("{0} left this lobby", string.Join(", ", users.Select(x => x.UserName).ToArray()));
                     codeBody = users.Select(x => new { x.Id, x.UserName, x.PortraitUrl }).ToJson();
                     break;
                 default:
