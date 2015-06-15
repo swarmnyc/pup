@@ -17,7 +17,6 @@ public class LobbyFilter extends GameFilter {
 	{
 		this.levels = new HashSet<>();
 		this.styles = new HashSet<>();
-
 	}
 
 	public Game getGame()

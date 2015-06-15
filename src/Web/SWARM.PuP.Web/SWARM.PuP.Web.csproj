@@ -240,6 +240,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
+    <None Include="Properties\PublishProfiles\PuP-Dev.pubxml" />
     <None Include="Properties\PublishProfiles\pup-secondary.pubxml" />
     <None Include="Properties\PublishProfiles\PuP.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

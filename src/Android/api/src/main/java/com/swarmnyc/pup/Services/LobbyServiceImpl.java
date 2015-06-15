@@ -7,6 +7,7 @@ import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.models.Lobby;
 import retrofit.client.Response;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class LobbyServiceImpl implements LobbyService
@@ -134,10 +135,12 @@ public class LobbyServiceImpl implements LobbyService
 	}
 
 	@Override
-	public void invite( final String id, final List<String> types, final ServiceCallback callback )
+	public void invite( final Lobby lobby, final List<String> types, final ServiceCallback callback )
 	{
+		String localTime = new SimpleDateFormat( "MMM dd h:mm a '('zzz')'" ).format( lobby.getStartTime() );
+
 		this.lobbyRestApi.invite(
-			id,types, new EmptyRestApiCallback()
+			lobby.getId(), localTime , types, new EmptyRestApiCallback()
 			{
 				@Override
 				public void success( Response response )

@@ -25,10 +25,8 @@ import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.GamePlatformUtils;
 import com.swarmnyc.pup.components.Screen;
 import com.swarmnyc.pup.events.UserChangedEvent;
-import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
-import com.swarmnyc.pup.view.DividerItemDecoration;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
@@ -94,32 +92,39 @@ public class LobbyFragment extends Fragment implements Screen
 	{
 		if ( User.isLoggedIn() )
 		{
-			DialogHelper.showProgressDialog( R.string.message_processing );
-			m_lobbyService.join(
-				m_lobby.getId(), new ServiceCallback()
-				{
-					@Override
-					public void success( final Object value )
+			if ( m_lobby.isDwellingUser( User.current.getId() ) )
+			{
+				initialize();
+			}
+			else
+			{
+				DialogHelper.showProgressDialog( R.string.message_processing );
+				m_lobbyService.join(
+					m_lobby.getId(), new ServiceCallback()
 					{
-						LobbyUserInfo user = m_lobby.getUser( User.current.getId() );
-						if ( user == null )
+						@Override
+						public void success( final Object value )
 						{
-							user = new LobbyUserInfo();
-							user.setId( User.current.getId() );
-							user.setUserName( User.current.getUserName() );
-							user.setPortraitUrl( User.current.getPortraitUrl() );
-							m_lobby.getUsers().add( user );
-						}
-						else
-						{
-							user.setIsLeave( false );
-						}
+							LobbyUserInfo user = m_lobby.getUser( User.current.getId() );
+							if ( user == null )
+							{
+								user = new LobbyUserInfo();
+								user.setId( User.current.getId() );
+								user.setUserName( User.current.getUserName() );
+								user.setPortraitUrl( User.current.getPortraitUrl() );
+								m_lobby.getUsers().add( user );
+							}
+							else
+							{
+								user.setIsLeave( false );
+							}
 
-						initialize();
-						DialogHelper.hide();
+							initialize();
+							DialogHelper.hide();
+						}
 					}
-				}
-			);
+				);
+			}
 		}
 		else
 		{
@@ -162,7 +167,7 @@ public class LobbyFragment extends Fragment implements Screen
 
 		Spanned subtitle = Html.fromHtml(
 			String.format(
-				"<small>%s: %s</small>", GamePlatformUtils.labelForPlatform(getActivity(), m_lobby.getPlatform()) , time
+				"<small>%s: %s</small>", GamePlatformUtils.labelForPlatform( getActivity(), m_lobby.getPlatform() ), time
 			)
 		);
 

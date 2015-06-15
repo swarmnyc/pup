@@ -346,7 +346,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 			else
 			{
 				m_lobbyService.invite(
-					m_lobby.getId(), types, new ServiceCallback()
+					m_lobby, types, new ServiceCallback()
 					{
 						@Override
 						public void success( final Object value )

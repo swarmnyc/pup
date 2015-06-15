@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Filters;
@@ -109,7 +111,7 @@ namespace SWARM.PuP.Web.ApiControllers
         }
 
         [Authorize, Route("Invite/{lobbyId}"), HttpPost, ModelValidate]
-        public IHttpActionResult Invite(string lobbyId, [FromUri] IEnumerable<SocialMediumType> types)
+        public IHttpActionResult Invite(string lobbyId, [FromUri] string localTime, [FromUri] IEnumerable<SocialMediumType> types)
         {
             var user = User.Identity.GetPuPUser();
             var lobby = _lobbyService.GetById(lobbyId);
@@ -125,10 +127,10 @@ namespace SWARM.PuP.Web.ApiControllers
                 switch (type)
                 {
                     case SocialMediumType.Facebook:
-                        ShareToFb(medium, lobby);
+                        ShareToFb(medium, lobby, localTime);
                         break;
                     case SocialMediumType.Twitter:
-                        ShareToTwitter(medium, lobby);
+                        ShareToTwitter(medium, lobby, localTime);
                         break;
                 }
             }
@@ -136,38 +138,54 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        private void ShareToTwitter(SocialMedium medium, Lobby lobby)
+        private void ShareToTwitter(SocialMedium medium, Lobby lobby, string localTime)
         {
-            //TODO: Move to Config and Error Control
-            var msg = GetMessage(lobby) + " " + Url.Content("~/lobby/" + lobby.Id);
-            var authRequest = new TwitterOAuthClient
+            try
             {
-                ConsumerKey = "tuPdqGWSqvDNRC8TrcJ1dyuSd",
-                ConsumerSecret = "oAjcN1hXSo0AZw9XauXU6qbwcR5FDBYnAvSHygFKbE2wg9kcxs",
-                Token = medium.Token,
-                TokenSecret = medium.Secret
-            };
+                //TODO: Move to Config, Bug with Chinese letter in AuthRequest
+                var msg = HttpUtility.UrlEncode(GetMessage(lobby, localTime), Encoding.UTF8);
+                var authRequest = new TwitterOAuthClient
+                {
+                    ConsumerKey = "tuPdqGWSqvDNRC8TrcJ1dyuSd",
+                    ConsumerSecret = "oAjcN1hXSo0AZw9XauXU6qbwcR5FDBYnAvSHygFKbE2wg9kcxs",
+                    Token = medium.Token,
+                    TokenSecret = medium.Secret
+                };
 
-            authRequest.OAuthWebRequest(RequestMethod.POST, "https://api.twitter.com/1.1/statuses/update.json",
-                "status=" + msg);
+                authRequest.OAuthWebRequest(RequestMethod.POST, "https://api.twitter.com/1.1/statuses/update.json",
+                    "status=" + msg);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError("{0}\n{1}", ex.Message, ex.StackTrace);
+            }
         }
 
-        private void ShareToFb(SocialMedium medium, Lobby lobby)
+        private void ShareToFb(SocialMedium medium, Lobby lobby, string localTime)
         {
-            //TODO: Error Control
-            var msg = HttpUtility.UrlEncode(GetMessage(lobby));
-            var link = HttpUtility.UrlEncode(Url.Content("~/lobby/" + lobby.Id));
-            var url = string.Format("https://graph.facebook.com/v2.3/me/feed?access_token={0}&message={1}&link={2}",
-                medium.Token, msg, link);
-            WebRequest webRequest = WebRequest.CreateHttp(url);
-            webRequest.Method = "POST";
-            var response = webRequest.GetResponse();
-            response.GetResponseStream();
+            try
+            {
+                var msg = HttpUtility.UrlEncode(GetMessage(lobby, localTime), Encoding.UTF8);
+                var link = HttpUtility.UrlEncode(Url.Content("~/lobby/" + lobby.Id));
+                var url = string.Format("https://graph.facebook.com/v2.3/me/feed?access_token={0}&message={1}&link={2}",
+                    medium.Token, msg, link);
+                WebRequest webRequest = WebRequest.CreateHttp(url);
+                webRequest.Method = "POST";
+                var response = webRequest.GetResponse();
+                response.GetResponseStream();
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError("{0}\n{1}", ex.Message, ex.StackTrace);
+            }
+
         }
 
-        private static string GetMessage(Lobby lobby)
+        private static string GetMessage(Lobby lobby, string localTime)
         {
-            return "Let's play " + lobby.Name + " with me.";
+            return string.Format(@"Who's up for {0} this {1}
+
+PUP: Find gamers to play with http://partyupplayer.com", lobby.Name, localTime);
         }
     }
 }
