@@ -107,7 +107,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     codeBody = users.Select(x => new { x.Id, x.UserName, x.PortraitUrl }).ToJson();
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(code), code, null);
+                    throw new ArgumentOutOfRangeException("code", code, null);
             }
 
             request.Json<QuickbloxMessage>(new QuickbloxMessage
