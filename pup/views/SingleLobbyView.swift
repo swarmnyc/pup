@@ -8,6 +8,9 @@ import UIKit
 
 class SingleLobbyView: UIView {
 
+
+
+
     var topContentBox: UIView = UIView();
     var lobbyTitle: UITextView = UITextView();
     var lobbyImg: UIImageView = UIImageView();
@@ -24,6 +27,10 @@ class SingleLobbyView: UIView {
 
     var isMember = false;
 
+    var table: UITableView?
+
+
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         println(frame)
@@ -38,6 +45,24 @@ class SingleLobbyView: UIView {
 
     }
 
+    func addTable(delegate: UITableViewDelegate) {
+        table = UITableView();
+        table?.delegate = delegate;
+        table?.dataSource = delegate as! UITableViewDataSource
+        table?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "message")
+        insertTable();
+        setUpTableConstraints();
+        table?.setContentOffset(CGPointMake(0, CGFloat.max), animated: false);
+
+    }
+
+    func hasMessages() -> Bool {
+        if (table == nil) {
+            return false;
+        }
+        return true;
+    }
+
 
 
 
@@ -49,7 +74,20 @@ class SingleLobbyView: UIView {
 
 
 
+    func insertTable() {
+        self.addSubview(table!)
+    }
 
+    func setUpTableConstraints() {
+
+        table!.snp_remakeConstraints { (make) -> Void in
+            make.top.equalTo(self.divider.snp_bottom).offset(0)
+            make.left.equalTo(self).offset(0);
+            make.right.equalTo(self).offset(0);
+            make.height.equalTo(600);
+
+        }
+    }
 
     func insertViews() {
 
@@ -96,6 +134,7 @@ class SingleLobbyView: UIView {
         if (!isMember) {
             joinLobbyButton.setTitle("Join Lobby", forState: .Normal)
             joinLobbyButton.setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
+            joinLobbyButton.backgroundColor = UIColor.whiteColor()
         }
 
         lobbyTitle.text = "\(data.data.owner.name)'s \n" +
@@ -137,8 +176,28 @@ class SingleLobbyView: UIView {
         setUpConstraints();
     }
 
+    func makeTableViewLonger(howManyMessages: Int) {
+
+        var howLong: Float = Float(howManyMessages) * 58.0;
+
+        if (CGFloat(howLong) > UIScreen.mainScreen().bounds.height) {
+            howLong = Float(UIScreen.mainScreen().bounds.height);
+        }
+
+        table!.snp_remakeConstraints { (make) -> Void in
+            make.top.equalTo(self.divider.snp_bottom).offset(0)
+            make.left.equalTo(self).offset(0);
+            make.right.equalTo(self).offset(0);
+            make.height.equalTo(howLong);
+
+        }
+
+
+    }
+
 
     func setUpConstraints() {
+
 
         topContentBox.snp_remakeConstraints { (make) -> Void in
             make.top.equalTo(self).offset(0)

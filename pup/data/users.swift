@@ -6,6 +6,7 @@
 import Foundation
 import UIKit
 import Alamofire
+import SwiftLoader
 
 struct userInfo {
     var loggedIn = false
@@ -138,16 +139,23 @@ class User {
             println("NO IMAGE!");
 
              Alamofire.request(.POST, "\(urls.register)", parameters: parameters).responseJSON { (request, response, responseJSON, error) in
-                var resp = responseJSON as! NSDictionary
-                var userData: NSDictionary = resp["data"] as! NSDictionary
-                println(resp)
-                println(userData)
-                 if (resp["success"] as! Bool) {
-                     println(userData["accessToken"]!)
 
-                     self.saveData(userData)
+                 if (error != nil) {
+                     SwiftLoader.hide()
+                     var alert = Error(alertTitle: "Whoops", alertText: "Sorry, there was an error while registering you")
 
-                     success()
+                 } else {
+                     var resp = responseJSON as! NSDictionary
+                     var userData: NSDictionary = resp["data"] as! NSDictionary
+                     println(error)
+                     println("error^")
+                     if (resp["success"] as! Bool) {
+                         println(userData["accessToken"]!)
+
+                         self.saveData(userData)
+
+                         success()
+                     }
                  }
 
              };
@@ -177,7 +185,8 @@ class User {
 
             },failure:{(error:NSError!) -> Void in
                 println("failure")
-
+                SwiftLoader.hide()
+                var alert = Error(alertTitle: "Whoops", alertText: "Sorry, there was an error while registering you")
                 //process failure response
             })
 

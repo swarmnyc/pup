@@ -132,8 +132,7 @@ class LobbyCreationModel {
             var newLobby = LobbyData(data: JSON as! NSDictionary)
             success(newLobby: newLobby);
             println(error)
-            println("---")
-            println(JSON)
+           println("^error")
         }
 
 

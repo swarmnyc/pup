@@ -108,14 +108,18 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
         newLobbyModel.PlayStyle = playStyle?.getCurrentSelection();
         newLobbyModel.GamerSkill = gamerSkill?.getCurrentSelection();
         if (newLobbyModel.checkData()) {
+
             var config = SwiftLoader.Config()
             config.size = 150
             config.spinnerColor = UIColor(rgba: colors.orange)
             config.backgroundColor = UIColor(rgba: colors.mainGrey)
-
             SwiftLoader.setConfig(config);
+
+            createView.closeKeyboard();
+
             SwiftLoader.show(title: "Loading...", animated: true)
             newLobbyModel.createRequest(moveToLobby, failure: {})
+
         } else {
 
             var alert = Error(alertTitle: "Could Not Create Lobby", alertText: "Make sure to fill out all of the fields")

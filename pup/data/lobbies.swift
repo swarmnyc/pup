@@ -24,7 +24,8 @@ class LobbyData {
     var users: Array<SingleLobbyUser> = []
     var owner = SingleLobbyUser()
     var tags = []
-    var QBChateRoomId: String = ""
+    var QBChatRoomId: String = ""
+    var messages: Array<Message> = [];
     var getTagText: String {
         get {
             return "\(playStyle), \(skillLevel)"
@@ -72,9 +73,10 @@ class LobbyData {
         skillLevel = data["skillLevel"] as! String
         startTimeUtc = data["startTimeUtc"] as! String
         tags = data["tags"] as! Array<Dictionary<String, String>>
-        QBChateRoomId = tags[0]["value"] as! String
+        QBChatRoomId = tags[0]["value"] as! String
         println(tags[0])
-        println(QBChateRoomId)
+        println(QBChatRoomId)
+
 
     }
 
@@ -84,6 +86,41 @@ class LobbyData {
         var breakdownTitle = "Happening Soon (2)"
     }
 
+    func addMessages(messages: NSArray) {
+        for (var i = 0; i<messages.count; i++) {
+            self.messages.append(Message(messages: messages[i], users: self.users, owner: self.owner));
+        }
+
+
+    }
+
+}
+
+
+class Message {
+    var username = ""
+    var message = ""
+    var picture = ""
+
+
+    init(messages: AnyObject, users: Array<SingleLobbyUser>, owner: SingleLobbyUser) {
+
+        self.username = messages.customParameters?["userName"] as! String;
+        self.message = messages.valueForKey("text") as! String;
+
+        for (var i = 0; i<users.count; i++) {
+            if (self.username == users[i].name) {
+                if (users[i].portraitUrl != "") {
+                    self.picture = users[i].portraitUrl;
+                }
+            }
+        }
+
+        if (self.username == owner.name) {
+            self.picture = owner.portraitUrl;
+        }
+
+    }
 }
 
 
@@ -92,20 +129,22 @@ class SingleLobbyUser {
     var id = "-1"
     var isOwner = false
     var name = ""
-
+    var portraitUrl = ""
     init() {
 
     }
 
     init(data: NSDictionary) {
 
-        println(data)
 
         isLeave = data["isLeave"] as! Bool
         isOwner = data["isOwner"] as! Bool
         id = data["id"] as! String
         name = data["userName"] as! String
-
+        if (data.objectForKey("portraitUrl") != nil) {
+            portraitUrl = data["portraitUrl"] as! String
+            println(portraitUrl);
+        }
     }
 
 }

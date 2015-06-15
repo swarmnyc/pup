@@ -23,7 +23,8 @@ struct appColors {
 struct miscData {
     var platforms: Array<String> = ["Steam or PC", "XBOX 360", "XBOX ONE", "PS3", "PS4"]
     var platformDict = ["Steam or PC": "Steam", "XBOX 360": "Xbox360", "XBOX ONE": "XboxOne", "PS3": "PS3", "PS4": "PS4"];
-
+    var QBDefaultUser = "553be08dcbf5a81a70567b13";
+    var QBDefaultPassword = "swarmnyc"
 
 }
 

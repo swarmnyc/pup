@@ -8,7 +8,7 @@ import UIKit
 import QuartzCore
 import SwiftLoader
 
-class SingleLobbyController: UIViewController {
+class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     var lobbyView: SingleLobbyView?;
 
@@ -24,6 +24,7 @@ class SingleLobbyController: UIViewController {
         self.init();
         println(info);
         println(info.name);
+        data.passMessagesToController = recievedMessages;
         data.data = info;
 
 
@@ -51,13 +52,14 @@ class SingleLobbyController: UIViewController {
         println("view did load")
         currentUser.setPage("Single Lobby")
 
-        self.data.getDetailed({
+        self.data.getDetailedAndThenGetMessages({
             self.lobbyView?.setUpViews(self.data)
 
             if (currentUser.loggedIn() == false) {
                 self.logInButton = JoinButton(parentController: self)
                 self.logInButton?.onSuccessJoin = self.joinLobby
             }
+
 
         }, failure: {
 
@@ -71,6 +73,18 @@ class SingleLobbyController: UIViewController {
 
     }
 
+    func recievedMessages() {
+        println("got em!")
+
+        if (self.lobbyView!.hasMessages()) {
+            self.lobbyView?.table?.reloadData();
+        } else {
+            self.lobbyView?.addTable(self);
+        }
+        self.lobbyView?.makeTableViewLonger(self.data.data.messages.count)
+    }
+
+
 
 
 
@@ -81,6 +95,11 @@ class SingleLobbyController: UIViewController {
             super.viewDidLayoutSubviews();
         println("view did layout subviews")
 
+        println(self.lobbyView?.table?.frame)
+
+        if let tableFrame = self.lobbyView?.table {
+            var offset = tableFrame.frame.
+        }
 
         // gradient.frame = gradientBox.frame;
 
@@ -118,6 +137,35 @@ class SingleLobbyController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+
+    //table view functions
+
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+        return self.data.data.messages.count;
+    }
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        //var cell:UITableViewCell = self.tableV.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+        //cell.textLabel.text = self.items[indexPath.row]
+        let cell = tableView.dequeueReusableCellWithIdentifier("message", forIndexPath: indexPath) as! UITableViewCell
+        cell.textLabel?.text = self.data.data.messages[indexPath.row].message;
+        return cell;
+
+
+    }
+
+    func tableView(tlableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 50;
+
+
+    }
+
+
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        println("You selected cell #\(indexPath.row)!")
+
     }
 
 

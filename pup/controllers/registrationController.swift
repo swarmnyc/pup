@@ -180,6 +180,11 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
 
         if (currentUser.validData(registrationData)) {
             currentUser.register(registrationData, success: closeAndContinue);
+        } else {
+            SwiftLoader.hide()
+            submitting = false;
+
+
         }
 
 

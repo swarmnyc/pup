@@ -15,6 +15,8 @@ class DateDisplayView: UIView, UITextFieldDelegate {
 
     var currentDate: NSDate = NSDate();
 
+    var dateSelector: DateAndTimePicker = DateAndTimePicker();
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -38,6 +40,15 @@ class DateDisplayView: UIView, UITextFieldDelegate {
         self.text.textAlignment = NSTextAlignment.Center
         self.text.textColor = UIColor(rgba: colors.tealMain)
         self.text.font = self.text.font.fontWithSize(19);
+
+
+        dateSelector.setUp(.Date, titleText: "WHEN?", maxDate: NSDate().dateByAddingDays(14), minimumDate: NSDate().dateByAddingMinutes(20), onComplete: {
+            (date) -> Void in
+            var newestTime = self.successfulChange!(newDate: date)
+            self.currentDate = newestTime;
+            self.text.text = "\(date.toString(dateStyle: .ShortStyle, timeStyle: .NoStyle, doesRelativeDateFormatting: true))"
+        })
+
     }
 
     func layoutView() {
@@ -62,17 +73,13 @@ class DateDisplayView: UIView, UITextFieldDelegate {
 
     }
 
+
+
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool{
         println("woooooooooh yeeeeeeeaaahhhhhhh")
 
+        self.dateSelector.show();
 
-        DatePickerDialog().show(title: "DatePicker", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Date, defaultDate: currentDate) {
-            (date) -> Void in
-
-            var newestTime = self.successfulChange!(newDate: date)
-            self.currentDate = newestTime;
-            textField.text = "\(date.toString(dateStyle: .ShortStyle, timeStyle: .NoStyle, doesRelativeDateFormatting: true))"
-        }
 
         return false
 
@@ -98,6 +105,15 @@ class TimeDisplayView: DateDisplayView {
         self.text.textAlignment = NSTextAlignment.Center
         self.text.textColor = UIColor(rgba: colors.tealMain)
         self.text.font = self.text.font.fontWithSize(19);
+
+
+        dateSelector.setUp(.Time, titleText: "WHAT TIME?", maxDate: NSDate().dateByAddingDays(14), minimumDate: NSDate().dateByAddingMinutes(20), onComplete: {
+            (date) -> Void in
+            var newestTime = self.successfulChange!(newDate: date)
+            self.currentDate = newestTime;
+            self.setNewText(newestTime)
+        })
+
     }
 
 
@@ -114,12 +130,7 @@ class TimeDisplayView: DateDisplayView {
         println("woooooooooh yeeeeeeeaaahhhhhhh")
 
 
-        DatePickerDialog().show(title: "DatePicker", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Time, defaultDate: currentDate) {
-            (date) -> Void in
-            var newestTime = self.successfulChange!(newDate: date)
-            self.currentDate = newestTime;
-           self.setNewText(newestTime)
-        }
+        self.dateSelector.show();
 
         return false
 

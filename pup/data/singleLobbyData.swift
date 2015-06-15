@@ -11,8 +11,12 @@ class singleLobby {
     var data = LobbyData();
     var empty = false;
     var isMember = false;
-    init() {
+    var quickBloxConnect: QuickBlox?
+    var passMessagesToController: (() -> Void)?
 
+    init() {
+        quickBloxConnect = QuickBlox();
+        quickBloxConnect?.handOffMessages = self.recieveMessages;
     }
 
 //    func addDetailed(detailed: NSDictionary) {
@@ -55,7 +59,14 @@ class singleLobby {
     }
 
 
-    func getDetailed(success: () -> Void, failure: () -> Void) {
+    func recieveMessages(response: QBResponse, messages: NSArray, responcePage: QBResponsePage) {
+        data.addMessages(messages);
+        passMessagesToController?();
+    }
+
+
+
+    func getDetailedAndThenGetMessages(success: () -> Void, failure: () -> Void) {
 
         let requestUrl = NSURL(string: "\(urls.lobbies)\(data.id)")
 
@@ -65,9 +76,22 @@ class singleLobby {
             println(resp);
 
             self.addOwnerAndUsersToData(resp);
+            self.quickBloxConnect?.lobbyId = self.data.QBChatRoomId;
+            self.loginToQuickBlox()
+
             success();
 
         };
+
+    }
+
+
+    func loginToQuickBlox() {
+        if (self.isMember) {
+            quickBloxConnect?.createSession();
+        } else {
+            quickBloxConnect?.createSessionWithDefaultUser();
+        }
 
     }
 
@@ -78,7 +102,6 @@ class singleLobby {
 
             if user[i]["userName"] as! String == currentUser.data.name {
                 isMember = true;
-
             }
 
             if (user[i]["isOwner"] as! Bool) {
