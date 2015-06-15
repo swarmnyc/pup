@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">PuP Debug</string>
-    <string name="PuP_API_Url">http://pup-dev.azurewebsites.net/api/</string>
+    <string name="PuP_Url">http://pup-dev.azurewebsites.net/</string>
     <string name="QB_APP_ID">24285</string>
     <string name="QB_APP_KEY">BeUfd9nMYp6OV8-</string>
     <string name="QB_APP_SECRET">QUBVCLgUjFY97cV</string>

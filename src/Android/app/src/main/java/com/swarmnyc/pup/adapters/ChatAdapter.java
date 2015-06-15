@@ -22,6 +22,7 @@ import com.swarmnyc.pup.chat.ChatMessageListener;
 import com.swarmnyc.pup.chat.ChatRoomService;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.TwitterHelper;
+import com.swarmnyc.pup.components.Utility;
 import com.swarmnyc.pup.events.LobbyUserChanged;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
@@ -173,8 +174,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 				//Join and Left System messages.
 				if ( cm.getCode().equals( "Join" ) && cm.getCodeBody() != null )
 				{
-					Gson g = new Gson();
-					UserInfo[] users = g.fromJson( cm.getCodeBody(), UserInfo[].class );
+					UserInfo[] users = Utility.fromJson( cm.getCodeBody(), UserInfo[].class );
 					for ( UserInfo u : users )
 					{
 						isCurrentUser = u.getId().equals( User.current.getId() );
@@ -184,7 +184,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 							user = new LobbyUserInfo();
 							user.setId( u.getId() );
 							user.setUserName( u.getUserName() );
-							user.setPortraitUrl( u.getPortraitUrl() );
+							user.setPortraitUrl( Utility.urlContent(u.getPortraitUrl()) );
 							m_lobby.getUsers().add( user );
 						}
 						else
@@ -198,8 +198,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 				}
 				else if ( cm.getCode().equals( "Leave" ) && cm.getCodeBody() != null )
 				{
-					Gson g = new Gson();
-					UserInfo[] users = g.fromJson( cm.getCodeBody(), UserInfo[].class );
+					UserInfo[] users = Utility.fromJson( cm.getCodeBody(), UserInfo[].class );
 					for ( UserInfo u : users )
 					{
 						LobbyUserInfo user = m_lobby.getUser( u.getId() );

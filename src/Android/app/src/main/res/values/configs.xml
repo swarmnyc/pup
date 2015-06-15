@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">PuP</string>
-    <string name="PuP_API_Url">http://pup.azurewebsites.net/api/</string>
+    <string name="PuP_Url">http://pup.azurewebsites.net/</string>
     <string name="QB_APP_ID">20103</string>
     <string name="QB_APP_KEY">gXa5zW9K5wdTuCV</string>
     <string name="QB_APP_SECRET">YGabpebTkW2Q9r6</string>
