@@ -211,6 +211,7 @@
     <Compile Include="Services\Quickblox\QuickbloxUser.cs" />
     <Compile Include="Services\Quickblox\Session.cs" />
     <Compile Include="Services\UserService.cs" />
+    <Compile Include="Components\TrimModelBinder.cs" />
     <Compile Include="ViewModels\RequestResult.cs" />
     <Compile Include="ViewModels\UserViewModels.cs" />
     <Compile Include="Models\PuPUser.cs" />
