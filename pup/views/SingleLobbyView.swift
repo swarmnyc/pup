@@ -25,6 +25,9 @@ class SingleLobbyView: UIView {
 
     var joinLobbyButton: UIButton = UIButton();
 
+    var newMessage: UITextField = UITextField();
+    var send: UIButton = UIButton();
+
     var isMember = false;
 
     var table: UITableView?
@@ -45,14 +48,20 @@ class SingleLobbyView: UIView {
 
     }
 
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
     func addTable(delegate: UITableViewDelegate) {
         table = UITableView();
         table?.delegate = delegate;
         table?.dataSource = delegate as! UITableViewDataSource
-        table?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "message")
+        table?.registerClass(MessageCell.self, forCellReuseIdentifier: "message")
         insertTable();
         setUpTableConstraints();
         table?.setContentOffset(CGPointMake(0, CGFloat.max), animated: false);
+
+        newMessage.delegate = delegate as! UITextFieldDelegate;
 
     }
 
@@ -66,16 +75,51 @@ class SingleLobbyView: UIView {
 
 
 
+    func shortenView(notification: NSNotification) {
+        println("shortening view")
+        if (newMessage.isFirstResponder()) {
+            UIView.animateWithDuration(0.5) {
+                var keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
+                var keyboardHeight = keyboardSize!.height;
 
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+                var trans = CGAffineTransformMakeTranslation(0, -keyboardHeight - 35);
+                self.transform = trans;
+
+
+                self.layoutIfNeeded()
+            }
+        }
+
+
+
+
     }
+
+    func restoreView() {
+        UIView.animateWithDuration(0.5) {
+
+            var trans = CGAffineTransformMakeTranslation(0, 0);
+            self.transform = trans;
+
+            self.layoutIfNeeded()
+        }
+    }
+
 
 
 
 
     func insertTable() {
         self.addSubview(table!)
+
+        bringSubviewToFront(newMessage)
+        bringSubviewToFront(send)
+        if (!isMember) {
+            bringSubviewToFront(self.joinLobbyButton);
+
+        }
+
+
     }
 
     func setUpTableConstraints() {
@@ -103,11 +147,19 @@ class SingleLobbyView: UIView {
 
         addSubview(topContentBox)
         addSubview(descBox)
+        addSubview(newMessage)
+        addSubview(send)
         if (!isMember) {
             addSubview(joinLobbyButton)
         }
 
 
+    }
+
+    func sendMessage() {
+        println("sending it")
+        println(newMessage.text)
+        newMessage.resignFirstResponder()
     }
 
 
@@ -166,11 +218,19 @@ class SingleLobbyView: UIView {
         desc.scrollEnabled = false
         desc.textContainerInset = UIEdgeInsetsZero
         desc.textContainer.lineFragmentPadding = 0
-        desc.setTranslatesAutoresizingMaskIntoConstraints(false)
         desc.backgroundColor = UIColor.clearColor()
 
 
         divider.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+
+        newMessage.layer.masksToBounds = true;
+        newMessage.layer.cornerRadius = 12;
+        newMessage.layer.borderColor = UIColor.blackColor().CGColor;
+        newMessage.layer.borderWidth = 1;
+
+        send.setTitle("Send", forState: .Normal)
+        send.setTitleColor(UIColor.blackColor(), forState: .Normal);
+        send.addTarget(self, action: "sendMessage", forControlEvents: UIControlEvents.TouchUpInside)
 
         insertViews();
         setUpConstraints();
@@ -263,6 +323,23 @@ class SingleLobbyView: UIView {
             make.right.equalTo(self.descBox).offset(0);
             make.height.equalTo(UIConstants.dividerWidth);
 
+        }
+
+        self.newMessage.snp_remakeConstraints {
+            (make) -> Void in
+            make.left.equalTo(self).offset(UIConstants.horizontalPadding)
+            make.right.equalTo(self).offset(-UIConstants.horizontalPadding * 8.0)
+            make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)
+            make.height.equalTo(25)
+
+        }
+
+        self.send.snp_remakeConstraints {
+            (make) -> Void in
+            make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
+            make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)
+            make.height.equalTo(25)
+            make.width.equalTo(UIConstants.horizontalPadding * 7)
         }
 
         if (!isMember) {

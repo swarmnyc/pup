@@ -51,6 +51,8 @@ class singleLobby {
 
         Alamofire.request(mutableURLRequest).responseJSON { (request, response, JSON, error) in
             success();
+            self.quickBloxConnect!.logoutOfChat();
+            self.quickBloxConnect!.createSession();
             println(error)
             println("---")
             println(JSON)
@@ -62,6 +64,10 @@ class singleLobby {
     func recieveMessages(response: QBResponse, messages: NSArray, responcePage: QBResponsePage) {
         data.addMessages(messages);
         passMessagesToController?();
+    }
+
+    func setID() {
+        quickBloxConnect?.roomID = data.QBChatRoomId;
     }
 
 
@@ -93,6 +99,10 @@ class singleLobby {
             quickBloxConnect?.createSessionWithDefaultUser();
         }
 
+    }
+
+    func logoutOfQuickBlox() {
+        quickBloxConnect?.logoutOfChat()
     }
 
     func addOwnerAndUsersToData(detailed: NSDictionary) {

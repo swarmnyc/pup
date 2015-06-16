@@ -72,7 +72,6 @@ class LobbyListView: UIView {
 
         //addSubview(swipeDetectionView)
 
-        self.setTranslatesAutoresizingMaskIntoConstraints(true)
 
     }
 
@@ -115,7 +114,6 @@ class LobbyListView: UIView {
             make.height.equalTo(50)
         }
 
-        self.setTranslatesAutoresizingMaskIntoConstraints(true)
     }
 
 

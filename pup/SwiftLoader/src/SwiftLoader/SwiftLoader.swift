@@ -22,7 +22,8 @@ public class SwiftLoader: UIView {
     private var animated : Bool?
     private var canUpdated = false
     private var title: String?
-    
+    private var showing:Bool = false;
+
     private var config : Config = Config() {
         didSet {
             self.loadingView?.config = config
@@ -45,35 +46,59 @@ public class SwiftLoader: UIView {
     public class func show(#animated: Bool) {
         self.show(title: nil, animated: animated)
     }
-    
+
+
+
     public class func show(#title: String?, animated : Bool) {
-        var currentWindow : UIWindow = UIApplication.sharedApplication().keyWindow!
-        
-        let loader = SwiftLoader.sharedInstance
-        loader.canUpdated = true
-        loader.animated = animated
-        loader.title = title
-        loader.update()
-        
-        var height : CGFloat = UIScreen.mainScreen().bounds.size.height
-        var width : CGFloat = UIScreen.mainScreen().bounds.size.width
-        var center : CGPoint = CGPointMake(width / 2.0, height / 2.0)
-        loader.center = center
-        
-        loader.coverView = UIView(frame: currentWindow.bounds)
-        loader.coverView?.backgroundColor = UIColor.clearColor()
-        
-        if (loader.superview == nil) {
-            currentWindow.addSubview(loader.coverView!)
-            currentWindow.addSubview(loader)
-            loader.start()
+
+            var currentWindow: UIWindow = UIApplication.sharedApplication().keyWindow!
+
+            let loader = SwiftLoader.sharedInstance
+            if (loader.showing == false) {
+            loader.canUpdated = true
+            loader.animated = animated
+            loader.title = title
+            loader.update()
+
+            var height: CGFloat = UIScreen.mainScreen().bounds.size.height
+            var width: CGFloat = UIScreen.mainScreen().bounds.size.width
+            var center: CGPoint = CGPointMake(width / 2.0, height / 2.0)
+            loader.center = center
+
+            loader.coverView = UIView(frame: currentWindow.bounds)
+            loader.coverView?.backgroundColor = UIColor.clearColor()
+
+            if (loader.superview == nil) {
+                currentWindow.addSubview(loader.coverView!)
+                currentWindow.addSubview(loader)
+                loader.start()
+            } else {
+                loader.coverView?.removeFromSuperview()
+            }
+            loader.showing = true;
         } else {
-            loader.coverView?.removeFromSuperview()
-        }
+
+                loader.canUpdated = true
+                loader.animated = animated
+                loader.title = title
+                loader.update()
+
+                var height: CGFloat = UIScreen.mainScreen().bounds.size.height
+                var width: CGFloat = UIScreen.mainScreen().bounds.size.width
+                var center: CGPoint = CGPointMake(width / 2.0, height / 2.0)
+                loader.center = center
+
+                loader.coverView?.frame = currentWindow.bounds
+                loader.coverView?.backgroundColor = UIColor.clearColor()
+                loader.start()
+
+            }
     }
     
     public class func hide() {
+
         let loader = SwiftLoader.sharedInstance
+        loader.showing = false;
         loader.stop()
     }
     

@@ -7,7 +7,7 @@ import Foundation
 import UIKit
 
 
-class JoinButtonView: PlatformButtonToggle {
+class JoinPupButtonView: PlatformButtonToggle {
 
     var topLabel: UILabel = UILabel();
     var bottomLabel: UILabel = UILabel()
@@ -53,26 +53,31 @@ class JoinButtonView: PlatformButtonToggle {
         bottomLabel.text = "You'll be able to chat and stuff"
         bottomLabel.font = bottomLabel.font.fontWithSize(12)
         bottomLabel.textAlignment = .Center
-        addViews(parentView);
-        setUpConstraints(parentView);
+
+        addViews();
+        setUpConstraints();
     }
 
 
-    func addViews(parentView: UIView) {
+    func addViews() {
 
         addSubview(topLabel)
         addSubview(bottomLabel)
-        parentView.addSubview(self)
-        parentView.bringSubviewToFront(self)
-
+//      parentView.addSubview(self)
+//      parentView.bringSubviewToFront(self)
+        UIApplication.sharedApplication().windows.first!.addSubview(self)
     }
 
-    func setUpConstraints(parentView: UIView) {
-        parentView.addSubview(self)
+    func removeViews() {
+        self.removeFromSuperview()
+    }
+
+    func setUpConstraints() {
+
         self.snp_remakeConstraints { (make) -> Void in
-            make.left.equalTo(parentView).offset(0)
-            make.right.equalTo(parentView).offset(0)
-            make.bottom.equalTo(parentView).offset(0)
+            make.left.equalTo(self.superview!).offset(0)
+            make.right.equalTo(self.superview!).offset(0)
+            make.bottom.equalTo(self.superview!).offset(0)
             make.height.equalTo(58)
 
         }

@@ -199,7 +199,6 @@ class gameCell: UITableViewCell {
 
 
         title.text = data.name
-        title.setTranslatesAutoresizingMaskIntoConstraints(false)
         title.font = title.font.fontWithSize(16)
         title.layoutMargins = UIEdgeInsetsZero
 
@@ -211,7 +210,6 @@ class gameCell: UITableViewCell {
         desc.scrollEnabled = false
         desc.textContainerInset = UIEdgeInsetsZero
         desc.textContainer.lineFragmentPadding = 0
-        desc.setTranslatesAutoresizingMaskIntoConstraints(false)
         desc.backgroundColor = UIColor.clearColor()
 
         tags.text = data.getTagText

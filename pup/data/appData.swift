@@ -25,7 +25,7 @@ struct miscData {
     var platformDict = ["Steam or PC": "Steam", "XBOX 360": "Xbox360", "XBOX ONE": "XboxOne", "PS3": "PS3", "PS4": "PS4"];
     var QBDefaultUser = "553be08dcbf5a81a70567b13";
     var QBDefaultPassword = "swarmnyc"
-
+    var QBAppId = "24285"
 }
 
 

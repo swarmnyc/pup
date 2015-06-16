@@ -7,17 +7,17 @@ import Foundation
 import UIKit
 
 
-class JoinButton: UIViewController, SimpleButtonDelegate {
+class JoinPupButton: UIViewController, SimpleButtonDelegate {
 
     var parent: UIViewController?
-    var joinButtonView: JoinButtonView = JoinButtonView();
+    var joinButtonView: JoinPupButtonView = JoinPupButtonView();
     var registrationController: RegistrationController?;
     var onSuccessJoin: (() -> Void)?
 
     convenience init(parentController: UIViewController) {
         self.init()
         parent = parentController;
-        registrationController = RegistrationController(parentController: self as UIViewController)
+        registrationController = RegistrationController(parentController: self)
         registrationController?.setUpView()
         self.view = joinButtonView
         joinButtonView.setUpViews(parent!.view, joinDelegate: self);
@@ -44,9 +44,17 @@ class JoinButton: UIViewController, SimpleButtonDelegate {
 
 
 
+
+
     func removeRegistrationView() {
-        registrationController?.view.removeFromSuperview()
+        println("removing registration view")
+        registrationController?.registrationView.removeFromSuperview()
+        self.joinButtonView.removeViews();
         self.view.removeFromSuperview()
+    }
+
+    func setUpConstraints() {
+        self.joinButtonView.setUpConstraints()
     }
 
 

@@ -9,13 +9,13 @@ import SwiftLoader
 class RegistrationController: UIViewController, UITextFieldDelegate, ImageButtonDelegate, UIImagePickerControllerDelegate,UINavigationControllerDelegate, RegistrationDelegate {
 
 
-    var parentController: UIViewController?
+    var parentController: JoinPupButton?
     var registrationView: RegistrationView = RegistrationView();
     var onSuccessJoin: (() -> (Void))?
     var submitting = false;
 
 
-    convenience init(parentController: UIViewController) {
+    convenience init(parentController: JoinPupButton) {
         self.init()
             self.view = registrationView;
             self.parentController = parentController
@@ -77,10 +77,12 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
     func closeAndContinue() {
         println(parentController)
         sideMenuController()?.sideMenu?.reloadData();
-        registrationView.hide()
-        SwiftLoader.hide()
 
-       // parentController?.removeRegistrationView()
+        registrationView.hide()
+        self.view.removeFromSuperview()
+        parentController?.removeRegistrationView()
+
+
         self.submitting=false;
         onSuccessJoin!();
     }
@@ -129,7 +131,8 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
 
         picker.allowsEditing = true //2
         picker.sourceType = .Camera //3
-        parentController?.presentViewController(picker, animated: true, completion: nil)//4
+        self.registrationView.layer.opacity = 0;
+        self.view.window?.rootViewController?.presentViewController(picker, animated: true, completion: nil)//4
 
     }
     func bringOutPhotoLibrary() {
@@ -140,7 +143,8 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
 
         picker.allowsEditing = true //2
         picker.sourceType = .PhotoLibrary //3
-        parentController?.presentViewController(picker, animated: true, completion: nil)//4
+        self.registrationView.layer.opacity = 0;
+        self.view.window?.rootViewController?.presentViewController(picker, animated: true, completion: nil)//4
 
     }
 
@@ -150,12 +154,13 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
         var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage
 
         registrationView.setImage(chosenImage)
-
+        self.registrationView.layer.opacity = 1;
         picker.dismissViewControllerAnimated(true, completion: nil) //5
     }
 
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         println(picker)
+        self.registrationView.layer.opacity = 1;
         picker.dismissViewControllerAnimated(true, completion: nil)
 
 

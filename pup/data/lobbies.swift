@@ -87,6 +87,8 @@ class LobbyData {
     }
 
     func addMessages(messages: NSArray) {
+        self.messages = [];
+
         for (var i = 0; i<messages.count; i++) {
             self.messages.append(Message(messages: messages[i], users: self.users, owner: self.owner));
         }
@@ -104,8 +106,13 @@ class Message {
 
 
     init(messages: AnyObject, users: Array<SingleLobbyUser>, owner: SingleLobbyUser) {
-
-        self.username = messages.customParameters?["userName"] as! String;
+        //println(messages.customParameters)
+        println("------")
+        if (messages.customParameters?["userName"] != nil) {
+            self.username = messages.customParameters?["userName"] as! String;
+        } else {
+            self.username = "system message"
+        }
         self.message = messages.valueForKey("text") as! String;
 
         for (var i = 0; i<users.count; i++) {
@@ -119,6 +126,9 @@ class Message {
         if (self.username == owner.name) {
             self.picture = owner.portraitUrl;
         }
+
+        println(self.message)
+        println(self.username);
 
     }
 }

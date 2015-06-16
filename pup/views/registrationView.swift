@@ -102,7 +102,7 @@ class RegistrationView: UIView {
         registrationDelegate = delegate as? RegistrationDelegate
 
         println("adding them")
-        parentView.addSubview(self)
+        UIApplication.sharedApplication().windows.first!.addSubview(self)
 
         setParentConstraints()
 
@@ -114,16 +114,17 @@ class RegistrationView: UIView {
 
     func setParentConstraints() {
         self.snp_remakeConstraints { (make) -> Void in
-            make.centerX.equalTo(self.parentView!)
-            make.top.equalTo(self.parentView!).offset(UIConstants.verticalPadding * 7.0)
-            make.left.equalTo(self.parentView!).offset(UIConstants.horizontalPadding)
-            make.right.equalTo(self.parentView!).offset(-UIConstants.horizontalPadding)
+            make.centerX.equalTo(self.superview!)
+            make.top.equalTo(self.superview!).offset(UIConstants.verticalPadding * 7.0)
+            make.left.equalTo(self.superview!).offset(UIConstants.horizontalPadding)
+            make.right.equalTo(self.superview!).offset(-UIConstants.horizontalPadding)
             make.height.equalTo(220)
         }
     }
 
     func hide() {
-        self.layer.opacity = 0;
+       // self.layer.opacity = 0;
+       // self.userInteractionEnabled = false;
        self.removeFromSuperview()
     }
 

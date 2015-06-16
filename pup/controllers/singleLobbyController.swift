@@ -8,7 +8,7 @@ import UIKit
 import QuartzCore
 import SwiftLoader
 
-class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
     var lobbyView: SingleLobbyView?;
 
@@ -17,7 +17,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
     var submitting = false;
 
 
-    var logInButton: JoinButton? = nil
+    var joinPupButton: JoinPupButton? = nil
 
     convenience init(info: LobbyData) {
 
@@ -26,7 +26,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         println(info.name);
         data.passMessagesToController = recievedMessages;
         data.data = info;
-
+        data.setID()
 
 
 
@@ -56,8 +56,8 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
             self.lobbyView?.setUpViews(self.data)
 
             if (currentUser.loggedIn() == false) {
-                self.logInButton = JoinButton(parentController: self)
-                self.logInButton?.onSuccessJoin = self.joinLobby
+                self.joinPupButton = JoinPupButton(parentController: self)
+                self.joinPupButton?.onSuccessJoin = self.joinLobby
             }
 
 
@@ -65,13 +65,64 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
         })
 
-
-
-
-
+        registerForKeyboardNotifications()
 
 
     }
+
+
+
+    func keyboardWillShow(notification: NSNotification)
+    {
+        println("keyboard opened!")
+        println(notification)
+        lobbyView?.shortenView(notification)
+
+    }
+
+    func keyboardWillBeHidden(notification: NSNotification)
+    {
+        lobbyView?.restoreView();
+
+    }
+
+    func registerForKeyboardNotifications() {
+        NSNotificationCenter.defaultCenter().addObserver(
+        self,
+                selector: "keyboardWillShow:",
+                name: UIKeyboardWillShowNotification,
+                object: nil)
+
+        NSNotificationCenter.defaultCenter().addObserver(
+        self,
+                selector: "keyboardWillBeHidden:",
+                name: UIKeyboardWillHideNotification,
+                object: nil)
+    }
+
+
+    //View is leaving the building
+    override func viewWillDisappear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().removeObserver(self,
+                name: UIKeyboardDidShowNotification,
+                object: nil)
+
+        NSNotificationCenter.defaultCenter().removeObserver(self,
+                name: UIKeyboardWillHideNotification,
+                object: nil)
+        var vcs = navigationController?.viewControllers as! NSArray;
+
+        if (vcs.indexOfObject(self) == NSNotFound) {
+            println("popped view")
+            joinPupButton?.removeRegistrationView();
+        }
+
+    }
+
+
+
+
+
 
     func recievedMessages() {
         println("got em!")
@@ -82,6 +133,9 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
             self.lobbyView?.addTable(self);
         }
         self.lobbyView?.makeTableViewLonger(self.data.data.messages.count)
+
+        println("about to submit a message")
+
     }
 
 
@@ -97,9 +151,9 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
         println(self.lobbyView?.table?.frame)
 
-        if let tableFrame = self.lobbyView?.table {
-            var offset = tableFrame.frame.
-        }
+//        if let tableFrame = self.lobbyView?.table {
+//            var offset = tableFrame.frame.
+//        }
 
         // gradient.frame = gradientBox.frame;
 
@@ -124,6 +178,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
                 println("successfully joined")
                 self.lobbyView?.joinLobbyButton.removeFromSuperview();
                 SwiftLoader.hide()
+                
             }, failure: {
                 println("failed")
                 SwiftLoader.hide()
@@ -137,6 +192,28 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+        println("logging out")
+        self.data.logoutOfQuickBlox()
+
+    }
+
+
+    //UITEXTFIELDDELEGATE
+
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        println(textField)
+
+        return true;
+    }
+
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder();
+
+        println(textField.text);
+        self.data.quickBloxConnect?.sendMessage(textField.text);
+
+        return true;
     }
 
 
@@ -149,8 +226,8 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //var cell:UITableViewCell = self.tableV.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
         //cell.textLabel.text = self.items[indexPath.row]
-        let cell = tableView.dequeueReusableCellWithIdentifier("message", forIndexPath: indexPath) as! UITableViewCell
-        cell.textLabel?.text = self.data.data.messages[indexPath.row].message;
+        let cell = tableView.dequeueReusableCellWithIdentifier("message", forIndexPath: indexPath) as! MessageCell
+        cell.setUpCell(self.data.data.messages[indexPath.row])
         return cell;
 
 

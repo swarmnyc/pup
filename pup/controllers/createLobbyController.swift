@@ -17,7 +17,7 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
     var playStyle: HorizontalSelectController?
     var gamerSkill: HorizontalSelectController?
 
-    var logInButton: JoinButton?
+    var logInButton: JoinPupButton?
 
 
     var dateDisplay: DateDisplayView = DateDisplayView();
@@ -62,7 +62,7 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
         data.delegate = self;
 
         if (currentUser.loggedIn() == false) {
-            logInButton = JoinButton(parentController: self)
+            logInButton = JoinPupButton(parentController: self)
             logInButton?.setNewView(createView.containerView)
             logInButton?.onSuccessJoin = createLobby;
         }
@@ -118,11 +118,15 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
             createView.closeKeyboard();
 
             SwiftLoader.show(title: "Loading...", animated: true)
-            newLobbyModel.createRequest(moveToLobby, failure: {})
+            newLobbyModel.createRequest(moveToLobby, failure: {
+                SwiftLoader.hide()
+
+            })
 
         } else {
-
             var alert = Error(alertTitle: "Could Not Create Lobby", alertText: "Make sure to fill out all of the fields")
+            SwiftLoader.show(title: "Loading...", animated: true)
+            SwiftLoader.hide()
 
         }
         println("createLobby")

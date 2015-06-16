@@ -11,6 +11,10 @@ class QuickBlox: NSObject, QBChatDelegate {
 
     var handOffMessages: ((response: QBResponse, messages: NSArray, responcePage: QBResponsePage) -> Void)?
     var lobbyId = "";
+    var message: String?
+    var roomID: String?
+    var room: QBChatRoom?
+
     override init() {
         super.init()
         
@@ -29,6 +33,7 @@ class QuickBlox: NSObject, QBChatDelegate {
 
 
     func createSession() {
+        logoutOfChat();
         var parameters = QBSessionParameters();
         parameters.userLogin = currentUser.data.userId
         parameters.userPassword = "swarmnyc"
@@ -45,7 +50,6 @@ class QuickBlox: NSObject, QBChatDelegate {
             QBChat.instance().addDelegate(self)
             QBChat.instance().loginWithUser(currentUser)
 
-            self.getMessages();
         }, errorBlock: {
             response in
             println("errrrooooorrrrr")
@@ -54,6 +58,7 @@ class QuickBlox: NSObject, QBChatDelegate {
     }
 
     func createSessionWithDefaultUser() {
+        logoutOfChat();
         var parameters = QBSessionParameters();
         parameters.userLogin = appData.QBDefaultUser
         parameters.userPassword = appData.QBDefaultPassword
@@ -88,6 +93,7 @@ class QuickBlox: NSObject, QBChatDelegate {
     }
 
     func getMessages() {
+
         var resPage: QBResponsePage = QBResponsePage(limit: 20, skip: 0);
         println("getting messages inside of quickblox object")
         QBRequest.messagesWithDialogID(lobbyId, extendedRequest: nil, forPage: resPage, successBlock: {
@@ -100,9 +106,53 @@ class QuickBlox: NSObject, QBChatDelegate {
         });
     }
 
+
+    func joinRoom() {
+        if (currentUser.loggedIn()) {
+            if (QBChat.instance().isLoggedIn()) {
+                println("is logged in")
+            } else {
+                println("is not logged in")
+
+            }
+
+            var dialog = QBChatDialog(dialogID: roomID!)
+            dialog.roomJID = appData.QBAppId + "_" + roomID! + "@muc.chat.quickblox.com"
+            dialog.userID = UInt(currentUser.data.QBChatId.toInt()!)
+            var room = dialog.chatRoom;
+            room.joinRoom()
+        }
+    }
+
+    func sendMessage(message: String) {
+//     roomID =  self.data.data.QBChatRoomId
+        self.message = message;
+
+        var qbmessage = QBChatMessage();
+        qbmessage.text = self.message!;
+        var params: NSMutableDictionary = ["userId": currentUser.data.userId, "save_to_history": true, "userName": currentUser.data.name]
+        qbmessage.customParameters = params;
+        QBChat.instance().sendChatMessage(qbmessage, toRoom: self.room!)
+
+        println("sending message!!!!!!")
+    }
+
+
+//- (void)chatRoomDidEnter:(QBChatRoom *)room{
+//    // joined here, now you can send and receive chat messages within this group dialog
+//}
+
+    func chatRoomDidEnter(room: QBChatRoom) {
+        println("chatRoom did enter");
+        self.room = room;
+
+    }
+
     //QBChatDelegate
     func chatDidLogin() {
         println("logged in!")
+        println(roomID);
+        joinRoom();
 
     }
 

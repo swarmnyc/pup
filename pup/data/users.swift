@@ -141,8 +141,8 @@ class User {
              Alamofire.request(.POST, "\(urls.register)", parameters: parameters).responseJSON { (request, response, responseJSON, error) in
 
                  if (error != nil) {
-                     SwiftLoader.hide()
                      var alert = Error(alertTitle: "Whoops", alertText: "Sorry, there was an error while registering you")
+                     SwiftLoader.hide()
 
                  } else {
                      var resp = responseJSON as! NSDictionary
