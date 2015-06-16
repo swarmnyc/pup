@@ -52,7 +52,9 @@
 		85DD27A3FF3778F7C14480FF /* users.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2D4861C2BBF20EE55949 /* users.swift */; };
 		85DD283AFDA2697E1053E7C2 /* lobbyCreation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD238EFD5444EC37120A93 /* lobbyCreation.swift */; };
 		85DD2853884136D4B49EB6D6 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 85DD22668098D439F280FA0E /* LICENSE */; };
+		85DD28658AE7C82D6D829653 /* arrayContains.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD25421C406DE9FE85197F /* arrayContains.swift */; };
 		85DD2894B3A4430DAD16E5D5 /* dateDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD222D009817F36BF19C9D /* dateDisplay.swift */; };
+		85DD28A9EDC87111225E005C /* arrayContains.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD25421C406DE9FE85197F /* arrayContains.swift */; };
 		85DD28BE1047C703D1F36BFE /* horizontalSelectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2DD3C511513115E28402 /* horizontalSelectController.swift */; };
 		85DD28E50C60015622E7DDF9 /* View+SnapKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD22D9AC670FFF7A557710 /* View+SnapKit.swift */; };
 		85DD28F795D156E8EE233ED2 /* GCD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2DCA8F64EC528E2FC189 /* GCD.swift */; };
@@ -178,6 +180,7 @@
 		85DD24FE962F075571314E81 /* pup-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pup-Bridging-Header.h"; sourceTree = "<group>"; };
 		85DD250C500EFF5FF2F84027 /* searchResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = searchResultsController.swift; path = controllers/searchResultsController.swift; sourceTree = "<group>"; };
 		85DD252C01D5A13C68981CC9 /* NetData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetData.swift; sourceTree = "<group>"; };
+		85DD25421C406DE9FE85197F /* arrayContains.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = arrayContains.swift; sourceTree = "<group>"; };
 		85DD256BD3A49C314605295B /* selectableTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = selectableTextView.swift; path = views/selectableTextView.swift; sourceTree = "<group>"; };
 		85DD2579270B8917230A6634 /* stringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = stringExtension.swift; sourceTree = "<group>"; };
 		85DD25A4CD6BEC9F1F2C7AB9 /* messageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = messageView.swift; path = views/messageView.swift; sourceTree = "<group>"; };
@@ -439,6 +442,7 @@
 				85DD22DCD70AD4F7485D0CDF /* emailTesting.swift */,
 				85DD221A5EDDBA6CD05235E0 /* formDataLibrary.swift */,
 				85DD27F3E7DC0D3E93059A12 /* errorAlert.swift */,
+				85DD25421C406DE9FE85197F /* arrayContains.swift */,
 			);
 			path = helperFunctions;
 			sourceTree = "<group>";
@@ -855,6 +859,7 @@
 				85DD2DB10A669B3888DDF73A /* SwiftLoader.swift in Sources */,
 				85DD2A7095ED4A91C3087DB5 /* lobbyChat.swift in Sources */,
 				85DD2EB3E80C0BEF68EC17EE /* messageView.swift in Sources */,
+				85DD28658AE7C82D6D829653 /* arrayContains.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -883,6 +888,7 @@
 				85DD2FFE5A053ACFC263AFBB /* NetResponseData.swift in Sources */,
 				85DD2B03F52BBF1719795DED /* NetRequestSerialization.swift in Sources */,
 				85DD2F6A81EFA0D9372ECA7B /* errorAlert.swift in Sources */,
+				85DD28A9EDC87111225E005C /* arrayContains.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

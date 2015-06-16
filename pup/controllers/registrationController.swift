@@ -132,6 +132,7 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
         picker.allowsEditing = true //2
         picker.sourceType = .Camera //3
         self.registrationView.layer.opacity = 0;
+        self.parentController?.joinButtonView.layer.opacity = 0;
         self.view.window?.rootViewController?.presentViewController(picker, animated: true, completion: nil)//4
 
     }
@@ -144,6 +145,8 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
         picker.allowsEditing = true //2
         picker.sourceType = .PhotoLibrary //3
         self.registrationView.layer.opacity = 0;
+        self.parentController?.joinButtonView.layer.opacity = 0;
+
         self.view.window?.rootViewController?.presentViewController(picker, animated: true, completion: nil)//4
 
     }
@@ -155,12 +158,14 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
 
         registrationView.setImage(chosenImage)
         self.registrationView.layer.opacity = 1;
+        self.parentController?.joinButtonView.layer.opacity = 1;
         picker.dismissViewControllerAnimated(true, completion: nil) //5
     }
 
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         println(picker)
         self.registrationView.layer.opacity = 1;
+        self.parentController?.joinButtonView.layer.opacity = 1;
         picker.dismissViewControllerAnimated(true, completion: nil)
 
 

@@ -17,14 +17,9 @@ class singleLobby {
     init() {
         quickBloxConnect = QuickBlox();
         quickBloxConnect?.handOffMessages = self.recieveMessages;
+        quickBloxConnect?.addNewMessage = self.addNewMessage;
     }
 
-//    func addDetailed(detailed: NSDictionary) {
-//
-//        addOwnerAndUsersToData(detailed);
-//        println(data.users.count)
-//        empty = isEmpty();
-//    }
 
     func isEmpty() -> Bool {
         if data.users.count==1 {
@@ -63,6 +58,11 @@ class singleLobby {
 
     func recieveMessages(response: QBResponse, messages: NSArray, responcePage: QBResponsePage) {
         data.addMessages(messages);
+        passMessagesToController?();
+    }
+
+    func addNewMessage(newMessage: String) {
+        data.messages.append(Message(newMessage: newMessage))
         passMessagesToController?();
     }
 
@@ -109,9 +109,11 @@ class singleLobby {
         var user = detailed["users"] as! NSArray
 
         for (var i = 0; i<user.count; i++) {
-
-            if user[i]["userName"] as! String == currentUser.data.name {
-                isMember = true;
+            var userName = user[i]["userName"] as! String
+            println("'" + currentUser.data.name.removeWhitespace() + "'")
+            println("'" + userName.removeWhitespace() + "'")
+            if userName.removeWhitespace() == currentUser.data.name.removeWhitespace() {
+                self.isMember = true;
             }
 
             if (user[i]["isOwner"] as! Bool) {

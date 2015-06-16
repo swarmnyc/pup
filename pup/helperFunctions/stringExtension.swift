@@ -6,10 +6,12 @@
 import Foundation
 
 
-extension String
-{
-    func replace(target: String, withString: String) -> String
-    {
-        return self.stringByReplacingOccurrencesOfString(target, withString: withString, options: NSStringCompareOptions.LiteralSearch, range: nil)
+extension String {
+    func replace(string:String, replacement:String) -> String {
+        return self.stringByReplacingOccurrencesOfString(string, withString: replacement, options: NSStringCompareOptions.LiteralSearch, range: nil)
+    }
+
+    func removeWhitespace() -> String {
+        return self.replace(" ", replacement: "")
     }
 }

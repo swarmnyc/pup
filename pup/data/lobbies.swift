@@ -131,6 +131,13 @@ class Message {
         println(self.username);
 
     }
+
+    init(newMessage: String) {
+        username = currentUser.data.name;
+        picture = currentUser.data.picture;
+        message = newMessage;
+
+    }
 }
 
 

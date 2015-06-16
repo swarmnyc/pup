@@ -10,6 +10,7 @@ class QuickBlox: NSObject, QBChatDelegate {
 
 
     var handOffMessages: ((response: QBResponse, messages: NSArray, responcePage: QBResponsePage) -> Void)?
+    var addNewMessage: ((newMessage: String) -> Void)?
     var lobbyId = "";
     var message: String?
     var roomID: String?
@@ -50,6 +51,7 @@ class QuickBlox: NSObject, QBChatDelegate {
             QBChat.instance().addDelegate(self)
             QBChat.instance().loginWithUser(currentUser)
 
+            self.getMessages();
         }, errorBlock: {
             response in
             println("errrrooooorrrrr")
@@ -132,9 +134,15 @@ class QuickBlox: NSObject, QBChatDelegate {
         qbmessage.text = self.message!;
         var params: NSMutableDictionary = ["userId": currentUser.data.userId, "save_to_history": true, "userName": currentUser.data.name]
         qbmessage.customParameters = params;
-        QBChat.instance().sendChatMessage(qbmessage, toRoom: self.room!)
-
         println("sending message!!!!!!")
+        var didSend = QBChat.instance().sendChatMessage(qbmessage, toRoom: self.room!)
+
+        if (didSend) {
+            println("whooo")
+            self.addNewMessage?(newMessage: self.message!);
+        }
+
+
     }
 
 

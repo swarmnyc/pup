@@ -15,7 +15,7 @@ struct userInfo {
     var name = ""
     var tags = [["" : ""]]
     var QBChatId = ""
-
+    var picture = ""
 }
 
 
@@ -44,7 +44,7 @@ class User {
                 data.userId = localStorage.valueForKey("userId") as! String
                 data.name = localStorage.valueForKey("name") as! String
                 data.QBChatId = localStorage.valueForKey("QBChatId") as! String
-
+                data.picture = localStorage.valueForKey("picture") as! String
             }
 
         }
@@ -59,6 +59,7 @@ class User {
         localStorage.setObject(self.data.userId,forKey: "userId")
         localStorage.setObject(self.data.name,forKey: "name")
         localStorage.setObject(self.data.QBChatId,forKey: "QBChatId")
+        localStorage.setObject(self.data.picture,forKey: "picture")
              localStorage.setBool(self.data.loggedIn, forKey: "loggedIn")
 
     }
@@ -85,6 +86,7 @@ class User {
             self.data.userId = ""
             self.data.loggedIn = false
             self.data.name = ""
+            self.data.picture = ""
            setLocalStorage()
 
         }
@@ -119,6 +121,12 @@ class User {
         self.data.accessToken = userData["accessToken"]! as! String;
         self.data.name = userData["userName"]! as! String;
         self.data.userId = userData["id"]! as! String;
+        if (userData["portraitUrl"] != nil) {
+            self.data.picture = userData["portraitUrl"]! as! String;
+        } else {
+            self.data.picture = ""
+
+        }
         self.data.tags = userData["tags"] as! Array<Dictionary<String, String>>
         self.data.QBChatId = self.data.tags[0]["value"] as! String!
         println(self.data)
@@ -168,7 +176,7 @@ class User {
             let imageData:NSData = NSData(data: UIImageJPEGRepresentation(image, 1.0))
 
             SRWebClient.POST(appURLS().register)
-            .data(imageData, fieldName:"portriat", data:parameters)
+            .data(imageData, fieldName:"portrait", data:parameters)
             .send({(response:AnyObject!, status:Int) -> Void in
                 println("success");
                 var resp = response as! Dictionary<String, AnyObject>

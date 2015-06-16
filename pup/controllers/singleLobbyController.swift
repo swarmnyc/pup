@@ -16,6 +16,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
     var submitting = false;
 
+    var descCell = SingleLobbyTopCell()
 
     var joinPupButton: JoinPupButton? = nil
 
@@ -28,6 +29,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         data.data = info;
         data.setID()
 
+        descCell.setUpCell(data)
 
 
 
@@ -40,8 +42,13 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
     override func loadView()
     {
         self.lobbyView = SingleLobbyView();
+        lobbyView?.sendTheMessage = self.sendMessage;
         lobbyView?.setUpDelegates(self)
+
         self.view = self.lobbyView;
+
+        self.lobbyView?.addTable(self);
+
     }
 
 
@@ -51,9 +58,12 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         self.title = data.data.name;
         println("view did load")
         currentUser.setPage("Single Lobby")
+        println(self.data.isMember)
 
         self.data.getDetailedAndThenGetMessages({
+
             self.lobbyView?.setUpViews(self.data)
+            self.descCell.addName(self.data)
 
             if (currentUser.loggedIn() == false) {
                 self.joinPupButton = JoinPupButton(parentController: self)
@@ -127,11 +137,9 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
     func recievedMessages() {
         println("got em!")
 
-        if (self.lobbyView!.hasMessages()) {
             self.lobbyView?.table?.reloadData();
-        } else {
-            self.lobbyView?.addTable(self);
-        }
+
+        self.lobbyView?.clearText();
         self.lobbyView?.makeTableViewLonger(self.data.data.messages.count)
 
         println("about to submit a message")
@@ -198,6 +206,11 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
     }
 
 
+    func sendMessage(message: String) {
+        self.data.quickBloxConnect?.sendMessage(message);
+
+    }
+
     //UITEXTFIELDDELEGATE
 
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
@@ -211,29 +224,48 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         textField.resignFirstResponder();
 
         println(textField.text);
-        self.data.quickBloxConnect?.sendMessage(textField.text);
-
+        sendMessage(textField.text)
         return true;
     }
 
 
     //table view functions
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return self.data.data.messages.count;
+
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if (section==0) {
+           return 1
+        } else {
+            return self.data.data.messages.count;
+        }
     }
+
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //var cell:UITableViewCell = self.tableV.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
         //cell.textLabel.text = self.items[indexPath.row]
-        let cell = tableView.dequeueReusableCellWithIdentifier("message", forIndexPath: indexPath) as! MessageCell
-        cell.setUpCell(self.data.data.messages[indexPath.row])
-        return cell;
+        if (indexPath.row==0 && indexPath.section==0) {
+
+            return descCell
+        } else {
+            let cell = tableView.dequeueReusableCellWithIdentifier("message", forIndexPath: indexPath) as! MessageCell
+            cell.setUpCell(self.data.data.messages[indexPath.row])
+            return cell;
+        }
 
 
     }
 
-    func tableView(tlableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 2;
+    }
+
+
+
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if (indexPath.row == 0 && indexPath.section == 0) {
+            return CGFloat(UIConstants.lobbyImageHeight) + CGFloat(100.0)
+        }
         return 50;
 
 

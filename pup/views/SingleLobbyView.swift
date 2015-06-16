@@ -6,10 +6,8 @@
 import Foundation
 import UIKit
 
-class SingleLobbyView: UIView {
 
-
-
+class SingleLobbyTopCell: UITableViewCell {
 
     var topContentBox: UIView = UIView();
     var lobbyTitle: UITextView = UITextView();
@@ -22,153 +20,30 @@ class SingleLobbyView: UIView {
     var tags: UILabel = UILabel();
     var desc: UITextView = UITextView()
     var divider: UIView = UIView()
-
-    var joinLobbyButton: UIButton = UIButton();
-
-    var newMessage: UITextField = UITextField();
-    var send: UIButton = UIButton();
-
     var isMember = false;
-
-    var table: UITableView?
-
-
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        println(frame)
-        println(frame.width)
-        println(frame.height)
-        backgroundColor=UIColor.blackColor()
-
-        clipsToBounds = true;
-
-
-
-
-    }
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
-    func addTable(delegate: UITableViewDelegate) {
-        table = UITableView();
-        table?.delegate = delegate;
-        table?.dataSource = delegate as! UITableViewDataSource
-        table?.registerClass(MessageCell.self, forCellReuseIdentifier: "message")
-        insertTable();
-        setUpTableConstraints();
-        table?.setContentOffset(CGPointMake(0, CGFloat.max), animated: false);
-
-        newMessage.delegate = delegate as! UITextFieldDelegate;
-
+    override init(style: UITableViewCellStyle, reuseIdentifier: String!) {
+        // println(style);
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
 
-    func hasMessages() -> Bool {
-        if (table == nil) {
-            return false;
-        }
-        return true;
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
     }
 
 
-
-
-    func shortenView(notification: NSNotification) {
-        println("shortening view")
-        if (newMessage.isFirstResponder()) {
-            UIView.animateWithDuration(0.5) {
-                var keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
-                var keyboardHeight = keyboardSize!.height;
-
-                var trans = CGAffineTransformMakeTranslation(0, -keyboardHeight - 35);
-                self.transform = trans;
-
-
-                self.layoutIfNeeded()
-            }
-        }
-
-
-
-
-    }
-
-    func restoreView() {
-        UIView.animateWithDuration(0.5) {
-
-            var trans = CGAffineTransformMakeTranslation(0, 0);
-            self.transform = trans;
-
-            self.layoutIfNeeded()
-        }
+    func addName(data: singleLobby) {
+        lobbyTitle.text = "\(data.data.owner.name)'s \n" +
+                "\(data.data.name)";
     }
 
 
-
-
-
-    func insertTable() {
-        self.addSubview(table!)
-
-        bringSubviewToFront(newMessage)
-        bringSubviewToFront(send)
-        if (!isMember) {
-            bringSubviewToFront(self.joinLobbyButton);
-
-        }
-
-
-    }
-
-    func setUpTableConstraints() {
-
-        table!.snp_remakeConstraints { (make) -> Void in
-            make.top.equalTo(self.divider.snp_bottom).offset(0)
-            make.left.equalTo(self).offset(0);
-            make.right.equalTo(self).offset(0);
-            make.height.equalTo(600);
-
-        }
-    }
-
-    func insertViews() {
-
-        topContentBox.addSubview(lobbyImg)
-        gradientBox.layer.insertSublayer(gradient, atIndex: 0)
-        topContentBox.addSubview(gradientBox)
-        topContentBox.addSubview(lobbyTitle)
-
-        
-        descBox.addSubview(tags)
-        descBox.addSubview(desc)
-        descBox.addSubview(divider)
-
-        addSubview(topContentBox)
-        addSubview(descBox)
-        addSubview(newMessage)
-        addSubview(send)
-        if (!isMember) {
-            addSubview(joinLobbyButton)
-        }
-
-
-    }
-
-    func sendMessage() {
-        println("sending it")
-        println(newMessage.text)
-        newMessage.resignFirstResponder()
-    }
-
-
-    func setUpDelegates(parentController: UIViewController) {
-        joinLobbyButton.addTarget(parentController as! SingleLobbyController, action: "joinLobby", forControlEvents: .TouchUpInside)
-    }
-
-    func setUpViews(data: singleLobby) {
-
+    func setUpCell(data: singleLobby) {
         isMember = data.isMember
 
 
@@ -183,14 +58,9 @@ class SingleLobbyView: UIView {
         })
 
 
-        if (!isMember) {
-            joinLobbyButton.setTitle("Join Lobby", forState: .Normal)
-            joinLobbyButton.setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
-            joinLobbyButton.backgroundColor = UIColor.whiteColor()
-        }
 
-        lobbyTitle.text = "\(data.data.owner.name)'s \n" +
-                "\(data.data.name)";
+
+        lobbyTitle.text = "\(data.data.name)";
         lobbyTitle.backgroundColor = UIColor.clearColor()
         lobbyTitle.textColor = UIColor.whiteColor()
         lobbyTitle.font = lobbyTitle.font.fontWithSize(19)
@@ -222,39 +92,24 @@ class SingleLobbyView: UIView {
 
 
         divider.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
-
-        newMessage.layer.masksToBounds = true;
-        newMessage.layer.cornerRadius = 12;
-        newMessage.layer.borderColor = UIColor.blackColor().CGColor;
-        newMessage.layer.borderWidth = 1;
-
-        send.setTitle("Send", forState: .Normal)
-        send.setTitleColor(UIColor.blackColor(), forState: .Normal);
-        send.addTarget(self, action: "sendMessage", forControlEvents: UIControlEvents.TouchUpInside)
-
         insertViews();
-        setUpConstraints();
+        setUpConstraints()
     }
 
-    func makeTableViewLonger(howManyMessages: Int) {
-
-        var howLong: Float = Float(howManyMessages) * 58.0;
-
-        if (CGFloat(howLong) > UIScreen.mainScreen().bounds.height) {
-            howLong = Float(UIScreen.mainScreen().bounds.height);
-        }
-
-        table!.snp_remakeConstraints { (make) -> Void in
-            make.top.equalTo(self.divider.snp_bottom).offset(0)
-            make.left.equalTo(self).offset(0);
-            make.right.equalTo(self).offset(0);
-            make.height.equalTo(howLong);
-
-        }
+    func insertViews() {
+        topContentBox.addSubview(lobbyImg)
+        gradientBox.layer.insertSublayer(gradient, atIndex: 0)
+        topContentBox.addSubview(gradientBox)
+        topContentBox.addSubview(lobbyTitle)
 
 
+        descBox.addSubview(tags)
+        descBox.addSubview(desc)
+        descBox.addSubview(divider)
+
+        addSubview(topContentBox)
+        addSubview(descBox)
     }
-
 
     func setUpConstraints() {
 
@@ -324,6 +179,180 @@ class SingleLobbyView: UIView {
             make.height.equalTo(UIConstants.dividerWidth);
 
         }
+
+    }
+
+}
+
+
+class SingleLobbyView: UIView {
+
+    var joinLobbyButton: UIButton = UIButton();
+
+    var newMessage: UITextField = UITextField();
+    var send: UIButton = UIButton();
+
+    var isMember = false;
+
+    var table: UITableView?
+
+    var sendTheMessage: ((newMessage: String) -> Void)?
+
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        println(frame)
+        println(frame.width)
+        println(frame.height)
+        backgroundColor=UIColor.blackColor()
+
+        clipsToBounds = true;
+
+
+
+
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+    func addTable(delegate: UITableViewDelegate) {
+        table = UITableView();
+        table?.delegate = delegate;
+        table?.dataSource = delegate as! UITableViewDataSource
+        table?.registerClass(MessageCell.self, forCellReuseIdentifier: "message")
+        insertTable();
+        setUpTableConstraints();
+        newMessage.delegate = delegate as! UITextFieldDelegate;
+        table?.reloadData()
+
+    }
+
+    func hasMessages() -> Bool {
+        if (table == nil) {
+            return false;
+        }
+        return true;
+    }
+
+
+
+
+    func shortenView(notification: NSNotification) {
+        println("shortening view")
+
+    }
+
+    func restoreView() {
+
+    }
+
+
+
+
+
+    func insertTable() {
+        self.addSubview(table!)
+
+        bringSubviewToFront(newMessage)
+        bringSubviewToFront(send)
+        if (!isMember) {
+            bringSubviewToFront(self.joinLobbyButton);
+
+        }
+
+
+    }
+
+    func setUpTableConstraints() {
+
+        table!.snp_remakeConstraints { (make) -> Void in
+            make.top.equalTo(self).offset(0)
+            make.left.equalTo(self).offset(0);
+            make.right.equalTo(self).offset(0);
+            make.bottom.equalTo(self).offset(-58);
+
+        }
+
+        if (isMember) {
+            table?.setContentOffset(CGPointMake(0, CGFloat.max), animated: false);
+            println("is member")
+        }
+    }
+
+    func insertViews() {
+
+        addSubview(newMessage)
+        addSubview(send)
+        if (!isMember) {
+            addSubview(joinLobbyButton)
+        }
+
+
+    }
+
+    func sendMessage() {
+        println("sending it")
+        println(newMessage.text)
+        sendTheMessage?(newMessage: newMessage.text);
+        newMessage.resignFirstResponder()
+    }
+
+
+    func setUpDelegates(parentController: UIViewController) {
+        joinLobbyButton.addTarget(parentController as! SingleLobbyController, action: "joinLobby", forControlEvents: .TouchUpInside)
+    }
+
+    func setUpViews(data: singleLobby) {
+
+        isMember = data.isMember
+
+        if (!isMember) {
+            joinLobbyButton.setTitle("Join Lobby", forState: .Normal)
+            joinLobbyButton.setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
+            joinLobbyButton.backgroundColor = UIColor.whiteColor()
+        }
+
+        newMessage.layer.masksToBounds = true;
+        newMessage.layer.cornerRadius = 12;
+        newMessage.layer.borderColor = UIColor.blackColor().CGColor;
+        newMessage.layer.borderWidth = 1;
+
+        send.setTitle("Send", forState: .Normal)
+        send.setTitleColor(UIColor.blackColor(), forState: .Normal);
+        send.addTarget(self, action: "sendMessage", forControlEvents: UIControlEvents.TouchUpInside)
+
+        insertViews();
+        setUpConstraints();
+    }
+
+    func clearText() {
+        self.newMessage.text = "";
+    }
+
+    func makeTableViewLonger(howManyMessages: Int) {
+
+//        var howLong: Float = Float(howManyMessages) * 58.0;
+//
+//        if (CGFloat(howLong) > UIScreen.mainScreen().bounds.height) {
+//            howLong = Float(UIScreen.mainScreen().bounds.height);
+//        }
+//
+//        table!.snp_remakeConstraints { (make) -> Void in
+//            make.top.equalTo(self).offset(0)
+//            make.left.equalTo(self).offset(0);
+//            make.right.equalTo(self).offset(0);
+//            make.bottom.equalTo(self).offset(58);
+//
+//        }
+
+
+    }
+
+
+    func setUpConstraints() {
+
 
         self.newMessage.snp_remakeConstraints {
             (make) -> Void in
