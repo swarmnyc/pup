@@ -60,6 +60,7 @@
     <string name="text_user_name_info">We\'ll be adding integrations for additional systems</string>
     <string name="text_facebook">Facebook</string>
     <string name="text_twitter">Twitter</string>
+    <string name="text_request_game">Not showing up? Request a Game.</string>
 
     <string name="message_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
     <string name="message_lobby_creating">Creating</string>

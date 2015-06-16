@@ -25,10 +25,12 @@ import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.Navigator;
+import com.swarmnyc.pup.components.Utility;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.*;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
 import com.swarmnyc.pup.view.HorizontalSpinner;
+import com.uservoice.uservoicesdk.UserVoice;
 
 import javax.inject.Inject;
 
@@ -199,7 +201,7 @@ public class CreateLobbyFragment extends Fragment
 		ButterKnife.inject( this, view );
 		EventBus.getBus().register( this );
 
-		m_gameAdapter = new AutoCompleteForPicturedModelAdapter<Game>( this.getActivity() );
+		m_gameAdapter = new AutoCompleteForPicturedModelAdapter<>( this.getActivity() );
 
 		m_gameAdapter.setSearchAction(
 			new Action<CharSequence>()
@@ -214,6 +216,13 @@ public class CreateLobbyFragment extends Fragment
 							@Override
 							public void success( List<Game> value )
 							{
+								if (value.size() == 0){
+									Game game = new Game();
+									game.setThumbnailPictureUrl( Utility.getResourceUri( getActivity(), R.drawable.ico_plus ).toString() );
+									game.setName( getString( R.string.text_request_game ) );
+									value.add( game );
+								}
+
 								m_gameAdapter.finishSearch( value );
 							}
 						}
@@ -231,15 +240,21 @@ public class CreateLobbyFragment extends Fragment
 				public void onItemClick( AdapterView<?> parent, View view, int position, long id )
 				{
 					m_selectedGame = m_gameAdapter.getItem( position );
-					if ( StringUtils.isNotEmpty( m_selectedGame.getPictureUrl() ) )
-					{
-						Picasso.with( getActivity() ).load( m_selectedGame.getPictureUrl() ).centerCrop().fit().into(
-							m_gameImageView
-						);
-					}
+					if ( m_selectedGame.getId() == null ){
+						m_gameNameTextEdit.setText( "" );
+						UserVoice.launchPostIdea( getActivity() );
+					} else  {
+						MainActivity.getInstance().hideIme();
+						if ( StringUtils.isNotEmpty( m_selectedGame.getPictureUrl() ) )
+						{
+							Picasso.with( getActivity() ).load( m_selectedGame.getPictureUrl() ).centerCrop().fit().into(
+								m_gameImageView
+							);
+						}
 
-					m_gamePlatformSelectView.setAvailablePlatforms( m_selectedGame.getPlatforms() );
-					valid();
+						m_gamePlatformSelectView.setAvailablePlatforms( m_selectedGame.getPlatforms() );
+						valid();
+					}
 				}
 			}
 		);
