@@ -14,4 +14,13 @@ extension String {
     func removeWhitespace() -> String {
         return self.replace(" ", replacement: "")
     }
+
+    func shorten(maxLength: Int) -> String {
+        if count(self) > maxLength {
+            return self.substringToIndex(advance(self.startIndex, maxLength)) + "..."
+        }
+
+        return self;
+    }
+
 }

@@ -58,22 +58,17 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         self.title = data.data.name;
         println("view did load")
         currentUser.setPage("Single Lobby")
-        println(self.data.isMember)
+        println(self.data.data.isMember)
+        self.lobbyView?.setUpViews(self.data)
 
-        self.data.getDetailedAndThenGetMessages({
+        self.data.setRoomIDAndLogIn()
 
-            self.lobbyView?.setUpViews(self.data)
-            self.descCell.addName(self.data)
-
-            if (currentUser.loggedIn() == false) {
-                self.joinPupButton = JoinPupButton(parentController: self)
-                self.joinPupButton?.onSuccessJoin = self.joinLobby
-            }
+        if (currentUser.loggedIn() == false) {
+            self.joinPupButton = JoinPupButton(parentController: self)
+            self.joinPupButton?.onSuccessJoin = self.joinLobby
+        }
 
 
-        }, failure: {
-
-        })
 
         registerForKeyboardNotifications()
 
@@ -137,8 +132,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
     func recievedMessages() {
         println("got em!")
 
-            self.lobbyView?.table?.reloadData();
-
+        self.lobbyView?.table?.reloadData();
         self.lobbyView?.clearText();
         self.lobbyView?.makeTableViewLonger(self.data.data.messages.count)
 
@@ -157,7 +151,10 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
             super.viewDidLayoutSubviews();
         println("view did layout subviews")
 
-        println(self.lobbyView?.table?.frame)
+        if (data.data.isMember) {
+            var rowAndSection = NSIndexPath(forRow: self.data.data.messages.count - 1, inSection: 1);
+            self.lobbyView?.table?.scrollToRowAtIndexPath(rowAndSection, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true);
+        }
 
 //        if let tableFrame = self.lobbyView?.table {
 //            var offset = tableFrame.frame.
@@ -237,7 +234,11 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         if (section==0) {
            return 1
         } else {
-            return self.data.data.messages.count;
+            if (self.data.hasMessages()) {
+                return self.data.data.messages.count;
+            } else {
+                return 1
+            }
         }
     }
 
@@ -248,9 +249,16 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
             return descCell
         } else {
-            let cell = tableView.dequeueReusableCellWithIdentifier("message", forIndexPath: indexPath) as! MessageCell
-            cell.setUpCell(self.data.data.messages[indexPath.row])
-            return cell;
+            if (self.data.hasMessages()) {
+                let cell = tableView.dequeueReusableCellWithIdentifier("message", forIndexPath: indexPath) as! MessageCell
+                cell.setUpCell(self.data.data.messages[indexPath.row])
+                return cell;
+            } else {
+                let cell = UITableViewCell();
+                cell.textLabel?.text = "Loading...";
+                cell.textLabel?.textAlignment = NSTextAlignment.Center
+                return cell
+            }
         }
 
 
@@ -266,7 +274,12 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         if (indexPath.row == 0 && indexPath.section == 0) {
             return CGFloat(UIConstants.lobbyImageHeight) + CGFloat(100.0)
         }
-        return 50;
+        if (self.data.hasMessages()) {
+            return CGFloat(50.0) + CGFloat(Int(count(self.data.data.messages[indexPath.row].message)/26) * 12);
+
+        } else {
+            return tableView.frame.height - (CGFloat(UIConstants.lobbyImageHeight) + CGFloat(100.0));
+        }
 
 
     }
@@ -274,6 +287,10 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         println("You selected cell #\(indexPath.row)!")
+        var cell = tableView.cellForRowAtIndexPath(indexPath);
+        cell?.backgroundColor = UIColor.whiteColor()
+
+        lobbyView?.newMessage.resignFirstResponder()
 
     }
 

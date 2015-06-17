@@ -143,8 +143,7 @@ class FilterView: UIView {
             make.width.equalTo(fullW)
             make.right.equalTo(self.parentView).offset(0)
             make.top.equalTo(self.parentView).offset(-300)
-            make.height.equalTo(self.parentView)
-
+            make.height.equalTo(390)
         }
 
         self.overlay.snp_remakeConstraints { (make) -> Void in

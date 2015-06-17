@@ -30,7 +30,12 @@ struct miscData {
 
 
 struct appURLS {
-    var apiBase = "http://pup-dev.azurewebsites.net/api/"
+    var siteBase = "http://pup-dev.azurewebsites.net/"
+    var apiBase: String {
+        get {
+            return "\(siteBase)/api/"
+        }
+    }
     var lobbies: String {
         get {
           return  "\(apiBase)lobby/"

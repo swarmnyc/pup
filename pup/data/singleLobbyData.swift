@@ -10,10 +10,9 @@ import Alamofire
 class singleLobby {
     var data = LobbyData();
     var empty = false;
-    var isMember = false;
     var quickBloxConnect: QuickBlox?
     var passMessagesToController: (() -> Void)?
-
+    var recievedMessages = false;
     init() {
         quickBloxConnect = QuickBlox();
         quickBloxConnect?.handOffMessages = self.recieveMessages;
@@ -31,6 +30,15 @@ class singleLobby {
 
     }
 
+    func hasMessages() -> Bool {
+        if (data.messages.count==0 && recievedMessages == false) {
+            return false
+        } else {
+            return true
+        }
+
+    }
+
 
     func joinLobby(success: () -> Void, failure: () -> Void) {
 
@@ -45,9 +53,15 @@ class singleLobby {
         mutableURLRequest.setValue("Bearer \(currentUser.data.accessToken)", forHTTPHeaderField: "Authorization")
 
         Alamofire.request(mutableURLRequest).responseJSON { (request, response, JSON, error) in
+           if (error == nil) {
+               self.data.isMember = true;
             success();
             self.quickBloxConnect!.logoutOfChat();
             self.quickBloxConnect!.createSession();
+           } else {
+               Error(alertTitle: "Couldn't Join Room", alertText: "We had some trouble getting you in, please try again...")
+               failure()
+           }
             println(error)
             println("---")
             println(JSON)
@@ -58,6 +72,7 @@ class singleLobby {
 
     func recieveMessages(response: QBResponse, messages: NSArray, responcePage: QBResponsePage) {
         data.addMessages(messages);
+        recievedMessages = true;
         passMessagesToController?();
     }
 
@@ -72,28 +87,18 @@ class singleLobby {
 
 
 
-    func getDetailedAndThenGetMessages(success: () -> Void, failure: () -> Void) {
+    func setRoomIDAndLogIn() {
 
-        let requestUrl = NSURL(string: "\(urls.lobbies)\(data.id)")
 
-        Alamofire.request(.GET, requestUrl!).responseJSON { (request, response, responseJSON, error) in
-            var resp: NSDictionary = responseJSON! as! NSDictionary
-
-            println(resp);
-
-            self.addOwnerAndUsersToData(resp);
             self.quickBloxConnect?.lobbyId = self.data.QBChatRoomId;
             self.loginToQuickBlox()
 
-            success();
-
-        };
 
     }
 
 
     func loginToQuickBlox() {
-        if (self.isMember) {
+        if (self.data.isMember) {
             quickBloxConnect?.createSession();
         } else {
             quickBloxConnect?.createSessionWithDefaultUser();
@@ -105,26 +110,6 @@ class singleLobby {
         quickBloxConnect?.logoutOfChat()
     }
 
-    func addOwnerAndUsersToData(detailed: NSDictionary) {
-        var user = detailed["users"] as! NSArray
-
-        for (var i = 0; i<user.count; i++) {
-            var userName = user[i]["userName"] as! String
-            println("'" + currentUser.data.name.removeWhitespace() + "'")
-            println("'" + userName.removeWhitespace() + "'")
-            if userName.removeWhitespace() == currentUser.data.name.removeWhitespace() {
-                self.isMember = true;
-            }
-
-            if (user[i]["isOwner"] as! Bool) {
-                data.owner = SingleLobbyUser(data: user[i] as! NSDictionary)
-            } else {
-                data.users.append(SingleLobbyUser(data: user[i] as! NSDictionary));
-            }
-        }
-
-
-    }
 
 
 

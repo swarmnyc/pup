@@ -67,10 +67,7 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         })
 
 
-
-
     }
-
 
 
     func fabTouchDown() {
@@ -109,40 +106,65 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
 
     func lobbyCount() -> Int {
-        return self.model.games.count
+        return self.model.gameCount
+    }
+
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 5;
+    }
+
+
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String {
+        return self.model.gamesKey[section] + " (\(self.model.gamesOrganized[self.model.gamesKey[section]]!.count))";
+
+    }
+
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        var title: UILabel = UILabel()
+        title.backgroundColor = UIColor.whiteColor();
+
+        title.text = "    " + self.model.gamesKey[section] + " (\(self.model.gamesOrganized[self.model.gamesKey[section]]!.count))";
+        title.font = title.font.fontWithSize(11)
+        title.textColor = UIColor(rgba: colors.midGray)
+        return title
+
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        println("count \(lobbyCount())")
-        return lobbyCount();
+
+        return self.model.gamesOrganized[self.model.gamesKey[section]]!.count;
+
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //var cell:UITableViewCell = self.tableV.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
         //cell.textLabel.text = self.items[indexPath.row]
-        if !self.model.games[indexPath.row].isBreakdown {
 
             let cell = tableView.dequeueReusableCellWithIdentifier("gamecell", forIndexPath:indexPath) as! gameCell
+            if (cell.isNew) {
+                cell.setCell(self.model.gamesOrganized[self.model.gamesKey[indexPath.section]]![indexPath.item])
+                cell.setUpConstraints()
+            }
 
-            cell.setCell(self.model.games[indexPath.row])
+            cell.setUpViews(self.model.gamesOrganized[self.model.gamesKey[indexPath.section]]![indexPath.item])
+
             return cell
-        } else {
 
-            var cell:headerCell = tableView.dequeueReusableCellWithIdentifier("headercell") as! headerCell
-            cell.setCell(self.model.games[indexPath.row])
-            return cell
-
-        }
 
 
     }
 
     func tableView(tlableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if !self.model.games[indexPath.row].isBreakdown {
-            return 119.0;
-        } else {
-            return 26.0;
-        }
 
+            return 119.0;
+
+    }
+
+  func tableView(tlableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+            if (self.model.gamesOrganized[self.model.gamesKey[section]]!.count == 0) {
+                return 0;
+            } else {
+                return 25;
+            }
 
     }
 
@@ -151,13 +173,9 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         println("You selected cell #\(indexPath.row)!")
         var selectedCell = tableView.cellForRowAtIndexPath(indexPath) as? gameCell;
 
+        let lobbyView = SingleLobbyController(info: self.model.gamesOrganized[self.model.gamesKey[indexPath.section]]![indexPath.row])
+        self.navigationController?.pushViewController(lobbyView, animated: true)
 
-        println(self.model.games[indexPath.row])
-        if (self.model.games[indexPath.row].isBreakdown == false) {
-            let lobbyView = SingleLobbyController(info: self.model.games[indexPath.row])
-
-            self.navigationController?.pushViewController(lobbyView, animated: true)
-        }
     }
 
 

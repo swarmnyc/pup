@@ -5,7 +5,7 @@
 
 import Foundation
 import UIKit
-
+import Haneke
 
 class MessageCell: UITableViewCell {
 
@@ -34,19 +34,41 @@ class MessageCell: UITableViewCell {
     func setUpCell(item: Message) {
         var image = UIImage(named: "iconWithText");
         self.profilePicture.clipsToBounds = true;
-        self.profilePicture.image = image;
+        self.profilePicture.image = nil;
         self.profilePicture.layer.cornerRadius = 20;
         if (item.picture != "") {
-            var url = NSURL(string: item.picture)
+            var url = NSURL(string: item.picture.stringByReplacingOccurrencesOfString("~", withString: urls.siteBase, options: NSStringCompareOptions.LiteralSearch, range: nil))
             self.profilePicture.frame = CGRectMake(0,0,50,50);
-
             self.profilePicture.hnk_setImageFromURL(url!)
             println("HAS URL!!!!!!!!")
+            println(url!)
+        } else {
+            self.profilePicture.image = image;
+
         }
+
+
+
+        message.text = item.message;
+        message.font = message.font.fontWithSize(13);
+        message.userInteractionEnabled = false;
+        message.textContainerInset = UIEdgeInsetsZero
+        message.textContainer.lineFragmentPadding = 0;
+        message.backgroundColor = UIColor.clearColor();
+        message.textColor = UIColor(rgba: colors.midGray).darkerColor(0.3)
+        self.message.textAlignment = NSTextAlignment.Left
 
         if (item.username == "system message") {
             isSystemMessage = true;
+            self.profilePicture.layer.opacity = 0;
+            self.userName.layer.opacity = 0;
+            self.message.textColor = UIColor(rgba: colors.orange);
+            self.message.textAlignment = NSTextAlignment.Center
         } else {
+            isSystemMessage = false;
+            self.profilePicture.layer.opacity = 1;
+            self.userName.layer.opacity = 1;
+
             userName.text = item.username;
             userName.font = userName.font.fontWithSize(12)
             userName.backgroundColor = UIColor.clearColor();
@@ -56,25 +78,17 @@ class MessageCell: UITableViewCell {
             }
         }
 
-        message.text = item.message;
-        message.font = message.font.fontWithSize(10);
-        message.userInteractionEnabled = false;
-        message.textContainerInset = UIEdgeInsetsZero
-        message.textContainer.lineFragmentPadding = 0;
-        message.backgroundColor = UIColor.clearColor();
-        message.textColor = UIColor(rgba: colors.midGray).darkerColor(0.3)
-
-
-        addViews();
+        if (message.superview == nil){
+            addViews();
+        }
         addConstraints();
+
 
     }
 
     func addViews() {
         addSubview(profilePicture)
-        if (isSystemMessage == false) {
-            addSubview(userName)
-        }
+        addSubview(userName)
         addSubview(message)
 
     }
@@ -83,7 +97,7 @@ class MessageCell: UITableViewCell {
         profilePicture.snp_makeConstraints {
             (make) -> Void in
             make.left.equalTo(self).offset(UIConstants.horizontalPadding * 2)
-            make.centerY.equalTo(self.snp_centerY)
+            make.top.equalTo(self).offset(UIConstants.halfVerticalPadding)
             make.height.equalTo(40)
             make.width.equalTo(40);
 
@@ -107,7 +121,7 @@ class MessageCell: UITableViewCell {
         } else {
             message.snp_remakeConstraints {
                 (make) -> Void in
-                make.left.equalTo(self.profilePicture.snp_right).offset(UIConstants.horizontalPadding * 2.0)
+                make.left.equalTo(self).offset(UIConstants.horizontalPadding * 2.0)
                 make.top.equalTo(self).offset(UIConstants.verticalPadding)
                 make.right.equalTo(self).offset(-UIConstants.horizontalPadding * 2.0);
                 make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)
@@ -122,8 +136,8 @@ class MessageCell: UITableViewCell {
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
 
+        self.backgroundColor = UIColor.whiteColor()
         // Configure the view for the selected state
     }
 

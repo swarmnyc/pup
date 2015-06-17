@@ -26,6 +26,8 @@ class LobbyData {
     var tags = []
     var QBChatRoomId: String = ""
     var messages: Array<Message> = [];
+    var proPicDict: Dictionary<String, String> = ["": ""];
+    var isMember = false;
     var getTagText: String {
         get {
             return "\(playStyle), \(skillLevel)"
@@ -77,6 +79,37 @@ class LobbyData {
         println(tags[0])
         println(QBChatRoomId)
 
+        addOwnerAndUsersToData(data);
+
+
+    }
+
+    func addOwnerAndUsersToData(detailed: NSDictionary) {
+        var user = detailed["users"] as! NSArray
+
+        for (var i = 0; i<user.count; i++) {
+            var userName = user[i]["userName"] as! String
+
+            //is the current user in this lobby?
+            if userName == currentUser.data.name {
+                self.isMember = true;
+                println("IS A MEMBER!!!!")
+            }
+
+            //add profile pictures in dictionary for easy access
+            proPicDict[userName] = ""
+            if (user[i].objectForKey("portraitUrl") != nil) {
+                proPicDict[userName] = user[i]["portraitUrl"] as! String
+            }
+
+            //add users and owners to data
+            if (user[i]["isOwner"] as! Bool) {
+                owner = SingleLobbyUser(data: user[i] as! NSDictionary)
+            } else {
+                users.append(SingleLobbyUser(data: user[i] as! NSDictionary));
+            }
+        }
+
 
     }
 
@@ -90,7 +123,7 @@ class LobbyData {
         self.messages = [];
 
         for (var i = 0; i<messages.count; i++) {
-            self.messages.append(Message(messages: messages[i], users: self.users, owner: self.owner));
+            self.messages.append(Message(messages: messages[i], propics: proPicDict));
         }
 
 
@@ -105,30 +138,23 @@ class Message {
     var picture = ""
 
 
-    init(messages: AnyObject, users: Array<SingleLobbyUser>, owner: SingleLobbyUser) {
+    init(messages: AnyObject, propics: Dictionary<String,String>) {
         //println(messages.customParameters)
         println("------")
         if (messages.customParameters?["userName"] != nil) {
             self.username = messages.customParameters?["userName"] as! String;
+            self.picture = propics[self.username] as! String!
         } else {
             self.username = "system message"
+            self.picture = ""
         }
         self.message = messages.valueForKey("text") as! String;
 
-        for (var i = 0; i<users.count; i++) {
-            if (self.username == users[i].name) {
-                if (users[i].portraitUrl != "") {
-                    self.picture = users[i].portraitUrl;
-                }
-            }
-        }
-
-        if (self.username == owner.name) {
-            self.picture = owner.portraitUrl;
-        }
-
         println(self.message)
         println(self.username);
+        println(self.picture);
+//        println(propics[self.username])
+//        println(propics);
 
     }
 
@@ -170,6 +196,10 @@ class SingleLobbyUser {
 
 class LobbyList {  //collection of all the current games
     var games: Array<LobbyData>;
+
+    var gamesOrganized = ["Happening Now": Array<LobbyData>(), "Happening Soon": Array<LobbyData>(), "Tomorrow": Array<LobbyData>(), "Later This Week": Array<LobbyData>(), "Next Week": Array<LobbyData>()]
+    var gamesKey = ["Happening Now", "Happening Soon", "Tomorrow", "Later This Week", "Next Week"]
+    var gameCount = 0;
 
     var updated: Bool = false;
     var parent: LobbyListController;
@@ -238,14 +268,38 @@ class LobbyList {  //collection of all the current games
     func updateData(data: NSArray) {  //update data and call a redraw in the UI
         println(data)
         games.removeAll();
-
+        gamesOrganized[gamesKey[0]] = []
+        gamesOrganized[gamesKey[1]] = []
+        gamesOrganized[gamesKey[2]] = []
+        gamesOrganized[gamesKey[3]] = []
+        gamesOrganized[gamesKey[4]] = []
+        gameCount = 0;
         println(games)
         updated = true;
 
 
         for (var i = 0; i<data.count; i++) {
+            var lobby = data[i] as! NSDictionary;
+            var startTimeUtc = lobby["startTimeUtc"] as! String
+            let date = NSDate(fromString: startTimeUtc, format: .ISO8601)
+            if (date.minutesAfterDate(NSDate()) <= 30) {
+                gamesOrganized[gamesKey[0]]!.append(LobbyData(data: lobby))
+                gameCount++;
+            } else if (date.isToday()) {
+                gamesOrganized[gamesKey[1]]!.append(LobbyData(data: lobby))
+                gameCount++;
+            } else if (date.isTomorrow()) {
+                gamesOrganized[gamesKey[2]]!.append(LobbyData(data: lobby))
+                gameCount++;
+            } else if (date.isThisWeek()) {
+                gamesOrganized[gamesKey[3]]!.append(LobbyData(data: lobby))
+                gameCount++;
+            } else {
+                gamesOrganized[gamesKey[4]]!.append(LobbyData(data: lobby))
+                gameCount++;
+            }
 
-            games.append(LobbyData(data: data[i] as! NSDictionary))
+            //games.append(LobbyData(data: lobby))
 
         }
 

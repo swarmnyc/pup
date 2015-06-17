@@ -37,14 +37,10 @@ class SingleLobbyTopCell: UITableViewCell {
     }
 
 
-    func addName(data: singleLobby) {
-        lobbyTitle.text = "\(data.data.owner.name)'s \n" +
-                "\(data.data.name)";
-    }
 
 
     func setUpCell(data: singleLobby) {
-        isMember = data.isMember
+        isMember = data.data.isMember
 
 
         var url = NSURL(string: data.data.pictureUrl)
@@ -60,11 +56,13 @@ class SingleLobbyTopCell: UITableViewCell {
 
 
 
-        lobbyTitle.text = "\(data.data.name)";
+        lobbyTitle.text = "\(data.data.owner.name)'s \n" +
+                "\(data.data.name)";
         lobbyTitle.backgroundColor = UIColor.clearColor()
         lobbyTitle.textColor = UIColor.whiteColor()
         lobbyTitle.font = lobbyTitle.font.fontWithSize(19)
         lobbyTitle.editable = false;
+        lobbyTitle.scrollEnabled = false;
         lobbyTitle.userInteractionEnabled = false;
 
         gradient.colors = [UIColor.clearColor().CGColor, UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).CGColor]
@@ -241,11 +239,31 @@ class SingleLobbyView: UIView {
 
     func shortenView(notification: NSNotification) {
         println("shortening view")
+        if (newMessage.isFirstResponder()) {
+            UIView.animateWithDuration(0.5) {
+                var keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue().height
 
+
+                var trans = CGAffineTransformMakeTranslation(0, -1 * keyboardSize!);
+                self.transform = trans;
+
+
+                self.layoutIfNeeded()
+            }
+
+
+
+        }
     }
 
     func restoreView() {
+        UIView.animateWithDuration(0.5) {
+            var trans = CGAffineTransformMakeTranslation(0, 0);
+            self.transform = trans;
 
+
+            self.layoutIfNeeded()
+        }
     }
 
 
@@ -306,7 +324,7 @@ class SingleLobbyView: UIView {
 
     func setUpViews(data: singleLobby) {
 
-        isMember = data.isMember
+        isMember = data.data.isMember
 
         if (!isMember) {
             joinLobbyButton.setTitle("Join Lobby", forState: .Normal)

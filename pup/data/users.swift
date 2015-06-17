@@ -119,7 +119,9 @@ class User {
 
         self.data.loggedIn = true;
         self.data.accessToken = userData["accessToken"]! as! String;
-        self.data.name = userData["userName"]! as! String;
+        var name = userData["userName"]! as! NSString;
+        self.data.name = name.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) as String
+        println(self.data.name + "the NAME")
         self.data.userId = userData["id"]! as! String;
         if (userData["portraitUrl"] != nil) {
             self.data.picture = userData["portraitUrl"]! as! String;
@@ -128,7 +130,7 @@ class User {
 
         }
         self.data.tags = userData["tags"] as! Array<Dictionary<String, String>>
-        self.data.QBChatId = self.data.tags[0]["value"] as! String!
+        self.data.QBChatId = self.data.tags[0]["value"] as String!
         println(self.data)
         self.setLocalStorage()
     }

@@ -6,6 +6,7 @@
 import Foundation
 import UIKit
 import Haneke
+
 class gameCell: UITableViewCell {
 
 
@@ -23,7 +24,7 @@ class gameCell: UITableViewCell {
     var time: UILabel = UILabel()
     var platform: UILabel = UILabel()
     var divider = UIView()
-
+    var isNew = true;
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -60,10 +61,7 @@ class gameCell: UITableViewCell {
 
         self.contentView.addSubview(textRightBottom)
 
-        setUpConstraints();
-
-        setUpViews(item)
-
+        //setUpConstraints();
 
 
     }
@@ -73,6 +71,7 @@ class gameCell: UITableViewCell {
 
     func setUpConstraints() {
 
+        isNew = false;
         var bottomSectionHeight = 26;
         var topSectionHeight = 93;
 
@@ -181,7 +180,9 @@ class gameCell: UITableViewCell {
         var url = NSURL(string: data.pictureUrl)
 
        // var request:NSURLRequest = NSURLRequest(URL: url!)
-        imgView.frame.size = CGSizeMake(400, 400);
+        self.imgView.clipsToBounds = true;
+        self.imgView.contentMode = UIViewContentMode.ScaleAspectFill;
+        imgView.frame.size = CGSizeMake(93, 93);
         self.imgView.hnk_setImageFromURL(url!)
 //        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
 //            self.img = UIImage(data: data) as UIImage!
@@ -203,7 +204,7 @@ class gameCell: UITableViewCell {
         title.layoutMargins = UIEdgeInsetsZero
 
 
-        desc.text = data.description
+        desc.text = data.description.shorten(220)
         self.desc.font = UIFont.systemFontOfSize(11.0)
         desc.editable = false
         desc.userInteractionEnabled = false

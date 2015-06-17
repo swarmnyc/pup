@@ -7,7 +7,6 @@ import Foundation
 
 
 func colorFromSystem(system: String) -> String {
-    println(system.uppercaseString);
     switch(system.uppercaseString) {
         case "PS3":
             return colors.PS3
@@ -21,7 +20,6 @@ func colorFromSystem(system: String) -> String {
         case "XBOXONE":
             return colors.XONE
         default:
-            println(colors.PC)
 
             return colors.PC
 

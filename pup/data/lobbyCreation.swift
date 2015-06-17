@@ -84,6 +84,7 @@ class LobbyCreationModel {
         if (gameId != nil && selectedPlatform != nil && PlayStyle != nil && GamerSkill != nil) {
             return true
         }
+
         makeSureTimeIsInFuture()
 
 
@@ -104,7 +105,15 @@ class LobbyCreationModel {
             urlEnd += "&Platform=" + appData.platformDict[selectedPlatform!]!
             urlEnd += "&PlayStyles=" + PlayStyle!
             urlEnd += "&SkillLevels=" + GamerSkill!
-            urlEnd += "&StartTimeUtc=" + startTime.toString(format: .Custom("yyyy-MM-dd")) + "T" + startTime.toString(format: .Custom("hh:mm:ss")) + "Z"
+
+            var dateFormatter = NSDateFormatter();
+            var timeZone = NSTimeZone(name: "UTC")
+            dateFormatter.timeZone = timeZone;
+            dateFormatter.dateFormat = "yyy-MM-dd HH:mm:ss";
+            var dateString = dateFormatter.stringFromDate(startTime) as! String
+
+//            urlEnd += "&StartTimeUtc=" + startTime.toString(format: .Custom("yyyy-MM-dd")) + "T" + startTime.toString(format: .Custom("hh:mm:ss")) + "Z"
+            urlEnd += "&StartTimeUtc=" + dateString.stringByReplacingOccurrencesOfString(" ", withString: "T", options: NSStringCompareOptions.LiteralSearch, range: nil) + "Z"
         if (description != nil) {
             urlEnd += "&description=" + description!
         }

@@ -15,7 +15,7 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
     var data: SearchResultsModel = SearchResultsModel();
     var numberOfSelections: Int = 0;
     var searchController: SearchResultsController?;
-
+    var searchText = "";
 
     convenience init(parentController: LobbyListController) {
         self.init()
@@ -159,10 +159,16 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
     }
 
 
+    func pullToRefresh() {
+        data.search(searchText, success: handOffResults, failure: {
+            println("failure in search");
+        })
+    }
+
 
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         println(searchText)
-
+        self.searchText = searchText;
 
         if (searchText == "") {
             searchController?.hideResults();
