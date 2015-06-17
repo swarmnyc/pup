@@ -88,7 +88,7 @@ namespace SWARM.PuP.Web.ApiControllers
             {
                 return BadRequest();
             }
-            
+
             return UserInfoResult(user, "");
         }
 
@@ -101,7 +101,7 @@ namespace SWARM.PuP.Web.ApiControllers
             if (user != null)
             {
                 // If username and email are the same, then login 
-                if (!user.Email.Equals(model.Email, StringComparison.CurrentCultureIgnoreCase) || 
+                if (!user.Email.Equals(model.Email, StringComparison.CurrentCultureIgnoreCase) ||
                     !user.UserName.Equals(model.UserName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     user = null;
@@ -193,7 +193,11 @@ namespace SWARM.PuP.Web.ApiControllers
         public IHttpActionResult AddMedium([FromBody] SocialMedium medium)
         {
             var user = User.Identity.GetPuPUser();
-            
+
+            if (user.Media.Contains(medium))
+            {
+                user.Media.Remove(medium);
+            }
             user.Media.Add(medium);
             _userService.Update(user);
 
@@ -204,8 +208,13 @@ namespace SWARM.PuP.Web.ApiControllers
         public IHttpActionResult DeleteMedium(SocialMediumType type)
         {
             var user = User.Identity.GetPuPUser();
-            user.Media.Remove(user.Media.First(x => x.Type == type));
-            _userService.Update(user);
+            var medium = user.Media.FirstOrDefault(x => x.Type == type);
+            if (medium != null)
+            {
+                user.Media.Remove(medium);
+                _userService.Update(user);
+            }
+
 
             return Ok();
         }

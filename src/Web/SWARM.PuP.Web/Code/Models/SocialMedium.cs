@@ -1,18 +1,22 @@
 ﻿using System;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace SWARM.PuP.Web.Models
 {
+
     public enum SocialMediumType
     {
         Facebook,
-        Twitter
+        Twitter,
+        Tumblr
     }
 
     public class SocialMedium
     {
-        [Required]
+        [Required, BsonRepresentation(BsonType.String)]
         public SocialMediumType Type { get; set; }
         [Required]
         public string UserId { get; set; }

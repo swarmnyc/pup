@@ -127,10 +127,13 @@ namespace SWARM.PuP.Web.ApiControllers
                 switch (type)
                 {
                     case SocialMediumType.Facebook:
-                        ShareToFb(medium, lobby, localTime);
+                        ShareToFacebook(medium, lobby, localTime);
                         break;
                     case SocialMediumType.Twitter:
                         ShareToTwitter(medium, lobby, localTime);
+                        break;
+                    case SocialMediumType.Tumblr:
+                        ShareToTumblur(medium, lobby, localTime);
                         break;
                 }
             }
@@ -138,16 +141,39 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
+        private void ShareToTumblur(SocialMedium medium, Lobby lobby, string localTime)
+        {
+            try
+            {
+                //TODO: Bug with Chinese letter in AuthRequest
+                var msg = HttpUtility.UrlEncode(GetMessage(lobby, localTime), Encoding.UTF8);
+                var authRequest = new TwitterOAuthClient
+                {
+                    ConsumerKey = OAuthData.Tumblr.ConsumerKey,
+                    ConsumerSecret = OAuthData.Tumblr.ConsumerSecret,
+                    Token = medium.Token,
+                    TokenSecret = medium.Secret
+                };
+
+                authRequest.OAuthWebRequest(RequestMethod.POST, string.Format("https://api.tumblr.com/v2/blog/{0}.tumblr.com/post", medium.UserId),
+                    "type=text&body=" + msg);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError("{0}\n{1}", ex.Message, ex.StackTrace);
+            }
+        }
+
         private void ShareToTwitter(SocialMedium medium, Lobby lobby, string localTime)
         {
             try
             {
-                //TODO: Move to Config, Bug with Chinese letter in AuthRequest
+                //TODO: Bug with Chinese letter in AuthRequest
                 var msg = HttpUtility.UrlEncode(GetMessage(lobby, localTime), Encoding.UTF8);
                 var authRequest = new TwitterOAuthClient
                 {
-                    ConsumerKey = "tuPdqGWSqvDNRC8TrcJ1dyuSd",
-                    ConsumerSecret = "oAjcN1hXSo0AZw9XauXU6qbwcR5FDBYnAvSHygFKbE2wg9kcxs",
+                    ConsumerKey = OAuthData.Twitter.ConsumerKey,
+                    ConsumerSecret = OAuthData.Twitter.ConsumerSecret,
                     Token = medium.Token,
                     TokenSecret = medium.Secret
                 };
@@ -161,7 +187,7 @@ namespace SWARM.PuP.Web.ApiControllers
             }
         }
 
-        private void ShareToFb(SocialMedium medium, Lobby lobby, string localTime)
+        private void ShareToFacebook(SocialMedium medium, Lobby lobby, string localTime)
         {
             try
             {
