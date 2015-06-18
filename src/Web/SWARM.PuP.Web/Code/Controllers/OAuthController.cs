@@ -22,8 +22,22 @@ namespace SWARM.PuP.Web.Controllers
             return Authorize(OAuthData.Twitter);
         }
 
+        [Authorize]
+        public ActionResult TumblrCallback()
+        {
+            return Callback(OAuthData.Tumblr, x=> x.ToObject<dynamic>().response.user.name);
+        }
+
+        [Authorize]
+        public ActionResult TwitterCallback()
+        {
+            return Callback(OAuthData.Twitter, x=> x.ToObject<dynamic>().screen_name);
+        }
+
         private ActionResult Authorize(OAuthData data)
         {
+            EnsureCookie();
+
             var authRequest = new TwitterOAuthClient
             {
                 ConsumerKey = data.ConsumerKey,
@@ -48,19 +62,14 @@ namespace SWARM.PuP.Web.Controllers
             return Redirect(authUrl);
         }
 
-        [Authorize]
-        public ActionResult TumblrCallback()
+        private void EnsureCookie()
         {
-            return Callback(OAuthData.Tumblr, x=> x.ToObject<dynamic>().response.user.name);
+            if (!string.IsNullOrWhiteSpace(Request.QueryString["user_token"]))
+            {
+                Response.Cookies["token"].Value = Request.QueryString["user_token"];
+            }
         }
 
-        [Authorize]
-        public ActionResult TwitterCallback()
-        {
-            return Callback(OAuthData.Twitter, x=> x.ToObject<dynamic>().screen_name);
-        }
-
-        
         private ActionResult Callback(OAuthData data, Func<string,string> getUserId)
         {
             var authRequest = new TwitterOAuthClient
@@ -108,7 +117,12 @@ namespace SWARM.PuP.Web.Controllers
                 userService.Update(user);
             }
 
-            return Content("Ok");
+            return RedirectToAction("Done");
+        }
+
+        public ActionResult Done()
+        {
+            return Content("");
         }
     }
 }
