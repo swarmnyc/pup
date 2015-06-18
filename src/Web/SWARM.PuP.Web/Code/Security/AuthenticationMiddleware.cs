@@ -31,20 +31,24 @@ namespace SWARM.PuP.Web.Security
         {
             IOwinContext context = (IOwinContext)obj;
 
-            string encryptedToken;
+            string encryptedToken = null;
             if (context.Request.Headers.ContainsKey("Authorization"))
             {
                 string s = context.Request.Headers.Get("Authorization");
                 if (s.IsNotNullOrEmpty() && s.StartsWith(TokenPrefix, StringComparison.CurrentCultureIgnoreCase))
                 {
                     encryptedToken = s.Substring(_tokenPrefixLength);
-                    goto CHECK;
                 }
             }
+            else if (!string.IsNullOrWhiteSpace(context.Request.Query["User_Token"]))
+            {
+                encryptedToken = context.Request.Query["User_Token"];
+            }
+            else
+            {
+                encryptedToken = context.Request.Cookies["token"];
+            }
 
-            encryptedToken = context.Request.Cookies["token"];
-
-            CHECK:
             if (encryptedToken.IsNotNullOrWhiteSpace())
             {
                 try
