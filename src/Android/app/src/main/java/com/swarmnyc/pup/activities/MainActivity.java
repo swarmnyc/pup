@@ -20,7 +20,6 @@ import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.Navigator;
-import com.swarmnyc.pup.components.TwitterHelper;
 import com.swarmnyc.pup.fragments.MainDrawerFragment;
 import com.uservoice.uservoicesdk.UserVoice;
 
@@ -112,7 +111,6 @@ public class MainActivity extends AppCompatActivity
 	{
 		super.onActivityResult( requestCode, resultCode, data );
 		FacebookHelper.handleActivityResult( requestCode, resultCode, data );
-		TwitterHelper.handleActivityResult( requestCode, resultCode, data );
 	}
 
 	@Override

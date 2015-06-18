@@ -58,8 +58,9 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     QuickbloxApiTypes.RoomUpdate(lobby.GetTagValue(QuickbloxHttpHelper.Const_ChatRoomId)),
                     HttpMethod.Put);
 
-            var charRoom = request.Json<QuickbloxRoom>(new
+            var chatRoom = request.Json<QuickbloxRoom>(new
             {
+                //push_all = add users
                 push_all = new
                 {
                     occupants_ids = chatUsersId
@@ -78,8 +79,9 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     QuickbloxApiTypes.RoomUpdate(lobby.GetTagValue(QuickbloxHttpHelper.Const_ChatRoomId)),
                     HttpMethod.Put);
 
-            var charRoom = request.Json<QuickbloxRoom>(new
+            var chatRoom = request.Json<QuickbloxRoom>(new
             {
+                //pull_all = remove users
                 pull_all = new
                 {
                     occupants_ids = chatUsersId

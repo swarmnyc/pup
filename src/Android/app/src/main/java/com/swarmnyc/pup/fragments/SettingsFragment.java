@@ -24,9 +24,9 @@ import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.PhotoHelper;
 import com.swarmnyc.pup.components.Screen;
-import com.swarmnyc.pup.components.TwitterHelper;
 
 import javax.inject.Inject;
+import java.security.Key;
 
 public class SettingsFragment extends Fragment implements Screen
 {
@@ -43,7 +43,13 @@ public class SettingsFragment extends Fragment implements Screen
 	Switch m_fbSwitch;
 
 	@InjectView( R.id.switch_twitter )
-	Switch m_twSwitch;
+	Switch m_twitterSwitch;
+
+	@InjectView( R.id.switch_reddit )
+	Switch m_redditSwitch;
+
+	@InjectView( R.id.switch_tumblr )
+	Switch m_tumblrSwitch;
 
 	@Override
 	public String toString()
@@ -83,7 +89,8 @@ public class SettingsFragment extends Fragment implements Screen
 		m_nameText.setText( User.current.getUserName() );
 
 		m_fbSwitch.setChecked( User.current.hasMedium( Consts.KEY_FACEBOOK ) );
-		m_twSwitch.setChecked( User.current.hasMedium( Consts.KEY_TWITTER ) );
+		m_twitterSwitch.setChecked( User.current.hasMedium( Consts.KEY_TWITTER ) );
+		m_tumblrSwitch.setChecked( User.current.hasMedium( Consts.KEY_TUMBLR ) );
 	}
 
 	@Override
@@ -135,7 +142,7 @@ public class SettingsFragment extends Fragment implements Screen
 							@Override
 							public void success( final String value )
 							{
-							    User.current.setPortraitUrl( value );
+								User.current.setPortraitUrl( value );
 								User.update();
 							}
 						}
@@ -163,8 +170,8 @@ public class SettingsFragment extends Fragment implements Screen
 		}
 		else
 		{
-			m_userService.deleteFacebookToken(
-				new ServiceCallback()
+			m_userService.deleteMedium(
+				Consts.KEY_FACEBOOK, new ServiceCallback()
 				{
 					@Override
 					public void success( final Object value )
@@ -180,28 +187,99 @@ public class SettingsFragment extends Fragment implements Screen
 	@OnClick( R.id.switch_twitter )
 	void connectToTwitter()
 	{
-		if ( m_twSwitch.isChecked() )
+		if ( m_twitterSwitch.isChecked() )
 		{
-			TwitterHelper.startLoginRequire(
-				new AsyncCallback()
+			m_twitterSwitch.setChecked( false );
+
+			OAuthFragment oAuthFragment = new OAuthFragment();
+			oAuthFragment.initialize(
+				Consts.KEY_TWITTER, new AsyncCallback()
 				{
 					@Override
-					public void failure()
+					public void success()
 					{
-						m_twSwitch.setChecked( false );
+						User.addMedium( Consts.KEY_TWITTER );
+						m_twitterSwitch.setChecked( true );
+						Toast.makeText( getActivity(), R.string.message_connect_success, Toast.LENGTH_LONG ).show();
 					}
 				}
 			);
+
+			oAuthFragment.show( this.getFragmentManager(), null );
 		}
 		else
 		{
-			m_userService.deleteTwitterToken(
-				new ServiceCallback()
+			m_userService.deleteMedium(
+				Consts.KEY_TWITTER, new ServiceCallback()
 				{
 					@Override
 					public void success( final Object value )
 					{
 						User.removeMedium( Consts.KEY_TWITTER );
+						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
+					}
+				}
+			);
+		}
+	}
+
+	@OnClick( R.id.switch_tumblr )
+	void connectToTumblr()
+	{
+		if ( m_tumblrSwitch.isChecked() )
+		{
+			m_tumblrSwitch.setChecked( false );
+
+			OAuthFragment oAuthFragment = new OAuthFragment();
+			oAuthFragment.initialize(
+				Consts.KEY_TUMBLR, new AsyncCallback()
+				{
+					@Override
+					public void success()
+					{
+						User.addMedium( Consts.KEY_TUMBLR );
+						m_tumblrSwitch.setChecked( true );
+						Toast.makeText( getActivity(), R.string.message_connect_success, Toast.LENGTH_LONG ).show();
+					}
+				}
+			);
+
+			oAuthFragment.show( this.getFragmentManager(), null );
+		}
+		else
+		{
+			m_userService.deleteMedium(
+				Consts.KEY_TUMBLR, new ServiceCallback()
+				{
+					@Override
+					public void success( final Object value )
+					{
+						User.removeMedium( Consts.KEY_TUMBLR );
+						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
+					}
+				}
+			);
+		}
+	}
+
+	@OnClick( R.id.switch_reddit )
+	void connectToReddit()
+	{
+		if ( m_redditSwitch.isChecked() )
+		{
+
+			/*RegisterForMediumDialogFragment dialogFragment = new RegisterForMediumDialogFragment();
+			dialogFragment.show( this.getFragmentManager(), null);*/
+		}
+		else
+		{
+			m_userService.deleteMedium(
+				Consts.KEY_REDDIT, new ServiceCallback()
+				{
+					@Override
+					public void success( final Object value )
+					{
+						User.removeMedium( Consts.KEY_REDDIT );
 						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
 					}
 				}

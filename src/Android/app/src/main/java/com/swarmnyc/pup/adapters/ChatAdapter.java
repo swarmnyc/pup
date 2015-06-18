@@ -1,7 +1,6 @@
 package com.swarmnyc.pup.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,18 +11,18 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
+import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatMessageListener;
 import com.swarmnyc.pup.chat.ChatRoomService;
 import com.swarmnyc.pup.components.FacebookHelper;
-import com.swarmnyc.pup.components.TwitterHelper;
 import com.swarmnyc.pup.components.Utility;
 import com.swarmnyc.pup.events.LobbyUserChanged;
+import com.swarmnyc.pup.fragments.OAuthFragment;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 import com.swarmnyc.pup.models.UserInfo;
@@ -184,7 +183,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 							user = new LobbyUserInfo();
 							user.setId( u.getId() );
 							user.setUserName( u.getUserName() );
-							user.setPortraitUrl( Utility.urlContent(u.getPortraitUrl()) );
+							user.setPortraitUrl( Utility.urlContent( u.getPortraitUrl() ) );
 							m_lobby.getUsers().add( user );
 						}
 						else
@@ -312,6 +311,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 		@InjectView( R.id.btn_twitter )
 		ImageView m_twitterButton;
 
+		@InjectView( R.id.btn_tumblr )
+		ImageView m_tumblrButton;
+
+		@InjectView( R.id.btn_reddit )
+		ImageView m_redditButton;
+
 		public ShareViewHolder( final View view )
 		{
 			super( view );
@@ -319,12 +324,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 			setButtonState( User.current.hasMedium( Consts.KEY_FACEBOOK ), m_facebookButton );
 			setButtonState( User.current.hasMedium( Consts.KEY_TWITTER ), m_twitterButton );
+			setButtonState( User.current.hasMedium( Consts.KEY_TUMBLR ), m_tumblrButton );
+			setButtonState( User.current.hasMedium( Consts.KEY_REDDIT ), m_redditButton );
 		}
 
 		private void setButtonState( boolean share, ImageView button )
 		{
 			button.setActivated( share );
-			button.setColorFilter( Color.argb( share ? 0 : 0xAA, 0, 0, 0 ) );
+			button.setImageResource( m_context.getResources().getIdentifier( "ico_" + button.getTag() + ( share ? "_select" : "" ), "drawable", m_context.getPackageName() ) );
 		}
 
 		@OnClick( R.id.btn_facebook )
@@ -371,16 +378,86 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 				}
 				else
 				{
-					TwitterHelper.startLoginRequire(
-						new AsyncCallback()
+					OAuthFragment oAuthFragment = new OAuthFragment();
+					oAuthFragment.initialize(
+						Consts.KEY_TWITTER, new AsyncCallback()
 						{
 							@Override
 							public void success()
 							{
+								User.addMedium( Consts.KEY_TWITTER );
 								setButtonState( true, m_twitterButton );
 							}
 						}
 					);
+
+					oAuthFragment.show( MainActivity.getInstance().getSupportFragmentManager(), null );
+				}
+			}
+		}
+
+		@OnClick( R.id.btn_tumblr )
+		void tapOnTumblr()
+		{
+			if ( m_tumblrButton.isActivated() )
+			{
+				setButtonState( false, m_tumblrButton );
+			}
+			else
+			{
+				if ( User.current.hasMedium( Consts.KEY_TUMBLR ) )
+				{
+					setButtonState( true, m_tumblrButton );
+				}
+				else
+				{
+					OAuthFragment oAuthFragment = new OAuthFragment();
+					oAuthFragment.initialize(
+						Consts.KEY_TUMBLR, new AsyncCallback()
+						{
+							@Override
+							public void success()
+							{
+								User.addMedium( Consts.KEY_TUMBLR );
+								setButtonState( true, m_tumblrButton );
+							}
+						}
+					);
+
+					oAuthFragment.show( MainActivity.getInstance().getSupportFragmentManager(), null );
+				}
+			}
+		}
+
+		@OnClick( R.id.btn_reddit )
+		void tapOnReddit()
+		{
+			if ( m_redditButton.isActivated() )
+			{
+				setButtonState( false, m_redditButton );
+			}
+			else
+			{
+				if ( User.current.hasMedium( Consts.KEY_REDDIT) )
+				{
+					setButtonState( true, m_redditButton );
+				}
+				else
+				{
+					OAuthFragment oAuthFragment = new OAuthFragment();
+					oAuthFragment.initialize(
+						Consts.KEY_REDDIT, new AsyncCallback()
+						{
+							@Override
+							public void success()
+							{
+								User.addMedium( Consts.KEY_REDDIT );
+								setButtonState( true, m_redditButton );
+							}
+						}
+					);
+
+					oAuthFragment.show( MainActivity.getInstance().getSupportFragmentManager(), null );
 				}
 			}
 		}

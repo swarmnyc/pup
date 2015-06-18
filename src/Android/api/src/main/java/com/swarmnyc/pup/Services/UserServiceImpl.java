@@ -11,6 +11,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -100,34 +101,7 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public void addFacebookToken(
-		final String userId, final String token, final Date expireAt, final ServiceCallback callback
-	)
-	{
-		addMedium( "Facebook", userId, token, null, expireAt, callback );
-	}
-
-	@Override
-	public void deleteFacebookToken( final ServiceCallback callback )
-	{
-		deleteMedium( "Facebook", callback );
-	}
-
-	@Override
-	public void addTwitterToken(
-		final String userId, final String token, final String secret, final ServiceCallback callback
-	)
-	{
-		addMedium( "Twitter", userId, token, secret, new GregorianCalendar( 2100, 1, 1 ).getTime(), callback );
-	}
-
-	@Override
-	public void deleteTwitterToken( final ServiceCallback callback )
-	{
-		deleteMedium( "Twitter", callback );
-	}
-
-	private void deleteMedium( final String type, final ServiceCallback callback )
+	public void deleteMedium( final String type, final ServiceCallback callback )
 	{
 		m_userApi.deleteMedium(
 			type, new RestApiCallback()
@@ -142,7 +116,8 @@ public class UserServiceImpl implements UserService
 		);
 	}
 
-	private void addMedium(
+	@Override
+	public void addMedium(
 		final String type,
 		final String userId,
 		final String token,

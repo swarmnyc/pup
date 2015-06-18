@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:layout_width="match_parent"
+          android:layout_height="58dp"
+          android:background="@color/pup_teal"
+          android:textColor="@color/pup_white"
+          android:textSize="@dimen/text20"
+          android:text="Connection"
+          android:padding="@dimen/padding_half"
+          android:gravity="center"
+          android:textStyle="bold">
+</TextView>
