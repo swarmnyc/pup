@@ -8,9 +8,9 @@ using Newtonsoft.Json.Serialization;
 
 namespace System.Net
 {
-    public static class WebApiHelper
+    public static class WebRequestExtensions
     {
-        static WebApiHelper()
+        static WebRequestExtensions()
         {
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
@@ -32,8 +32,23 @@ namespace System.Net
         {
             using (var writer = new StreamWriter(request.GetRequestStream()))
             {
-                
                 writer.Write(JsonConvert.SerializeObject(obj));
+            }
+        }
+
+        public static T Read<T>(this WebRequest request)
+        {
+            using (var writer = new StreamReader(request.GetResponse().GetResponseStream()))
+            {
+                return JsonConvert.DeserializeObject<T>(writer.ReadToEnd());
+            }
+        }
+
+        public static string ReadAll(this WebRequest request)
+        {
+            using (var writer = new StreamReader(request.GetResponse().GetResponseStream()))
+            {
+                return writer.ReadToEnd();
             }
         }
 

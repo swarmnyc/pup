@@ -154,6 +154,7 @@
     <Compile Include="Code\ApiControllers\ErrorCode.cs" />
     <Compile Include="Code\Components\QueryString.cs" />
     <Compile Include="Code\Components\ModelValidateAttribute.cs" />
+    <Compile Include="Code\Components\RedditHelper.cs" />
     <Compile Include="Code\Controllers\LobbyController.cs" />
     <Compile Include="Code\Controllers\OAuthController.cs" />
     <Compile Include="Code\Components\OAuthData.cs" />
@@ -193,7 +194,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Code\Components\MongoHelper.cs" />
-    <Compile Include="Code\Components\WebApiHelper.cs" />
+    <Compile Include="Code\Components\WebRequestExtensions.cs" />
     <Compile Include="Code\Controllers\AccountController.cs" />
     <None Include="Code\Controllers\GameController.cs" />
     <Compile Include="Code\Controllers\HomeController.cs" />

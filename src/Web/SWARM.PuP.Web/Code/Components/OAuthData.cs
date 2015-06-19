@@ -1,3 +1,4 @@
+using System.Configuration;
 using SWARM.PuP.Web.Models;
 
 namespace SWARM.PuP.Web
@@ -7,8 +8,8 @@ namespace SWARM.PuP.Web
         public static OAuthData Tumblr = new OAuthData()
         {
             Type = SocialMediumType.Tumblr,
-            ConsumerKey = "LjsDKGXRkYdiRkVP9BRUCRhKRUkFnfT9MD7gUYZg6rHjseDJpB",
-            ConsumerSecret = "Esiseof9mPJ2cTaXH9lmd1pyvuUOmmEi5JMf5qrrP0SZh2rV4q",
+            ConsumerKey = ConfigurationManager.AppSettings["Tumblr_AuthKey"],
+            ConsumerSecret = ConfigurationManager.AppSettings["Tumblr_AuthSecret"],
             RequestTokenUrl = "https://www.tumblr.com/oauth/request_token",
             AuthorizeUrl = "https://www.tumblr.com/oauth/authorize",
             AccessTokenUrl = "https://www.tumblr.com/oauth/access_token",
@@ -20,13 +21,23 @@ namespace SWARM.PuP.Web
         public static OAuthData Twitter = new OAuthData()
         {
             Type = SocialMediumType.Twitter,
-            ConsumerKey = "tuPdqGWSqvDNRC8TrcJ1dyuSd",
-            ConsumerSecret = "oAjcN1hXSo0AZw9XauXU6qbwcR5FDBYnAvSHygFKbE2wg9kcxs",
+            ConsumerKey = ConfigurationManager.AppSettings["Twitter_AuthKey"],
+            ConsumerSecret = ConfigurationManager.AppSettings["Twitter_AuthSecret"],
             RequestTokenUrl = "https://api.twitter.com/oauth/request_token",
             AuthorizeUrl = "https://api.twitter.com/oauth/authorize",
             AccessTokenUrl = "https://api.twitter.com/oauth/access_token",
             UserInfo = "https://api.twitter.com/1.1/account/settings.json",
             CallBackUrl = "/OAuth/TwitterCallback"
+        };
+
+        public static OAuthData Reddit = new OAuthData()
+        {
+            Type = SocialMediumType.Reddit,
+            ConsumerKey = ConfigurationManager.AppSettings["Reddit_AuthKey"],
+            ConsumerSecret = ConfigurationManager.AppSettings["Reddit_AuthSecret"],
+            AuthorizeUrl = "https://www.reddit.com/api/v1/authorize.compact",
+            AccessTokenUrl = "https://www.reddit.com/api/v1/access_token",
+            CallBackUrl = ConfigurationManager.AppSettings["Reddit_ApiUrl"]
         };
 
         public SocialMediumType Type { get; set; }

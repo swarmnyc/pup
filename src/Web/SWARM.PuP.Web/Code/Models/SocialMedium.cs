@@ -11,7 +11,8 @@ namespace SWARM.PuP.Web.Models
     {
         Facebook,
         Twitter,
-        Tumblr
+        Tumblr,
+        Reddit
     }
 
     public class SocialMedium

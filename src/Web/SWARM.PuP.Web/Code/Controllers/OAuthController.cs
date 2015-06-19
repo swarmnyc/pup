@@ -1,6 +1,9 @@
 ﻿using System;
+using System.IO;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using SWARM.PuP.Web.Code.Components;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.Services;
 using TwitterOAuth.Enum;
@@ -17,21 +20,46 @@ namespace SWARM.PuP.Web.Controllers
         }
 
         [Authorize]
+        public ActionResult TumblrCallback()
+        {
+            return Callback(OAuthData.Tumblr, x => x.ToObject<dynamic>().response.user.name);
+        }
+
+        [Authorize]
         public ActionResult Twitter()
         {
             return Authorize(OAuthData.Twitter);
         }
 
-        [Authorize]
-        public ActionResult TumblrCallback()
-        {
-            return Callback(OAuthData.Tumblr, x=> x.ToObject<dynamic>().response.user.name);
-        }
+
 
         [Authorize]
         public ActionResult TwitterCallback()
         {
-            return Callback(OAuthData.Twitter, x=> x.ToObject<dynamic>().screen_name);
+            return Callback(OAuthData.Twitter, x => x.ToObject<dynamic>().screen_name);
+        }
+
+        [Authorize]
+        public ActionResult Reddit()
+        {
+            return Redirect(string.Format("{0}?client_id={1}&state=oauth&response_type=code&duration=permanent&scope=identity,submit&redirect_uri={2}",
+                OAuthData.Reddit.AuthorizeUrl, OAuthData.Reddit.ConsumerKey, Url.Encode(OAuthData.Reddit.CallBackUrl)));
+        }
+
+        [Authorize]
+        public ActionResult RedditCallback()
+        {
+            string code = Request.QueryString["code"];
+
+            User.Identity.GetPuPUser().UpdateRedditToken(true, code);
+
+            return RedirectToAction("Done");
+        }
+
+
+        public ActionResult Done()
+        {
+            return Content("");
         }
 
         private ActionResult Authorize(OAuthData data)
@@ -55,22 +83,14 @@ namespace SWARM.PuP.Web.Controllers
                     nameValueCollection["oauth_callback_confirmed"] != "true")
                     throw new Exception("OAuth callback not confirmed.");
 
-                authUrl = data.AuthorizeUrl  + "?oauth_token=" + nameValueCollection["oauth_token"];
+                authUrl = data.AuthorizeUrl + "?oauth_token=" + nameValueCollection["oauth_token"];
                 Response.Cookies["oauth_secret"].Value = nameValueCollection["oauth_token_secret"];
             }
 
             return Redirect(authUrl);
         }
 
-        private void EnsureCookie()
-        {
-            if (!string.IsNullOrWhiteSpace(Request.QueryString["user_token"]))
-            {
-                Response.Cookies["token"].Value = Request.QueryString["user_token"];
-            }
-        }
-
-        private ActionResult Callback(OAuthData data, Func<string,string> getUserId)
+        private ActionResult Callback(OAuthData data, Func<string, string> getUserId)
         {
             var authRequest = new TwitterOAuthClient
             {
@@ -86,8 +106,7 @@ namespace SWARM.PuP.Web.Controllers
             if (query.Length > 0)
             {
                 var nameValueCollection = HttpUtility.ParseQueryString(query);
-                var userService = Resolver.GetService<IUserService>();
-                var user = User.Identity.GetPuPUser();
+
 
                 SocialMedium medium = new SocialMedium()
                 {
@@ -108,21 +127,33 @@ namespace SWARM.PuP.Web.Controllers
                 query = authRequest.OAuthWebRequest(RequestMethod.GET, data.UserInfo, string.Empty);
                 medium.UserId = getUserId(query);
 
-                if (user.Media.Contains(medium))
-                {
-                    user.Media.Remove(medium);
-                }
-
-                user.Media.Add(medium);
-                userService.Update(user);
+                UpdateMedium(medium);
             }
 
             return RedirectToAction("Done");
         }
 
-        public ActionResult Done()
+        private void UpdateMedium(SocialMedium medium)
         {
-            return Content("");
+            var userService = Resolver.GetService<IUserService>();
+            var user = User.Identity.GetPuPUser();
+
+            if (user.Media.Contains(medium))
+            {
+                user.Media.Remove(medium);
+            }
+
+            user.Media.Add(medium);
+            userService.Update(user);
         }
+
+        private void EnsureCookie()
+        {
+            if (!string.IsNullOrWhiteSpace(Request.QueryString["user_token"]))
+            {
+                Response.Cookies["token"].Value = Request.QueryString["user_token"];
+            }
+        }
+
     }
 }

@@ -4,10 +4,12 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Filters;
+using SWARM.PuP.Web.Code.Components;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
 using SWARM.PuP.Web.Services;
@@ -135,6 +137,9 @@ namespace SWARM.PuP.Web.ApiControllers
                     case SocialMediumType.Tumblr:
                         ShareToTumblur(medium, lobby, localTime);
                         break;
+                    case SocialMediumType.Reddit:
+                        ShareToReddit(user, lobby, localTime);
+                        break;
                 }
             }
 
@@ -197,14 +202,27 @@ namespace SWARM.PuP.Web.ApiControllers
                     medium.Token, msg, link);
                 WebRequest webRequest = WebRequest.CreateHttp(url);
                 webRequest.Method = "POST";
-                var response = webRequest.GetResponse();
-                response.GetResponseStream();
+                webRequest.ReadAll();
             }
             catch (Exception ex)
             {
                 Trace.TraceError("{0}\n{1}", ex.Message, ex.StackTrace);
             }
 
+        }
+
+        private void ShareToReddit(PuPUser user, Lobby lobby, string localTime)
+        {
+            try
+            {
+                var msg = HttpUtility.UrlEncode(GetMessage(lobby, localTime), Encoding.UTF8);
+                var queries = Request.GetQueryNameValuePairs();
+                RedditHelper.PostToReddit(user, msg, lobby.GetTagValue("Reddit-SR"), queries.First(x => x.Key == "CaptchaId").Value, queries.First(x => x.Key == "Captcha").Value);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError("{0}\n{1}", ex.Message, ex.StackTrace);
+            }
         }
 
         private static string GetMessage(Lobby lobby, string localTime)

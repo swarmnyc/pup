@@ -36,6 +36,10 @@
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac.Integration.Mvc, Version=3.3.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Mvc5.3.3.4\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.2.13.0\lib\net40-client\CsvHelper.dll</HintPath>
       <Private>True</Private>
@@ -112,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\GameControllerTests.cs" />
+    <Compile Include="RedditHelperTest.cs" />
     <None Include="ApiControllers\UserControllerTests.cs" />
     <Compile Include="ApiControllers\LobbyControllerTests.cs" />
     <Compile Include="Services\UserServiceTests.cs" />
