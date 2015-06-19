@@ -13,11 +13,11 @@ struct userInfo {
     var accessToken = ""
     var userId = ""
     var name = ""
-    var tags = [["" : ""]]
+    var tags = [["": ""]]
     var QBChatId = ""
     var picture = ""
+    var social: [String: Bool] = ["facebook": false, "twitter": false, "tumblr": false, "reddit": false];
 }
-
 
 class User {
 
@@ -45,6 +45,7 @@ class User {
                 data.name = localStorage.valueForKey("name") as! String
                 data.QBChatId = localStorage.valueForKey("QBChatId") as! String
                 data.picture = localStorage.valueForKey("picture") as! String
+                data.social = localStorage.valueForKey("social") as! [String: Bool]
             }
 
         }
@@ -61,6 +62,7 @@ class User {
         localStorage.setObject(self.data.QBChatId,forKey: "QBChatId")
         localStorage.setObject(self.data.picture,forKey: "picture")
              localStorage.setBool(self.data.loggedIn, forKey: "loggedIn")
+             localStorage.setObject(self.data.social, forKey: "social")
 
     }
 
@@ -129,6 +131,7 @@ class User {
             self.data.picture = ""
 
         }
+
         self.data.tags = userData["tags"] as! Array<Dictionary<String, String>>
         self.data.QBChatId = self.data.tags[0]["value"] as String!
         println(self.data)
@@ -155,16 +158,24 @@ class User {
                      SwiftLoader.hide()
 
                  } else {
+                    println(responseJSON)
                      var resp = responseJSON as! NSDictionary
-                     var userData: NSDictionary = resp["data"] as! NSDictionary
-                     println(error)
-                     println("error^")
-                     if (resp["success"] as! Bool) {
-                         println(userData["accessToken"]!)
+                     println(resp)
+                     if (resp["errorMessage"] as! String == "002 Exist") {
+                         var alert = Error(alertTitle: "Whoops", alertText: "There's already a user with that email or username, try another.")
+                         SwiftLoader.hide()
 
-                         self.saveData(userData)
+                     } else {
+                         var userData: NSDictionary = resp["data"] as! NSDictionary
+                         println(error)
+                         println("error^")
+                         if (resp["success"] as! Bool) {
+                             println(userData["accessToken"]!)
 
-                         success()
+                             self.saveData(userData)
+
+                             success()
+                         }
                      }
                  }
 

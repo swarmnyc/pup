@@ -39,8 +39,21 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         listView?.setDelegates(self,dataSource: self, fabDelegate: self)
     }
 
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+
+
+        self.navigationController?.navigationBar.translucent = false;
+        self.navigationController?.navigationBar.setBackgroundImage(nil, forBarMetrics: UIBarMetrics.Default)
+        self.navigationController?.navigationBar.shadowImage = nil
+
+
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.translucent = false
 
         currentUser.setPage("Find A Game");
         self.title = "All Games";
@@ -50,6 +63,8 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         let filterImage = UIImage(named: "filter")
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: filterImage, style: UIBarButtonItemStyle.Plain, target: self, action: "openFilter")
 
+        //makes it so that inside of a lobby their is no title on the back button
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
 
         let menuImage = UIImage(named: "hamburgerMenu")
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: menuImage, style: UIBarButtonItemStyle.Plain, target: navigationController, action: "toggleSideMenu")

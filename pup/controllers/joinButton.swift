@@ -20,11 +20,19 @@ class JoinPupButton: UIViewController, SimpleButtonDelegate {
         registrationController = RegistrationController(parentController: self)
         registrationController?.setUpView()
         self.view = joinButtonView
-        joinButtonView.setUpViews(parent!.view, joinDelegate: self);
 
-        println(self.view.frame)
-        println("self view")
+        joinButtonView.setUpView(self);
+
+
     }
+
+
+    func bounceView(amount: CGFloat) {
+        if (amount <= 15) {
+            joinButtonView.bounce(amount);
+        }
+    }
+
 
     func touchUp(button: NSObject, type: String) {
         println("touched")
@@ -65,12 +73,7 @@ class JoinPupButton: UIViewController, SimpleButtonDelegate {
 
     }
 
-    func setNewView(newView: UIView) {
-        joinButtonView.setUpViews(newView, joinDelegate: self);
 
-
-
-    }
 
 
 

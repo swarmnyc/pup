@@ -52,7 +52,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'ENSwiftSideMenu.framework'
   install_framework 'Haneke.framework'
   install_framework 'SnapKit.framework'
-  install_framework 'SwiftHTTP.framework'
   install_framework 'SwiftLoader.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -60,6 +59,5 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'ENSwiftSideMenu.framework'
   install_framework 'Haneke.framework'
   install_framework 'SnapKit.framework'
-  install_framework 'SwiftHTTP.framework'
   install_framework 'SwiftLoader.framework'
 fi

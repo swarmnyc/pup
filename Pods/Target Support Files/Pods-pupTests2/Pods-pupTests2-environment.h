@@ -10,7 +10,7 @@
 #define COCOAPODS_POD_AVAILABLE_Alamofire
 #define COCOAPODS_VERSION_MAJOR_Alamofire 1
 #define COCOAPODS_VERSION_MINOR_Alamofire 2
-#define COCOAPODS_VERSION_PATCH_Alamofire 2
+#define COCOAPODS_VERSION_PATCH_Alamofire 3
 
 // ENSwiftSideMenu
 #define COCOAPODS_POD_AVAILABLE_ENSwiftSideMenu
@@ -26,21 +26,16 @@
 
 // QuickBlox
 #define COCOAPODS_POD_AVAILABLE_QuickBlox
-#define COCOAPODS_VERSION_MAJOR_QuickBlox 2
-#define COCOAPODS_VERSION_MINOR_QuickBlox 2
-#define COCOAPODS_VERSION_PATCH_QuickBlox 4
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 2.3.0.1.
 
 // SnapKit
 #define COCOAPODS_POD_AVAILABLE_SnapKit
 #define COCOAPODS_VERSION_MAJOR_SnapKit 0
 #define COCOAPODS_VERSION_MINOR_SnapKit 10
 #define COCOAPODS_VERSION_PATCH_SnapKit 0
-
-// SwiftHTTP
-#define COCOAPODS_POD_AVAILABLE_SwiftHTTP
-#define COCOAPODS_VERSION_MAJOR_SwiftHTTP 0
-#define COCOAPODS_VERSION_MINOR_SwiftHTTP 9
-#define COCOAPODS_VERSION_PATCH_SwiftHTTP 5
 
 // SwiftLoader
 #define COCOAPODS_POD_AVAILABLE_SwiftLoader

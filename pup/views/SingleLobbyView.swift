@@ -5,22 +5,21 @@
 
 import Foundation
 import UIKit
-
+import Haneke
 
 class SingleLobbyTopCell: UITableViewCell {
 
     var topContentBox: UIView = UIView();
     var lobbyTitle: UITextView = UITextView();
-    var lobbyImg: UIImageView = UIImageView();
     var gradientBox: UIView = UIView();
     var gradient: CAGradientLayer = CAGradientLayer()
-
     var descBox: UIView = UIView();
 
     var tags: UILabel = UILabel();
     var desc: UITextView = UITextView()
     var divider: UIView = UIView()
     var isMember = false;
+
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -43,17 +42,8 @@ class SingleLobbyTopCell: UITableViewCell {
         isMember = data.data.isMember
 
 
-        var url = NSURL(string: data.data.pictureUrl)
 
-        var request:NSURLRequest = NSURLRequest(URL: url!)
-        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
-            var img = UIImage(data: data) as UIImage!
-            self.lobbyImg.image = img;
-            self.lobbyImg.contentMode = UIViewContentMode.ScaleAspectFill;
-            self.lobbyImg.clipsToBounds = true;
-        })
-
-
+        self.backgroundColor = UIColor.clearColor()
 
 
         lobbyTitle.text = "\(data.data.owner.name)'s \n" +
@@ -86,8 +76,9 @@ class SingleLobbyTopCell: UITableViewCell {
         desc.scrollEnabled = false
         desc.textContainerInset = UIEdgeInsetsZero
         desc.textContainer.lineFragmentPadding = 0
-        desc.backgroundColor = UIColor.clearColor()
+        desc.backgroundColor = UIColor.whiteColor()
 
+        descBox.backgroundColor = UIColor.whiteColor();
 
         divider.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
         insertViews();
@@ -95,7 +86,6 @@ class SingleLobbyTopCell: UITableViewCell {
     }
 
     func insertViews() {
-        topContentBox.addSubview(lobbyImg)
         gradientBox.layer.insertSublayer(gradient, atIndex: 0)
         topContentBox.addSubview(gradientBox)
         topContentBox.addSubview(lobbyTitle)
@@ -120,13 +110,6 @@ class SingleLobbyTopCell: UITableViewCell {
         }
 
 
-        lobbyImg.snp_remakeConstraints { (make) -> Void in
-            make.top.equalTo(self.topContentBox).offset(0)
-            make.left.equalTo(self.topContentBox).offset(0)
-            make.right.equalTo(self.topContentBox).offset(0)
-            make.bottom.equalTo(self.topContentBox).offset(0)
-
-        }
 
         lobbyTitle.snp_remakeConstraints { (make) -> Void in
             make.bottom.equalTo(self.topContentBox).offset(0)
@@ -152,7 +135,7 @@ class SingleLobbyTopCell: UITableViewCell {
             make.left.equalTo(self).offset(0)
             make.right.equalTo(self).offset(0)
             make.top.equalTo(self.topContentBox.snp_bottom).offset(0)
-            make.height.equalTo(100)
+            make.bottom.equalTo(self)
         }
 
 
@@ -164,8 +147,8 @@ class SingleLobbyTopCell: UITableViewCell {
         }
 
         desc.snp_remakeConstraints { (make) -> Void in
-            make.top.equalTo(self.tags.snp_bottom).offset(UIConstants.horizontalPadding)
-            make.bottom.equalTo(self.descBox).offset(UIConstants.horizontalPadding)
+            make.top.equalTo(self.tags.snp_bottom).offset(UIConstants.horizontalPadding / 2)
+            make.bottom.equalTo(self.descBox).offset(-UIConstants.horizontalPadding)
             make.left.equalTo(self.descBox).offset(UIConstants.horizontalPadding)
             make.right.equalTo(self.descBox).offset(-UIConstants.horizontalPadding)
         }
@@ -193,9 +176,11 @@ class SingleLobbyView: UIView {
     var isMember = false;
 
     var table: UITableView?
-
+    var lobbyImg: UIImageView = UIImageView();
+    var whiteBottom: UIView = UIView();
     var sendTheMessage: ((newMessage: String) -> Void)?
 
+    var drawer: UIView?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -215,8 +200,21 @@ class SingleLobbyView: UIView {
         super.init(coder: aDecoder)
     }
 
+    func addDrawer(drawer: UIView) {
+        self.drawer = drawer;
+        addSubview(self.drawer!)
+        self.drawer?.snp_makeConstraints {
+            (make) -> Void in
+            make.top.equalTo(self).offset(0)
+            make.left.equalTo(self).offset(0)
+            make.right.equalTo(self).offset(0)
+            make.bottom.equalTo(self).offset(0)
+        }
+    }
+
     func addTable(delegate: UITableViewDelegate) {
         table = UITableView();
+        table?.backgroundColor = UIColor.clearColor()
         table?.delegate = delegate;
         table?.dataSource = delegate as! UITableViewDataSource
         table?.registerClass(MessageCell.self, forCellReuseIdentifier: "message")
@@ -235,10 +233,17 @@ class SingleLobbyView: UIView {
     }
 
 
+     func scaleImage(amount: CGFloat) {
+         println(amount)
+         if (amount >= 1) {
+             var scale = CGAffineTransformMakeScale(amount, amount)
+             //  self.lobbyImg.layer.anchorPoint = CGPointMake(self.lobbyImg.bounds.size.width / 2.0, self.lobbyImg.bounds.size.height / 2.0)
+             self.lobbyImg.transform = scale;
+         }
+     }
 
 
     func shortenView(notification: NSNotification) {
-        println("shortening view")
         if (newMessage.isFirstResponder()) {
             UIView.animateWithDuration(0.5) {
                 var keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue().height
@@ -280,31 +285,44 @@ class SingleLobbyView: UIView {
 
         }
 
+        if (self.drawer != nil) {
+            bringSubviewToFront(self.drawer!);
+        }
+
 
     }
 
     func setUpTableConstraints() {
 
         table!.snp_remakeConstraints { (make) -> Void in
-            make.top.equalTo(self).offset(0)
-            make.left.equalTo(self).offset(0);
+            make.height.equalTo(UIScreen.mainScreen().bounds.height)
+            make.width.equalTo(UIScreen.mainScreen().bounds.width);
             make.right.equalTo(self).offset(0);
             make.bottom.equalTo(self).offset(-58);
 
         }
 
         if (isMember) {
-            table?.setContentOffset(CGPointMake(0, CGFloat.max), animated: false);
-            println("is member")
+
+            UIView.animateWithDuration(1.6, animations: {
+                table?.contentOffset = CGPointMake(0, CGFloat.max);
+            })
         }
     }
 
     func insertViews() {
-
+       addSubview(lobbyImg)
+       addSubview(whiteBottom)
+        bringSubviewToFront(table!)
         addSubview(newMessage)
         addSubview(send)
         if (!isMember) {
             addSubview(joinLobbyButton)
+        }
+
+        if (self.drawer != nil) {
+            println("bringing drawer to front")
+            bringSubviewToFront(drawer!)
         }
 
 
@@ -325,6 +343,30 @@ class SingleLobbyView: UIView {
     func setUpViews(data: singleLobby) {
 
         isMember = data.data.isMember
+
+
+
+        var url = NSURL(string: data.data.pictureUrl)
+        self.lobbyImg.frame.size = CGSizeMake(460, 500);
+
+        self.lobbyImg.contentMode = UIViewContentMode.ScaleAspectFill;
+        self.lobbyImg.alpha = 0;
+            self.lobbyImg.hnk_setImageFromURL(url!, placeholder:nil, format: nil, failure: nil, success: {
+                (image) -> Void in
+                println("fading image");
+                self.lobbyImg.image = image;
+                UIView.animateWithDuration(0.6, animations: {
+                    () -> Void in
+                    self.lobbyImg.alpha = 1;
+                });
+
+            })
+
+
+
+
+
+
 
         if (!isMember) {
             joinLobbyButton.setTitle("Join Lobby", forState: .Normal)
@@ -371,7 +413,20 @@ class SingleLobbyView: UIView {
 
     func setUpConstraints() {
 
+        lobbyImg.snp_remakeConstraints { (make) -> Void in
+            make.bottom.equalTo(-(UIScreen.mainScreen().bounds.height - CGFloat(UIConstants.lobbyImageHeight * 1.15)))
+            make.left.equalTo(self).offset(0)
+            make.right.equalTo(self).offset(0)
+            make.height.equalTo(UIConstants.lobbyImageHeight * 1.15)
 
+        }
+        whiteBottom.snp_remakeConstraints { (make) -> Void in
+            make.top.equalTo(lobbyImg.snp_bottom).offset(0)
+            make.left.equalTo(self).offset(0)
+            make.right.equalTo(self).offset(0)
+            make.height.equalTo(UIConstants.lobbyImageHeight * 1.3)
+
+        }
         self.newMessage.snp_remakeConstraints {
             (make) -> Void in
             make.left.equalTo(self).offset(UIConstants.horizontalPadding)

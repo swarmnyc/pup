@@ -17,12 +17,15 @@ struct appColors {
     var PC = "#1e1e1e"
     var lightGray = "#f1f1f1"
     var midGray = "#b3b3b3"
+    
 }
 
 
 struct miscData {
     var platforms: Array<String> = ["Steam or PC", "XBOX 360", "XBOX ONE", "PS3", "PS4"]
     var platformDict = ["Steam or PC": "Steam", "XBOX 360": "Xbox360", "XBOX ONE": "XboxOne", "PS3": "PS3", "PS4": "PS4"];
+  
+    
     var QBDefaultUser = "553be08dcbf5a81a70567b13";
     var QBDefaultPassword = "swarmnyc"
     var QBAppId = "24285"
@@ -71,6 +74,48 @@ struct appURLS {
     var register: String {
         get {
             return "\(apiBase)register"
+        }
+    }
+
+    var OAuth: String {
+        get {
+            return "\(apiBase)OAuth/"
+        }
+    }
+
+    var Tumblr: String {
+        get {
+            return "\(OAuth)Tumblr"
+        }
+    }
+
+    var Twitter: String {
+        get {
+            return "\(OAuth)Twitter"
+        }
+    }
+
+    var Reddit: String {
+        get {
+            return "\(OAuth)Reddit"
+        }
+    }
+
+    var User: String {
+        get {
+            return "\(apiBase)user/"
+        }
+    }
+
+    var updatePortrait: String {
+        get {
+            return "\(User)updateportrait"
+        }
+    }
+
+    var Facebook: String {
+        get {
+            return "\(User)medium"
         }
     }
 

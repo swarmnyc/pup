@@ -63,12 +63,15 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
 
         if (currentUser.loggedIn() == false) {
             logInButton = JoinPupButton(parentController: self)
-            logInButton?.setNewView(createView.containerView)
             logInButton?.onSuccessJoin = createLobby;
         }
 
 
         registerForKeyboardNotifications()
+    }
+
+    func scrollViewDidScroll(scrollView: UIScrollView!) {
+        logInButton?.bounceView(scrollView.contentSize.height - (scrollView.contentOffset.y+scrollView.frame.height))
     }
 
 
@@ -166,6 +169,9 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
 
             return false
         }
+
+        newLobbyModel.description = textView.text;
+
 
         return true
 

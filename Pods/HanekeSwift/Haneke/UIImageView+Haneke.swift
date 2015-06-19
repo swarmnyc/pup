@@ -11,7 +11,8 @@ import UIKit
 public extension UIImageView {
     
     public var hnk_format : Format<UIImage> {
-        let viewSize = self.bounds.size
+        var viewSize = self.bounds.size
+       
             assert(viewSize.width > 0 && viewSize.height > 0, "[\(reflect(self).summary) \(__FUNCTION__)]: UImageView size is zero. Set its frame, call sizeToFit or force layout first.")
             let scaleMode = self.hnk_scaleMode
             return HanekeGlobals.UIKit.formatWithSize(viewSize, scaleMode: scaleMode)

@@ -33,7 +33,7 @@ class SettingsController: UIViewController {
         super.viewDidLoad()
 
        // currentUser.setPage("Find A Game");
-        self.title = "Settings";
+        self.title = "Acounts & Settings";
 
 
         let menuImage = UIImage(named: "hamburgerMenu")

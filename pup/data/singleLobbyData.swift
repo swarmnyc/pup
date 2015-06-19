@@ -13,10 +13,12 @@ class singleLobby {
     var quickBloxConnect: QuickBlox?
     var passMessagesToController: (() -> Void)?
     var recievedMessages = false;
+
     init() {
         quickBloxConnect = QuickBlox();
         quickBloxConnect?.handOffMessages = self.recieveMessages;
         quickBloxConnect?.addNewMessage = self.addNewMessage;
+        quickBloxConnect?.sessionCreationSuccess = self.getMessages;
     }
 
 
@@ -40,6 +42,11 @@ class singleLobby {
     }
 
 
+    func getMessages() {
+        quickBloxConnect?.getMessages();
+
+    }
+
     func joinLobby(success: () -> Void, failure: () -> Void) {
 
 
@@ -57,7 +64,7 @@ class singleLobby {
                self.data.isMember = true;
             success();
             self.quickBloxConnect!.logoutOfChat();
-            self.quickBloxConnect!.createSession();
+            self.quickBloxConnect!.createSession(self.data.isMember);
            } else {
                Error(alertTitle: "Couldn't Join Room", alertText: "We had some trouble getting you in, please try again...")
                failure()
@@ -98,11 +105,7 @@ class singleLobby {
 
 
     func loginToQuickBlox() {
-        if (self.data.isMember) {
-            quickBloxConnect?.createSession();
-        } else {
-            quickBloxConnect?.createSessionWithDefaultUser();
-        }
+        quickBloxConnect?.createSession(self.data.isMember)
 
     }
 

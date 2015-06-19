@@ -10,13 +10,11 @@ class SelectableTextView : UITextView {
 
     override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
         self.resignFirstResponder()
-        println("textView canPreformAction")
         return false
     }
 
     override func shouldChangeTextInRange(range: UITextRange, replacementText text: String) -> Bool {
         self.resignFirstResponder()
-        println("textView shouldChangeTextInRange")
 
         return false
     }

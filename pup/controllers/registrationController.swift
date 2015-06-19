@@ -211,6 +211,7 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
             if (textField.text == "") {
                 textField.text==UIConstants.emailPlaceholder
             } else {
+                textField.resignFirstResponder()
               registerClicked();
             }
         }

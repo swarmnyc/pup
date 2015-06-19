@@ -10,6 +10,9 @@ import UIKit
 class SettingsView: UIView {
     
     var logout: UIButton = UIButton();
+    var containerView: UIView = UIView();
+    var scrollView: UIScrollView = UIScrollView()
+
 
 
     override init(frame: CGRect) {
@@ -47,16 +50,37 @@ class SettingsView: UIView {
     }
 
     func setUpView() {
-        self.addSubview(logout)
+
+        self.containerView.addSubview(logout)
+        self.scrollView.addSubview(containerView)
+        self.addSubview(self.scrollView)
     }
 
     func setUpConstraints() {
+
+        scrollView.snp_makeConstraints {
+            (make) -> Void in
+            make.left.equalTo(self)
+            make.right.equalTo(self)
+            make.bottom.equalTo(self)
+            make.top.equalTo(self)
+        }
+
+        containerView.snp_makeConstraints {
+            (make) -> Void in
+            make.left.equalTo(self)
+            make.right.equalTo(self)
+            make.top.equalTo(self)
+            make.bottom.equalTo(self)
+            make.height.equalTo(1000)
+        }
+
         if (currentUser.loggedIn()) {
             logout.snp_makeConstraints {
                 (make) -> Void in
-                make.top.equalTo(self).offset(225)
-                make.left.equalTo(self).offset(0)
-                make.right.equalTo(self).offset(0)
+                make.top.equalTo(self.containerView).offset(225)
+                make.left.equalTo(self.containerView).offset(0)
+                make.right.equalTo(self.containerView).offset(0)
                 make.height.equalTo(100)
             }
         }

@@ -1,0 +1,6 @@
+framework module FBSDKShareKit {
+  umbrella header "Pods-pup-FBSDKShareKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

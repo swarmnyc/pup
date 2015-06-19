@@ -5,6 +5,7 @@
 
 import Foundation
 import UIKit
+import QuartzCore
 import Haneke
 
 class gameCell: UITableViewCell {
@@ -179,17 +180,21 @@ class gameCell: UITableViewCell {
 
         var url = NSURL(string: data.pictureUrl)
 
-       // var request:NSURLRequest = NSURLRequest(URL: url!)
-        self.imgView.clipsToBounds = true;
-        self.imgView.contentMode = UIViewContentMode.ScaleAspectFill;
+        imgView.clipsToBounds = true;
+        imgView.contentMode = UIViewContentMode.ScaleAspectFill;
         imgView.frame.size = CGSizeMake(93, 93);
-        self.imgView.hnk_setImageFromURL(url!)
-//        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
-//            self.img = UIImage(data: data) as UIImage!
-//            self.imgView.image = self.img;
-//            self.imgView.contentMode = UIViewContentMode.ScaleAspectFill;
-//            self.imgView.clipsToBounds = true;
-//        })
+        imgView.backgroundColor = UIColor(rgba: colors.orange)
+        imgView.alpha = 0;
+        self.imgView.hnk_setImageFromURL(url!, placeholder:nil, format: nil, failure: nil, success: {
+            (image) -> Void in
+            println("fading image");
+            self.imgView.image = image;
+            UIView.animateWithDuration(0.3, animations: {
+                () -> Void in
+                self.imgView.alpha = 1;
+            });
+
+        })
 
 
         platform.text = data.platform;

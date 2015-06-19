@@ -143,7 +143,7 @@ class FilterView: UIView {
             make.width.equalTo(fullW)
             make.right.equalTo(self.parentView).offset(0)
             make.top.equalTo(self.parentView).offset(-300)
-            make.height.equalTo(390)
+            make.height.equalTo(305)
         }
 
         self.overlay.snp_remakeConstraints { (make) -> Void in
@@ -245,7 +245,7 @@ class FilterView: UIView {
         var fullW: CGFloat = UIScreen.mainScreen().bounds.size.width
 
         UIView.animateWithDuration(Double(0.5)) {
-            var trans = CGAffineTransformMakeTranslation(0, 300);
+            var trans = CGAffineTransformMakeTranslation(0, 250);
             self.self.transform = trans;
             self.snp_remakeConstraints { (make) -> Void in
                 make.width.equalTo(fullW)

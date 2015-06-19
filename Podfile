@@ -6,30 +6,32 @@ use_frameworks!
 
 target 'pup' do
   pod 'SnapKit', '~> 0.10.0'
-  pod 'SwiftHTTP', '~> 0.9.4'
   pod 'Alamofire', '~> 1.2'
   pod 'HanekeSwift'
   pod 'ENSwiftSideMenu', '~> 0.0'
   pod 'SwiftLoader'
   pod 'QuickBlox'
+  pod 'FBSDKCoreKit'
+  pod 'FBSDKLoginKit'
+  pod 'FBSDKShareKit'
 end
 
 target 'pupTests' do
   pod 'SnapKit', '~> 0.10.0'
-  pod 'SwiftHTTP', '~> 0.9.4'
   pod 'Alamofire', '~> 1.2'
   pod 'HanekeSwift'
   pod 'ENSwiftSideMenu', '~> 0.0'
   pod 'SwiftLoader'
+
 end
 
 target 'pupTests2' do
   pod 'SnapKit', '~> 0.10.0'
-  pod 'SwiftHTTP', '~> 0.9.4'
   pod 'Alamofire', '~> 1.2'
   pod 'HanekeSwift'
   pod 'ENSwiftSideMenu', '~> 0.0'
   pod 'SwiftLoader'
   pod 'QuickBlox'
+
 end
 

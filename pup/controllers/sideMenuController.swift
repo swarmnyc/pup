@@ -144,7 +144,7 @@ class MenuTableController: UITableViewController {
         var destViewController : UIViewController
         switch (selectedMenuItem) {
         case 0:
-            destViewController = UIViewController() as! UIViewController
+            destViewController = MyChatsController() as! UIViewController
             break
         case 1:
             destViewController = LobbyListController() as! UIViewController

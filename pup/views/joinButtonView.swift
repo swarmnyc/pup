@@ -39,7 +39,19 @@ class JoinPupButtonView: PlatformButtonToggle {
 
     }
 
-    func setUpViews(parentView: UIView, joinDelegate: SimpleButtonDelegate) {
+    func bounce(amount: CGFloat) {
+            var transAmount = amount
+            if (transAmount>0) {
+                transAmount = 0;
+            }
+            var trans = CGAffineTransformMakeTranslation(0, transAmount)
+            //  self.lobbyImg.layer.anchorPoint = CGPointMake(self.lobbyImg.bounds.size.width / 2.0, self.lobbyImg.bounds.size.height / 2.0)
+            self.transform = trans;
+
+
+    }
+
+    func setUpView(joinDelegate: SimpleButtonDelegate) {
         delegate = joinDelegate
         self.backgroundColor = UIColor(rgba: colors.orange)
 
@@ -55,7 +67,8 @@ class JoinPupButtonView: PlatformButtonToggle {
         bottomLabel.textAlignment = .Center
 
         addViews();
-        setUpConstraints();
+        setUpConstraints()
+
     }
 
 

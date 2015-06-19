@@ -1,28 +1,51 @@
 PODS:
-  - Alamofire (1.2.2)
+  - Alamofire (1.2.3)
+  - Bolts (1.2.0):
+    - Bolts/AppLinks (= 1.2.0)
+    - Bolts/Tasks (= 1.2.0)
+  - Bolts/AppLinks (1.2.0):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.2.0)
   - ENSwiftSideMenu (0.0.6)
+  - FBSDKCoreKit (4.2.0):
+    - Bolts (~> 1.1)
+    - FBSDKCoreKit/arc (= 4.2.0)
+    - FBSDKCoreKit/no-arc (= 4.2.0)
+  - FBSDKCoreKit/arc (4.2.0):
+    - Bolts (~> 1.1)
+  - FBSDKCoreKit/no-arc (4.2.0):
+    - Bolts (~> 1.1)
+    - FBSDKCoreKit/arc
+  - FBSDKLoginKit (4.2.0):
+    - FBSDKCoreKit
+  - FBSDKShareKit (4.2.0):
+    - FBSDKCoreKit
   - HanekeSwift (0.9.1)
-  - QuickBlox (2.2.4)
+  - QuickBlox (2.3.0.1)
   - SnapKit (0.10.0)
-  - SwiftHTTP (0.9.5)
   - SwiftLoader (0.2.2)
 
 DEPENDENCIES:
   - Alamofire (~> 1.2)
   - ENSwiftSideMenu (~> 0.0)
+  - FBSDKCoreKit
+  - FBSDKLoginKit
+  - FBSDKShareKit
   - HanekeSwift
   - QuickBlox
   - SnapKit (~> 0.10.0)
-  - SwiftHTTP (~> 0.9.4)
   - SwiftLoader
 
 SPEC CHECKSUMS:
-  Alamofire: 11a6022f5089887d92ffb5a3014c97a0a915ab98
+  Alamofire: 5550bf0b575ed1a4bf9be572f9463e1015cc169e
+  Bolts: d176cb1e0012175589e389a9db49b85e27787576
   ENSwiftSideMenu: c21151418a1d03fdf413fd4921d522f064d29e7a
+  FBSDKCoreKit: 84b3616a361801f190e43a9909caead7bb6087c7
+  FBSDKLoginKit: 57e37106af12c9e264e473dcb75d7decdbb07fe4
+  FBSDKShareKit: 931746fdf8fb95efd6e12310ec14b2b3295e2aec
   HanekeSwift: 50d37bfbc4432edc649167e538c259feccb4a2bb
-  QuickBlox: 1774dc7413673be23a21d0e80228d3bf67ab4d35
+  QuickBlox: 0c62fa9b6d9d5092b0f0f31b90eabeb7f854ceb5
   SnapKit: 53696873f2cf84a15e8d7d0d9729ed4381196b16
-  SwiftHTTP: cd7b248bc07db02926ff54cf19b580b78f7abfa1
   SwiftLoader: 9c5e547ae8e00b1c1079139492d6a273c7f73171
 
 COCOAPODS: 0.37.1
