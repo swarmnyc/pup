@@ -183,7 +183,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 							user = new LobbyUserInfo();
 							user.setId( u.getId() );
 							user.setUserName( u.getUserName() );
-							user.setPortraitUrl( Utility.urlContent( u.getPortraitUrl() ) );
+							user.setPortraitUrl( u.getPortraitUrl() );
 							m_lobby.getUsers().add( user );
 						}
 						else

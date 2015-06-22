@@ -1,6 +1,7 @@
 package com.swarmnyc.pup.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.swarmnyc.pup.ApiSettings;
 
 import java.util.Date;
 import java.util.List;
@@ -79,6 +80,9 @@ public class Lobby extends Taggable implements PicturedModel {
     }
 
     public String getPictureUrl() {
+        if ( pictureUrl != null && pictureUrl.startsWith( "~/" ) )
+        { pictureUrl = pictureUrl.replace( "~/", ApiSettings.PuPServerPath ); }
+
         return pictureUrl;
     }
 
@@ -113,6 +117,9 @@ public class Lobby extends Taggable implements PicturedModel {
     }
 
     public String getThumbnailPictureUrl() {
+        if ( thumbnailPictureUrl != null && thumbnailPictureUrl.startsWith( "~/" ) )
+        { thumbnailPictureUrl = thumbnailPictureUrl.replace( "~/", ApiSettings.PuPServerPath ); }
+
         return thumbnailPictureUrl;
     }
 

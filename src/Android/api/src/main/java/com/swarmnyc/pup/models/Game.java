@@ -1,84 +1,108 @@
 package com.swarmnyc.pup.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.swarmnyc.pup.ApiSettings;
 
 import java.util.Date;
 import java.util.List;
 
-public class Game extends Taggable implements PicturedModel {
+public class Game extends Taggable implements PicturedModel
+{
 
-    private String name;
-    private String pictureUrl;
-    private String thumbnailPictureUrl;
-    private String description;
-    private List<GamePlatform> platforms;
-    private List<String> gameTypes;
-    private int rank;
+	private String             name;
+	private String             pictureUrl;
+	private String             thumbnailPictureUrl;
+	private String             description;
+	private List<GamePlatform> platforms;
+	private List<String>       gameTypes;
+	private int                rank;
 
-    @SerializedName("releaseDateUtc")
-    private Date releaseDate;
+	@SerializedName( "releaseDateUtc" )
+	private Date releaseDate;
 
-    public String getName() {
-        return name;
-    }
+	public String getName()
+	{
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName( String name )
+	{
+		this.name = name;
+	}
 
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
+	public String getPictureUrl()
+	{
+		if ( pictureUrl != null && pictureUrl.startsWith( "~/" ) )
+		{ pictureUrl = pictureUrl.replace( "~/", ApiSettings.PuPServerPath ); }
 
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
-    }
+		return pictureUrl;
+	}
 
-    public List<GamePlatform> getPlatforms() {
-        return platforms;
-    }
+	public void setPictureUrl( String pictureUrl )
+	{
+		this.pictureUrl = pictureUrl;
+	}
 
-    public void setPlatforms(List<GamePlatform> platforms) {
-        this.platforms = platforms;
-    }
+	public String getThumbnailPictureUrl()
+	{
+		if ( thumbnailPictureUrl != null && thumbnailPictureUrl.startsWith( "~/" ) )
+		{  thumbnailPictureUrl = thumbnailPictureUrl.replace( "~/", ApiSettings.PuPServerPath ); }
 
-    public String getThumbnailPictureUrl() {
-        return thumbnailPictureUrl;
-    }
+		return thumbnailPictureUrl;
+	}
 
-    public void setThumbnailPictureUrl(String thumbnailPictureUrl) {
-        this.thumbnailPictureUrl = thumbnailPictureUrl;
-    }
+	public void setThumbnailPictureUrl( String thumbnailPictureUrl )
+	{
+		this.thumbnailPictureUrl = thumbnailPictureUrl;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public List<GamePlatform> getPlatforms()
+	{
+		return platforms;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public void setPlatforms( List<GamePlatform> platforms )
+	{
+		this.platforms = platforms;
+	}
 
-    public Date getReleaseDate() {
-        return releaseDate;
-    }
+	public String getDescription()
+	{
+		return description;
+	}
 
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
-    }
+	public void setDescription( String description )
+	{
+		this.description = description;
+	}
 
-    public List<String> getGameTypes() {
-        return gameTypes;
-    }
+	public Date getReleaseDate()
+	{
+		return releaseDate;
+	}
 
-    public void setGameTypes(List<String> gameTypes) {
-        this.gameTypes = gameTypes;
-    }
+	public void setReleaseDate( Date releaseDate )
+	{
+		this.releaseDate = releaseDate;
+	}
 
-    public int getRank() {
-        return rank;
-    }
+	public List<String> getGameTypes()
+	{
+		return gameTypes;
+	}
 
-    public void setRank(int rank) {
-        this.rank = rank;
-    }
+	public void setGameTypes( List<String> gameTypes )
+	{
+		this.gameTypes = gameTypes;
+	}
+
+	public int getRank()
+	{
+		return rank;
+	}
+
+	public void setRank( int rank )
+	{
+		this.rank = rank;
+	}
 }

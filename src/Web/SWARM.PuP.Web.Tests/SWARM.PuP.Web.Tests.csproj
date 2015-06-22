@@ -75,6 +75,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.Extensions" />
@@ -119,6 +120,7 @@
     <Compile Include="RedditHelperTest.cs" />
     <None Include="ApiControllers\UserControllerTests.cs" />
     <Compile Include="ApiControllers\LobbyControllerTests.cs" />
+    <Compile Include="GameImport.cs" />
     <Compile Include="Services\UserServiceTests.cs" />
     <Compile Include="Services\GameServiceTests.cs" />
     <Compile Include="Services\LobbyServiceTests.cs" />

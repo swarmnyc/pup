@@ -30,6 +30,8 @@ public class PuPApplication extends Application
         User.init();
 
         this.component = DaggerPuPComponent.builder().build();
+
+        ApiSettings.PuPServerPath = Config.getConfigString( R.string.PuP_Url );
     }
 
     public int getAppVersion() {
