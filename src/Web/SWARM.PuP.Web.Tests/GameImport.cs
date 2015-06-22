@@ -4,35 +4,37 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Net;
 using Autofac;
+using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB;
+using MongoDB.Bson;
+using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.Services;
 
 namespace SWARM.PuP.Web.Tests.Services
 {
-    [TestClass()]
+    [TestClass]
     public class GameImport
     {
         private readonly IGameService _gameService;
 
         public GameImport()
         {
-            IContainer ioc = TestHelper.GetContainer();
+            var ioc = TestHelper.GetContainer();
             _gameService = ioc.Resolve<IGameService>();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void Real_GameImport_Images()
         {
             var fileFolder = @"D:\Projects\SWARM\PuP\src\Web\SWARM.PuP.Web\Content\Game\";
             var gameCollection = MongoHelper.GetCollection<Game>("Games");
-            WebClient client = new WebClient();
+            var client = new WebClient();
             string file1 = null;
             foreach (var game in gameCollection.AsQueryable())
             {
@@ -70,10 +72,40 @@ namespace SWARM.PuP.Web.Tests.Services
             client.Dispose();
         }
 
-        [TestMethod()]
+        [TestMethod]
+        public void Real_GameImport_SubReddit()
+        {
+            var gameCollection = MongoHelper.GetCollection<Game>("Games");
+
+            var reader = new CsvReader(new StreamReader(@"D:\Downloads\RedditGameDataForSubReddit.csv"));
+            while (reader.Read())
+            {
+                var gameId = reader.GetField<string>(0);
+                var sr = reader.GetField<string>(2);
+                if (string.IsNullOrWhiteSpace(sr))
+                {
+                    gameCollection.Remove(Query.EQ("_id", new ObjectId(gameId)));
+                    continue;
+                }
+
+                if (sr.EndsWith("/"))
+                {
+                    sr = sr.Substring(0, sr.Length - 1);
+                }
+
+                sr = sr.Substring(sr.LastIndexOf("/")+1);
+
+                Trace.TraceInformation("{0}:{1}", gameId, sr);
+                var game = gameCollection.FindOneById(new ObjectId(gameId));
+                game.UpdateTag("RedditSR", sr);
+                gameCollection.Save(game);
+            }
+        }
+
+        [TestMethod]
         public void Real_GameImport_Adds()
         {
-            IEnumerable<GameSource> list = ConvertGameCSV();
+            var list = ConvertGameCSV();
             //IEnumerable<GameSource> list = JsonConvert.DeserializeObject<IEnumerable<GameSource>>(File.ReadAllText(@"..\..\MockData\import_games.json"));
 
             foreach (var game in list)
@@ -101,7 +133,7 @@ namespace SWARM.PuP.Web.Tests.Services
                 if (!string.IsNullOrWhiteSpace(game.ReleaseDate))
                     date = DateTime.Parse(game.ReleaseDate).AddHours(-4);
 
-                _gameService.Add(new Game()
+                _gameService.Add(new Game
                 {
                     Name = game.Name,
                     Platforms = p,
@@ -109,36 +141,20 @@ namespace SWARM.PuP.Web.Tests.Services
                     PictureUrl = game.ImageURL,
                     ThumbnailPictureUrl = game.ImageURL,
                     Description = game.Description,
-                    ReleaseDateUtc = date,
+                    ReleaseDateUtc = date
                 });
             }
         }
 
         private IEnumerable<GameSource> ConvertGameCSV()
         {
-            CsvConfiguration configuration = new CsvConfiguration();
+            var configuration = new CsvConfiguration();
 
             configuration.HasHeaderRecord = true;
             configuration.WillThrowOnMissingField = false;
-            var reader = new CsvHelper.CsvReader(new StreamReader(@"..\..\MockData\import_games.csv"), configuration);
+            var reader = new CsvReader(new StreamReader(@"..\..\MockData\import_games.csv"), configuration);
 
             return reader.GetRecords<GameSource>();
-        }
-
-        public class GameSource
-        {
-            public string Name { get; set; }
-            public string ReleaseDate { get; set; }
-            public string XBOX360 { get; set; }
-            public string XBOXOne { get; set; }
-            public string PS3 { get; set; }
-            public string PS4 { get; set; }
-            public string STEAM { get; set; }
-            public string PC { get; set; }
-            public string WIIU { get; set; }
-            public string Description { get; set; }
-            public string Genre { get; set; }
-            public string ImageURL { get; set; }
         }
 
         public void CreateThumbnailTo(string input, int size, string saveto)
@@ -170,5 +186,20 @@ namespace SWARM.PuP.Web.Tests.Services
             return true;
         }
 
+        public class GameSource
+        {
+            public string Name { get; set; }
+            public string ReleaseDate { get; set; }
+            public string XBOX360 { get; set; }
+            public string XBOXOne { get; set; }
+            public string PS3 { get; set; }
+            public string PS4 { get; set; }
+            public string STEAM { get; set; }
+            public string PC { get; set; }
+            public string WIIU { get; set; }
+            public string Description { get; set; }
+            public string Genre { get; set; }
+            public string ImageURL { get; set; }
+        }
     }
 }

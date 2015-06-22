@@ -90,6 +90,7 @@ public class SettingsFragment extends Fragment implements Screen
 
 		m_fbSwitch.setChecked( User.current.hasMedium( Consts.KEY_FACEBOOK ) );
 		m_twitterSwitch.setChecked( User.current.hasMedium( Consts.KEY_TWITTER ) );
+		m_redditSwitch.setChecked( User.current.hasMedium( Consts.KEY_REDDIT ) );
 		m_tumblrSwitch.setChecked( User.current.hasMedium( Consts.KEY_TUMBLR ) );
 	}
 
@@ -267,9 +268,23 @@ public class SettingsFragment extends Fragment implements Screen
 	{
 		if ( m_redditSwitch.isChecked() )
 		{
+			m_redditSwitch.setChecked( false );
 
-			/*RegisterForMediumDialogFragment dialogFragment = new RegisterForMediumDialogFragment();
-			dialogFragment.show( this.getFragmentManager(), null);*/
+			OAuthFragment oAuthFragment = new OAuthFragment();
+			oAuthFragment.initialize(
+					Consts.KEY_REDDIT, new AsyncCallback()
+					{
+						@Override
+						public void success()
+						{
+							User.addMedium( Consts.KEY_REDDIT );
+							m_redditSwitch.setChecked( true );
+							Toast.makeText( getActivity(), R.string.message_connect_success, Toast.LENGTH_LONG ).show();
+						}
+					}
+			);
+
+			oAuthFragment.show( this.getFragmentManager(), null );
 		}
 		else
 		{

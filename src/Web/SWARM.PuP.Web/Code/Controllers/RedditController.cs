@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -37,21 +38,35 @@ namespace SWARM.PuP.Web.Code.Controllers
             {
                 var lobby = _lobbyService.GetById(model.LobbyId);
                 var game = _gameService.GetById(lobby.GameId);
-                var sr = game.GetTagValue("RedditSR") ?? "test";
+                var sr = game.GetTagValue("RedditSR");
+                if (string.IsNullOrWhiteSpace(sr))
+                {
+                    Trace.TraceWarning("{0} doesn't have SubRiddit tag", game.Name);
+                    return RedirectToAction("Done");
+                }
+
                 string result = ShareHelper.ShareToReddit(User.Identity.GetPuPUser(), lobby, sr, model.CaptchaId, model.Captcha,
                 model.LocalTime);
 
                 if (result.Contains("BAD_CAPTCHA"))
                 {
-                    ViewBag.ErrorMessage = "Captcha was incurrent";
+                    ViewBag.ErrorMessage = "Captcha was incorrect";
+                    ViewBag.CaptchaId = RedditHelper.GetRedditCaptchaId(User.Identity.GetPuPUser());
+                    return View();
+                }
+                else if (result.Contains(".error.RATELIMIT"))
+                {
+                    ViewBag.ErrorMessage = "you are doing that too much. try again late.";
                     ViewBag.CaptchaId = RedditHelper.GetRedditCaptchaId(User.Identity.GetPuPUser());
                     return View();
                 }
                 else
                 {
+                    Trace.WriteLine("Reddit Share Result: " + result);
+
                     return RedirectToAction("Done");
                 }
-                
+
             }
             else
             {

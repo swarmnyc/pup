@@ -38,7 +38,7 @@ public class OAuthFragment extends DialogFragment
 
 		ButterKnife.inject( this, view );
 
-		m_webview.loadUrl( Utility.urlContent( "oauth/" + m_type + "?user_token=" + User.current.getAccessToken() ));
+		m_webview.loadUrl( Utility.urlContent( "~/oauth/" + m_type + "?user_token=" + User.current.getAccessToken() ));
 
 		WebSettings settings = m_webview.getSettings();
 		settings.setJavaScriptEnabled( true );
