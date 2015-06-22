@@ -41,7 +41,7 @@ namespace SWARM.PuP.Web.Code.Components
             return result.json.data.iden;
         }
 
-        public static void PostToReddit(PuPUser user, string text, string sr, string captchaId, string captcha)
+        public static string PostToReddit(PuPUser user, string title, string text, string sr, string captchaId, string captcha)
         {
             user.RefreshRedditToken();
 
@@ -50,11 +50,10 @@ namespace SWARM.PuP.Web.Code.Components
             request.ContentType = "application/x-www-form-urlencoded";
             request.UserAgent = "partyupplayer";
             request.Headers.Add("Authorization", "bearer " + user.Media.First(x => x.Type == SocialMediumType.Reddit).Token);
+            
+            request.Write(String.Format("text={0}&sr={1}&kind=self&title={2}&iden={3}&captcha={4}", text, sr, title, captchaId, captcha));
 
-            string title = text.Substring(0, text.IndexOf("\r"));
-            request.Write(String.Format("text={0}&sr={1}&kind=self&title={2}&iden={3}&captcha={4}", text, sr, text, captchaId, captcha));
-
-            request.ReadAll();
+            return request.ReadAll();
         }
 
         public static void UpdateRedditToken(this PuPUser user, bool newToken, string code)

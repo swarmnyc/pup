@@ -64,16 +64,6 @@ public class LobbyFilter extends GameFilter {
 	}
 
 	@Override
-	public void setPageIndex( final int pageIndex )
-	{
-		if (pageIndex == 0)
-		{
-			setStartTime( new Date(  ) ); // set DAte = now
-		}
-		super.setPageIndex( pageIndex );
-	}
-
-	@Override
     public Map<String, Object> toMap() {
         Map<String, Object> map = super.toMap();
         if ( game != null) {

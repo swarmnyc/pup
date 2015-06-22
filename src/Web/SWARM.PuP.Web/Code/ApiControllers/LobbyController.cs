@@ -129,107 +129,18 @@ namespace SWARM.PuP.Web.ApiControllers
                 switch (type)
                 {
                     case SocialMediumType.Facebook:
-                        ShareToFacebook(medium, lobby, localTime);
+                        ShareHelper.ShareToFacebook(medium, lobby, localTime);
                         break;
                     case SocialMediumType.Twitter:
-                        ShareToTwitter(medium, lobby, localTime);
+                        ShareHelper.ShareToTwitter(medium, lobby, localTime);
                         break;
                     case SocialMediumType.Tumblr:
-                        ShareToTumblur(medium, lobby, localTime);
-                        break;
-                    case SocialMediumType.Reddit:
-                        ShareToReddit(user, lobby, localTime);
+                        ShareHelper.ShareToTumblur(medium, lobby, localTime);
                         break;
                 }
             }
 
             return Ok();
-        }
-
-        private void ShareToTumblur(SocialMedium medium, Lobby lobby, string localTime)
-        {
-            try
-            {
-                //TODO: Bug with Chinese letter in AuthRequest
-                var msg = HttpUtility.UrlEncode(GetMessage(lobby, localTime), Encoding.UTF8);
-                var authRequest = new TwitterOAuthClient
-                {
-                    ConsumerKey = OAuthData.Tumblr.ConsumerKey,
-                    ConsumerSecret = OAuthData.Tumblr.ConsumerSecret,
-                    Token = medium.Token,
-                    TokenSecret = medium.Secret
-                };
-
-                authRequest.OAuthWebRequest(RequestMethod.POST, string.Format("https://api.tumblr.com/v2/blog/{0}.tumblr.com/post", medium.UserId),
-                    "type=text&body=" + msg);
-            }
-            catch (Exception ex)
-            {
-                Trace.TraceError("{0}\n{1}", ex.Message, ex.StackTrace);
-            }
-        }
-
-        private void ShareToTwitter(SocialMedium medium, Lobby lobby, string localTime)
-        {
-            try
-            {
-                //TODO: Bug with Chinese letter in AuthRequest
-                var msg = HttpUtility.UrlEncode(GetMessage(lobby, localTime), Encoding.UTF8);
-                var authRequest = new TwitterOAuthClient
-                {
-                    ConsumerKey = OAuthData.Twitter.ConsumerKey,
-                    ConsumerSecret = OAuthData.Twitter.ConsumerSecret,
-                    Token = medium.Token,
-                    TokenSecret = medium.Secret
-                };
-
-                authRequest.OAuthWebRequest(RequestMethod.POST, "https://api.twitter.com/1.1/statuses/update.json",
-                    "status=" + msg);
-            }
-            catch (Exception ex)
-            {
-                Trace.TraceError("{0}\n{1}", ex.Message, ex.StackTrace);
-            }
-        }
-
-        private void ShareToFacebook(SocialMedium medium, Lobby lobby, string localTime)
-        {
-            try
-            {
-                var msg = HttpUtility.UrlEncode(GetMessage(lobby, localTime), Encoding.UTF8);
-                var link = HttpUtility.UrlEncode(Url.Content("~/lobby/" + lobby.Id));
-                var url = string.Format("https://graph.facebook.com/v2.3/me/feed?access_token={0}&message={1}&link={2}",
-                    medium.Token, msg, link);
-                WebRequest webRequest = WebRequest.CreateHttp(url);
-                webRequest.Method = "POST";
-                webRequest.ReadAll();
-            }
-            catch (Exception ex)
-            {
-                Trace.TraceError("{0}\n{1}", ex.Message, ex.StackTrace);
-            }
-
-        }
-
-        private void ShareToReddit(PuPUser user, Lobby lobby, string localTime)
-        {
-            try
-            {
-                var msg = HttpUtility.UrlEncode(GetMessage(lobby, localTime), Encoding.UTF8);
-                var queries = Request.GetQueryNameValuePairs();
-                RedditHelper.PostToReddit(user, msg, lobby.GetTagValue("Reddit-SR"), queries.First(x => x.Key == "CaptchaId").Value, queries.First(x => x.Key == "Captcha").Value);
-            }
-            catch (Exception ex)
-            {
-                Trace.TraceError("{0}\n{1}", ex.Message, ex.StackTrace);
-            }
-        }
-
-        private static string GetMessage(Lobby lobby, string localTime)
-        {
-            return string.Format(@"Who's up for {0} this {1}
-
-PUP: Find gamers to play with http://partyupplayer.com", lobby.Name, localTime);
         }
     }
 }

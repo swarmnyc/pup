@@ -1,0 +1,28 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Share to Reddit</title>
+</head>
+<body>
+<form method="POST">
+    <h3>In order to share to Reddit, you need to fill in this code.</h3>
+    <img src="http://www.reddit.com/captcha/@ViewBag.CaptchaId" alt="captcha" width="200"/>
+    <br/>
+    <input type="text" name="captcha" value=""/>
+    <input type="hidden" name="captchaId" value="@ViewBag.CaptchaId"/>
+    <br/>
+    @if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
+    {
+        <div style="color: red">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

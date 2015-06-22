@@ -16,29 +16,42 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import com.swarmnyc.pup.AsyncCallback;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.StringUtils;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.components.Utility;
+import com.swarmnyc.pup.models.Lobby;
 
-public class OAuthFragment extends DialogFragment
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+
+public class RedditShareFragment extends DialogFragment
 {
 	@InjectView( R.id.webview )
 	WebView m_webview;
 
-	private String        m_type;
+	private Lobby         m_lobby;
 	private AsyncCallback m_callback;
 
 	@Override
 	public Dialog onCreateDialog( final Bundle savedInstanceState )
 	{
 		LayoutInflater lf = this.getActivity().getLayoutInflater();
-		View view = lf.inflate( R.layout.dialog_connection, null );
-		View title = lf.inflate( R.layout.title_connection, null );
+		View view = lf.inflate( R.layout.dialog_share_to_reddit, null );
+		View title = lf.inflate( R.layout.title_share_to_reddit, null );
 
 		AlertDialog alertDialog = new AlertDialog.Builder( this.getActivity() ).setView( view ).setCustomTitle( title ).create();
 
 		ButterKnife.inject( this, view );
+		String localTime = null;
+		try {
+			localTime = URLEncoder.encode(new SimpleDateFormat( "MMM dd h:mm a '('zzz')'" ).format( m_lobby.getStartTime() ),"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 
-		m_webview.loadUrl( Utility.urlContent( "oauth/" + m_type + "?user_token=" + User.current.getAccessToken() ));
+		m_webview.loadUrl( Utility.urlContent( "~/Reddit/Share?user_token=" + User.current.getAccessToken() + "&lobbyId=" + m_lobby.getId() + "&localTime=" + localTime)  );
 
 		WebSettings settings = m_webview.getSettings();
 		settings.setJavaScriptEnabled( true );
@@ -49,7 +62,7 @@ public class OAuthFragment extends DialogFragment
 				@Override
 				public boolean shouldOverrideUrlLoading( final WebView view, final String url )
 				{
-					if ( url.toLowerCase().contains( "/oauth/done" ) )
+					if ( url.toLowerCase().contains( "done" ) )
 					{
 						if ( m_callback != null )
 						{ m_callback.success(); }
@@ -72,10 +85,9 @@ public class OAuthFragment extends DialogFragment
 		ButterKnife.reset( this );
 	}
 
-	public void initialize( String type, AsyncCallback callback )
+	public void initialize( Lobby lobby, AsyncCallback callback )
 	{
-
-		m_type = type;
+		m_lobby = lobby;
 		m_callback = callback;
 	}
 

@@ -45,6 +45,7 @@ import com.uservoice.uservoicesdk.UserVoice;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -382,6 +383,7 @@ public class LobbyListFragment extends Fragment implements Screen
 		m_lobbyFilter.setPageIndex( current_page );
 		if ( current_page == 0 )
 		{
+			m_lobbyFilter.setStartTime(new Date());
 			m_endlessRecyclerOnScrollListener.reset();
 		}
 		else

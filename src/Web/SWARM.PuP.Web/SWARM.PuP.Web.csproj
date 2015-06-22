@@ -152,12 +152,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\ApiControllers\ErrorCode.cs" />
+    <Compile Include="Code\Components\ShareHelper.cs" />
     <Compile Include="Code\Components\QueryString.cs" />
     <Compile Include="Code\Components\ModelValidateAttribute.cs" />
     <Compile Include="Code\Components\RedditHelper.cs" />
     <Compile Include="Code\Controllers\LobbyController.cs" />
     <Compile Include="Code\Controllers\OAuthController.cs" />
     <Compile Include="Code\Components\OAuthData.cs" />
+    <Compile Include="Code\Controllers\RedditController.cs" />
     <Compile Include="Code\Models\SocialMedium.cs" />
     <Compile Include="Code\Security\AuthenticationMiddleware.cs" />
     <Compile Include="Code\Security\DataProtector.cs" />
@@ -631,11 +633,10 @@
     <Content Include="Content\Game\5553c9f460635b5368e5a1fe.jpg" />
     <Content Include="Content\Game\5553c9f460635b5368e5a1ff-tn.jpg" />
     <Content Include="Content\Game\5553c9f460635b5368e5a1ff.jpg" />
-    <Content Include="Content\Game\temp.jpeg" />
-    <Content Include="Content\Game\temp.png" />
     <Content Include="Content\pup.png" />
     <Content Include="Content\User\Cool.txt" />
     <Content Include="Views\Lobby\Index.cshtml" />
+    <Content Include="Views\Reddit\Share.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -652,7 +653,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\Game\temp.resizedimage" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Properties\PublishProfiles\PuP-Dev.pubxml" />
     <None Include="Properties\PublishProfiles\pup-secondary.pubxml" />
