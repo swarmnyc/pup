@@ -9,8 +9,6 @@
 #ifndef Quickblox_QBCustomObjectsHeader_h
 #define Quickblox_QBCustomObjectsHeader_h
 
-#import <Quickblox/QBCOPermissions.h>
-#import <Quickblox/QBCOCustomObject.h>
 #import <Quickblox/QBRequest+QBCustomObjects.h>
 #import <Quickblox/QBCOFile.h>
 

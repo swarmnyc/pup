@@ -8,7 +8,7 @@ import UIKit
 import QuartzCore
 import SwiftLoader
 
-class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, SimpleButtonDelegate {
 
     var lobbyView: SingleLobbyView?;
     var data: singleLobby = singleLobby();
@@ -20,12 +20,16 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
     var navBarVisible = false;
     var firstTime = true;
 
+    var socialController: SocialConnector?
+    var socialView: SocialButtonsView?
+
     convenience init(info: LobbyData) {
 
         self.init();
         println(info);
         println(info.name);
         data.passMessagesToController = recievedMessages;
+        data.setUpSharing = setUpSharing;
         data.data = info;
         data.setID()
 
@@ -60,9 +64,6 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
 
 
-
-        println(navigationController);
-        println("navigation controller")
 
 
     }
@@ -121,13 +122,59 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
 
 
-
         registerForKeyboardNotifications()
 
 
 
     }
 
+
+    //SOCIAL START
+
+    //set up
+    func setUpSharing() {
+        println("sharing should happen")
+
+        socialView = SocialButtonsView();
+        self.lobbyView?.addSubview(self.socialView!);
+        socialView!.setUpButtons(self)
+
+        socialController = SocialConnector();
+        socialController?.cancelOauth = self.socialView!.cancelled;
+
+
+    }
+
+
+    //touch down doesn't get used, but part of protocol
+    func touchDown(button: NSObject, type: String) {
+            println(type)
+    }
+
+    //clicked on social toggle
+    func touchUp(button: NSObject, type: String) {
+
+        if (type == "send") {
+            println(type)
+            socialController?.sendInvites(button as! Array<SocialToggle>, lobbyData: self.data.data)
+        } else if (currentUser.loggedIn()) {
+            var socialToggle = button as! SocialToggle;
+            if (socialToggle.checked == false) {
+                //if its false that means it is about to turn true, it turns to checked after this
+                //function runs
+                socialController?.setTypeAndAuthenticate(type);
+            }
+        } else {
+                socialController?.service = type;
+                socialController?.cancelOauth?(type);
+                joinPupButton?.touchUp(button, type: type)
+
+        }
+
+    }
+
+
+    //SOCIAL START
 
 
     func keyboardWillShow(notification: NSNotification)
@@ -195,6 +242,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
         println("about to submit a message")
 
+
     }
 
 
@@ -231,7 +279,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         var config = SwiftLoader.Config()
         config.size = 150
         config.spinnerColor = UIColor(rgba: colors.orange)
-        config.backgroundColor = UIColor(rgba: colors.mainGrey)
+        config.backgroundColor = UIColor.whiteColor()
 
         SwiftLoader.setConfig(config);
         SwiftLoader.show(title: "Loading...", animated: true)

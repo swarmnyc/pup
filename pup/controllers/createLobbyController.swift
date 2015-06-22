@@ -115,7 +115,7 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
             var config = SwiftLoader.Config()
             config.size = 150
             config.spinnerColor = UIColor(rgba: colors.orange)
-            config.backgroundColor = UIColor(rgba: colors.mainGrey)
+            config.backgroundColor = UIColor.whiteColor()
             SwiftLoader.setConfig(config);
 
             createView.closeKeyboard();

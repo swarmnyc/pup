@@ -37,7 +37,7 @@ class MessageCell: UITableViewCell {
         self.profilePicture.image = nil;
         self.profilePicture.layer.cornerRadius = 20;
         if (item.picture != "") {
-            var url = NSURL(string: item.picture.stringByReplacingOccurrencesOfString("~", withString: urls.siteBase, options: NSStringCompareOptions.LiteralSearch, range: nil))
+            var url = NSURL(string: item.picture.getPUPUrl())
             self.profilePicture.frame = CGRectMake(0,0,50,50);
             self.profilePicture.hnk_setImageFromURL(url!)
             println("HAS URL!!!!!!!!")

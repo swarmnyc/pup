@@ -6,6 +6,8 @@
 import Foundation
 import UIKit
 
+
+
 class PlatformButtonToggle: UIButton {
 
     var checked: Bool = false
@@ -81,7 +83,7 @@ class PlatformButtonToggle: UIButton {
     }
 
     func buttonPressed(sender: UIButton!) {
-        println("hello")
+       // println("hello")
     }
 
     func toggleSelected(sender: PlatformButtonToggle!) {

@@ -14,11 +14,3 @@ extern NSString *const kQBCOPermissionsAccessOpen;
 extern NSString *const kQBCOPermissionsAccessOwner;
 extern NSString *const kQBCOPermissionsAccessOpenForUsersIDs;
 extern NSString *const kQBCOPermissionsAccessOpenForGroups;
-
-typedef NS_ENUM(NSUInteger, QBCOAggregationOperator) {
-    QBCOAggregationOperatorNone,
-    QBCOAggregationOperatorAverage,
-    QBCOAggregationOperatorMinimum,
-    QBCOAggregationOperatorMaximum,
-    QBCOAggregationOperatorSummary
-};

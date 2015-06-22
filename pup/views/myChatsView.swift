@@ -91,7 +91,11 @@ class MyChatsCell: UICollectionViewCell {
 
     func setUpCell(data: LobbyData) {
         self.backgroundColor = UIColor(rgba: "#f1f1f1")
-
+        if (data.timeInHuman == "Finished") {
+            self.contentView.layer.opacity = 0.6
+        } else {
+            self.contentView.layer.opacity = 1
+        }
         self.contentView.layer.borderColor = UIColor(rgba: colors.lightGray).CGColor
         self.contentView.layer.borderWidth = 4.0;
 
@@ -99,12 +103,22 @@ class MyChatsCell: UICollectionViewCell {
         lobbyName.font = lobbyName.font.fontWithSize(13)
         lobbyName.textColor = UIColor(rgba: colors.mainGrey)
 
-        var url = NSURL(string: data.thumbnailPictureUrl.stringByReplacingOccurrencesOfString("~", withString: urls.siteBase, options: NSStringCompareOptions.LiteralSearch, range: nil))
-        // var request:NSURLRequest = NSURLRequest(URL: url!)
+        var url = NSURL(string: data.thumbnailPictureUrl.getPUPUrl())
         self.lobbyImage.clipsToBounds = true;
         self.lobbyImage.contentMode = UIViewContentMode.ScaleAspectFill;
         lobbyImage.frame.size = CGSizeMake(42, 42);
         self.lobbyImage.hnk_setImageFromURL(url!)
+        self.lobbyImage.backgroundColor = UIColor(rgba: colors.orange)
+        self.lobbyImage.alpha = 0;
+        self.lobbyImage.hnk_setImageFromURL(url!, placeholder:nil, format: nil, failure: nil, success: {
+            (image) -> Void in
+            self.lobbyImage.image = image;
+            UIView.animateWithDuration(0.3, animations: {
+                () -> Void in
+                self.lobbyImage.alpha = 1;
+            });
+
+        })
 
 
 
@@ -121,7 +135,7 @@ class MyChatsCell: UICollectionViewCell {
         platform.textColor = UIColor(rgba: colors.midGray);
         platform.textAlignment = NSTextAlignment.Right
 
-        divider.backgroundColor = UIColor(rgba: colors.mainGrey)
+        divider.backgroundColor = UIColor(rgba: colors.mainGrey).lighterColor(0.75)
 
 
         lobbyImage.snp_makeConstraints {
@@ -148,7 +162,7 @@ class MyChatsCell: UICollectionViewCell {
                 make.left.equalTo(self.contentView).offset(UIConstants.horizontalPadding)
                 make.top.equalTo(self.lobbyImage.snp_bottom).offset(UIConstants.verticalPadding)
                 make.width.equalTo(150)
-                make.height.equalTo(16)
+                make.height.equalTo(14)
             }
 
             desc.snp_makeConstraints {
@@ -172,7 +186,7 @@ class MyChatsCell: UICollectionViewCell {
                 make.bottom.equalTo(self.contentView).offset(0)
                 make.left.equalTo(self.contentView).offset(0)
                 make.right.equalTo(self.contentView).offset(0)
-                make.height.equalTo(2)
+                make.height.equalTo(4.5)
             }
 
 

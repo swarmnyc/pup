@@ -21,7 +21,8 @@ PODS:
   - FBSDKShareKit (4.2.0):
     - FBSDKCoreKit
   - HanekeSwift (0.9.1)
-  - QuickBlox (2.3.0.1)
+  - JLToast (1.2.3)
+  - QuickBlox (2.2.5)
   - SnapKit (0.10.0)
   - SwiftLoader (0.2.2)
 
@@ -32,7 +33,8 @@ DEPENDENCIES:
   - FBSDKLoginKit
   - FBSDKShareKit
   - HanekeSwift
-  - QuickBlox
+  - JLToast
+  - QuickBlox (~> 2.2.3)
   - SnapKit (~> 0.10.0)
   - SwiftLoader
 
@@ -44,8 +46,9 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: 57e37106af12c9e264e473dcb75d7decdbb07fe4
   FBSDKShareKit: 931746fdf8fb95efd6e12310ec14b2b3295e2aec
   HanekeSwift: 50d37bfbc4432edc649167e538c259feccb4a2bb
-  QuickBlox: 0c62fa9b6d9d5092b0f0f31b90eabeb7f854ceb5
+  JLToast: fc26885fae255e31ba9bebc0f82ae2ab1140f503
+  QuickBlox: f13fb448a32d3c09efc71a9fd19d7f44092d9dbd
   SnapKit: 53696873f2cf84a15e8d7d0d9729ed4381196b16
   SwiftLoader: 9c5e547ae8e00b1c1079139492d6a273c7f73171
 
-COCOAPODS: 0.37.1
+COCOAPODS: 0.37.2

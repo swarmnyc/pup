@@ -17,6 +17,7 @@ class RegistrationView: UIView {
     var cancel: UIButton = UIButton();
     var registrationDelegate: RegistrationDelegate?
     var parentView: UIView?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 

@@ -9,8 +9,6 @@
 #ifndef Quickblox_QBContentHeader_h
 #define Quickblox_QBContentHeader_h
 
-#import <Quickblox/QBCBlob.h>
-#import <Quickblox/QBCBlobObjectAccess.h>
 #import <Quickblox/QBRequest+QBContent.h>
 
 #endif

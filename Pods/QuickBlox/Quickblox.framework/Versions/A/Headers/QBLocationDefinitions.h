@@ -10,3 +10,5 @@
 
 #import <Quickblox/QBLocationEnums.h>
 #import <Quickblox/QBLocationStructs.h>
+#import <Quickblox/QBLGPConst.h>
+#import <Quickblox/QBLocationConsts.h>

@@ -72,12 +72,17 @@
 #define COCOAPODS_VERSION_MINOR_HanekeSwift 9
 #define COCOAPODS_VERSION_PATCH_HanekeSwift 1
 
+// JLToast
+#define COCOAPODS_POD_AVAILABLE_JLToast
+#define COCOAPODS_VERSION_MAJOR_JLToast 1
+#define COCOAPODS_VERSION_MINOR_JLToast 2
+#define COCOAPODS_VERSION_PATCH_JLToast 3
+
 // QuickBlox
 #define COCOAPODS_POD_AVAILABLE_QuickBlox
-// This library does not follow semantic-versioning,
-// so we were not able to define version macros.
-// Please contact the author.
-// Version: 2.3.0.1.
+#define COCOAPODS_VERSION_MAJOR_QuickBlox 2
+#define COCOAPODS_VERSION_MINOR_QuickBlox 2
+#define COCOAPODS_VERSION_PATCH_QuickBlox 5
 
 // SnapKit
 #define COCOAPODS_POD_AVAILABLE_SnapKit

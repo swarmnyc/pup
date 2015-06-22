@@ -198,7 +198,7 @@ class MembersListCell: UICollectionViewCell {
         memberName.textColor = UIColor(rgba: colors.mainGrey)
 
 
-        var proPicUrl = data.portraitUrl.stringByReplacingOccurrencesOfString("~", withString: urls.siteBase, options: NSStringCompareOptions.LiteralSearch, range: nil);
+        var proPicUrl = data.portraitUrl.getPUPUrl();
         if (proPicUrl == "") { //has no profile picture
             var img = UIImage(named: "iconWithText");
             self.memberPhoto.image = img;

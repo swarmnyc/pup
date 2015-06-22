@@ -36,7 +36,7 @@ struct appURLS {
     var siteBase = "http://pup-dev.azurewebsites.net/"
     var apiBase: String {
         get {
-            return "\(siteBase)/api/"
+            return "\(siteBase)api/"
         }
     }
     var lobbies: String {
@@ -79,7 +79,7 @@ struct appURLS {
 
     var OAuth: String {
         get {
-            return "\(apiBase)OAuth/"
+            return "\(siteBase)OAuth/"
         }
     }
 

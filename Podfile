@@ -10,10 +10,11 @@ target 'pup' do
   pod 'HanekeSwift'
   pod 'ENSwiftSideMenu', '~> 0.0'
   pod 'SwiftLoader'
-  pod 'QuickBlox'
+  pod 'QuickBlox', '~> 2.2.3'
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
+  pod 'JLToast'
 end
 
 target 'pupTests' do
@@ -22,7 +23,9 @@ target 'pupTests' do
   pod 'HanekeSwift'
   pod 'ENSwiftSideMenu', '~> 0.0'
   pod 'SwiftLoader'
-
+  pod 'FBSDKCoreKit'
+  pod 'FBSDKLoginKit'
+  pod 'FBSDKShareKit'
 end
 
 target 'pupTests2' do
@@ -31,7 +34,9 @@ target 'pupTests2' do
   pod 'HanekeSwift'
   pod 'ENSwiftSideMenu', '~> 0.0'
   pod 'SwiftLoader'
-  pod 'QuickBlox'
-
+  pod 'QuickBlox', '~> 2.2.3'
+  pod 'FBSDKCoreKit'
+  pod 'FBSDKLoginKit'
+  pod 'FBSDKShareKit'
 end
 

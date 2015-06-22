@@ -14,8 +14,8 @@ class gameCell: UITableViewCell {
 
 
     var imageAndPlatform: UIView = UIView()
-    var textRightTop: UIView = UIView()
-    var textRightBottom: UIView = UIView()
+    var textRightTitleAndDesc: UIView = UIView()
+    var textRightTagsAndDate: UIView = UIView()
 
     var title:UILabel = UILabel()
     var desc: SelectableTextView = SelectableTextView()
@@ -51,16 +51,16 @@ class gameCell: UITableViewCell {
 
         self.contentView.addSubview(imageAndPlatform)
 
-        textRightTop.addSubview(title)
-        textRightTop.addSubview(desc)
+        textRightTitleAndDesc.addSubview(title)
+        textRightTitleAndDesc.addSubview(desc)
 
-        self.contentView.addSubview(textRightTop)
+        self.contentView.addSubview(textRightTitleAndDesc)
 
-        textRightBottom.addSubview(tags)
-        textRightBottom.addSubview(time)
-        textRightBottom.addSubview(divider)
+        textRightTagsAndDate.addSubview(tags)
+        textRightTagsAndDate.addSubview(time)
+        textRightTagsAndDate.addSubview(divider)
 
-        self.contentView.addSubview(textRightBottom)
+        self.contentView.addSubview(textRightTagsAndDate)
 
         //setUpConstraints();
 
@@ -90,22 +90,22 @@ class gameCell: UITableViewCell {
         }
 
 
-        textRightTop.snp_remakeConstraints { (make) -> Void in
+        textRightTitleAndDesc.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(imageAndPlatform.snp_right).offset(0);
             make.right.equalTo(self.contentView).offset(0)
-            make.top.equalTo(self.contentView).offset(0)
+            make.top.equalTo(self.textRightTagsAndDate.snp_bottom).offset(0)
             make.bottom.equalTo(self.contentView).offset(26)
         }
-        textRightBottom.snp_remakeConstraints { (make) -> Void in
+        textRightTagsAndDate.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(imageAndPlatform.snp_right).offset(0);
             make.right.equalTo(self.contentView).offset(0)
             make.height.equalTo(bottomSectionHeight)
-            make.bottom.equalTo(self.contentView).offset(0)
+            make.top.equalTo(self.contentView).offset(0)
         }
 
         imgView.snp_remakeConstraints { (make) -> Void in
             make.right.equalTo(imageAndPlatform).offset(0)
-            make.top.equalTo(imageAndPlatform).offset(0)
+            make.bottom.equalTo(imageAndPlatform).offset(0)
             make.left.equalTo(imageAndPlatform).offset(0)
             make.height.equalTo(topSectionHeight)
 
@@ -113,7 +113,7 @@ class gameCell: UITableViewCell {
         }
 
         platform.snp_remakeConstraints { (make) -> Void in
-            make.top.equalTo(imgView.snp_bottom).offset(0)
+            make.top.equalTo(imageAndPlatform).offset(0)
             make.right.equalTo(imageAndPlatform).offset(0)
             make.left.equalTo(imageAndPlatform).offset(0)
             make.height.equalTo(bottomSectionHeight)
@@ -121,37 +121,37 @@ class gameCell: UITableViewCell {
         }
 
         title.snp_remakeConstraints { (make) -> Void in
-            make.left.equalTo(textRightTop).offset(UIConstants.horizontalPadding)
-            make.right.equalTo(textRightTop).offset(-UIConstants.horizontalPadding)
-            make.top.equalTo(textRightTop).offset(UIConstants.verticalPadding)
+            make.left.equalTo(textRightTitleAndDesc).offset(UIConstants.horizontalPadding)
+            make.right.equalTo(textRightTitleAndDesc).offset(-UIConstants.horizontalPadding)
+            make.top.equalTo(textRightTitleAndDesc).offset(UIConstants.verticalPadding)
             make.height.equalTo(18)
 
         }
         desc.snp_remakeConstraints { (make) -> Void in
-            make.left.equalTo(textRightTop).offset(UIConstants.horizontalPadding)
-            make.right.equalTo(textRightTop).offset(-UIConstants.horizontalPadding)
+            make.left.equalTo(textRightTitleAndDesc).offset(UIConstants.horizontalPadding)
+            make.right.equalTo(textRightTitleAndDesc).offset(-UIConstants.horizontalPadding)
             make.top.equalTo(title.snp_bottom).offset(UIConstants.halfHorizontalPadding)
-            make.bottom.equalTo(textRightTop).offset(-UIConstants.verticalPadding)
+            make.bottom.equalTo(textRightTitleAndDesc).offset(-UIConstants.verticalPadding)
 
         }
 
         tags.snp_remakeConstraints { (make) -> Void in
-            make.left.equalTo(textRightBottom).offset(UIConstants.horizontalPadding);
-            make.top.equalTo(textRightBottom).offset(0)
-            make.bottom.equalTo(textRightBottom).offset(0)
+            make.left.equalTo(textRightTagsAndDate).offset(UIConstants.horizontalPadding);
+            make.top.equalTo(textRightTagsAndDate).offset(0)
+            make.bottom.equalTo(textRightTagsAndDate).offset(0)
             make.width.greaterThanOrEqualTo(100)
         }
 
         time.snp_remakeConstraints { (make) -> Void in
-            make.right.equalTo(textRightBottom).offset(-UIConstants.horizontalPadding)
-            make.top.equalTo(textRightBottom).offset(0)
-            make.bottom.equalTo(textRightBottom).offset(0)
+            make.right.equalTo(textRightTagsAndDate).offset(-UIConstants.horizontalPadding)
+            make.top.equalTo(textRightTagsAndDate).offset(0)
+            make.bottom.equalTo(textRightTagsAndDate).offset(0)
         }
 
         divider.snp_remakeConstraints { (make) -> Void in
-            make.top.equalTo(textRightBottom).offset(0)
-            make.left.equalTo(textRightBottom).offset(0)
-            make.right.equalTo(textRightBottom).offset(0)
+            make.bottom.equalTo(textRightTagsAndDate).offset(0)
+            make.left.equalTo(textRightTagsAndDate).offset(0)
+            make.right.equalTo(textRightTagsAndDate).offset(0)
             make.height.equalTo(UIConstants.dividerWidth)
         }
 
@@ -187,7 +187,6 @@ class gameCell: UITableViewCell {
         imgView.alpha = 0;
         self.imgView.hnk_setImageFromURL(url!, placeholder:nil, format: nil, failure: nil, success: {
             (image) -> Void in
-            println("fading image");
             self.imgView.image = image;
             UIView.animateWithDuration(0.3, animations: {
                 () -> Void in

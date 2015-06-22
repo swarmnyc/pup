@@ -22,9 +22,9 @@
  @param blob An instance of QBCBlob, describing the file to be uploaded.
  @param successBlock Block with response and blob instances if request succeded
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
  */
+
 + (QBRequest *)createBlob:(QBCBlob *)blob successBlock:(void(^)(QBResponse *response, QBCBlob *blob))successBlock errorBlock:(void(^)(QBResponse *response))errorBlock;
 
 #pragma mark -
@@ -36,8 +36,7 @@
  @param blobID Unique blob identifier, value of ID property of the QBCBlob instance.
  @param successBlock Block with response and blob instances if request succeded
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
  */
 + (QBRequest *)blobWithID:(NSUInteger)blobID successBlock:(void(^)(QBResponse *response, QBCBlob *blob))successBlock
                errorBlock:(void(^)(QBResponse *response))errorBlock;
@@ -50,8 +49,7 @@
  
  @param successBlock Block with response, page and blob instances if request succeded
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
  */
 + (QBRequest *)blobsWithSuccessBlock:(void(^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *blobs))successBlock
                           errorBlock:(void(^)(QBResponse *response))errorBlock;
@@ -62,8 +60,7 @@
  @param page Page information
  @param successBlock Block with response, page and blob instances if request succeded
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
  */
 + (QBRequest *)blobsForPage:(QBGeneralResponsePage *)page
                successBlock:(void(^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *blobs))successBlock
@@ -77,8 +74,7 @@
  
  @param successBlock Block with response, page and blob instances if request succeded
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
  */
 + (QBRequest *)taggedBlobsWithSuccessBlock:(void(^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *blobs))successBlock
                                 errorBlock:(void(^)(QBResponse *response))errorBlock;
@@ -88,8 +84,7 @@
  @param page Page information
  @param successBlock Block with response, page and blob instances if request succeded
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
  */
 + (QBRequest *)taggedBlobsForPage:(QBGeneralResponsePage *)page
                      successBlock:(void(^)(QBResponse *response, QBGeneralResponsePage *page, NSArray *blobs))successBlock
@@ -101,11 +96,10 @@
 /**
  Update Blob
  
- @param blob An instance of QBCBlob to be updated.
+ @param blob An instance of QBCBlob, describing the file to be updated.
  @param successBlock Block with response and blob instances if request succeded
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
  */
 + (QBRequest *)updateBlob:(QBCBlob*)blob successBlock:(void(^)(QBResponse *response, QBCBlob *blob))successBlock
                          errorBlock:(void(^)(QBResponse *response))errorBlock;
@@ -119,8 +113,7 @@
  @param blobID Unique blob identifier, value of ID property of the QBCBlob instance.
  @param successBlock Block with response if request succeded
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
  */
 + (QBRequest *)deleteBlobWithID:(NSUInteger)blobID successBlock:(void(^)(QBResponse *response))successBlock
                      errorBlock:(void(^)(QBResponse *response))errorBlock;
@@ -131,12 +124,13 @@
 /**
  Declaring Blob uploaded with ID
  
+ Type of QBResult - QBResult
+ 
  @param blobID Unique blob identifier, value of ID property of the QBCBlob instance.
  @param size Size of uploaded file, in bytes
  @param successBlock Block with response and blob instances if request succeded
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
  */
 + (QBRequest *)completeBlobWithID:(NSUInteger)blobID size:(NSUInteger)size successBlock:(void(^)(QBResponse *response))successBlock
                        errorBlock:(void(^)(QBResponse *response))errorBlock;
@@ -150,8 +144,7 @@
  @param blobID Unique blob identifier, value of ID property of the QBCBlob instance.
  @param successBlock Block with response and blob instances if request succeded
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
 */
 + (QBRequest *)blobObjectAccessWithBlobID:(NSUInteger)blobID
                              successBlock:(void(^)(QBResponse *response, QBCBlobObjectAccess *objectAccess))successBlock
@@ -168,8 +161,7 @@
  @param successBlock Block with response if request succeded
  @param statusBlock Block with upload/download progress
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
  */
 + (QBRequest *)uploadFile:(NSData *)data
       blobWithWriteAccess:(QBCBlob *)blobWithWriteAccess
@@ -187,28 +179,12 @@
  @param successBlock Block with response if request succeded
  @param statusBlock Block with upload/download progress
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
  */
 + (QBRequest *)downloadFileWithUID:(NSString *)UID
                       successBlock:(void(^)(QBResponse *response, NSData *fileData))successBlock
                        statusBlock:(QBRequestStatusUpdateBlock)statusBlock
                         errorBlock:(void(^)(QBResponse *response))errorBlock;
-
-/**
- Download File by file identifier.
- 
- @param fileID File identifier.
- @param successBlock Block with response and fileData if request succeded
- @param statusBlock Block with upload/download progress
- @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
- */
-+ (QBRequest *)downloadFileWithID:(NSUInteger)fileID
-                     successBlock:(void(^)(QBResponse *response, NSData *fileData))successBlock
-                      statusBlock:(QBRequestStatusUpdateBlock)statusBlock
-                       errorBlock:(void(^)(QBResponse *response))errorBlock;
 
 #pragma mark -
 #pragma mark Tasks
@@ -216,15 +192,14 @@
 /**
  Upload File task. Contains 3 requests: Create Blob, upload file, declaring file uploaded
  
- @param data File to be uploaded
- @param fileName Name of the file
- @param contentType Type of the content in mime format
- @param isPublic Blob's visibility
+ @param data file to be uploaded
+ @param fileName name of the file
+ @param contentType type of the content in mime format
+ @param isPublic blob's visibility
  @param successBlock Block with response if request succeded
  @param statusBlock Block with upload/download progress
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
  */
 + (QBRequest *)TUploadFile:(NSData*)data
                   fileName:(NSString*)fileName
@@ -236,32 +211,30 @@
 
 /**
  Download File task. Contains 2 requests: Get Blob with ID, download file
- 
- @warning *Deprecated in QB iOS SDK 2.3:* Use 'downloadFileWithID:successBlock:statusBlock:errorBlock' instead.
 
  @param blobID Unique blob identifier, value of ID property of the QBCBlob instance.
  @param successBlock Block with response and fileData if request succeded
  @param statusBlock Block with upload/download progress
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
  */
+
 + (QBRequest *)TDownloadFileWithBlobID:(NSUInteger)blobID
                           successBlock:(void(^)(QBResponse *response, NSData *fileData))successBlock
                            statusBlock:(QBRequestStatusUpdateBlock)statusBlock
-                            errorBlock:(void(^)(QBResponse *response))errorBlock __attribute__((deprecated("use 'downloadFileWithID:successBlock:statusBlock:errorBlock' instead.")));
+                            errorBlock:(void(^)(QBResponse *response))errorBlock;
 
 /**
  Update File task. Contains 3 quieries: Update Blob, Upload file, Declaring file uploaded
  
- @param data File to be uploaded
- @param blob File which needs to be updated
+ @param data file to be uploaded
+ @param blob file which need to be updated
  @param successBlock Block with response if request succeded
  @param statusBlock Block with upload/download progress
  @param errorBlock Block with response instance if request failed
- 
- @return An instance of QBRequest for cancel operation mainly.
+ @return An instance of QBRequest. Use this instance to cancel the operation.
  */
+
 + (QBRequest *)TUpdateFileWithData:(NSData *)data
                               file:(QBCBlob *)file
                       successBlock:(void(^)(QBResponse *response))successBlock

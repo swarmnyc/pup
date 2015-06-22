@@ -123,7 +123,7 @@ class LobbyData {
         self.messages = [];
 
         for (var i = 0; i<messages.count; i++) {
-            self.messages.append(Message(messages: messages[i], propics: proPicDict));
+            self.messages.append(Message(messages: messages[i], propics: proPicDict, users: users, owner: owner));
         }
 
 
@@ -138,11 +138,11 @@ class Message {
     var picture = ""
 
 
-    init(messages: AnyObject, propics: Dictionary<String,String>) {
-        //println(messages.customParameters)
-        println("------")
-        if (messages.customParameters?["userName"] != nil) {
-            self.username = messages.customParameters?["userName"] as! String;
+    init(messages: AnyObject, propics: Dictionary<String,String>, users: Array<SingleLobbyUser>, owner: SingleLobbyUser) {
+
+                if (messages.customParameters?["id"] != nil) {
+                    var id = messages.customParameters?["id"] as! String;
+            self.username = checkUserName(id, users: users, owner: owner);
             self.picture = propics[self.username] as! String!
         } else {
             self.username = "system message"
@@ -150,11 +150,7 @@ class Message {
         }
         self.message = messages.valueForKey("text") as! String;
 
-        println(self.message)
-        println(self.username);
-        println(self.picture);
-//        println(propics[self.username])
-//        println(propics);
+
 
     }
 
@@ -163,6 +159,21 @@ class Message {
         picture = currentUser.data.picture;
         message = newMessage;
 
+    }
+
+    func checkUserName(id: String, users: Array<SingleLobbyUser>, owner: SingleLobbyUser) -> String {
+
+        for (var i = 0; i<users.count; i++) {
+            if (users[i].id == id) {
+                return users[i].name;
+            }
+        }
+
+        if (owner.id == id) {
+            return owner.name;
+        }
+
+        return "";
     }
 }
 
@@ -186,7 +197,6 @@ class SingleLobbyUser {
         name = data["userName"] as! String
         if (data.objectForKey("portraitUrl") != nil) {
             portraitUrl = data["portraitUrl"] as! String
-            println(portraitUrl);
         }
     }
 
@@ -222,7 +232,6 @@ class LobbyList {  //collection of all the current games
             }
         }
 
-        println(suffix);
         return suffix;
         //getLobbies(searchTerms: suffix);
     }
@@ -238,7 +247,6 @@ class LobbyList {  //collection of all the current games
         }
         var urlAppendEncoded = urlAppend.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())
         var url = "\(urls.apiBase)\(urlAppendEncoded!)"
-        println(url)
         let requestUrl = NSURL(string: url)
         if (requestUrl != nil) {
 
@@ -266,7 +274,6 @@ class LobbyList {  //collection of all the current games
 
 
     func updateData(data: NSArray) {  //update data and call a redraw in the UI
-        println(data)
         games.removeAll();
         gamesOrganized[gamesKey[0]] = []
         gamesOrganized[gamesKey[1]] = []
@@ -274,7 +281,6 @@ class LobbyList {  //collection of all the current games
         gamesOrganized[gamesKey[3]] = []
         gamesOrganized[gamesKey[4]] = []
         gameCount = 0;
-        println(games)
         updated = true;
 
 

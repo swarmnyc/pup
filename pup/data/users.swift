@@ -89,6 +89,8 @@ class User {
             self.data.loggedIn = false
             self.data.name = ""
             self.data.picture = ""
+            self.data.social = ["facebook": false, "twitter": false, "tumblr": false, "reddit": false];
+            self.data.QBChatId = "";
            setLocalStorage()
 
         }
@@ -161,7 +163,7 @@ class User {
                     println(responseJSON)
                      var resp = responseJSON as! NSDictionary
                      println(resp)
-                     if (resp["errorMessage"] as! String == "002 Exist") {
+                     if (resp["success"] as! Bool == false) {
                          var alert = Error(alertTitle: "Whoops", alertText: "There's already a user with that email or username, try another.")
                          SwiftLoader.hide()
 

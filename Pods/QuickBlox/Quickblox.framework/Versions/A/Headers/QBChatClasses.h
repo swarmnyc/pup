@@ -8,3 +8,6 @@
 
 #import <Quickblox/QBChatDefinitions.h>
 #import <Quickblox/QBChatBusiness.h>
+#import <Quickblox/QBChatNet.h>
+
+#import <Quickblox/QBChatUtils.h>

@@ -9,11 +9,6 @@
 #ifndef Quickblox_QBMessagesHeader_h
 #define Quickblox_QBMessagesHeader_h
 
-#import <Quickblox/QBMessagesDefinitions.h>
-#import <Quickblox/QBMPushToken.h>
-#import <Quickblox/QBMPushMessage.h>
-#import <Quickblox/QBMEvent.h>
-#import <Quickblox/QBMSubscription.h>
 #import <QuickBlox/QBRequest+QBMessages.h>
 
 #endif

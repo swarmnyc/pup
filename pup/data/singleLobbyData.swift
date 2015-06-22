@@ -13,6 +13,7 @@ class singleLobby {
     var quickBloxConnect: QuickBlox?
     var passMessagesToController: (() -> Void)?
     var recievedMessages = false;
+    var setUpSharing: (() -> Void)?
 
     init() {
         quickBloxConnect = QuickBlox();
@@ -78,9 +79,15 @@ class singleLobby {
 
 
     func recieveMessages(response: QBResponse, messages: NSArray, responcePage: QBResponsePage) {
+
         data.addMessages(messages);
         recievedMessages = true;
         passMessagesToController?();
+
+        if (messages.count==0) {
+            setUpSharing?();
+        }
+
     }
 
     func addNewMessage(newMessage: String) {

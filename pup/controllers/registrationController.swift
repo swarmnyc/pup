@@ -55,7 +55,7 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
         var config = SwiftLoader.Config()
         config.size = 150
         config.spinnerColor = UIColor(rgba: colors.orange)
-        config.backgroundColor = UIColor(rgba: colors.mainGrey)
+        config.backgroundColor = UIColor.whiteColor()
 
         SwiftLoader.setConfig(config);
         SwiftLoader.show(title: "Loading...", animated: true)

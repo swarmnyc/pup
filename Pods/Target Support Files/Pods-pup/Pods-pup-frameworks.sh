@@ -55,6 +55,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'FBSDKLoginKit.framework'
   install_framework 'FBSDKShareKit.framework'
   install_framework 'Haneke.framework'
+  install_framework 'JLToast.framework'
   install_framework 'SnapKit.framework'
   install_framework 'SwiftLoader.framework'
 fi
@@ -66,6 +67,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'FBSDKLoginKit.framework'
   install_framework 'FBSDKShareKit.framework'
   install_framework 'Haneke.framework'
+  install_framework 'JLToast.framework'
   install_framework 'SnapKit.framework'
   install_framework 'SwiftLoader.framework'
 fi

@@ -95,7 +95,8 @@ class CreateLobbyView: UIView {
 
     func setImage(imageUrl: String) {
 
-        var url = NSURL(string: imageUrl)
+        var url = NSURL(string: imageUrl.getPUPUrl())
+        //println(url)
         var request:NSURLRequest = NSURLRequest(URL: url!)
         headerImage.backgroundColor = UIColor.blackColor();
         NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in

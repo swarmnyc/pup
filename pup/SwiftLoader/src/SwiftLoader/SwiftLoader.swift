@@ -23,6 +23,9 @@ public class SwiftLoader: UIView {
     private var canUpdated = false
     private var title: String?
     private var showing:Bool = false;
+    private var isSetUp: Bool = false;
+    private var pupPanting: UIImageView = UIImageView();
+
 
     private var config : Config = Config() {
         didSet {
@@ -153,14 +156,14 @@ public class SwiftLoader: UIView {
         self.backgroundColor = self.config.backgroundColor
         self.layer.cornerRadius = self.config.cornerRadius
         var loadingViewSize = self.frame.size.width - (loaderSpinnerMarginSide * 2)
-        
+
         if (self.loadingView == nil) {
             self.loadingView = SwiftLoadingView(frame: self.frameForSpinner())
             self.addSubview(self.loadingView!)
         } else {
             self.loadingView?.frame = self.frameForSpinner()
         }
-        
+
         if (self.titleLabel == nil) {
             self.titleLabel = UILabel(frame: CGRectMake(loaderTitleMargin, loaderSpinnerMarginTop + loadingViewSize, self.frame.width - loaderTitleMargin*2, 42.0))
             self.addSubview(self.titleLabel!)
@@ -170,11 +173,11 @@ public class SwiftLoader: UIView {
         } else {
             self.titleLabel?.frame = CGRectMake(loaderTitleMargin, loaderSpinnerMarginTop + loadingViewSize, self.frame.width - loaderTitleMargin*2, 42.0)
         }
-        
+
         self.titleLabel?.font = self.config.titleTextFont
         self.titleLabel?.textColor = self.config.titleTextColor
         self.titleLabel?.text = self.title
-        
+
         self.titleLabel?.hidden = self.title == nil
     }
     
@@ -206,7 +209,9 @@ public class SwiftLoader: UIView {
         private var lineTintColor : UIColor?
         private var backgroundLayer : CAShapeLayer?
         private var isSpinning : Bool?
-        
+        private var isSetUp: Bool = false;
+        private var pupPanting: UIImageView = UIImageView();
+
         private var config : Config = Config() {
             didSet {
                 self.update()
@@ -227,9 +232,25 @@ public class SwiftLoader: UIView {
         */
         
         private func setup() {
+                    // jeremy.gif
+        var url = NSBundle.mainBundle().URLForResource("pupanimation", withExtension: "gif")
+        var imageData = NSData(contentsOfURL: url!)
+
+        // Returns an animated UIImage
+
+            self.pupPanting.image = UIImage.animatedImageWithData(imageData!)
+            self.pupPanting.backgroundColor = UIColor.clearColor();
+            self.addSubview(self.pupPanting)
+            self.pupPanting.snp_makeConstraints {
+                (make) -> Void in
+                make.top.equalTo(self).offset(0)
+                make.left.equalTo(self).offset(0)
+                make.right.equalTo(self).offset(0)
+                make.bottom.equalTo(self).offset(0)
+            }
             self.backgroundColor = UIColor.clearColor()
             self.lineWidth = fmaxf(Float(self.frame.size.width) * 0.025, 1)
-            
+
             self.backgroundLayer = CAShapeLayer()
             self.backgroundLayer?.strokeColor = self.config.spinnerColor.CGColor
             self.backgroundLayer?.fillColor = self.backgroundColor?.CGColor
@@ -254,21 +275,21 @@ public class SwiftLoader: UIView {
         }
         
         private func drawBackgroundCircle(partial : Bool) {
-            var startAngle : CGFloat = CGFloat(M_PI) / CGFloat(2.0)
-            var endAngle : CGFloat = (2.0 * CGFloat(M_PI)) + startAngle
-            
-            var center : CGPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)
-            var radius : CGFloat = (CGFloat(self.bounds.size.width) - CGFloat(self.lineWidth!)) / CGFloat(2.0)
-            
-            var processBackgroundPath : UIBezierPath = UIBezierPath()
-            processBackgroundPath.lineWidth = CGFloat(self.lineWidth!)
-            
-            if (partial) {
-                endAngle = (1.8 * CGFloat(M_PI)) + startAngle
-            }
-            
-            processBackgroundPath.addArcWithCenter(center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
-            self.backgroundLayer?.path = processBackgroundPath.CGPath;
+//            var startAngle : CGFloat = CGFloat(M_PI) / CGFloat(2.0)
+//            var endAngle : CGFloat = (2.0 * CGFloat(M_PI)) + startAngle
+//
+//            var center : CGPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2)
+//            var radius : CGFloat = (CGFloat(self.bounds.size.width) - CGFloat(self.lineWidth!)) / CGFloat(2.0)
+//
+//            var processBackgroundPath : UIBezierPath = UIBezierPath()
+//            processBackgroundPath.lineWidth = CGFloat(self.lineWidth!)
+//
+//            if (partial) {
+//                endAngle = (1.8 * CGFloat(M_PI)) + startAngle
+//            }
+//
+//            processBackgroundPath.addArcWithCenter(center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
+//            self.backgroundLayer?.path = processBackgroundPath.CGPath;
         }
         
         /**
@@ -276,22 +297,22 @@ public class SwiftLoader: UIView {
         */
         
         private func start() {
-            self.isSpinning? = true
-            self.drawBackgroundCircle(true)
-            
-            var rotationAnimation : CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
-            rotationAnimation.toValue = NSNumber(double: M_PI * 2.0)
-            rotationAnimation.duration = 1;
-            rotationAnimation.cumulative = true;
-            rotationAnimation.repeatCount = HUGE;
-            self.backgroundLayer?.addAnimation(rotationAnimation, forKey: "rotationAnimation")
+//            self.isSpinning? = true
+//            self.drawBackgroundCircle(true)
+//
+//            var rotationAnimation : CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+//            rotationAnimation.toValue = NSNumber(double: M_PI * 2.0)
+//            rotationAnimation.duration = 1;
+//            rotationAnimation.cumulative = true;
+//            rotationAnimation.repeatCount = HUGE;
+//            self.backgroundLayer?.addAnimation(rotationAnimation, forKey: "rotationAnimation")
         }
         
         private func stop() {
-            self.drawBackgroundCircle(false)
-            
-            self.backgroundLayer?.removeAllAnimations()
-            self.isSpinning? = false
+//            self.drawBackgroundCircle(false)
+//
+//            self.backgroundLayer?.removeAllAnimations()
+//            self.isSpinning? = false
         }
     }
     

@@ -27,10 +27,10 @@
 /**
  User subscription state. Read more about states http://xmpp.org/rfcs/rfc3921.html#roster
  */
-@property (nonatomic, assign) QBPresenseSubscriptionState subscriptionState;
+@property (nonatomic, assign) enum QBPresenseSubscriptionState subscriptionState;
 
 // Helpers: translate subscriptionState to and from string to and from enum
-+ (QBPresenseSubscriptionState)subscriptionStateFromString:(NSString *)subscriptionState;
-+ (NSString *)subscriptionStateToString:(QBPresenseSubscriptionState)subscriptionState;
++ (enum QBPresenseSubscriptionState)subscriptionStateFromString:(NSString *)subscriptionState;
++ (NSString *)subscriptionStateToString:(enum QBPresenseSubscriptionState)subscriptionState;
 
 @end

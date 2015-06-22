@@ -6,14 +6,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "QBCEntity.h"
+#import "Entity.h"
 #import "QBMessagesEnums.h"
 
 /** QBMEvent class declaration. */
 /** Overview */
 /** Event representation. If you want to send Apple push - use the QBMApplePushEvent subclass. */
 
-@interface QBMEvent : QBCEntity <NSCoding, NSCopying>{
+@interface QBMEvent : Entity <NSCoding, NSCopying>{
     BOOL active;
     enum QBMNotificationType notificationType;
     
