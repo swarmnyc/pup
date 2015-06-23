@@ -95,6 +95,15 @@ class singleLobby {
         passMessagesToController?();
     }
 
+    func lastMessageIsUser() -> Bool {
+        //if you are logged in, there are messages, and then if the last message was made by you
+        if (currentUser.loggedIn() && data.messages.count>2 && (data.messages[data.messages.count - 1].username == currentUser.data.name)) {
+            return true
+        }
+
+        return false
+    }
+
     func setID() {
         quickBloxConnect?.roomID = data.QBChatRoomId;
     }

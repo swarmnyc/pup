@@ -115,4 +115,22 @@ class JoinPupButtonView: PlatformButtonToggle {
     }
 
 
+    func shortenView(keyboardHeight: CGFloat) {
+        UIView.animateWithDuration(0.5, animations: {
+            var trans = CGAffineTransformMakeTranslation(0,-keyboardHeight);
+            self.transform = trans;
+
+        })
+
+    }
+
+    func restoreView() {
+        UIView.animateWithDuration(0.5, animations: {
+            var trans = CGAffineTransformMakeTranslation(0,0);
+            self.transform = trans;
+
+        })
+    }
+
+
 }

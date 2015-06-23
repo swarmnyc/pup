@@ -47,8 +47,8 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
         searchController = SearchResultsController(parent: self, searchBar: createView.searchBar);
 
         //set up scrolling selectors
-        playStyle = HorizontalSelectController(parent: self, options: ["NORMAL", "HARDCORE", "3L337", "PRO"], title: "PLAY STYLE")
-        gamerSkill = HorizontalSelectController(parent: self, options: ["NOOB", "CASUAL", "3L337", "PRO"], title: "GAMER SKILL")
+        playStyle = HorizontalSelectController(parent: self, options: ["CASUAL", "SOCIAL", "HARDCORE"], title: "PLAY STYLE", defaultSelection: 1)
+        gamerSkill = HorizontalSelectController(parent: self, options: ["NEWBIE", "EASY", "MEDIUM", "HARD", "NIGHTMARE"], title: "GAMER SKILL", defaultSelection: 2)
 
         createView.containerView.addSubview(playStyle!.view)
         createView.containerView.addSubview(gamerSkill!.view)
@@ -182,13 +182,18 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
        println("keyboard opened!")
         println(notification)
         createView.shortenView(notification)
+        if (logInButton != nil && createView.descriptionEditor.firstResponderCheck()) {
+            logInButton?.shortenView(notification)
+        }
 
     }
 
     func keyboardWillBeHidden(notification: NSNotification)
     {
       createView.restoreView();
-
+        if (logInButton != nil) {
+            logInButton?.restoreView()
+        }
     }
 
     func registerForKeyboardNotifications() {

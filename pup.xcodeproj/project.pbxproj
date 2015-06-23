@@ -44,6 +44,7 @@
 		85DD253635184ED5D8B1F6D1 /* stringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2579270B8917230A6634 /* stringExtension.swift */; };
 		85DD254871AF38D1690B8FED /* searchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD250C500EFF5FF2F84027 /* searchResultsController.swift */; };
 		85DD25527A060177029C0608 /* formDataLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD221A5EDDBA6CD05235E0 /* formDataLibrary.swift */; };
+		85DD25A029478F991A8BF4A9 /* coloredImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2C101B43889F6E228EB6 /* coloredImage.swift */; };
 		85DD26954D9F631A1FFC8FEF /* platformButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD27868059972BED2B656E /* platformButtonView.swift */; };
 		85DD26E3F2F4DDAB59670C4B /* lobbyListCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2B7D734F3205C2B6F994 /* lobbyListCells.swift */; };
 		85DD273B03F5548C452DFBDC /* registrationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD23A1345A68AEF31DE584 /* registrationController.swift */; };
@@ -191,6 +192,7 @@
 		85DD2BD649B18EA543224FA5 /* settingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = settingsView.swift; path = views/settingsView.swift; sourceTree = "<group>"; };
 		85DD2BDD3E207769685D2DE6 /* ico_filter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ico_filter.png; sourceTree = "<group>"; };
 		85DD2BF6D0F2A27802560D8C /* colorFromHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = colorFromHex.swift; path = GlobalStyles/colorFromHex.swift; sourceTree = "<group>"; };
+		85DD2C101B43889F6E228EB6 /* coloredImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = coloredImage.swift; sourceTree = "<group>"; };
 		85DD2C5A26754E9EEB02E8F9 /* createLobbyController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = createLobbyController.swift; path = controllers/createLobbyController.swift; sourceTree = "<group>"; };
 		85DD2C5B66D10B2F40BA8D74 /* lobbies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = lobbies.swift; path = data/lobbies.swift; sourceTree = "<group>"; };
 		85DD2C5BCAA8ACABAC9DCE69 /* SwiftLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftLoader.swift; sourceTree = "<group>"; };
@@ -419,6 +421,7 @@
 				85DD27F3E7DC0D3E93059A12 /* errorAlert.swift */,
 				85DD25421C406DE9FE85197F /* arrayContains.swift */,
 				85DD236D465031166756C8F2 /* gif.swift */,
+				85DD2C101B43889F6E228EB6 /* coloredImage.swift */,
 			);
 			path = helperFunctions;
 			sourceTree = "<group>";
@@ -816,6 +819,7 @@
 				85DD246B08BC01379750D106 /* gif.swift in Sources */,
 				85DD2F23913B03F97FE19DDA /* SocialConnector.swift in Sources */,
 				85DD2F5967B1FA589F7C445E /* SocialController.swift in Sources */,
+				85DD25A029478F991A8BF4A9 /* coloredImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

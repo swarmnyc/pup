@@ -20,6 +20,7 @@ class gameCell: UITableViewCell {
     var title:UILabel = UILabel()
     var desc: SelectableTextView = SelectableTextView()
     var imgView: UIImageView = UIImageView()
+    var backImageView: UIImageView = UIImageView()
     var img: UIImage = UIImage()
     var tags: UILabel = UILabel()
     var time: UILabel = UILabel()
@@ -46,6 +47,7 @@ class gameCell: UITableViewCell {
     func setCell(item: LobbyData) {
 
 
+        imageAndPlatform.addSubview(backImageView)
         imageAndPlatform.addSubview(imgView)
         imageAndPlatform.addSubview(platform)
 
@@ -103,6 +105,14 @@ class gameCell: UITableViewCell {
             make.top.equalTo(self.contentView).offset(0)
         }
 
+        backImageView.snp_remakeConstraints { (make) -> Void in
+            make.right.equalTo(imageAndPlatform).offset(0)
+            make.bottom.equalTo(imageAndPlatform).offset(0)
+            make.left.equalTo(imageAndPlatform).offset(0)
+            make.height.equalTo(topSectionHeight)
+
+
+        }
         imgView.snp_remakeConstraints { (make) -> Void in
             make.right.equalTo(imageAndPlatform).offset(0)
             make.bottom.equalTo(imageAndPlatform).offset(0)
@@ -178,7 +188,13 @@ class gameCell: UITableViewCell {
 
         selectionStyle = UITableViewCellSelectionStyle.None
 
-        var url = NSURL(string: data.pictureUrl)
+        var url = NSURL(string: data.pictureUrl.getPUPUrl())
+
+        backImageView.clipsToBounds = true;
+        backImageView.contentMode = UIViewContentMode.ScaleAspectFill;
+        backImageView.frame.size = CGSizeMake(93, 93);
+        backImageView.backgroundColor = UIColor(rgba: colors.orange)
+        backImageView.image = getImageWithColor(UIColor(rgba: colorFromSystem(data.platform)), CGSizeMake(93,93))
 
         imgView.clipsToBounds = true;
         imgView.contentMode = UIViewContentMode.ScaleAspectFill;

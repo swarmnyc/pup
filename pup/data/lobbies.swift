@@ -139,10 +139,12 @@ class Message {
 
 
     init(messages: AnyObject, propics: Dictionary<String,String>, users: Array<SingleLobbyUser>, owner: SingleLobbyUser) {
+        println(messages.customParameters)
+        println("---------")
 
-                if (messages.customParameters?["id"] != nil) {
-                    var id = messages.customParameters?["id"] as! String;
-            self.username = checkUserName(id, users: users, owner: owner);
+        if ((messages.customParameters! != nil) && (messages.customParameters?["userId"] != nil)) {
+            var id = messages.customParameters?["userId"] as! String;
+            self.username = getUserName(id, users: users, owner: owner);
             self.picture = propics[self.username] as! String!
         } else {
             self.username = "system message"
@@ -161,7 +163,7 @@ class Message {
 
     }
 
-    func checkUserName(id: String, users: Array<SingleLobbyUser>, owner: SingleLobbyUser) -> String {
+    func getUserName(id: String, users: Array<SingleLobbyUser>, owner: SingleLobbyUser) -> String {
 
         for (var i = 0; i<users.count; i++) {
             if (users[i].id == id) {

@@ -42,7 +42,7 @@ class SingleLobbyTopCell: UITableViewCell {
         isMember = data.data.isMember
 
 
-
+        self.userInteractionEnabled = false;
         self.backgroundColor = UIColor.clearColor()
 
 
@@ -144,6 +144,7 @@ class SingleLobbyTopCell: UITableViewCell {
             make.left.equalTo(self.descBox).offset(UIConstants.horizontalPadding)
             make.top.equalTo(self.descBox).offset(UIConstants.horizontalPadding)
             make.right.equalTo(self.descBox).offset(-UIConstants.horizontalPadding)
+            make.height.equalTo(16)
         }
 
         desc.snp_remakeConstraints { (make) -> Void in
@@ -177,6 +178,7 @@ class SingleLobbyView: UIView {
 
     var table: UITableView?
     var lobbyImg: UIImageView = UIImageView();
+    var lobbyImgBack: UIImageView = UIImageView();
     var whiteBottom: UIView = UIView();
     var sendTheMessage: ((newMessage: String) -> Void)?
 
@@ -242,6 +244,13 @@ class SingleLobbyView: UIView {
          }
      }
 
+    func scrollImage(amount: CGFloat) {
+        if (amount >= 1) {
+            var trans = CGAffineTransformMakeTranslation(0, -amount / 2)
+            //  self.lobbyImg.layer.anchorPoint = CGPointMake(self.lobbyImg.bounds.size.width / 2.0, self.lobbyImg.bounds.size.height / 2.0)
+            self.lobbyImg.transform = trans;
+        }
+    }
 
     func shortenView(notification: NSNotification) {
         if (newMessage.isFirstResponder()) {
@@ -303,14 +312,22 @@ class SingleLobbyView: UIView {
         }
 
         if (isMember) {
+           scrollToBottom(1.6);
+        }
+    }
 
-            UIView.animateWithDuration(1.6, animations: {
-                table?.contentOffset = CGPointMake(0, CGFloat.max);
+    func scrollToBottom(duration: NSTimeInterval) {
+        if (table!.contentSize.height - table!.frame.height > 0) {
+            UIView.animateWithDuration(duration, animations: {
+                table?.contentOffset = CGPointMake(0, (table!.contentSize.height - table!.frame.height));
             })
         }
     }
 
+
+
     func insertViews() {
+       addSubview(lobbyImgBack)
        addSubview(lobbyImg)
        addSubview(whiteBottom)
         bringSubviewToFront(table!)
@@ -346,10 +363,18 @@ class SingleLobbyView: UIView {
 
 
 
-        var url = NSURL(string: data.data.pictureUrl)
+        var url = NSURL(string: data.data.pictureUrl.getPUPUrl())
+        println(data.data.pictureUrl)
+        self.lobbyImgBack.frame.size = CGSizeMake(460, 500);
+
+        self.lobbyImgBack.contentMode = UIViewContentMode.ScaleAspectFill;
+        self.lobbyImgBack.clipsToBounds = true;
+        self.lobbyImgBack.image = getImageWithColor(UIColor(rgba: colorFromSystem(data.data.platform)), CGSizeMake(460,500))
+
         self.lobbyImg.frame.size = CGSizeMake(460, 500);
 
         self.lobbyImg.contentMode = UIViewContentMode.ScaleAspectFill;
+        self.lobbyImg.clipsToBounds = true;
         self.lobbyImg.alpha = 0;
             self.lobbyImg.hnk_setImageFromURL(url!, placeholder:nil, format: nil, failure: nil, success: {
                 (image) -> Void in
@@ -358,6 +383,7 @@ class SingleLobbyView: UIView {
                 UIView.animateWithDuration(0.6, animations: {
                     () -> Void in
                     self.lobbyImg.alpha = 1;
+                    self.lobbyImgBack.alpha = 0;
                 });
 
             })
@@ -413,11 +439,18 @@ class SingleLobbyView: UIView {
 
     func setUpConstraints() {
 
-        lobbyImg.snp_remakeConstraints { (make) -> Void in
-            make.bottom.equalTo(-(UIScreen.mainScreen().bounds.height - CGFloat(UIConstants.lobbyImageHeight * 1.15)))
+        lobbyImgBack.snp_remakeConstraints { (make) -> Void in
+            make.top.equalTo(self)
             make.left.equalTo(self).offset(0)
             make.right.equalTo(self).offset(0)
-            make.height.equalTo(UIConstants.lobbyImageHeight * 1.15)
+            make.height.equalTo(UIConstants.lobbyImageHeight)
+
+        }
+        lobbyImg.snp_remakeConstraints { (make) -> Void in
+            make.top.equalTo(self)
+            make.left.equalTo(self).offset(0)
+            make.right.equalTo(self).offset(0)
+            make.height.equalTo(UIConstants.lobbyImageHeight)
 
         }
         whiteBottom.snp_remakeConstraints { (make) -> Void in

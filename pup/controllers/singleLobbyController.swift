@@ -68,6 +68,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
     }
 
+
     //scrolling table view
     func scrollViewDidScroll(scrollView: UIScrollView!) {
         if (scrollView.contentOffset.y > CGFloat(UIConstants.lobbyImageHeight * 0.75)) {
@@ -99,6 +100,11 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
             if (firstTime == false) {
                 var amount = 1.0 - (1.0 * (CGFloat(scrollView.contentOffset.y) / CGFloat(UIConstants.lobbyImageHeight)))
                 lobbyView?.scaleImage(amount)
+
+                if ((scrollView.contentOffset.y > 0) && (scrollView.contentOffset.y < CGFloat(UIConstants.lobbyImageHeight))) {
+                    lobbyView?.scrollImage(scrollView.contentOffset.y);
+                }
+
 
             } else {
                 firstTime = false;
@@ -239,6 +245,16 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         self.lobbyView?.table?.reloadData();
         self.lobbyView?.clearText();
         self.lobbyView?.makeTableViewLonger(self.data.data.messages.count)
+
+        if (socialController != nil) {
+            socialView?.removeView();
+        }
+
+        if (data.lastMessageIsUser()) {
+            self.lobbyView?.scrollToBottom(0.5);
+        }
+
+
 
         println("about to submit a message")
 
@@ -382,13 +398,13 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if (indexPath.row == 0 && indexPath.section == 0) {
-            return CGFloat(UIConstants.lobbyImageHeight) + CGFloat(100.0)
+            return CGFloat(UIConstants.lobbyImageHeight) + CGFloat(175.0)
         }
         if (self.data.hasMessages()) {
             return CGFloat(50.0) + CGFloat(Int(count(self.data.data.messages[indexPath.row].message)/26) * 12);
 
         } else {
-            return tableView.frame.height - (CGFloat(UIConstants.lobbyImageHeight) + CGFloat(150.0));
+            return tableView.frame.height - (CGFloat(UIConstants.lobbyImageHeight) + CGFloat(250.0));
         }
 
 

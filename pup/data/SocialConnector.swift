@@ -50,7 +50,7 @@ class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
 
     func scrollViewDidScroll(scrollView: UIScrollView) {
 
-        println(scrollView.contentOffset)
+     //   println(scrollView.contentOffset)
         if (scrollView.contentOffset.y < -25) {
             UIView.animateWithDuration(1.0, animations: {
                 var trans = CGAffineTransformMakeTranslation(0, UIScreen.mainScreen().bounds.size.height)
@@ -131,7 +131,6 @@ class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
            return currentUser.data.social["facebook"]!;
         }
 
-        return false;
     }
 
 
@@ -161,7 +160,7 @@ class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
 
     }
 
-    func saveData() {
+    func saveAuthenticationStatus() {
         switch (self.type) {
             case .Tumblr:
                 currentUser.data.social["tumblr"] = true;
@@ -193,7 +192,11 @@ class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
         var currentURL = webView.request!.URL!.absoluteString;
         if (currentURL?.lowercaseString.rangeOfString("/oauth/done") != nil) {
             OAuthWebView.removeFromSuperview();
-            saveData();
+            saveAuthenticationStatus();
+        } else if (currentURL?.lowercaseString.rangeOfString("/Reddit/Done") != nil) {
+            OAuthWebView.removeFromSuperview();
+            println("success")
+            redditSuccess();
         }
     }
 
@@ -205,21 +208,27 @@ class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
 
         var inviteUrl = urls.lobbies + "invite/" + lobbyData.id + "?LocalTime=" + lobbyData.timeInHuman;
 
-
+        var siteCount = 0;
         for (var i = 0; i<sites.count; i++) {
             if (sites[i].checked) {
-
-                inviteUrl += "&Types=" + sites[i].returnType;
+                if (sites[i].site == .Reddit) {
+                    println("we got a redittor")
+                    redditCaptcha(lobbyData);
+                } else {
+                    inviteUrl += "&Types=" + sites[i].returnType;
+                    siteCount++;
+                }
             }
         }
 
+        if (siteCount==0) {
+            return
+        }
+
+
         //&platforms=\(platforms[i])
 
-        var config = SwiftLoader.Config()
-        config.size = 150
-        config.spinnerColor = UIColor(rgba: colors.orange)
-        config.backgroundColor = UIColor.whiteColor()
-        SwiftLoader.setConfig(config);
+
 
         SwiftLoader.show(title: "Sharing...", animated: true)
         println(inviteUrl)
@@ -247,6 +256,17 @@ class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
             }
 
         }
+    }
+
+
+    func redditCaptcha(lobbyData: LobbyData) {
+        var redditUrl = urls.siteBase + "/Reddit/Share?user_token=" + currentUser.data.accessToken + "&lobbyId=" + lobbyData.id + "&localTime=" + lobbyData.timeInHuman
+       println(redditUrl);
+        showOAuthScreen(redditUrl.URLEncodedString()!);
+    }
+
+    func redditSuccess() {
+        JLToast.makeText("Game has been shared on Reddit!", duration: JLToastDelay.LongDelay).show()
     }
     
 }

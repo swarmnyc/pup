@@ -34,6 +34,20 @@ class JoinPupButton: UIViewController, SimpleButtonDelegate {
     }
 
 
+    func shortenView(notification: NSNotification) {
+
+        var keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
+        var keyboardHeight = keyboardSize!.height;
+        joinButtonView.shortenView(keyboardHeight)
+
+    }
+
+    func restoreView() {
+        joinButtonView.restoreView();
+    }
+
+
+
     func touchUp(button: NSObject, type: String) {
         println("touched")
        // parent?.view.addSubview(registrationController.view)

@@ -34,11 +34,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+
+
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
 
         self.window!.backgroundColor = UIColor.whiteColor()
         self.window!.makeKeyAndVisible()
-        
+
+
        // var menuController: MenuNavigationController? = MenuNavigationController( menuTableViewController: MenuTableController(), contentViewController: LobbyListController())
         self.nav = MenuNavigationController( menuTableViewController: MenuTableController(), contentViewController: LobbyListController())
         self.nav!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(rgba: colors.tealMain)]

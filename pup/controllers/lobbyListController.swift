@@ -81,6 +81,14 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
             println("failed...")
         })
 
+
+        var config = SwiftLoader.Config()
+        config.size = 150
+        config.spinnerColor = UIColor(rgba: colors.orange)
+        config.backgroundColor = UIColor.whiteColor()
+        SwiftLoader.setConfig(config);
+
+        SwiftLoader.show(title: "Loading Games", animated: false);
         //var facebook = SocialButtonController(type: .Tumblr)
 
 
@@ -119,6 +127,7 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
     func updateData() {
         listView?.table.reloadData()
+        SwiftLoader.hide()
     }
 
 

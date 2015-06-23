@@ -32,6 +32,8 @@ class MessageCell: UITableViewCell {
 
 
     func setUpCell(item: Message) {
+
+
         var image = UIImage(named: "iconWithText");
         self.profilePicture.clipsToBounds = true;
         self.profilePicture.image = nil;
@@ -79,12 +81,16 @@ class MessageCell: UITableViewCell {
         }
 
         if (message.superview == nil){
+
             addViews();
+
         }
         addConstraints();
 
 
     }
+
+
 
     func addViews() {
         addSubview(profilePicture)

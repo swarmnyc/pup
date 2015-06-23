@@ -36,7 +36,7 @@ class SearchResultsViewCell: UICollectionViewCell {
         println(data.Name)
         gameName.font = gameName.font.fontWithSize(12)
 
-        var url = NSURL(string: data.ThumbnailPictureUrl)
+        var url = NSURL(string: data.ThumbnailPictureUrl.getPUPUrl())
         gameImg.backgroundColor = UIColor.blackColor();
         gameImg.frame.size = CGSizeMake(45, 45);
         self.gameImg.hnk_setImageFromURL(url!)

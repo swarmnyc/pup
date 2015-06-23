@@ -53,18 +53,7 @@ class HorizontalSelectView: UIView {
 
     func slideLayout(currentSelect: Int) {
             println("layout slide")
-//        UIView.animateWithDuration(Double(0.5)) {
-//
-//            var trans = CGAffineTransformMakeTranslation(CGFloat(-currentSelect) * (self.optionWidth), 0);
-//            self.transform = trans;
-//
-//
-//            self.setSelected(currentSelect)
-//
-//
-//
-//            self.layoutIfNeeded()
-//        }
+
 
         UIView.animateWithDuration(Double(0.15)) {
 
@@ -128,7 +117,7 @@ class HorizontalSelectView: UIView {
     }
 
     func setUpView(parentView: UIView, bottomOffset: Double) {
-
+        println("set up view!!!!")
         self.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(parentView).offset(0)
             make.bottom.equalTo(parentView).offset(-bottomOffset)

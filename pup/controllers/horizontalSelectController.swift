@@ -12,12 +12,13 @@ class HorizontalSelectController: UIViewController, SimpleButtonDelegate, SwipeG
     var data = HorizontalData()
 
     var options: Array<String> = []
-    convenience init(parent: UIViewController, options: Array<String>, title: String) {
+    convenience init(parent: UIViewController, options: Array<String>, title: String, defaultSelection: Int) {
         self.init();
         println("hello im a horizontal selector!")
         parentController = parent;
         self.data.options = options;
         self.data.title = title;
+        self.data.currentSelection = defaultSelection;
 
     }
 
@@ -31,6 +32,7 @@ class HorizontalSelectController: UIViewController, SimpleButtonDelegate, SwipeG
         super.viewDidLoad();
 
         horizontalView.addOptions(data.options, title: data.title, delegate: self)
+        println(self.data.currentSelection)
 
 
 
@@ -58,7 +60,7 @@ class HorizontalSelectController: UIViewController, SimpleButtonDelegate, SwipeG
 
     func setUpView(parentView: UIView, bottomOffset: Double) {
         horizontalView.setUpView(parentView, bottomOffset: bottomOffset)
-
+        horizontalView.slideLayout(self.data.currentSelection);
     }
 
     func touchDown(button: NSObject, type: String) {
