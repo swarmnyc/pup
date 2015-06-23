@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.StringUtils;
-import com.swarmnyc.pup.events.LobbyUserChanged;
+import com.swarmnyc.pup.events.LobbyUserChangeEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 
@@ -74,7 +74,7 @@ public class MemberFragment extends Fragment
 	}
 
 	@Subscribe
-	public void postUserChanged( LobbyUserChanged changed )
+	public void postUserChanged( LobbyUserChangeEvent changed )
 	{
 		refresh();
 	}

@@ -8,6 +8,7 @@ import com.swarmnyc.pup.models.UserInfo;
 public class ChatMessage
 {
 	private UserInfo m_user;
+
 	private String   m_body;
 	private boolean  m_newMessage;
 	private String   m_code;
@@ -32,6 +33,10 @@ public class ChatMessage
 	public String getBody()
 	{
 		return m_body;
+	}
+
+	public void setBody(String body) {
+		this.m_body = body;
 	}
 
 	public UserInfo getUser()

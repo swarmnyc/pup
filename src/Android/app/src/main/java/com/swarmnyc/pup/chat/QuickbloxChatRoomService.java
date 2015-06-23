@@ -54,7 +54,6 @@ public class QuickbloxChatRoomService extends ChatRoomService
 			QBChatMessage chatMessage = new QBChatMessage();
 			chatMessage.setBody( message );
 			chatMessage.setProperty( "userId", User.current.getId() );
-			//chatMessage.setProperty( "userName", User.current.getUserName() );
 			chatMessage.setDateSent( new Date().getTime() / 1000 );
 			chatMessage.setSaveToHistory( true );
 			m_chat.sendMessage( chatMessage );
@@ -68,6 +67,7 @@ public class QuickbloxChatRoomService extends ChatRoomService
 	@Override
 	public void login( final boolean loadHistory )
 	{
+        leave();
 		QBUser user = new QBUser();
 		if ( User.isLoggedIn() && m_lobby.isDwellingUser( User.current.getId() ) )
 		{
@@ -94,9 +94,6 @@ public class QuickbloxChatRoomService extends ChatRoomService
 
 	private void joinRoom( final boolean loadHistory )
 	{
-		if ( m_chat != null && m_chat.isJoined() )
-		{ return; }
-
 		m_dialog = new QBDialog( m_lobby.getTagValue( "QBChatRoomId" ) );
 		m_dialog.setRoomJid( Config.getConfigString( R.string.QB_APP_ID ) + "_" + m_dialog.getDialogId() + "@muc.chat.quickblox.com" );
 		m_dialog.setUserId( m_quickbloxChatService.getUser().getId() );
@@ -279,5 +276,4 @@ public class QuickbloxChatRoomService extends ChatRoomService
 			}
 		);
 	}
-
 }

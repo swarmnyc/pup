@@ -1,8 +1,8 @@
 package com.swarmnyc.pup.events;
 
-public class LobbyUserChanged
+public class LobbyUserChangeEvent
 {
-	public LobbyUserChanged( final boolean currentUser )
+	public LobbyUserChangeEvent(final boolean currentUser)
 	{
 		m_currentUser = currentUser;
 	}
