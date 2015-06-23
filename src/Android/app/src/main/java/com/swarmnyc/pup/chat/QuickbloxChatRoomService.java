@@ -14,7 +14,9 @@ import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.model.QBUser;
 import com.swarmnyc.pup.AsyncCallback;
 import com.swarmnyc.pup.Config;
+import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.ChatMessageReceiveEvent;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.models.Lobby;
@@ -124,7 +126,8 @@ public class QuickbloxChatRoomService extends ChatRoomService
 										String.valueOf( chatMessage.getProperty( "codeBody" ) )
 									)
 								);
-								QuickbloxChatRoomService.this.listener.receive( messages );
+
+								EventBus.getBus().post(new ChatMessageReceiveEvent(m_lobby.getId(), messages));
 							}
 						}
 					);
@@ -252,7 +255,7 @@ public class QuickbloxChatRoomService extends ChatRoomService
 									cms.add( new ChatMessage( user, message.getBody() ) );
 								}
 
-								QuickbloxChatRoomService.this.listener.receive( cms );
+								EventBus.getBus().post(new ChatMessageReceiveEvent(m_lobby.getId(), cms));
 							}
 						}
 					);

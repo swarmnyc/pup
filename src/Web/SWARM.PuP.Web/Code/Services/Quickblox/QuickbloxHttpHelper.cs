@@ -20,7 +20,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
         private static readonly object LockObj = new object();
         private static readonly Random Random = new Random();
         private static readonly Uri BaseUri;
-        private static Session _session;
+        private static Session _defaultSession;
 
         public const string UserPassword = "swarmnyc";
         public const string CompanyEmailDomin = "@swarmnyc.com";
@@ -45,8 +45,13 @@ namespace SWARM.PuP.Web.Services.Quickblox
                 InitSession();
             }
 
+            return Create(api, method, _defaultSession);
+        }
+
+        internal static WebRequest Create(string api, HttpMethod method, Session session)
+        {
             WebRequest request = WebRequest.CreateHttp(new Uri(BaseUri, api));
-            request.Headers.Add("QB-Token", _session.token);
+            request.Headers.Add("QB-Token", session.token);
             request.Headers.Add("QuickBlox-REST-API-Version", "0.1.0");
             request.ContentType = "application/json";
             request.Method = method.Method;
@@ -63,20 +68,20 @@ namespace SWARM.PuP.Web.Services.Quickblox
             user.UpdateTag(Const_ChatId, chatId);
         }
 
-        private static bool IsNoSession()
+        internal static void InitSession()
         {
-            return _session == null || (_session.created_at - DateTime.UtcNow).Minutes > TimeOut;
+            if (!IsNoSession())
+            {
+                return;
+            }
+
+            _defaultSession = InitSession(AdminUserId);
         }
 
-        private static void InitSession()
+        internal static Session InitSession(string userId)
         {
             lock (LockObj)
             {
-                if (!IsNoSession())
-                {
-                    return;
-                }
-
                 WebRequest request = WebRequest.CreateHttp(new Uri(BaseUri, QuickbloxApiTypes.Session));
                 request.Headers.Add("QuickBlox-REST-API-Version", "0.1.0");
                 request.ContentType = "application/json";
@@ -92,11 +97,16 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     timestamp,
                     nonce,
                     signature = GenerateAuthMsg(nonce, timestamp),
-                    user = new { login = AdminUserId,/* email = UserEmail,*/ password = UserPassword }
+                    user = new { login = userId,/* email = UserEmail,*/ password = UserPassword }
                 });
 
-                _session = result.session;
+                return result.session;
             }
+        }
+
+        private static bool IsNoSession()
+        {
+            return _defaultSession == null || (_defaultSession.created_at - DateTime.UtcNow).Minutes > TimeOut;
         }
 
         private static string GenerateTimeStamp()

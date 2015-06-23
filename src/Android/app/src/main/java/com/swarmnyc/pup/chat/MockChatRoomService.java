@@ -2,6 +2,9 @@ package com.swarmnyc.pup.chat;
 
 import android.os.Handler;
 import android.os.Message;
+
+import com.swarmnyc.pup.ChatMessageReceiveEvent;
+import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 
@@ -35,7 +38,7 @@ public class MockChatRoomService extends ChatRoomService
 				list.add( new ChatMessage( user, "Test " + i ) );
 			}
 
-			listener.receive( list );
+			EventBus.getBus().post(new ChatMessageReceiveEvent("", list));
 		}
 	};
 
@@ -47,7 +50,7 @@ public class MockChatRoomService extends ChatRoomService
 		user.setId( "0" );
 		user.setId( "Name" );
 		list.add( new ChatMessage( user, message ) );
-		listener.receive( list );
+		EventBus.getBus().post(new ChatMessageReceiveEvent("", list));
 	}
 
 	@Override

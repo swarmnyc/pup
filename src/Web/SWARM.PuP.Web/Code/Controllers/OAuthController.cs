@@ -42,6 +42,8 @@ namespace SWARM.PuP.Web.Controllers
         [Authorize]
         public ActionResult Reddit()
         {
+            EnsureCookie();
+
             return Redirect(string.Format("{0}?client_id={1}&state=oauth&response_type=code&duration=permanent&scope=identity,submit&redirect_uri={2}",
                 OAuthData.Reddit.AuthorizeUrl, OAuthData.Reddit.ConsumerKey, Url.Encode(OAuthData.Reddit.CallBackUrl)));
         }

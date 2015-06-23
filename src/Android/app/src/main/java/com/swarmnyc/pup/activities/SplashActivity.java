@@ -17,7 +17,6 @@ public class SplashActivity extends Activity
 	@InjectView( R.id.pup_logo )
 	ImageView logoImage;
 
-
 	Handler m_handler = new Handler()
 	{
 		@Override

@@ -13,13 +13,13 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.chat.ChatMessage;
-import com.swarmnyc.pup.chat.ChatMessageListener;
 import com.swarmnyc.pup.chat.ChatRoomService;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.Utility;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ChatMessageListener {
+public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int HEADER = 0;
     private static final int SHARE = -1;
     private static final int SYSTEM = -2;
@@ -60,8 +60,58 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     public void setChatRoomService(final ChatRoomService chatRoomService, boolean loadHistory) {
         m_chatRoomService = chatRoomService;
-        m_chatRoomService.setMessageListener(this);
         m_chatRoomService.login(loadHistory);
+
+        EventBus.getBus().register(this);
+    }
+
+    @Subscribe
+    public void receiveMessage(ChatMessageReceiveEvent event) {
+        m_isloaded = true;
+        List<ChatMessage> messages = event.getMessages();
+        if (messages.size() == 1) {
+            ChatMessage cm = messages.get(0);
+            if (cm.isNewMessage() && cm.isSystemMessage() && cm.getCode() != null) {
+                boolean isCurrentUser = false;
+                //Join and Left System messages.
+                if (cm.getCode().equals("Join") && cm.getCodeBody() != null) {
+                    UserInfo[] users = Utility.fromJson(cm.getCodeBody(), UserInfo[].class);
+                    for (UserInfo u : users) {
+                        isCurrentUser = u.getId().equals(User.current.getId());
+                        LobbyUserInfo user = m_lobby.getUser(u.getId());
+                        if (user == null) {
+                            user = new LobbyUserInfo();
+                            user.setId(u.getId());
+                            user.setUserName(u.getUserName());
+                            user.setPortraitUrl(u.getPortraitUrl());
+                            m_lobby.getUsers().add(user);
+                        } else {
+                            //rejoin
+                            user.setIsLeave(false);
+                        }
+                    }
+
+                    EventBus.getBus().post(new LobbyUserChanged(isCurrentUser));
+                } else if (cm.getCode().equals("Leave") && cm.getCodeBody() != null) {
+                    UserInfo[] users = Utility.fromJson(cm.getCodeBody(), UserInfo[].class);
+                    for (UserInfo u : users) {
+                        LobbyUserInfo user = m_lobby.getUser(u.getId());
+                        if (user != null) {
+                            //rejoin
+                            user.setIsLeave(true);
+                        }
+                    }
+
+                    EventBus.getBus().post(new LobbyUserChanged(false));
+                }
+
+            }
+        }
+        m_chatMessages.addAll(messages);
+        notifyDataSetChanged();
+
+        //TODO: Better Scrolling
+        m_recyclerView.scrollToPosition(m_chatMessages.size());
     }
 
     @Override
@@ -134,55 +184,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     private ChatMessage getChatMessage(final int location) {
         return m_chatMessages.get(location - 1);
-    }
-
-    @Override
-    public void receive(final List<ChatMessage> messages) {
-        m_isloaded = true;
-
-        if (messages.size() == 1) {
-            ChatMessage cm = messages.get(0);
-            if (cm.isNewMessage() && cm.isSystemMessage() && cm.getCode() != null) {
-                boolean isCurrentUser = false;
-                //Join and Left System messages.
-                if (cm.getCode().equals("Join") && cm.getCodeBody() != null) {
-                    UserInfo[] users = Utility.fromJson(cm.getCodeBody(), UserInfo[].class);
-                    for (UserInfo u : users) {
-                        isCurrentUser = u.getId().equals(User.current.getId());
-                        LobbyUserInfo user = m_lobby.getUser(u.getId());
-                        if (user == null) {
-                            user = new LobbyUserInfo();
-                            user.setId(u.getId());
-                            user.setUserName(u.getUserName());
-                            user.setPortraitUrl(u.getPortraitUrl());
-                            m_lobby.getUsers().add(user);
-                        } else {
-                            //rejoin
-                            user.setIsLeave(false);
-                        }
-                    }
-
-                    EventBus.getBus().post(new LobbyUserChanged(isCurrentUser));
-                } else if (cm.getCode().equals("Leave") && cm.getCodeBody() != null) {
-                    UserInfo[] users = Utility.fromJson(cm.getCodeBody(), UserInfo[].class);
-                    for (UserInfo u : users) {
-                        LobbyUserInfo user = m_lobby.getUser(u.getId());
-                        if (user != null) {
-                            //rejoin
-                            user.setIsLeave(true);
-                        }
-                    }
-
-                    EventBus.getBus().post(new LobbyUserChanged(false));
-                }
-
-            }
-        }
-        m_chatMessages.addAll(messages);
-        notifyDataSetChanged();
-
-        //TODO: Better Scrolling
-        m_recyclerView.scrollToPosition(m_chatMessages.size());
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {

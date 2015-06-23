@@ -16,6 +16,7 @@
     <string name="fabric_app_key">6e9cbc0476f528edefc80e2daf875075623c2aa9</string>
 
     <string name="uservoice_id">swarmnyc.uservoice.com</string>
+    <string name="google_tracker_key">UA-43683040-6</string>
 
     <integer name="menu_item_default">0</integer>
     <integer name="menu_item_default_for_user">1</integer>
