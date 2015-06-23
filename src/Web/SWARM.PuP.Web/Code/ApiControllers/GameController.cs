@@ -31,7 +31,13 @@ namespace SWARM.PuP.Web.ApiControllers
         // GET: api/Game/5
         public Game Get(string id)
         {
-            return _gameService.GetById(id);
+            var game = _gameService.GetById(id);
+            if (game == null)
+            {
+                throw new ArgumentException(ErrorCode.E003NotFoundGame);
+            }
+
+            return game;
         }
 
         [Route("Popular"), HttpGet]

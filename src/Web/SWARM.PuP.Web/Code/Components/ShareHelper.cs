@@ -32,7 +32,7 @@ namespace SWARM.PuP.Web
             }
             catch (Exception ex)
             {
-                Trace.TraceError(ex.ToString());
+                Trace.TraceError("Share To Tumblur failed for lobby {0}\r\n{1}", lobby, ex);
             }
         }
 
@@ -55,7 +55,7 @@ namespace SWARM.PuP.Web
             }
             catch (Exception ex)
             {
-                Trace.TraceError("{0}\n{1}", ex.Message, ex.StackTrace);
+                Trace.TraceError("Share To Twitter failed for lobby {0}\r\n{1}", lobby, ex);
             }
         }
 
@@ -73,7 +73,7 @@ namespace SWARM.PuP.Web
             }
             catch (Exception ex)
             {
-                Trace.TraceError("{0}\n{1}", ex.Message, ex.StackTrace);
+                Trace.TraceError("Share To Facebook failed for lobby {0}\r\n{1}", lobby, ex);
             }
 
         }
@@ -88,7 +88,7 @@ namespace SWARM.PuP.Web
             }
             catch (Exception ex)
             {
-                Trace.TraceError("{0}\n{1}", ex.Message, ex.StackTrace);
+                Trace.TraceError("Share To Reddit failed for lobby {0}\r\n{1}", lobby, ex);
                 return "error";
             }
         }

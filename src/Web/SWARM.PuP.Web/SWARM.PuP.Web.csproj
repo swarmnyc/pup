@@ -197,10 +197,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Code\Components\MongoHelper.cs" />
     <Compile Include="Code\Components\WebRequestExtensions.cs" />
-    <Compile Include="Code\Controllers\AccountController.cs" />
     <None Include="Code\Controllers\GameController.cs" />
     <Compile Include="Code\Controllers\HomeController.cs" />
-    <None Include="Code\Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

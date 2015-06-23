@@ -68,13 +68,13 @@ namespace System.Net
             }
         }
 
-        public static T Json<T>(this WebRequest request, object obj)
+        public static T GetJson<T>(this WebRequest request, object obj)
         {
             request.Write(obj);
             return request.GetResponse().Read<T>();
         }
 
-        public static T Json<T>(this WebRequest request)
+        public static T GetJson<T>(this WebRequest request)
         {
             return request.GetResponse().Read<T>();
         }

@@ -8,10 +8,11 @@ namespace System.Web.Http.Filters
     {
         public override void OnException(HttpActionExecutedContext context)
         {
-            Trace.TraceError("Unhandled exception processing {0} for {1}: {2}",
+            Trace.TraceWarning("Unhandled exception processing {0} for {1}\r\n{2}",
                 context.Request.Method,
                 context.Request.RequestUri,
                 context.Exception);
+
             var exception = (context.Exception as HttpResponseException);
             if (exception == null)
             {

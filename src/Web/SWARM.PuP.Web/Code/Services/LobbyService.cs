@@ -71,7 +71,7 @@ namespace SWARM.PuP.Web.Services
                 query = query.Where(x => x.StartTimeUtc >= filter.StartTimeUtc);
             }
 
-            query = query.Where(x => x.State == ModelState.Actived);
+            query = query.Where(x => x.State == ModelState.Active);
 
             query = DoOrderQuery(query, filter);
 
@@ -114,7 +114,7 @@ namespace SWARM.PuP.Web.Services
                 var newOwner = lobby.Users.FirstOrDefault(x => !x.IsLeave && !x.IsOwner);
                 if (newOwner == null)
                 {
-                    lobby.State = ModelState.Disactived;
+                    lobby.State = ModelState.Disactive;
                 }
                 else
                 {

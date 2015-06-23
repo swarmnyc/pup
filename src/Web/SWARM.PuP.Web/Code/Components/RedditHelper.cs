@@ -77,7 +77,7 @@ namespace SWARM.PuP.Web.Code.Components
 
             if (result.error != null)
             {
-                throw new ApplicationException(result.error.ToString());
+                throw new ApplicationException("Update RedditToken failed for User:" + user + ", Message:" + result.error.ToString());
             }
 
             SocialMedium medium = new SocialMedium()

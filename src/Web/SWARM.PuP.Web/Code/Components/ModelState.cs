@@ -2,9 +2,8 @@
 {
     public enum ModelState
     {
-        Actived,
-        Unactived,
-        Disactived,
+        Active,
+        Disactive,
         Deleted
     }
 }

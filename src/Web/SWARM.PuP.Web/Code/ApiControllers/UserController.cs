@@ -41,7 +41,7 @@ namespace SWARM.PuP.Web.ApiControllers
 
             if (user == null)
             {
-                errorMessage = ErrorCode.E003NotFound;
+                errorMessage = ErrorCode.E003NotFoundUser;
             }
 
 
@@ -59,7 +59,7 @@ namespace SWARM.PuP.Web.ApiControllers
                 case "google":
                     var request =
                         WebRequest.Create("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + model.Token);
-                    var googleUser = request.Json<GoogleUserInfo>();
+                    var googleUser = request.GetJson<GoogleUserInfo>();
 
                     user = _userService.FindByEmail(model.Email);
 

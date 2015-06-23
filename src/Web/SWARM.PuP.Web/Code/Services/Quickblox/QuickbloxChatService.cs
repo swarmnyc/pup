@@ -13,7 +13,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
         {
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.User, HttpMethod.Post);
 
-            var result = request.Json<CreateUserResult>(new
+            var result = request.GetJson<CreateUserResult>(new
             {
                 user = new
                 {
@@ -39,7 +39,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
             string[] chatUsersId = { owner.GetChatId() };
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.Room, HttpMethod.Post);
 
-            var charRoom = request.Json<QuickbloxRoom>(new
+            var charRoom = request.GetJson<QuickbloxRoom>(new
             {
                 type = ChatRoomType.Group,
                 name = string.Format(QuickbloxHttpHelper.LobbyNameFormat, lobby.Name),
@@ -58,7 +58,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     QuickbloxApiTypes.RoomUpdate(lobby.GetTagValue(QuickbloxHttpHelper.Const_ChatRoomId)),
                     HttpMethod.Put);
 
-            var chatRoom = request.Json<QuickbloxRoom>(new
+            var chatRoom = request.GetJson<QuickbloxRoom>(new
             {
                 //push_all = add users
                 push_all = new
@@ -79,7 +79,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     QuickbloxApiTypes.RoomUpdate(lobby.GetTagValue(QuickbloxHttpHelper.Const_ChatRoomId)),
                     HttpMethod.Put);
 
-            var chatRoom = request.Json<QuickbloxRoom>(new
+            var chatRoom = request.GetJson<QuickbloxRoom>(new
             {
                 //pull_all = remove users
                 pull_all = new
@@ -112,7 +112,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     throw new ArgumentOutOfRangeException("code", code, null);
             }
 
-            request.Json<QuickbloxMessage>(new QuickbloxMessage
+            request.GetJson<QuickbloxMessage>(new QuickbloxMessage
             {
                 chat_dialog_id = roomId,
                 code = code.ToString(),

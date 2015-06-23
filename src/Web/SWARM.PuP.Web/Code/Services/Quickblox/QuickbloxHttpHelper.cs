@@ -85,7 +85,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                 var nonce = GenerateNonce();
                 var timestamp = GenerateTimeStamp();
 
-                var result = request.Json<SessionResult>(new
+                var result = request.GetJson<SessionResult>(new
                 {
                     application_id = ApplicationId,
                     auth_key = AuthKey,

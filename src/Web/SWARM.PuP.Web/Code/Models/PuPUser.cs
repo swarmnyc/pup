@@ -34,5 +34,10 @@ namespace SWARM.PuP.Web.Models
         {
             this.UpdateTag("Name" + platform, name);
         }
+
+        public override string ToString()
+        {
+            return UserName + "(" + Id + ")";
+        }
     }
 }

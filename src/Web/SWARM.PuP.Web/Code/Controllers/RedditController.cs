@@ -54,16 +54,16 @@ namespace SWARM.PuP.Web.Code.Controllers
                     ViewBag.CaptchaId = RedditHelper.GetRedditCaptchaId(User.Identity.GetPuPUser());
                     return View();
                 }
-                else if (result.Contains(".error.RATELIMIT"))
+                else if (result.Contains(".error"))
                 {
+                    Trace.TraceWarning("Reddit Share Error for Lobby: {0}, Message: {1}", lobby, result);
+
                     ViewBag.ErrorMessage = "you are doing that too much. try again late.";
                     ViewBag.CaptchaId = RedditHelper.GetRedditCaptchaId(User.Identity.GetPuPUser());
                     return View();
                 }
                 else
                 {
-                    Trace.WriteLine("Reddit Share Result: " + result);
-
                     return RedirectToAction("Done");
                 }
 

@@ -36,5 +36,10 @@ namespace SWARM.PuP.Web.Models
             get { return _users ?? (_users = new HashSet<LobbyUserInfo>()); }
             set { _users = value; }
         }
+
+        public override string ToString()
+        {
+            return Name + "("+ Id +")";
+        }
     }
 }

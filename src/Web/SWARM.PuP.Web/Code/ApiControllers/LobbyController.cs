@@ -1,20 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Web;
 using System.Web.Http;
 using System.Web.Http.Filters;
-using SWARM.PuP.Web.Code.Components;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
 using SWARM.PuP.Web.Services;
-using TwitterOAuth.Enum;
-using TwitterOAuth.Impl;
 
 namespace SWARM.PuP.Web.ApiControllers
 {
@@ -56,12 +48,9 @@ namespace SWARM.PuP.Web.ApiControllers
         public Lobby Get(string id)
         {
             var lobby = _lobbyService.GetById(id);
-            foreach (var user in lobby.Users)
+            if (lobby == null)
             {
-                if (user.PortraitUrl.IsNotNullOrWhiteSpace())
-                {
-                    user.PortraitUrl = Url.Content(user.PortraitUrl);
-                }
+                throw new ArgumentException(ErrorCode.E003NotFoundLobby);
             }
 
             return lobby;
@@ -71,6 +60,11 @@ namespace SWARM.PuP.Web.ApiControllers
         public Lobby Post(Lobby lobby)
         {
             var game = _gameService.GetById(lobby.GameId);
+            if (game == null)
+            {
+                throw new ArgumentException(ErrorCode.E003NotFoundGame);
+            }
+
             if (string.IsNullOrWhiteSpace(lobby.Name))
             {
                 lobby.Name = game.Name;
@@ -113,10 +107,21 @@ namespace SWARM.PuP.Web.ApiControllers
         }
 
         [Authorize, Route("Invite/{lobbyId}"), HttpPost, ModelValidate]
-        public IHttpActionResult Invite(string lobbyId, [FromUri] string localTime, [FromUri] IEnumerable<SocialMediumType> types)
+        public IHttpActionResult Invite(string lobbyId, [FromUri] string localTime,
+            [FromUri] IEnumerable<SocialMediumType> types)
         {
             var user = User.Identity.GetPuPUser();
             var lobby = _lobbyService.GetById(lobbyId);
+
+            if (user == null)
+            {
+                throw new ArgumentException(ErrorCode.E003NotFoundUser);
+            }
+
+            if (lobby == null)
+            {
+                throw new ArgumentException(ErrorCode.E003NotFoundLobby);
+            }
 
             foreach (var type in types)
             {
