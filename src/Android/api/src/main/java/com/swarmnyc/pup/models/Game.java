@@ -8,7 +8,6 @@ import java.util.List;
 
 public class Game extends Taggable implements PicturedModel
 {
-
 	private String             name;
 	private String             pictureUrl;
 	private String             thumbnailPictureUrl;

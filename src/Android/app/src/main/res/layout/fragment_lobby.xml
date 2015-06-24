@@ -42,6 +42,7 @@
                 android:minHeight="55dp"
                 android:maxLines="3"
                 tools:text="Message"
+                android:enabled="false"
                 android:layout_toLeftOf="@+id/btn_send"
                 android:gravity="bottom"
                 android:layout_marginLeft="@dimen/margin_half"/>
@@ -49,6 +50,7 @@
                 android:id="@+id/btn_send"
                 android:text="@string/text_send"
                 android:layout_height="45dp"
+                android:enabled="false"
                 android:layout_alignParentRight="true"
                 android:layout_alignBottom="@+id/text_message"
                 style="@style/button_text"

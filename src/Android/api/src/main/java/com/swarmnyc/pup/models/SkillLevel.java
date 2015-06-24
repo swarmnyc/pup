@@ -1,16 +1,16 @@
 package com.swarmnyc.pup.models;
 
-import com.google.gson.annotations.SerializedName;
-
-public enum SkillLevel {
-    Newbie,
-    Intermediate,
+public enum SkillLevel
+{
+	Newbie,
+	Intermediate,
 	L337,
-    Pro;
+	Pro;
 
 	public static SkillLevel get( final int value )
 	{
-		switch ( value ){
+		switch ( value )
+		{
 			case 0:
 				return Newbie;
 			case 1:

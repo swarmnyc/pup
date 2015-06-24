@@ -11,14 +11,11 @@ import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class UserServiceImpl implements UserService
 {
-
-	public static final String PASSWORD = "swarmnyc";
+	private static final String PASSWORD = "swarmnyc";
 	private UserRestApi m_userApi;
 
 	public UserServiceImpl( UserRestApi userApi )

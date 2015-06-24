@@ -1,15 +1,15 @@
 package com.swarmnyc.pup.models;
 
-import com.google.gson.annotations.SerializedName;
-
-public enum PlayStyle {
-    Casual,
+public enum PlayStyle
+{
+	Casual,
 	Normal,
 	Hardcore;
 
 	public static PlayStyle get( final int value )
 	{
-		switch ( value ){
+		switch ( value )
+		{
 			case 0:
 				return Casual;
 			case 1:

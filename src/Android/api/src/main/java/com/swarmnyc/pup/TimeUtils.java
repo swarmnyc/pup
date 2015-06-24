@@ -4,10 +4,10 @@ import java.util.Calendar;
 
 public class TimeUtils
 {
-	public static final long miniute_in_millis = 60000;
-	public static final long hour_in_millis = 3600000;
-	public static final long day_in_millis  = 86400000;
-	public static final long week_in_millis = 604800000;
+	public static final long minute_in_millis = 60000;
+	public static final long hour_in_millis   = 3600000;
+	public static final long day_in_millis    = 86400000;
+	public static final long week_in_millis   = 604800000;
 
 
 	public static long todayTimeMillis()
@@ -40,8 +40,8 @@ public class TimeUtils
 			s = getUnit( "hour", i );
 		}
 		else{
-			i = l / miniute_in_millis;
-			s = getUnit( "miniute", i );
+			i = l / minute_in_millis;
+			s = getUnit( "minute", i );
 		}
 
 		return i + " " + s;

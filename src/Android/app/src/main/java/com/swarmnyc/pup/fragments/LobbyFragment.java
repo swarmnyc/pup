@@ -2,8 +2,6 @@ package com.swarmnyc.pup.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -59,8 +57,6 @@ import butterknife.OnClick;
 
 
 public class LobbyFragment extends Fragment implements Screen {
-    ChatListScrollingHandler m_chatListScrollingHandler = new ChatListScrollingHandler();
-
     @Inject
     LobbyService m_lobbyService;
 
@@ -160,6 +156,7 @@ public class LobbyFragment extends Fragment implements Screen {
     public void onDetach() {
         super.onDetach();
 
+        m_chatRoomService.leave();
         if (m_memberFragment != null) {
             MainDrawerFragment.getInstance().removeRightDrawer(m_memberFragment);
         }
@@ -309,6 +306,9 @@ public class LobbyFragment extends Fragment implements Screen {
         if (!event.getLobbyId().equals(m_lobbyId))
             return;
 
+        //After receive history
+        m_messageText.setEnabled( true );
+        m_sendButton.setEnabled( true );
         m_loadingImage.setVisibility(View.GONE);
 
         List<ChatMessage> messages = event.getMessages();
@@ -361,30 +361,9 @@ public class LobbyFragment extends Fragment implements Screen {
         } else {
             m_sharePanel.setVisibility(View.GONE);
             int lastPosition = m_chatListLayoutManager.findLastVisibleItemPosition();
-            if ((lastPosition + 5) > oldSize) //on the end
-                m_chatList.smoothScrollToPosition(lastPosition);
-        }
-    }
-
-    private class ChatListScrollingHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            int current = msg.arg1;
-            int total = m_lobbyChatAdapter.getItemCount();
-            int target = Math.min(current + 1, total);
-
-            m_chatList.smoothScrollToPosition(target);
-
-            if (target < total)
-                scrollToEnd(target);
+            if ((lastPosition + 3) > oldSize) //it is on the end, scrolling
+                m_chatList.scrollToPosition(size);
         }
 
-        public void scrollToEnd(int i) {
-            this.removeMessages(0);
-            Message message = new Message();
-            message.what = 0;
-            message.arg1 = i;
-            sendMessageDelayed(message, 50);
-        }
     }
 }

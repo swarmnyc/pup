@@ -8,28 +8,26 @@ import com.swarmnyc.pup.adapters.MyChatAdapter;
 import com.swarmnyc.pup.fragments.*;
 import dagger.Component;
 
-import javax.inject.Singleton;
+@Component( modules = PuPApiModule.class )
+public interface PuPComponent
+{
+	UserService getUserService();
 
-@Singleton
-@Component(modules = PuPApiModule.class)
-public interface PuPComponent {
-    UserService getUserService();
+	void inject( MainActivity mainActivity );
 
-    void inject(MainActivity mainActivity);
+	void inject( SplashActivity splashActivity );
 
-    void inject(SplashActivity splashActivity);
+	void inject( LobbyListFragment lobbyListFragment );
 
-    void inject(LobbyListFragment lobbyListFragment);
-
-    void inject(CreateLobbyFragment createLobbyFragment);
+	void inject( CreateLobbyFragment createLobbyFragment );
 
 	void inject( LobbyFragment lobbyFragment );
 
 	void inject( RegisterDialogFragment registerDialogFragment );
 
-    void inject( LobbyChatAdapter lobbyChatAdapter);
+	void inject( LobbyChatAdapter lobbyChatAdapter );
 
-    void inject( MyChatAdapter myChatAdapter );
+	void inject( MyChatAdapter myChatAdapter );
 
-    void inject( SettingsFragment settingsFragment );
+	void inject( SettingsFragment settingsFragment );
 }
