@@ -137,7 +137,7 @@ namespace SWARM.PuP.Web.Tests.Services
                 {
                     Name = game.Name,
                     Platforms = p,
-                    Genera = game.Genre?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries),
+                    Genres = game.Genre?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries),
                     PictureUrl = game.ImageURL,
                     ThumbnailPictureUrl = game.ImageURL,
                     Description = game.Description,
