@@ -189,7 +189,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        [Authorize, HttpPost, Route("Medium"), ModelValidate]
+        [Authorize, HttpPost, Route("SocialMedia"), ModelValidate]
         public IHttpActionResult AddMedium([FromBody] SocialMedium medium)
         {
             var user = User.Identity.GetPuPUser();
@@ -204,7 +204,7 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        [Authorize, HttpDelete, Route("Medium/{type}"), ModelValidate]
+        [Authorize, HttpDelete, Route("SocialMedia/{type}"), ModelValidate]
         public IHttpActionResult DeleteMedium(SocialMediumType type)
         {
             var user = User.Identity.GetPuPUser();
