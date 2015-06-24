@@ -8,16 +8,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardElevation="@dimen/margin_small"
-        app:cardCornerRadius="0dp"
-        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_quarter"
         android:layout_marginLeft="@dimen/margin_half"
-        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_quarter"
         android:layout_marginRight="@dimen/margin_half"
+
         >
 
     <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground">
 
 
         <ImageView
@@ -108,12 +109,12 @@
                     android:layout_gravity="center_vertical"/>
         </LinearLayout>
 
-        <View
-                android:id="@+id/seperator2"
-                android:layout_below="@id/layout_lobby_info"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+        <!--<View-->
+                <!--android:id="@+id/seperator2"-->
+                <!--android:layout_below="@id/layout_lobby_info"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@android:color/darker_gray"/>-->
 
     </RelativeLayout>
 

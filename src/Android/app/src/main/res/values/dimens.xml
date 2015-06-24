@@ -2,7 +2,8 @@
     <dimen name="margin_2x">32dp</dimen>
     <dimen name="margin_normal">16dp</dimen>
     <dimen name="margin_half">8dp</dimen>
-    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_quarter">4dp</dimen>
+    <dimen name="margin_small">2dp</dimen>
 
     <dimen name="padding_normal">16dp</dimen>
     <dimen name="padding_half">8dp</dimen>

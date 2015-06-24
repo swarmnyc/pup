@@ -236,7 +236,6 @@ public class LobbyFragment extends Fragment implements Screen
 		ButterKnife.inject( this, view );
 
 		setHasOptionsMenu( true );
-		DialogHelper.showProgressDialog( R.string.message_loading );
 		m_lobbyService.getLobby(
 			m_lobbyId, new ServiceCallback<Lobby>()
 			{
@@ -248,11 +247,12 @@ public class LobbyFragment extends Fragment implements Screen
 					m_memberFragment.setLobby( value );
 					MainDrawerFragment.getInstance().setRightDrawer( m_memberFragment );
 					initialize();
-					DialogHelper.hide();
 				}
 			}
 		);
 	}
+
+
 
 	@Override
 	public void onStart()

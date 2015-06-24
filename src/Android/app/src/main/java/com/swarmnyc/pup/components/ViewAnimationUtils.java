@@ -1,6 +1,12 @@
 package com.swarmnyc.pup.components;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -42,5 +48,66 @@ public class ViewAnimationUtils
 				}
 			}
 		);
+	}
+
+	@TargetApi( Build.VERSION_CODES.LOLLIPOP )
+	public static void enterReveal( final View view ) {
+		// make the view visible and start the animation
+		view.setVisibility( View.VISIBLE );
+
+
+
+		// previously invisible view
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+			return;
+		}
+
+		// get the center for the clipping circle
+		int cx = view.getMeasuredWidth() / 2;
+		int cy = view.getMeasuredHeight() / 2;
+
+		// get the final radius for the clipping circle
+		int finalRadius = Math.max( view.getWidth(), view.getHeight()) / 2;
+
+		// create the animator for this view (the start radius is zero)
+		Animator anim =
+			android.view.ViewAnimationUtils.createCircularReveal( view, cx, cy, 0, finalRadius );
+
+		anim.start();
+	}
+
+	@TargetApi( Build.VERSION_CODES.LOLLIPOP )
+	public static void exitReveal( final View myView) {
+		// previously visible view
+
+		// previously invisible view
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+			myView.setVisibility(View.INVISIBLE);
+			return;
+		}
+
+
+		// get the center for the clipping circle
+		int cx = myView.getMeasuredWidth() / 2;
+		int cy = myView.getMeasuredHeight() / 2;
+
+		// get the initial radius for the clipping circle
+		int initialRadius = myView.getWidth() / 2;
+
+		// create the animation (the final radius is zero)
+		Animator anim =
+			android.view.ViewAnimationUtils.createCircularReveal(myView, cx, cy, initialRadius, 0);
+
+		// make the view invisible when the animation is done
+		anim.addListener(new AnimatorListenerAdapter() {
+			                 @Override
+			                 public void onAnimationEnd(Animator animation) {
+				                 super.onAnimationEnd(animation);
+				                 myView.setVisibility(View.INVISIBLE);
+			                 }
+		                 });
+
+		// start the animation
+		anim.start();
 	}
 }
