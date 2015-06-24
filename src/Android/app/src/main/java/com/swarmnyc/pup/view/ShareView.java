@@ -1,16 +1,23 @@
 package com.swarmnyc.pup.view;
 
-import android.view.View;
+import android.content.Context;
+import android.util.AttributeSet;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.swarmnyc.pup.AsyncCallback;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.Services.LobbyService;
+import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.activities.MainActivity;
-import com.swarmnyc.pup.adapters.LobbyChatAdapter;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.fragments.OAuthFragment;
+import com.swarmnyc.pup.fragments.RedditShareFragment;
+import com.swarmnyc.pup.models.Lobby;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class ShareFragment {
-    private LobbyChatAdapter lobbyChatAdapter;
+public class ShareView extends LinearLayout {
     @InjectView(R.id.btn_facebook)
     ImageView m_facebookButton;
 
@@ -33,20 +39,35 @@ public class ShareFragment {
     @InjectView(R.id.btn_reddit)
     ImageView m_redditButton;
 
-    public ShareFragment(LobbyChatAdapter lobbyChatAdapter, final View view) {
-        //super(view);
-        this.lobbyChatAdapter = lobbyChatAdapter;
-        ButterKnife.inject(this, view);
+    private LobbyService m_lobbyService;
+    private Lobby m_lobby;
 
-        setButtonState(User.current.hasSocialMedium(Consts.KEY_FACEBOOK), m_facebookButton);
-        setButtonState(User.current.hasSocialMedium(Consts.KEY_TWITTER), m_twitterButton);
-        setButtonState(User.current.hasSocialMedium(Consts.KEY_TUMBLR), m_tumblrButton);
-        setButtonState(User.current.hasSocialMedium(Consts.KEY_REDDIT), m_redditButton);
+    public ShareView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+
+        init();
     }
 
-    private void setButtonState(boolean share, ImageView button) {
-        button.setActivated(share);
-        //button.setImageResource(m_context.getResources().getIdentifier("ico_" + button.getTag() + (share ? "_select" : ""), "drawable", lobbyChatAdapter.m_context.getPackageName()));
+    public void init() {
+        setOrientation(VERTICAL);
+        inflate(getContext(), R.layout.view_share, this);
+        if (!isInEditMode()) {
+            ButterKnife.inject(this);
+
+            setButtonState(User.current.hasSocialMedium(Consts.KEY_FACEBOOK), m_facebookButton);
+            setButtonState(User.current.hasSocialMedium(Consts.KEY_TWITTER), m_twitterButton);
+            setButtonState(User.current.hasSocialMedium(Consts.KEY_TUMBLR), m_tumblrButton);
+            setButtonState(User.current.hasSocialMedium(Consts.KEY_REDDIT), m_redditButton);
+        }
+    }
+
+
+    public void setLobbyService(LobbyService m_lobbyService) {
+        this.m_lobbyService = m_lobbyService;
+    }
+
+    public void setLobby(Lobby m_lobby) {
+        this.m_lobby = m_lobby;
     }
 
     @OnClick(R.id.btn_facebook)
@@ -160,34 +181,39 @@ public class ShareFragment {
             if (m_redditButton.isActivated()) {
                 ShareToReddit();
             } else {
-                //Toast.makeText(lobbyChatAdapter.m_context, "You need to choose at least one social medium", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "You need to choose at least one social medium", Toast.LENGTH_SHORT).show();
             }
 
         } else {
-           /* lobbyChatAdapter.m_lobbyService.invite(
-                    lobbyChatAdapter.m_lobby, types, new ServiceCallback() {
+            m_lobbyService.invite(
+                    m_lobby, types, new ServiceCallback() {
                         @Override
                         public void success(final Object value) {
                             if (m_redditButton.isActivated()) {
                                 ShareToReddit();
                             } else {
-                                Toast.makeText(lobbyChatAdapter.m_context, "Share Succeeded", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Share Succeeded", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
-            );*/
+            );
         }
     }
 
     private void ShareToReddit() {
-       /* RedditShareFragment fragment = new RedditShareFragment();
-        fragment.initialize(lobbyChatAdapter.m_lobby, new AsyncCallback() {
+        RedditShareFragment fragment = new RedditShareFragment();
+        fragment.initialize(m_lobby, new AsyncCallback() {
             @Override
             public void success() {
-                Toast.makeText(lobbyChatAdapter.m_context, "Share Succeeded", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Share Succeeded", Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });
 
-        //fragment.show(MainActivity.getInstance().getSupportFragmentManager(), "Reddit");
+        fragment.show(MainActivity.getInstance().getSupportFragmentManager(), "Reddit");
+    }
+
+    private void setButtonState(boolean share, ImageView button) {
+        button.setActivated(share);
+        button.setImageResource(getResources().getIdentifier("ico_" + button.getTag() + (share ? "_select" : ""), "drawable", getContext().getPackageName()));
     }
 }

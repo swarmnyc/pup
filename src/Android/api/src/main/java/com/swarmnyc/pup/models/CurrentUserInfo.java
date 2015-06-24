@@ -17,7 +17,8 @@ public class CurrentUserInfo extends UserInfo
 	public CurrentUserInfo()
 	{
 		tags = new ArrayList<>();
-	}
+        socialMedia = new HashSet<>();
+    }
 
 	public String getEmail()
 	{
@@ -74,10 +75,6 @@ public class CurrentUserInfo extends UserInfo
 
 	public Set<String> getSocialMedia()
 	{
-		if ( socialMedia == null )
-		{
-			socialMedia = new HashSet<>();
-		}
 		return socialMedia;
 	}
 
