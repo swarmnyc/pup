@@ -39,7 +39,7 @@ public class FacebookHelper
 								@Override
 								public void success( final Object value )
 								{
-									User.addMedium( Consts.KEY_FACEBOOK );
+									User.addSocialMedium(Consts.KEY_FACEBOOK);
 									Toast.makeText( MainActivity.getInstance(), R.string.message_connect_success, Toast.LENGTH_LONG ).show();
 
 									if ( callback != null )

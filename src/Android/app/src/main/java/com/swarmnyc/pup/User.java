@@ -56,13 +56,13 @@ public class User
 		return current != CurrentUserInfo.Null;
 	}
 
-	public static void addMedium( final String type ) {
-		current.getMedia().add( type );
+	public static void addSocialMedium(final String type) {
+		current.getSocialMedia().add( type );
 		Config.setString( KEY_USER, gson.toJson( current ) );
 	}
 
-	public static void removeMedium( final String type ) {
-		current.getMedia().remove( type );
+	public static void removeSocialMedium(final String type) {
+		current.getSocialMedia().remove( type );
 		Config.setString( KEY_USER, gson.toJson( current ) );
 	}
 

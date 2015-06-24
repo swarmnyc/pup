@@ -1,20 +1,16 @@
 package com.swarmnyc.pup.view;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.swarmnyc.pup.AsyncCallback;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.LobbyChatAdapter;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.fragments.OAuthFragment;
-import com.swarmnyc.pup.fragments.RedditShareFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +38,10 @@ public class ShareFragment {
         this.lobbyChatAdapter = lobbyChatAdapter;
         ButterKnife.inject(this, view);
 
-        setButtonState(User.current.hasMedium(Consts.KEY_FACEBOOK), m_facebookButton);
-        setButtonState(User.current.hasMedium(Consts.KEY_TWITTER), m_twitterButton);
-        setButtonState(User.current.hasMedium(Consts.KEY_TUMBLR), m_tumblrButton);
-        setButtonState(User.current.hasMedium(Consts.KEY_REDDIT), m_redditButton);
+        setButtonState(User.current.hasSocialMedium(Consts.KEY_FACEBOOK), m_facebookButton);
+        setButtonState(User.current.hasSocialMedium(Consts.KEY_TWITTER), m_twitterButton);
+        setButtonState(User.current.hasSocialMedium(Consts.KEY_TUMBLR), m_tumblrButton);
+        setButtonState(User.current.hasSocialMedium(Consts.KEY_REDDIT), m_redditButton);
     }
 
     private void setButtonState(boolean share, ImageView button) {
@@ -58,7 +54,7 @@ public class ShareFragment {
         if (m_facebookButton.isActivated()) {
             setButtonState(false, m_facebookButton);
         } else {
-            if (User.current.hasMedium(Consts.KEY_FACEBOOK)) {
+            if (User.current.hasSocialMedium(Consts.KEY_FACEBOOK)) {
                 setButtonState(true, m_facebookButton);
             } else {
                 FacebookHelper.startLoginRequire(
@@ -78,7 +74,7 @@ public class ShareFragment {
         if (m_twitterButton.isActivated()) {
             setButtonState(false, m_twitterButton);
         } else {
-            if (User.current.hasMedium(Consts.KEY_TWITTER)) {
+            if (User.current.hasSocialMedium(Consts.KEY_TWITTER)) {
                 setButtonState(true, m_twitterButton);
             } else {
                 OAuthFragment oAuthFragment = new OAuthFragment();
@@ -86,7 +82,7 @@ public class ShareFragment {
                         Consts.KEY_TWITTER, new AsyncCallback() {
                             @Override
                             public void success() {
-                                User.addMedium(Consts.KEY_TWITTER);
+                                User.addSocialMedium(Consts.KEY_TWITTER);
                                 setButtonState(true, m_twitterButton);
                             }
                         }
@@ -102,7 +98,7 @@ public class ShareFragment {
         if (m_tumblrButton.isActivated()) {
             setButtonState(false, m_tumblrButton);
         } else {
-            if (User.current.hasMedium(Consts.KEY_TUMBLR)) {
+            if (User.current.hasSocialMedium(Consts.KEY_TUMBLR)) {
                 setButtonState(true, m_tumblrButton);
             } else {
                 OAuthFragment oAuthFragment = new OAuthFragment();
@@ -110,7 +106,7 @@ public class ShareFragment {
                         Consts.KEY_TUMBLR, new AsyncCallback() {
                             @Override
                             public void success() {
-                                User.addMedium(Consts.KEY_TUMBLR);
+                                User.addSocialMedium(Consts.KEY_TUMBLR);
                                 setButtonState(true, m_tumblrButton);
                             }
                         }
@@ -126,7 +122,7 @@ public class ShareFragment {
         if (m_redditButton.isActivated()) {
             setButtonState(false, m_redditButton);
         } else {
-            if (User.current.hasMedium(Consts.KEY_REDDIT)) {
+            if (User.current.hasSocialMedium(Consts.KEY_REDDIT)) {
                 setButtonState(true, m_redditButton);
             } else {
                 OAuthFragment oAuthFragment = new OAuthFragment();
@@ -134,7 +130,7 @@ public class ShareFragment {
                         Consts.KEY_REDDIT, new AsyncCallback() {
                             @Override
                             public void success() {
-                                User.addMedium(Consts.KEY_REDDIT);
+                                User.addSocialMedium(Consts.KEY_REDDIT);
                                 setButtonState(true, m_redditButton);
                             }
                         }
