@@ -22,7 +22,7 @@ namespace SWARM.PuP.Web.Models
         
         public DateTime? ReleaseDateUtc { get; set; }
 
-        public string[] GameTypes { get; set; }
+        public string[] Genera { get; set; }
 
         public int Rank { get; set; }
 

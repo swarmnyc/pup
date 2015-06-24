@@ -14,8 +14,8 @@ public class Game extends Taggable implements PicturedModel
 	private String             thumbnailPictureUrl;
 	private String             description;
 	private List<GamePlatform> platforms;
-	private List<String>       gameTypes;
-	private int                rank;
+    private List<String>       genera;
+    private int                rank;
 
 	@SerializedName( "releaseDateUtc" )
 	private Date releaseDate;
@@ -86,14 +86,14 @@ public class Game extends Taggable implements PicturedModel
 		this.releaseDate = releaseDate;
 	}
 
-	public List<String> getGameTypes()
+	public List<String> getGenera()
 	{
-		return gameTypes;
+		return genera;
 	}
 
-	public void setGameTypes( List<String> gameTypes )
+	public void setGenera(List<String> genera)
 	{
-		this.gameTypes = gameTypes;
+		this.genera = genera;
 	}
 
 	public int getRank()
