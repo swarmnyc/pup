@@ -1,7 +1,12 @@
 package com.swarmnyc.pup.components;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.net.Uri;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.swarmnyc.pup.Config;
+import com.swarmnyc.pup.R;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -38,7 +43,7 @@ public final class Utility
 		return sdf.parse( value.substring( 0, value.length() - 1 ) + "+00" );
 	}
 
-	public static String toJson(final Object o)
+	public static String toJson( final Object o )
 	{
 		return gson.toJson( o );
 	}
@@ -48,4 +53,24 @@ public final class Utility
 
 	public static <T> T fromJson( final String json, final Type typeOfT ) throws JsonSyntaxException
 	{return gson.fromJson( json, typeOfT );}
+
+	public static String urlContent( final String url )
+	{
+		if ( url == null )
+		{ return null; }
+
+		return url.replace( "~/", Config.getConfigString( R.string.PuP_Url ) );
+	}
+
+	public static Uri getResourceUri( Context context, int id )
+	{
+		return Uri.parse(
+			ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+			context.getResources().getResourcePackageName( id ) +
+			'/' +
+			context.getResources().getResourceTypeName( id ) +
+			'/' +
+			context.getResources().getResourceEntryName( id )
+		);
+	}
 }

@@ -2,8 +2,10 @@ package com.swarmnyc.pup.chat;
 
 import android.os.Handler;
 import android.os.Message;
+
+import com.swarmnyc.pup.ChatMessageReceiveEvent;
+import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.User;
-import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ public class MockChatRoomService extends ChatRoomService
 				list.add( new ChatMessage( user, "Test " + i ) );
 			}
 
-			listener.receive( list );
+			EventBus.getBus().post(new ChatMessageReceiveEvent("", list));
 		}
 	};
 
@@ -48,13 +50,7 @@ public class MockChatRoomService extends ChatRoomService
 		user.setId( "0" );
 		user.setId( "Name" );
 		list.add( new ChatMessage( user, message ) );
-		listener.receive( list );
-	}
-
-	@Override
-	public void login( final Action callback )
-	{
-		m_handler.sendEmptyMessageDelayed( 0, 1000 );
+		EventBus.getBus().post(new ChatMessageReceiveEvent("", list));
 	}
 
 	@Override
@@ -65,5 +61,11 @@ public class MockChatRoomService extends ChatRoomService
 	@Override
 	public void loadChatHistory()
 	{
+	}
+
+	@Override
+	public void login( final boolean loadHistory )
+	{
+		m_handler.sendEmptyMessageDelayed( 0, 1000 );
 	}
 }

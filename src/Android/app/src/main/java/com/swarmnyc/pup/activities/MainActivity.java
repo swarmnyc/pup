@@ -11,171 +11,160 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.squareup.otto.Subscribe;
-import com.swarmnyc.pup.*;
+import com.swarmnyc.pup.Config;
+import com.swarmnyc.pup.Consts;
+import com.swarmnyc.pup.EventBus;
+import com.swarmnyc.pup.PuPApplication;
+import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.Navigator;
-import com.swarmnyc.pup.components.TwitterHelper;
 import com.swarmnyc.pup.fragments.MainDrawerFragment;
 import com.uservoice.uservoicesdk.UserVoice;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-{
-	private static MainActivity instance;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.internal.ButterKnifeProcessor;
 
-	@InjectView( R.id.toolbar )
-	Toolbar m_toolbar;
-	private GoogleAnalytics m_googleAnalytics;
-	private Tracker         m_tracker;
-	private boolean         launchDefault;
+public class MainActivity extends AppCompatActivity {
+    private static MainActivity instance;
 
-	public MainActivity()
-	{
-		instance = this;
-	}
+    @InjectView(R.id.toolbar)
+    Toolbar m_toolbar;
+    private boolean launchDefault;
 
-	public static MainActivity getInstance()
-	{
-		return instance;
-	}
+    public MainActivity() {
+        instance = this;
+    }
 
-	@Override
-	protected void onCreate( Bundle savedInstanceState )
-	{
-		super.onCreate( savedInstanceState );
-		setContentView( R.layout.activity_main );
+    public static MainActivity getInstance() {
+        return instance;
+    }
 
-		ButterKnife.inject( this );
-		PuPApplication.getInstance().getComponent().inject( this );
-		EventBus.getBus().register( this );
-		m_toolbar.setSubtitleTextColor( getResources().getColor( R.color.pup_grey ) );
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-		Display display = getWindowManager().getDefaultDisplay();
-		Point windowSize = new Point();
-		display.getSize( windowSize );
-		Consts.windowWidth = windowSize.x;
-		Consts.windowHeight = windowSize.y;
+        ButterKnife.inject(this);
+        PuPApplication.getInstance().getComponent().inject(this);
+        m_toolbar.setSubtitleTextColor(getResources().getColor(R.color.pup_grey));
 
-		//Google
-		m_googleAnalytics = GoogleAnalytics.getInstance( this );
-		m_googleAnalytics.setLocalDispatchPeriod( 1800 );
+        Display display = getWindowManager().getDefaultDisplay();
+        Point windowSize = new Point();
+        display.getSize(windowSize);
+        Consts.windowWidth = windowSize.x;
+        Consts.windowHeight = windowSize.y;
 
-		m_tracker = m_googleAnalytics.newTracker( "UA-43683040-6" );
-		m_tracker.enableExceptionReporting( false );
+        //Google
+        GoogleAnalytics m_googleAnalytics = GoogleAnalytics.getInstance(this);
+        m_googleAnalytics.setLocalDispatchPeriod(1800);
 
-		Navigator.init( this, m_tracker );
+        Tracker m_tracker = m_googleAnalytics.newTracker(getString(R.string.google_tracker_key));
+        m_tracker.enableExceptionReporting(false);
 
-		if ( !Config.getBool( "ShowedSplash" ) )
-		{
-			Config.setBool( "ShowedSplash", true );
-			startActivity( new Intent( this, SplashActivity.class ) );
-		}
+        //User Voice
+        com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config(getString(R.string.uservoice_id));
+        config.setForumId(272754);
+        UserVoice.init(config, this);
 
-		Intent intent = getIntent();
-		Uri data = intent.getData();
-		launchDefault = true;
-		if ( data != null )
-		{
-			List<String> p = data.getPathSegments();
-			if ( p.size() == 2 && p.get( 0 ).equals( "lobby" ) )
-			{
-				launchDefault = false;
-				Navigator.ToLobby( p.get( 1 ), "From Intend", Consts.KEY_LOBBIES, false );
-			}
-		}
+        Navigator.init(this, m_tracker);
 
-		//User Voice
-		com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config( getString( R.string.uservoice_id ) );
-		config.setForumId( 272754 );
-		UserVoice.init( config, this );
-	}
+        if (!Config.getBool("ShowedSplash")) {
+            Config.setBool("ShowedSplash", true);
+            startActivity(new Intent(this, SplashActivity.class));
+        }
 
-	public Toolbar getToolbar()
-	{
-		return m_toolbar;
-	}
+        Intent intent = getIntent();
+        Uri data = intent.getData();
+        launchDefault = true;
+        if (data != null) {
+            List<String> p = data.getPathSegments();
+            if (p.size() == 2 && p.get(0).equals("lobby")) {
+                launchDefault = false;
+                Navigator.ToLobby(p.get(1), "From Intend", false);
+            }
+        }
+    }
 
-	public boolean isLaunchDefaultFragment()
-	{
-		return launchDefault;
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getBus().register(this);
+    }
 
-	@Override
-	protected void onActivityResult( final int requestCode, final int resultCode, final Intent data )
-	{
-		super.onActivityResult( requestCode, resultCode, data );
-		FacebookHelper.handleActivityResult( requestCode, resultCode, data );
-		TwitterHelper.handleActivityResult( requestCode, resultCode, data );
-	}
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getBus().unregister(this);
+    }
 
-	@Override
-	public void onBackPressed()
-	{
-		if ( MainDrawerFragment.getInstance().isDrawOpens() )
-		{
-			MainDrawerFragment.getInstance().closeDrawers();
-		}
-		else
-		{
-			super.onBackPressed();
-		}
-	}
+    public Toolbar getToolbar() {
+        return m_toolbar;
+    }
 
-	public void retrieveMessage( final String message )
-	{
-	}
+    public boolean isLaunchDefaultFragment() {
+        return launchDefault;
+    }
 
-	public void hideToolbar()
-	{
-		m_toolbar.setVisibility( View.GONE );
-	}
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        FacebookHelper.handleActivityResult(requestCode, resultCode, data);
+    }
 
-	public void showToolbar()
-	{
-		m_toolbar.setVisibility( View.VISIBLE );
-	}
+    @Override
+    public void onBackPressed() {
+        if (MainDrawerFragment.getInstance().isDrawOpens()) {
+            MainDrawerFragment.getInstance().closeDrawers();
+        } else {
+            super.onBackPressed();
+        }
+    }
 
-	@Subscribe
-	public void runtimeError( final RuntimeException exception )
-	{
-		this.runOnUiThread(
-			new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					// TODO: Better Message content
-					DialogHelper.showError( exception.getMessage() );
-				}
-			}
-		);
-	}
+    public void retrieveMessage(final String message) {
+        //TODO: Push Notification
+    }
 
-	@Override
-	public boolean dispatchTouchEvent( final MotionEvent ev )
-	{
-		hideIme();
-		return super.dispatchTouchEvent( ev );
-	}
+    public void hideToolbar() {
+        m_toolbar.setVisibility(View.GONE);
+    }
 
-	public void hideIme()
-	{
-		if ( getCurrentFocus() == null )
-		{ return; }
-		if ( getCurrentFocus().getWindowToken() == null )
-		{ return; }
+    public void showToolbar() {
+        m_toolbar.setVisibility(View.VISIBLE);
+    }
 
-		InputMethodManager imm = (InputMethodManager) getSystemService(
-			Context.INPUT_METHOD_SERVICE
-		);
+    @Subscribe
+    public void runtimeError(final RuntimeException exception) {
+        this.runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO: Better Message content
+                        DialogHelper.showError(exception.getMessage());
+                    }
+                }
+        );
+    }
 
-		imm.hideSoftInputFromWindow( getCurrentFocus().getWindowToken(), 0 );
-	}
+    public void hideIme() {
+        if (getCurrentFocus() == null) {
+            return;
+        }
+        if (getCurrentFocus().getWindowToken() == null) {
+            return;
+        }
+
+        InputMethodManager imm = (InputMethodManager) getSystemService(
+                Context.INPUT_METHOD_SERVICE
+        );
+
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
 }

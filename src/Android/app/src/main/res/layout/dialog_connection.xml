@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="285dp">
+    <com.swarmnyc.pup.view.WebView2
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"/>
+
+    <Button
+            android:id="@+id/btn_cancel"
+            android:layout_below="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@drawable/button_teal"
+            android:textColor="@color/always_white"
+            android:text="@string/text_cancel"/>
+</LinearLayout>

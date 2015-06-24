@@ -69,6 +69,31 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+        <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_ps3"
+                android:text="@string/label_ps3"
+                style="@style/SelectButton"/>
+
+        <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray"/>
+
+        <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_ps4"
+                android:text="@string/label_ps4"
+                style="@style/SelectButton"/>
+
+        <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray"/>
 
         <Button
                 android:layout_width="0dp"
@@ -76,38 +101,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_steam"
                 android:text="@string/label_steam"
-                style="@style/SelectButton"
-                />
-
-        <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/darker_gray"/>
-
-        <Button
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_ps3"
-                android:text="@string/label_ps3"
-                style="@style/SelectButton"
-
-                />
-
-        <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/darker_gray"/>
-
-        <Button
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-
-                android:id="@+id/btn_ps4"
-                android:text="@string/label_ps4"
-                style="@style/SelectButton"
-                />
+                android:visibility="invisible"
+                style="@style/SelectButton"/>
     </LinearLayout>
 
     <View

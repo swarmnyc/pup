@@ -1,5 +1,7 @@
 package com.swarmnyc.pup.models;
 
+import com.swarmnyc.pup.ApiSettings;
+
 public class UserInfo
 {
 	String id;
@@ -28,6 +30,9 @@ public class UserInfo
 
 	public String getPortraitUrl()
 	{
+		if ( portraitUrl != null && portraitUrl.startsWith( "~/" ) )
+		{ portraitUrl = portraitUrl.replace( "~/", ApiSettings.PuPServerPath ); }
+
 		return portraitUrl;
 	}
 

@@ -50,6 +50,6 @@ public interface LobbyRestApi {
     @POST("/Lobby/Invite/{LobbyId}")
     void invite(
         @Path( "LobbyId" )
-        String lobbyId,  @Query("Types") Iterable<String> types, EmptyRestApiCallback callback
+        String lobbyId, @Query("LocalTime")String localTime,  @Query("Types") Iterable<String> types, EmptyRestApiCallback callback
     );
 }

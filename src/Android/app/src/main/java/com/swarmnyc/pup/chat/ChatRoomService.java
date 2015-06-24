@@ -1,20 +1,12 @@
 package com.swarmnyc.pup.chat;
 
-import android.app.Activity;
-import com.swarmnyc.pup.components.Action;
+public abstract class ChatRoomService
+{
+	public abstract void SendMessage( String message );
 
-public abstract class ChatRoomService {
-    protected ChatMessageListener listener;
+	public abstract void login( final boolean loadHistory );
 
-    public abstract void SendMessage(String message);
+	public abstract void leave();
 
-    public abstract void login( Action callback );
-
-    public abstract void leave();
-
-    public void setMessageListener(ChatMessageListener listener){
-        this.listener = listener;
-    }
-
-    public abstract void loadChatHistory();
+	public abstract void loadChatHistory();
 }

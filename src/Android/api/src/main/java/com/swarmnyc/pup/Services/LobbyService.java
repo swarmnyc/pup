@@ -19,5 +19,5 @@ public interface LobbyService
 
 	void leave( String id, ServiceCallback callback );
 
-	void invite( String id, List<String> types, ServiceCallback callback );
+	void invite( Lobby lobby, List<String> types, ServiceCallback callback );
 }

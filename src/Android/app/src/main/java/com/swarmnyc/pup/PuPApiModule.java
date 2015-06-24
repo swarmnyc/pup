@@ -8,7 +8,6 @@ import com.swarmnyc.pup.RestApis.LobbyRestApi;
 import com.swarmnyc.pup.RestApis.UserRestApi;
 import com.swarmnyc.pup.Services.*;
 import com.swarmnyc.pup.chat.ChatService;
-import com.swarmnyc.pup.chat.MockChatService;
 
 import java.util.Date;
 
@@ -31,7 +30,7 @@ public class PuPApiModule {
                 .create();
 
         restAdapter = new RestAdapter.Builder()
-                .setEndpoint(Config.getConfigString(R.string.PuP_API_Url))
+                .setEndpoint(Config.getConfigString(R.string.PuP_Url ) + "api/")
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade request) {

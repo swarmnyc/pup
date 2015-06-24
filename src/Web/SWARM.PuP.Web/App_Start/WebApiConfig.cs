@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Filters;
+using System.Web.Http.ModelBinding;
 using MultipartDataMediaFormatter;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -36,12 +37,14 @@ namespace SWARM.PuP.Web
             // Web API routes
             config.MapHttpAttributeRoutes();
 
-            config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new {id = RouteParameter.Optional}
-                );
+            config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new {id = RouteParameter.Optional});
             
             config.Formatters.Add(new ReadonlyFormMultipartEncodedMediaTypeFormatter());
             
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+
+            config.BindParameter(typeof(string), new TrimModelBinder());
+
         }
     }
 }

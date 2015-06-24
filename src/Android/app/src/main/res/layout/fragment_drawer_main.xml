@@ -10,7 +10,7 @@
         android:layout_width="128dp"
         android:layout_height="128dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/pup_lg"/>
+        android:src="@drawable/pup_animation"/>
 
     <View
         android:id="@+id/divider_line"

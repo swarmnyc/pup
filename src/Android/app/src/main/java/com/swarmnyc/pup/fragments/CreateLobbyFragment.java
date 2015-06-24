@@ -25,12 +25,16 @@ import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.Navigator;
+import com.swarmnyc.pup.components.Utility;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.*;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
 import com.swarmnyc.pup.view.HorizontalSpinner;
+import com.uservoice.uservoicesdk.UserVoice;
 
 import javax.inject.Inject;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CreateLobbyFragment extends Fragment
@@ -145,7 +149,7 @@ public class CreateLobbyFragment extends Fragment
 				public void success( final Lobby value )
 				{
 					DialogHelper.hide();
-					Navigator.ToLobby( value.getId(), value.getName(), Consts.KEY_LOBBIES, true );
+					Navigator.ToLobby( value.getId(), value.getName(), true );
 				}
 			}
 		);
@@ -197,7 +201,7 @@ public class CreateLobbyFragment extends Fragment
 		ButterKnife.inject( this, view );
 		EventBus.getBus().register( this );
 
-		m_gameAdapter = new AutoCompleteForPicturedModelAdapter<Game>( this.getActivity() );
+		m_gameAdapter = new AutoCompleteForPicturedModelAdapter<>( this.getActivity() );
 
 		m_gameAdapter.setSearchAction(
 			new Action<CharSequence>()
@@ -212,6 +216,13 @@ public class CreateLobbyFragment extends Fragment
 							@Override
 							public void success( List<Game> value )
 							{
+								if (value.size() == 0){
+									Game game = new Game();
+									game.setThumbnailPictureUrl( Utility.getResourceUri( getActivity(), R.drawable.ico_plus ).toString() );
+									game.setName( getString( R.string.text_request_game ) );
+									value.add( game );
+								}
+
 								m_gameAdapter.finishSearch( value );
 							}
 						}
@@ -229,15 +240,21 @@ public class CreateLobbyFragment extends Fragment
 				public void onItemClick( AdapterView<?> parent, View view, int position, long id )
 				{
 					m_selectedGame = m_gameAdapter.getItem( position );
-					if ( StringUtils.isNotEmpty( m_selectedGame.getPictureUrl() ) )
-					{
-						Picasso.with( getActivity() ).load( m_selectedGame.getPictureUrl() ).centerCrop().fit().into(
-							m_gameImageView
-						);
-					}
+					if ( m_selectedGame.getId() == null ){
+						m_gameNameTextEdit.setText( "" );
+						UserVoice.launchPostIdea( getActivity() );
+					} else  {
+						MainActivity.getInstance().hideIme();
+						if ( StringUtils.isNotEmpty( m_selectedGame.getPictureUrl() ) )
+						{
+							Picasso.with( getActivity() ).load( m_selectedGame.getPictureUrl() ).centerCrop().fit().into(
+								m_gameImageView
+							);
+						}
 
-					m_gamePlatformSelectView.setAvailablePlatforms( m_selectedGame.getPlatforms() );
-					valid();
+						m_gamePlatformSelectView.setAvailablePlatforms( m_selectedGame.getPlatforms() );
+						valid();
+					}
 				}
 			}
 		);
@@ -375,13 +392,8 @@ public class CreateLobbyFragment extends Fragment
 				s = this.getActivity().getString( R.string.text_tomorrow );
 				break;
 			default:
-				s = String.format(
-					"%s %d",
-					m_selectedDate.getDisplayName( Calendar.MONTH, Calendar.SHORT, Locale.US ),
-					m_selectedDate.get(
-						Calendar.DAY_OF_MONTH
-					)
-				);
+				SimpleDateFormat format = new SimpleDateFormat("MMM dd",Locale.getDefault());
+				s = format.format(m_selectedDate.getTime());
 				break;
 		}
 
@@ -403,14 +415,8 @@ public class CreateLobbyFragment extends Fragment
 		}
 		else
 		{
-			s = String.format(
-				"%d:%d %s",
-				hour,
-				min,
-				hour >= 12
-				? this.getActivity().getString( R.string.time_pm )
-				: this.getActivity().getString( R.string.time_am )
-			);
+			SimpleDateFormat format = new SimpleDateFormat("h:mm a",Locale.getDefault());
+			s = format.format(m_selectedDate.getTime());
 		}
 
 		m_timeText.setText( s );

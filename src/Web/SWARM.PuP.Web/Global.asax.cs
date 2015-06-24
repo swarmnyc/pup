@@ -14,7 +14,16 @@ namespace SWARM.PuP.Web
 {
     public class PuPApplication : System.Web.HttpApplication
     {
-        public IContainer Container { get; private set; }
+
+        public PuPApplication()
+        {
+            Current = this;
+            Ioc = RegisterDependencies();
+        }
+
+        public static PuPApplication Current { get; private set; }
+
+        public IContainer Ioc { get; private set; }
     
         protected void Application_Start()
         {
@@ -24,13 +33,11 @@ namespace SWARM.PuP.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            Container = RegisterDependencies();
-
-            GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(Container);
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(Container));
+            GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(Ioc);
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(Ioc));
         }
 
-        public IContainer RegisterDependencies()
+        private IContainer RegisterDependencies()
         {
             ContainerBuilder builder = new ContainerBuilder();
 

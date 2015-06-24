@@ -17,20 +17,9 @@ public interface UserService
 
     void updatePortrait(String file , ServiceCallback<String> callback );
 
-    void addFacebookToken(
-        String userId,
-        String token,
-        Date expireAt,
-        ServiceCallback callback
-    );
+    void addMedium(String type, String userId, String token, String secret,Date expiredAt, ServiceCallback callback );
 
-    void deleteFacebookToken(
-        ServiceCallback callback
-    );
-
-    void addTwitterToken( String userId, String token, String secret, ServiceCallback callback );
-
-    void deleteTwitterToken(
+    void deleteMedium(String type,
         ServiceCallback callback
     );
 }

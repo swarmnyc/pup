@@ -33,18 +33,17 @@ public class FacebookHelper
 						AccessToken at = loginResult.getAccessToken();
 						UserService userService = PuPApplication.getInstance().getComponent().getUserService();
 
-						userService.addFacebookToken(
-							at.getUserId(), at.getToken(), at.getExpires(), new ServiceCallback()
+						userService.addMedium(
+							Consts.KEY_FACEBOOK, at.getUserId(), at.getToken(), null, at.getExpires(), new ServiceCallback()
 							{
 								@Override
 								public void success( final Object value )
 								{
 									User.addMedium( Consts.KEY_FACEBOOK );
-									Toast.makeText( MainActivity.getInstance(), R.string.message_connect_success, Toast.LENGTH_LONG )
-									     .show();
+									Toast.makeText( MainActivity.getInstance(), R.string.message_connect_success, Toast.LENGTH_LONG ).show();
 
 									if ( callback != null )
-									{ callback.success( ); }
+									{ callback.success(); }
 								}
 							}
 						);
@@ -60,7 +59,7 @@ public class FacebookHelper
 					public void onError( final FacebookException e )
 					{
 						callback.failure();
-						Toast.makeText( MainActivity.getInstance(),R.string.message_connect_failure, Toast.LENGTH_LONG ).show();
+						Toast.makeText( MainActivity.getInstance(), R.string.message_connect_failure, Toast.LENGTH_LONG ).show();
 					}
 				}
 			);

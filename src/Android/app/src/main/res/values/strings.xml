@@ -1,6 +1,4 @@
 <resources>
-
-
     <string name="font_roboto_slab">RobotoSlab-Regular.ttf</string>
     <string name="font_roboto_slab_bold">RobotoSlab-Bold.ttf</string>
 
@@ -33,7 +31,7 @@
     <string name="label_steam">STEAM</string>
     <string name="label_xbox_one">XBOX ONE</string>
     <string name="label_xbox_360">XBOX 360</string>
-    <string name="label_pc">PC</string>
+    <string name="label_pc">PC/STEAM</string>
     <string name="label_other">Other</string>
     <string name="label_pick_a_platform">PICK A SYSTEM</string>
     <string name="label_play_style">PLAY STYLE</string>
@@ -44,6 +42,7 @@
     <string name="label_settings"><![CDATA[Accounts & Settings]]></string>
     <string name="label_your_pup_name">Your PUP username</string>
     <string name="label_social_connection">Social Connection</string>
+    <string name="label_invite">No one\'s here yet.\nWhy not invite some friends?</string>
 
     <string name="text_filter">Filter</string>
     <string name="text_create_lobby">Create Lobby</string>
@@ -60,6 +59,12 @@
     <string name="text_user_name_info">We\'ll be adding integrations for additional systems</string>
     <string name="text_facebook">Facebook</string>
     <string name="text_twitter">Twitter</string>
+    <string name="text_request_game">Not showing up? Request a Game.</string>
+    <string name="text_connect">Connect</string>
+    <string name="text_reddit">Reddit</string>
+    <string name="text_tumblr">Tumblr</string>
+    <string name="text_share">Share</string>
+    <string name="text_share_to_reddit">Share to Reddit</string>
 
     <string name="message_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
     <string name="message_lobby_creating">Creating</string>
@@ -77,4 +82,5 @@
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
     <string name="msg_loading_more_lobbies">Loading more games...</string>
+
 </resources>

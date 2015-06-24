@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
@@ -30,6 +31,7 @@ import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.Services.GameService;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
+import com.swarmnyc.pup.StringUtils;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
 import com.swarmnyc.pup.adapters.EndlessRecyclerOnScrollListener;
@@ -39,9 +41,11 @@ import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
 import com.swarmnyc.pup.view.LobbyListItemView;
+import com.uservoice.uservoicesdk.UserVoice;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -142,6 +146,13 @@ public class LobbyListFragment extends Fragment implements Screen
 							@Override
 							public void success( List<Game> value )
 							{
+								if (value.size() == 0){
+									Game game = new Game();
+									game.setThumbnailPictureUrl( Utility.getResourceUri( getActivity(), R.drawable.ico_plus ).toString() );
+									game.setName( getString( R.string.text_request_game ) );
+									value.add( game );
+								}
+
 								gameAdapter.finishSearch( value );
 							}
 						}
@@ -158,12 +169,17 @@ public class LobbyListFragment extends Fragment implements Screen
 				@Override
 				public void onItemClick( AdapterView<?> parent, View view, int position, long id )
 				{
-					m_lobbyFilter.setGame( gameAdapter.getItem( position ) );
+					Game selectedGame =gameAdapter.getItem( position );
+					if ( selectedGame.getId() == null ){
+						m_gameSearch.setText( "" );
+						UserVoice.launchPostIdea( getActivity() );
+					} else  {
+						m_lobbyFilter.setGame( selectedGame );
 
-					reloadData( 0 );
-					hideKeyboard();
-					m_slidingPanel.setPanelState( SlidingUpPanelLayout.PanelState.COLLAPSED );
-
+						reloadData( 0 );
+						hideKeyboard();
+						m_slidingPanel.setPanelState( SlidingUpPanelLayout.PanelState.COLLAPSED );
+					}
 				}
 			}
 		);
@@ -367,6 +383,7 @@ public class LobbyListFragment extends Fragment implements Screen
 		m_lobbyFilter.setPageIndex( current_page );
 		if ( current_page == 0 )
 		{
+			m_lobbyFilter.setStartTime(new Date());
 			m_endlessRecyclerOnScrollListener.reset();
 		}
 		else
@@ -606,7 +623,6 @@ public class LobbyListFragment extends Fragment implements Screen
 							Navigator.ToLobby(
 								lobbyListItemView.getLobby().getId(),
 								lobbyListItemView.getLobby().getName(),
-								Consts.KEY_LOBBIES,
 								false
 							);
 						}

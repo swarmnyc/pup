@@ -17,7 +17,6 @@ public class LobbyFilter extends GameFilter {
 	{
 		this.levels = new HashSet<>();
 		this.styles = new HashSet<>();
-
 	}
 
 	public Game getGame()
@@ -62,16 +61,6 @@ public class LobbyFilter extends GameFilter {
 	public void setStartTime( final Date startTime )
 	{
 		this.startTime = startTime;
-	}
-
-	@Override
-	public void setPageIndex( final int pageIndex )
-	{
-		if (pageIndex == 0)
-		{
-			setStartTime( new Date(  ) ); // set DAte = now
-		}
-		super.setPageIndex( pageIndex );
 	}
 
 	@Override

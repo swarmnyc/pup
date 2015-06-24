@@ -12,9 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
+import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.StringUtils;
+import com.swarmnyc.pup.events.LobbyUserChangeEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 
@@ -56,6 +59,26 @@ public class MemberFragment extends Fragment
 		{ m_memberList.setAdapter( new MemberAdapter( this.getActivity(), m_lobby.getUsers() ) ); }
 	}
 
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		EventBus.getBus().register( this );
+	}
+
+	@Override
+	public void onStop()
+	{
+		super.onStop();
+		EventBus.getBus().unregister( this );
+	}
+
+	@Subscribe
+	public void postUserChanged( LobbyUserChangeEvent changed )
+	{
+		refresh();
+	}
+
 	private class MemberViewHolder extends RecyclerView.ViewHolder
 	{
 		private LobbyUserInfo m_user;
@@ -88,6 +111,7 @@ public class MemberFragment extends Fragment
 			m_nameText.setText( user.getUserName() );
 		}
 	}
+
 
 	private class MemberAdapter extends RecyclerView.Adapter<MemberViewHolder>
 	{

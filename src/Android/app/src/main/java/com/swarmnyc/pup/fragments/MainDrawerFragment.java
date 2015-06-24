@@ -94,11 +94,7 @@ public class MainDrawerFragment extends Fragment
 		}*/
 
 		m_drawerToggle = new ActionBarDrawerToggle(
-			this.getActivity(),
-			m_drawerLayout,
-			toolbar,
-			R.string.navigation_drawer_open,
-			R.string.navigation_drawer_close
+			this.getActivity(), m_drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
 		)
 		{
 			@Override
@@ -176,7 +172,8 @@ public class MainDrawerFragment extends Fragment
 					fragment = LobbyListFragment.class;
 					break;
 				case Consts.KEY_FEEDBACK:
-					UserVoice.launchUserVoice( this.getActivity() );
+					//UserVoice.launchUserVoice( this.getActivity() );
+					UserVoice.launchPostIdea(this.getActivity());
 					break;
 				case Consts.KEY_SETTINGS:
 					fragment = SettingsFragment.class;
@@ -226,26 +223,31 @@ public class MainDrawerFragment extends Fragment
 
 	public void highLight( String code )
 	{
-		int position = -1;
-		if ( User.isLoggedIn() )
-		{
-			for ( int i = 0; i < m_itemCodesForUser.length; i++ )
-			{
-				if ( m_itemCodesForUser[i].equals( code ) )
-				{ position = i; }
-			}
+		if ( code == null ){
+			m_drawerListView.setItemChecked( m_currentSelection, false );
+			m_currentSelection=-1;
 		}
 		else
 		{
-			for ( int i = 0; i < m_itemCodes.length; i++ )
-			{
-				if ( m_itemCodes[i].equals( code ) )
-				{ position = i; }
-			}
-		}
+			int position = -1;
 
-		if ( position > -1 )
-		{
+			if ( User.isLoggedIn() )
+			{
+				for ( int i = 0; i < m_itemCodesForUser.length; i++ )
+				{
+					if ( m_itemCodesForUser[i].equals( code ) )
+					{ position = i; }
+				}
+			}
+			else
+			{
+				for ( int i = 0; i < m_itemCodes.length; i++ )
+				{
+					if ( m_itemCodes[i].equals( code ) )
+					{ position = i; }
+				}
+			}
+
 			m_currentSelection = position;
 			m_drawerListView.setItemChecked( position, true );
 		}
@@ -269,10 +271,7 @@ public class MainDrawerFragment extends Fragment
 
 	public void setRightDrawer( final Fragment fragment )
 	{
-		getActivity().getSupportFragmentManager()
-		             .beginTransaction()
-		             .replace( R.id.main_drawer_right, fragment )
-		             .commit();
+		getActivity().getSupportFragmentManager().beginTransaction().replace( R.id.main_drawer_right, fragment ).commit();
 
 		m_drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END );
 	}
@@ -289,7 +288,8 @@ public class MainDrawerFragment extends Fragment
 
 	public void showRightDrawer()
 	{
-		if ( m_drawerLayout.getDrawerLockMode( GravityCompat.END )!= DrawerLayout.LOCK_MODE_LOCKED_CLOSED ){
+		if ( m_drawerLayout.getDrawerLockMode( GravityCompat.END ) != DrawerLayout.LOCK_MODE_LOCKED_CLOSED )
+		{
 			m_drawerLayout.openDrawer( GravityCompat.END );
 		}
 	}
