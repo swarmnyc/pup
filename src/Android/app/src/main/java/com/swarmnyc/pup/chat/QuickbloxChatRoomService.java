@@ -69,7 +69,7 @@ public class QuickbloxChatRoomService extends ChatRoomService
 	{
         leave();
 		QBUser user = new QBUser();
-		if ( User.isLoggedIn() && m_lobby.isDwellingUser( User.current.getId() ) )
+		if ( User.isLoggedIn() && m_lobby.isAliveUser(User.current.getId()) )
 		{
 			user.setLogin( User.current.getId() );
 			user.setPassword( Config.getConfigString( R.string.QB_APP_PW ) );

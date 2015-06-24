@@ -13,7 +13,6 @@ import butterknife.InjectView;
 
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.*;
-import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatRoomService;
 import com.swarmnyc.pup.models.Lobby;
@@ -85,7 +84,7 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public int getItemCount() {
         if (m_chatMessages.size() == 0) {
-            return m_lobby.isDwellingUser(User.current.getId()) ? 2 : 1;
+            return m_lobby.isAliveUser(User.current.getId()) ? 2 : 1;
         } else {
             return m_chatMessages.size() + 1;
         }

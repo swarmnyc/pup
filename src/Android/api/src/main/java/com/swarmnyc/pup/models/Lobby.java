@@ -107,7 +107,7 @@ public class Lobby extends Taggable implements PicturedModel {
         return null;
     }
 
-    public LobbyUserInfo getDwellingUser( String userId ) {
+    public LobbyUserInfo getAliveUser(String userId) {
         for (LobbyUserInfo user : users) {
             if (user.id.equals(userId) && !user.isLeave)
                 return user;
@@ -137,7 +137,7 @@ public class Lobby extends Taggable implements PicturedModel {
         return null;
     }
 
-    public boolean isDwellingUser( final String userId )
+    public boolean isAliveUser(final String userId)
     {
         for (LobbyUserInfo user : users) {
             if (user.id.equals(userId) && !user.isLeave)

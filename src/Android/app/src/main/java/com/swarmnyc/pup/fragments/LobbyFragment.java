@@ -137,7 +137,7 @@ public class LobbyFragment extends Fragment implements Screen
 		//joinLobby button and text panel
 		if ( User.isLoggedIn() )
 		{
-			LobbyUserInfo user = m_lobby.getDwellingUser( User.current.getId() );
+			LobbyUserInfo user = m_lobby.getAliveUser(User.current.getId());
 			if ( user == null )
 			{
 				m_joinButton.setVisibility( View.VISIBLE );
