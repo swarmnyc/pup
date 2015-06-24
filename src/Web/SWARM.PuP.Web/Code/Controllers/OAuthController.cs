@@ -140,12 +140,12 @@ namespace SWARM.PuP.Web.Controllers
             var userService = Resolver.GetService<IUserService>();
             var user = User.Identity.GetPuPUser();
 
-            if (user.Media.Contains(medium))
+            if (user.SocialMedia.Contains(medium))
             {
-                user.Media.Remove(medium);
+                user.SocialMedia.Remove(medium);
             }
 
-            user.Media.Add(medium);
+            user.SocialMedia.Add(medium);
             userService.Update(user);
         }
 

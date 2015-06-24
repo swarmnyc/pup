@@ -125,7 +125,7 @@ namespace SWARM.PuP.Web.ApiControllers
 
             foreach (var type in types)
             {
-                var medium = user.Media.FirstOrDefault(x => x.Type == type);
+                var medium = user.SocialMedia.FirstOrDefault(x => x.Type == type);
                 if (medium == null)
                 {
                     continue;

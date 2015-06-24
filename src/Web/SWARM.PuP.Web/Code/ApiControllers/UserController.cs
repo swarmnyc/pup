@@ -194,11 +194,11 @@ namespace SWARM.PuP.Web.ApiControllers
         {
             var user = User.Identity.GetPuPUser();
 
-            if (user.Media.Contains(medium))
+            if (user.SocialMedia.Contains(medium))
             {
-                user.Media.Remove(medium);
+                user.SocialMedia.Remove(medium);
             }
-            user.Media.Add(medium);
+            user.SocialMedia.Add(medium);
             _userService.Update(user);
 
             return Ok();
@@ -208,10 +208,10 @@ namespace SWARM.PuP.Web.ApiControllers
         public IHttpActionResult DeleteMedium(SocialMediumType type)
         {
             var user = User.Identity.GetPuPUser();
-            var medium = user.Media.FirstOrDefault(x => x.Type == type);
+            var medium = user.SocialMedia.FirstOrDefault(x => x.Type == type);
             if (medium != null)
             {
-                user.Media.Remove(medium);
+                user.SocialMedia.Remove(medium);
                 _userService.Update(user);
             }
 
