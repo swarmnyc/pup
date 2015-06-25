@@ -67,12 +67,15 @@ namespace SWARM.PuP.Web.ApiControllers
                 List<Lobby> sortedLobbies = new List<Lobby>();
                 foreach (var room in result.items)
                 {
-                    var lobby = lobbies.First(x => x.Tags.Any(y => y.Value == room._id));
-                    lobby.LastMessage = room.last_message;
-                    lobby.LastMessageAt = _javaDateTime.AddSeconds(room.last_message_date_sent).ToUniversalTime();
-                    lobby.UnreadMessageCount = room.unread_messages_count;
+                    var lobby = lobbies.FirstOrDefault(x => x.Tags.Any(y => y.Value == room._id));
+                    if (lobby != null)
+                    {
+                        lobby.LastMessage = room.last_message;
+                        lobby.LastMessageAt = _javaDateTime.AddSeconds(room.last_message_date_sent).ToUniversalTime();
+                        lobby.UnreadMessageCount = room.unread_messages_count;
 
-                    sortedLobbies.Add(lobby);
+                        sortedLobbies.Add(lobby);
+                    }
                 }
 
                 return sortedLobbies;
