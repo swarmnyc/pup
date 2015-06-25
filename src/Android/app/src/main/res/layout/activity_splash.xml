@@ -5,7 +5,7 @@
     android:id="@+id/container"
     tools:context="com.swarmnyc.pup.activities.SplashActivity">
 
-    <ImageView
+    <com.swarmnyc.pup.view.AnimatedImageView
         android:id="@+id/pup_logo"
         android:layout_width="250dp"
         android:layout_height="250dp"

@@ -12,7 +12,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="55dp"/>
 
-    <ImageView
+    <com.swarmnyc.pup.view.AnimatedImageView
         android:id="@+id/img_loading"
         android:src="@drawable/pup_animation"
         android:layout_width="240dp"

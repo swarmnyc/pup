@@ -2,10 +2,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawer_container"
+    android:clickable="true"
     android:paddingTop="@dimen/padding_normal"
     android:background="@android:color/white">
 
-    <ImageView
+    <com.swarmnyc.pup.view.AnimatedImageView
         android:id="@+id/pup_logo"
         android:layout_width="128dp"
         android:layout_height="128dp"
