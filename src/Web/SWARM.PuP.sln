@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22609.0
+VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SWARM.PuP.Web", "SWARM.PuP.Web\SWARM.PuP.Web.csproj", "{E3BD3ED5-3389-4F6A-B1B2-89FB08217D05}"
 EndProject
@@ -38,5 +38,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{327765B5-90ED-4CDB-BBE5-C972DB4EA992} = {35BC01A6-5256-4542-B53C-C2A42F9F2EA6}
+	EndGlobalSection
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = 434312d6-4aad-4ed4-9aa7-3c4babd8f2ae
 	EndGlobalSection
 EndGlobal

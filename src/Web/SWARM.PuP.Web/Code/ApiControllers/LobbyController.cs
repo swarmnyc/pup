@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Filters;
+using MongoDB.Bson;
+using MongoDB.Driver.Builders;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
 using SWARM.PuP.Web.Services;
+using SWARM.PuP.Web.Services.Quickblox;
 
 namespace SWARM.PuP.Web.ApiControllers
 {
@@ -14,6 +19,7 @@ namespace SWARM.PuP.Web.ApiControllers
     public class LobbyController : ApiController
     {
         private const int ShowTimeOffset = -15;
+        private static DateTime _javaDateTime = new DateTime(1970, 1, 1, 0, 0, 0);
         private readonly IGameService _gameService;
         private readonly ILobbyService _lobbyService;
 
@@ -38,10 +44,39 @@ namespace SWARM.PuP.Web.ApiControllers
         [Authorize, Route("My")]
         public IEnumerable<Lobby> GetMy([FromUri] LobbyFilter filter)
         {
+            //TODO: the just and only for Quicklbox.
             filter = filter ?? new LobbyFilter();
-            filter.UserId = User.Identity.GetPuPUser().Id;
-            filter.OrderDirection = ListSortDirection.Descending;
-            return _lobbyService.Filter(filter);
+
+            PuPUser user = User.Identity.GetPuPUser();
+            Session session = QuickbloxHttpHelper.InitSession(user.Id);
+
+            string apiUrl = QuickbloxApiTypes.Room + string.Format("?limit={0}&skip={1}", filter.PageSize, filter.PageIndex * filter.PageSize);
+            var request = QuickbloxHttpHelper.Create(apiUrl, HttpMethod.Get, session);
+
+            var result = request.GetJson<QuickbloxRoomQueryResult>();
+
+            if (result.items.Count == 0)
+            {
+                return new Lobby[0];
+            }
+            else
+            {
+                var charIds = result.items.Select(x => new BsonString(x._id));
+                var lobbies = ((LobbyService)_lobbyService).Collection.FindAs<Lobby>(Query.In("Tags.Value", charIds)).ToArray();
+
+                List<Lobby> sortedLobbies = new List<Lobby>();
+                foreach (var room in result.items)
+                {
+                    var lobby = lobbies.First(x => x.Tags.Any(y => y.Value == room._id));
+                    lobby.LastMessage = room.last_message;
+                    lobby.LastMessageAt = _javaDateTime.AddSeconds(room.last_message_date_sent).ToUniversalTime();
+                    lobby.UnreadMessageCount = room.unread_messages_count;
+
+                    sortedLobbies.Add(lobby);
+                }
+
+                return sortedLobbies;
+            }
         }
 
         [ModelValidate]

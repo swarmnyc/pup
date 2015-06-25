@@ -96,7 +96,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     auth_key = AuthKey,
                     timestamp,
                     nonce,
-                    signature = GenerateAuthMsg(nonce, timestamp),
+                    signature = GenerateAuthMsg(userId, nonce, timestamp),
                     user = new { login = userId,/* email = UserEmail,*/ password = UserPassword }
                 });
 
@@ -120,7 +120,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
             return Random.Next(123400, 9999999).ToString();
         }
 
-        private static String GenerateAuthMsg(string nonce, string timestamp)
+        private static String GenerateAuthMsg(string userId, string nonce, string timestamp)
         {
             var messsage = new List<string>
             {
@@ -132,7 +132,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
 
             if (AdminUserId != null)
             {
-                messsage.Add("user[login]=" + AdminUserId);
+                messsage.Add("user[login]=" + userId);
                 //messsage.Add("user[email]=" + UserEmail);
                 messsage.Add("user[password]=" + UserPassword);
             }
