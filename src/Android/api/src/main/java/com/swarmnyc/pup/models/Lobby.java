@@ -13,6 +13,10 @@ public class Lobby extends Taggable implements PicturedModel {
     private GamePlatform platform;
     private String gameId;
     private String description;
+    private String lastMessage;
+    private Date lastMessageAt;
+    private int unreadMessageCount;
+
     @SerializedName("startTimeUtc")
     private Date startTime;
     private PlayStyle playStyle;
@@ -125,6 +129,30 @@ public class Lobby extends Taggable implements PicturedModel {
 
     public void setThumbnailPictureUrl(String thumbnailPictureUrl) {
         this.thumbnailPictureUrl = thumbnailPictureUrl;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    public Date getLastMessageAt() {
+        return lastMessageAt;
+    }
+
+    public void setLastMessageAt(Date lastMessageAt) {
+        this.lastMessageAt = lastMessageAt;
+    }
+
+    public int getUnreadMessageCount() {
+        return unreadMessageCount;
+    }
+
+    public void setUnreadMessageCount(int unreadMessageCount) {
+        this.unreadMessageCount = unreadMessageCount;
     }
 
     public LobbyUserInfo getOwner()

@@ -231,14 +231,16 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 		RelativeLayout m_contentPanel;
 		@InjectView( R.id.img_game )
 		ImageView      m_gameImage;
+		@InjectView( R.id.img_game_border )
+		View     	   m_gameImageBorder;
 		@InjectView( R.id.img_delete )
 		ImageView      m_deleteImage;
 		@InjectView( R.id.txt_game_name )
 		TextView       m_gameName;
 		@InjectView( R.id.txt_game_time )
 		TextView       m_gameTime;
-		@InjectView( R.id.txt_description )
-		TextView       m_description;
+		@InjectView( R.id.txt_lastMessage )
+		TextView m_lastMessage;
 		@InjectView( R.id.txt_platform )
 		TextView       m_platform;
 
@@ -327,13 +329,19 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 
 			m_gameName.setText( lobby.getName() );
 
-			m_description.setText( lobby.getDescription() );
+			m_lastMessage.setText(lobby.getLastMessage());
 
 			m_platform.setText( GamePlatformUtils.labelResIdForPlatform( lobby.getPlatform() ) );
 
 			m_gameTime.setText(
 				DateUtils.getRelativeTimeSpanString( lobby.getStartTime().getTime() )
 			);
+
+			if (lobby.getUnreadMessageCount() == 0){
+				m_gameImageBorder.setVisibility(View.GONE);
+			} else {
+				m_gameImageBorder.setVisibility(View.VISIBLE);
+			}
 		}
 	}
 
