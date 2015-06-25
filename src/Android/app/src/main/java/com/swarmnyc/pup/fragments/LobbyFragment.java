@@ -86,6 +86,7 @@ public class LobbyFragment extends Fragment implements Screen {
     @InjectView(R.id.img_loading)
     ImageView m_loadingImage;
 
+    private boolean m_loadHistory = true;
     private Lobby m_lobby;
     private String m_lobbyName;
     private MemberFragment m_memberFragment;
@@ -119,6 +120,8 @@ public class LobbyFragment extends Fragment implements Screen {
 
         setHasOptionsMenu(true);
 
+        MainActivity.getInstance().getToolbar().setTitle(m_lobbyName);
+
         m_lobbyService.getLobby(
                 m_lobbyId, new ServiceCallback<Lobby>() {
                     @Override
@@ -138,12 +141,20 @@ public class LobbyFragment extends Fragment implements Screen {
     public void onResume() {
         super.onStart();
         EventBus.getBus().register(this);
+
+        if (m_chatRoomService != null) {
+            m_chatRoomService.login(false);
+        }
     }
 
     @Override
     public void onPause() {
         super.onStop();
         EventBus.getBus().unregister(this);
+
+        if (m_chatRoomService != null) {
+            m_chatRoomService.leave();
+        }
     }
 
     @Override
@@ -156,7 +167,6 @@ public class LobbyFragment extends Fragment implements Screen {
     public void onDetach() {
         super.onDetach();
 
-        m_chatRoomService.leave();
         if (m_memberFragment != null) {
             MainDrawerFragment.getInstance().removeRightDrawer(m_memberFragment);
         }
@@ -307,8 +317,8 @@ public class LobbyFragment extends Fragment implements Screen {
             return;
 
         //After receive history
-        m_messageText.setEnabled( true );
-        m_sendButton.setEnabled( true );
+        m_messageText.setEnabled(true);
+        m_sendButton.setEnabled(true);
         m_loadingImage.setVisibility(View.GONE);
 
         List<ChatMessage> messages = event.getMessages();
