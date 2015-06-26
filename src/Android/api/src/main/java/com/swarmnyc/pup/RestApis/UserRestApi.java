@@ -51,14 +51,14 @@ public interface UserRestApi
 		RestApiCallback<String> callback
 	);
 
-	@POST( "/User/Medium" )
+	@POST( "/User/SocialMedia" )
 	void addMedium(
 		@Body
 		SocialMedium token,
 		RestApiCallback callback
 	);
 
-	@DELETE( "/User/Medium/{Type}" )
+	@DELETE( "/User/SocialMedia/{Type}" )
 	void deleteMedium(
 		@Path( "Type" )
 		String type,

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
+import com.swarmnyc.pup.Consts;
 
 public class SoftKeyboardHelper
 {
@@ -34,7 +35,7 @@ public class SoftKeyboardHelper
 
 	public static void setSoftKeyboardCallback( Action callback )
 	{
-		m_globalLayoutListener = new GlobalLayoutListener( callback );
+		m_globalLayoutListener = new GlobalLayoutListener(m_rootView, callback );
 		m_rootView.getViewTreeObserver().addOnGlobalLayoutListener( m_globalLayoutListener );
 	}
 
@@ -63,10 +64,12 @@ public class SoftKeyboardHelper
 
 	private static class GlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener
 	{
+		private View   m_view;
 		private Action m_callback;
 
-		public GlobalLayoutListener( final Action callback )
+		public GlobalLayoutListener( final View view, final Action callback )
 		{
+			m_view = view;
 			m_callback = callback;
 		}
 
@@ -74,10 +77,9 @@ public class SoftKeyboardHelper
 		public void onGlobalLayout()
 		{
 			Rect r = new Rect();
-			m_rootView.getWindowVisibleDisplayFrame( r );
+			m_view.getWindowVisibleDisplayFrame( r );
 
-			int screenHeight = m_rootView.getRootView().getHeight();
-			int heightDifference = screenHeight - ( r.bottom - r.top );
+			int heightDifference = Consts.windowHeight - ( r.bottom - r.top );
 
 			if ( heightDifference > 100 )
 			{
