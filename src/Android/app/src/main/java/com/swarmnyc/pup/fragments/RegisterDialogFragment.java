@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.TempFragmentDialog;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +27,7 @@ import com.swarmnyc.pup.models.CurrentUserInfo;
 
 import javax.inject.Inject;
 
-public class RegisterDialogFragment extends DialogFragment
+public class RegisterDialogFragment extends TempFragmentDialog
 {
 	@Inject
 	UserService m_userService;

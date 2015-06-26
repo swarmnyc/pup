@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.TempFragmentDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -26,7 +27,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 
-public class RedditShareFragment extends DialogFragment
+public class RedditShareFragment extends TempFragmentDialog
 {
 	@InjectView( R.id.webview )
 	WebView m_webview;
