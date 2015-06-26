@@ -13,6 +13,10 @@ public class Lobby extends Taggable implements PicturedModel {
     private GamePlatform platform;
     private String gameId;
     private String description;
+    private String lastMessage;
+    private Date lastMessageAt;
+    private int unreadMessageCount;
+
     @SerializedName("startTimeUtc")
     private Date startTime;
     private PlayStyle playStyle;
@@ -107,7 +111,7 @@ public class Lobby extends Taggable implements PicturedModel {
         return null;
     }
 
-    public LobbyUserInfo getDwellingUser( String userId ) {
+    public LobbyUserInfo getAliveUser(String userId) {
         for (LobbyUserInfo user : users) {
             if (user.id.equals(userId) && !user.isLeave)
                 return user;
@@ -127,6 +131,30 @@ public class Lobby extends Taggable implements PicturedModel {
         this.thumbnailPictureUrl = thumbnailPictureUrl;
     }
 
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    public Date getLastMessageAt() {
+        return lastMessageAt;
+    }
+
+    public void setLastMessageAt(Date lastMessageAt) {
+        this.lastMessageAt = lastMessageAt;
+    }
+
+    public int getUnreadMessageCount() {
+        return unreadMessageCount;
+    }
+
+    public void setUnreadMessageCount(int unreadMessageCount) {
+        this.unreadMessageCount = unreadMessageCount;
+    }
+
     public LobbyUserInfo getOwner()
     {
         for (LobbyUserInfo user : users) {
@@ -137,7 +165,7 @@ public class Lobby extends Taggable implements PicturedModel {
         return null;
     }
 
-    public boolean isDwellingUser( final String userId )
+    public boolean isAliveUser(final String userId)
     {
         for (LobbyUserInfo user : users) {
             if (user.id.equals(userId) && !user.isLeave)

@@ -37,6 +37,12 @@ namespace SWARM.PuP.Web.Models
             set { _users = value; }
         }
 
+        public string LastMessage { get; set; }
+
+        public DateTime LastMessageAt { get; set; }
+
+        public int UnreadMessageCount { get; set; }
+
         public override string ToString()
         {
             return Name + "("+ Id +")";

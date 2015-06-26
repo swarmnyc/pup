@@ -1,7 +1,5 @@
 package com.swarmnyc.pup;
 
-import com.google.gson.JsonSyntaxException;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,7 +36,7 @@ public class StringUtils
 		DateFormat dateFormat = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US );
 		dateFormat.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
 
-		return  dateFormat;
+		return dateFormat;
 	}
 
 }

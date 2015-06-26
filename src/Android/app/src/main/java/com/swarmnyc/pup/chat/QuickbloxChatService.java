@@ -18,13 +18,22 @@ import java.util.List;
 
 public class QuickbloxChatService implements ChatService
 {
-	private QBChatService m_chatService;
-	private QBUser        m_user;
 	private AsyncCallback m_callback;
 
 	public QBUser getUser()
 	{
-		return m_user;
+		return QBChatService.getInstance().getUser();
+	}
+
+	public QuickbloxChatService(  )
+	{
+		//Login API
+		QBChatService.setDebugEnabled( BuildConfig.DEBUG );
+		QBSettings.getInstance().fastConfigInit(
+			Config.getConfigString( R.string.QB_APP_ID ),
+			Config.getConfigString( R.string.QB_APP_KEY ),
+			Config.getConfigString( R.string.QB_APP_SECRET )
+		);
 	}
 
 	@Override
@@ -45,18 +54,23 @@ public class QuickbloxChatService implements ChatService
 		login( activity, user, new AsyncCallback());
 	}
 
-	protected void login( final Activity activity, QBUser user, AsyncCallback callback )
+	protected void login( final Activity activity, final QBUser user, AsyncCallback callback )
 	{
-		m_callback = callback;
-		if ( m_user != null)
+		if ( !QBChatService.isInitialized() )
 		{
-			if ( m_user.getLogin().equals( user.getLogin() )  ){
+			QBChatService.init( activity );
+		}
+
+		m_callback = callback;
+		if ( getUser() != null)
+		{
+			if ( getUser().getLogin().equals( user.getLogin() )  ){
 				m_callback.success();
 				return;
 			}else{
 				try
 				{
-					m_chatService.logout();
+					QBChatService.getInstance().logout();
 				}
 				catch ( SmackException.NotConnectedException e )
 				{
@@ -65,30 +79,13 @@ public class QuickbloxChatService implements ChatService
 			}
 		}
 
-		//Login API
-		QBChatService.setDebugEnabled( BuildConfig.DEBUG );
-		QBSettings.getInstance().fastConfigInit(
-			Config.getConfigString( R.string.QB_APP_ID ),
-			Config.getConfigString( R.string.QB_APP_KEY ),
-			Config.getConfigString( R.string.QB_APP_SECRET )
-		);
-
-		if ( !QBChatService.isInitialized() )
-		{
-			QBChatService.init( activity );
-		}
-
-		m_chatService = QBChatService.getInstance();
-
-		m_user = user;
-
 		QBAuth.createSession(
-			m_user, new QBEntityCallbackImpl<QBSession>()
+			user, new QBEntityCallbackImpl<QBSession>()
 			{
 				@Override
 				public void onSuccess( QBSession qbSession, Bundle bundle )
 				{
-					m_user.setId( qbSession.getUserId() );
+					user.setId( qbSession.getUserId() );
 
 					activity.runOnUiThread(
 						new Runnable()
@@ -97,7 +94,7 @@ public class QuickbloxChatService implements ChatService
 							public void run()
 							{
 								//Login Chat
-								loginChat( m_user );
+								loginChat( user );
 							}
 						}
 					);
@@ -108,13 +105,13 @@ public class QuickbloxChatService implements ChatService
 
 	private void loginChat( final QBUser user )
 	{
-		m_chatService.login(
+		QBChatService.getInstance().login(
 			user, new QBEntityCallbackImpl()
 			{
 				@Override
 				public void onSuccess()
 				{
-					 m_callback.success();
+					m_callback.success();
 				}
 			}
 		);

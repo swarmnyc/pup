@@ -12,12 +12,13 @@ public class CurrentUserInfo extends UserInfo
 	private String       accessToken;
 	private double       expiresIn;
 	private List<PuPTag> tags;
-	private Set<String>  media;
+	private Set<String> socialMedia;
 
 	public CurrentUserInfo()
 	{
 		tags = new ArrayList<>();
-	}
+        socialMedia = new HashSet<>();
+    }
 
 	public String getEmail()
 	{
@@ -72,23 +73,19 @@ public class CurrentUserInfo extends UserInfo
 		return null;
 	}
 
-	public Set<String> getMedia()
+	public Set<String> getSocialMedia()
 	{
-		if ( media == null )
-		{
-			media = new HashSet<>();
-		}
-		return media;
+		return socialMedia;
 	}
 
-	public void setMedia( Set<String> media )
+	public void setSocialMedia(Set<String> socialMedia)
 	{
-		this.media = media;
+		this.socialMedia = socialMedia;
 	}
 
-	public boolean hasMedium( String type )
+	public boolean hasSocialMedium(String type)
 	{
-		for ( String m : media )
+		for ( String m : socialMedia)
 		{
 			if ( type.equals( m ) )
 			{ return true; }

@@ -36,14 +36,14 @@ namespace SWARM.PuP.Web.Services.Quickblox
 
         public void CreateRoomForLobby(PuPUser owner, Lobby lobby)
         {
-            string[] chatUsersId = { owner.GetChatId() };
+            string[] chatUserIds = { owner.GetChatId() };
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.Room, HttpMethod.Post);
 
             var charRoom = request.GetJson<QuickbloxRoom>(new
             {
                 type = ChatRoomType.Group,
                 name = string.Format(QuickbloxHttpHelper.LobbyNameFormat, lobby.Name),
-                occupants_ids = string.Join(",", chatUsersId)
+                occupants_ids = string.Join(",", chatUserIds)
             });
 
             lobby.UpdateTag(QuickbloxHttpHelper.Const_ChatRoomId, charRoom._id);
@@ -51,7 +51,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
 
         public void JoinRoom(Lobby lobby, IEnumerable<PuPUser> users)
         {
-            var chatUsersId = users.Select(x => x.GetChatId()).ToArray();
+            var chatUserIds = users.Select(x => x.GetChatId()).ToArray();
 
             var request =
                 QuickbloxHttpHelper.Create(
@@ -63,7 +63,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                 //push_all = add users
                 push_all = new
                 {
-                    occupants_ids = chatUsersId
+                    occupants_ids = chatUserIds
                 }
             });
 
@@ -72,7 +72,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
 
         public void LeaveRoom(Lobby lobby, IEnumerable<PuPUser> users)
         {
-            var chatUsersId = users.Select(x => x.GetChatId()).ToArray();
+            var chatUserIds = users.Select(x => x.GetChatId()).ToArray();
 
             var request =
                 QuickbloxHttpHelper.Create(
@@ -84,7 +84,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                 //pull_all = remove users
                 pull_all = new
                 {
-                    occupants_ids = chatUsersId
+                    occupants_ids = chatUserIds
                 }
             });
 

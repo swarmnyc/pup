@@ -31,6 +31,12 @@
                 tools:src="@drawable/default_portrait"
                 android:scaleType="centerCrop"/>
 
+        <View
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:id="@+id/img_game_border"
+                android:background="@drawable/border"/>
+
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,7 +53,7 @@
                 android:maxLines="2"
                 android:ellipsize="end"
                 tools:text="This is some random text that is about the game that is about to be played and I love so so so so much"
-                android:id="@+id/txt_description"
+                android:id="@+id/txt_lastMessage"
                 android:textColor="@color/pup_light"
                 android:layout_below="@+id/txt_game_name"
                 android:layout_marginLeft="50dp"/>

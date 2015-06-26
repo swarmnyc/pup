@@ -45,25 +45,21 @@ public class PuPApiModule {
     }
 
     @Provides
-    @Singleton
     public LobbyService provideLobbyService() {
         return new LobbyServiceImpl(restAdapter.create(LobbyRestApi.class));
     }
 
     @Provides
-    @Singleton
     public GameService provideGameService() {
         return new GameServiceImpl(restAdapter.create(GameRestApi.class));
     }
 
     @Provides
-    @Singleton
     public UserService provideUserService() {
         return new UserServiceImpl(restAdapter.create(UserRestApi.class));
     }
 
     @Provides
-    @Singleton
     public ChatService provideChatService() {
         //return new MockChatService();
         return new QuickbloxChatService();

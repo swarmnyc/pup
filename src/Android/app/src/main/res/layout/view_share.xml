@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+            android:id="@+id/text_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/text13"
+            android:textColor="@color/pup_light"
+            android:layout_margin="@dimen/margin_normal"
+            android:text="@string/label_invite"/>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="58dp">
+
+        <ImageView
+                android:id="@+id/btn_facebook"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:src="@drawable/ico_facebook"
+                android:tag="facebook"
+                android:cropToPadding="false"
+                android:scaleType="fitXY"/>
+
+        <ImageView
+                android:id="@+id/btn_twitter"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:src="@drawable/ico_twitter"
+                android:tag="twitter"
+                android:scaleType="fitXY"/>
+
+        <ImageView
+                android:id="@+id/btn_tumblr"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:src="@drawable/ico_tumblr"
+                android:tag="tumblr"
+                android:scaleType="fitXY"/>
+
+
+        <ImageView
+                android:id="@+id/btn_reddit"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:src="@drawable/ico_reddit"
+                android:tag="reddit"
+                android:scaleType="fitXY"/>
+    </LinearLayout>
+
+    <Button
+            android:id="@+id/btn_invite"
+            style="@style/button_orange"
+            android:text="@string/text_share"/>
+</merge>

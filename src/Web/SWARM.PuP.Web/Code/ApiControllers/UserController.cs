@@ -189,29 +189,29 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        [Authorize, HttpPost, Route("Medium"), ModelValidate]
+        [Authorize, HttpPost, Route("SocialMedia"), ModelValidate]
         public IHttpActionResult AddMedium([FromBody] SocialMedium medium)
         {
             var user = User.Identity.GetPuPUser();
 
-            if (user.Media.Contains(medium))
+            if (user.SocialMedia.Contains(medium))
             {
-                user.Media.Remove(medium);
+                user.SocialMedia.Remove(medium);
             }
-            user.Media.Add(medium);
+            user.SocialMedia.Add(medium);
             _userService.Update(user);
 
             return Ok();
         }
 
-        [Authorize, HttpDelete, Route("Medium/{type}"), ModelValidate]
+        [Authorize, HttpDelete, Route("SocialMedia/{type}"), ModelValidate]
         public IHttpActionResult DeleteMedium(SocialMediumType type)
         {
             var user = User.Identity.GetPuPUser();
-            var medium = user.Media.FirstOrDefault(x => x.Type == type);
+            var medium = user.SocialMedia.FirstOrDefault(x => x.Type == type);
             if (medium != null)
             {
-                user.Media.Remove(medium);
+                user.SocialMedia.Remove(medium);
                 _userService.Update(user);
             }
 

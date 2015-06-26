@@ -10,7 +10,7 @@ namespace SWARM.PuP.Web.Models
         public virtual string SecurityStamp { get; set; }
         public virtual string Email { get; set; }
 
-        public virtual HashSet<SocialMedium> Media
+        public virtual HashSet<SocialMedium> SocialMedia
         {
             get { return _media ?? (_media = new HashSet<SocialMedium>()); }
             set { _media = value; }

@@ -8,14 +8,13 @@ import java.util.List;
 
 public class Game extends Taggable implements PicturedModel
 {
-
 	private String             name;
 	private String             pictureUrl;
 	private String             thumbnailPictureUrl;
 	private String             description;
 	private List<GamePlatform> platforms;
-	private List<String>       gameTypes;
-	private int                rank;
+    private List<String>       genres;
+    private int                rank;
 
 	@SerializedName( "releaseDateUtc" )
 	private Date releaseDate;
@@ -86,14 +85,14 @@ public class Game extends Taggable implements PicturedModel
 		this.releaseDate = releaseDate;
 	}
 
-	public List<String> getGameTypes()
+	public List<String> getGenres()
 	{
-		return gameTypes;
+		return genres;
 	}
 
-	public void setGameTypes( List<String> gameTypes )
+	public void setGenres(List<String> genres)
 	{
-		this.gameTypes = gameTypes;
+		this.genres = genres;
 	}
 
 	public int getRank()

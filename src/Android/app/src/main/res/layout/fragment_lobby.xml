@@ -2,27 +2,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/container"
-                android:visibility="invisible"
-                tools:visibility="visible">
+                android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/list_chat"
+            android:visibility="gone"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="55dp"/>
 
+    <com.swarmnyc.pup.view.AnimatedImageView
+        android:id="@+id/img_loading"
+        android:src="@drawable/pup_animation"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
+
+    <com.swarmnyc.pup.view.ShareView
+        android:id="@+id/share_panel"
+        android:visibility="gone"
+        android:layout_above="@+id/text_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <RelativeLayout
             android:background="@color/pup_white"
-            android:id="@+id/panel"
+            android:id="@+id/text_panel"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible">
+            android:visibility="gone">
         <EditText
-                android:id="@+id/text_message"
+                android:id="@+id/edit_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="55dp"

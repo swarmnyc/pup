@@ -52,12 +52,9 @@ namespace SWARM.PuP.Web.Tests.Services
             try
             {
                 var userService = new UserService(null);
+                var lobbyService = new LobbyService(null);
                 QuickbloxChatService s = new QuickbloxChatService();
-                s.CreateRoomForLobby(userService.Collection.FindOne() , new Lobby()
-                {
-                    Name = "Test-" + DateTime.Now.ToString(CultureInfo.CurrentCulture)
-                });
-
+                s.CreateRoomForLobby(userService.FindByEmail("Wade@swarmnyc.com") , lobbyService.Collection.FindOne());
             }
             catch (WebException e)
             {

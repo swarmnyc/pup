@@ -10,8 +10,7 @@ public class SocialMedium
 	String userId;
 	String token;
 	String secret;
-	@SerializedName( "ExpireAtUtc" )
-	Date expireAt;
+	@SerializedName( "ExpireAtUtc" ) Date expireAt;
 
 	public String getType()
 	{

@@ -26,7 +26,6 @@ import com.swarmnyc.pup.components.PhotoHelper;
 import com.swarmnyc.pup.components.Screen;
 
 import javax.inject.Inject;
-import java.security.Key;
 
 public class SettingsFragment extends Fragment implements Screen
 {
@@ -88,10 +87,10 @@ public class SettingsFragment extends Fragment implements Screen
 
 		m_nameText.setText( User.current.getUserName() );
 
-		m_fbSwitch.setChecked( User.current.hasMedium( Consts.KEY_FACEBOOK ) );
-		m_twitterSwitch.setChecked( User.current.hasMedium( Consts.KEY_TWITTER ) );
-		m_redditSwitch.setChecked( User.current.hasMedium( Consts.KEY_REDDIT ) );
-		m_tumblrSwitch.setChecked( User.current.hasMedium( Consts.KEY_TUMBLR ) );
+		m_fbSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_FACEBOOK) );
+		m_twitterSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_TWITTER) );
+		m_redditSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_REDDIT) );
+		m_tumblrSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_TUMBLR) );
 	}
 
 	@Override
@@ -177,7 +176,7 @@ public class SettingsFragment extends Fragment implements Screen
 					@Override
 					public void success( final Object value )
 					{
-						User.removeMedium( Consts.KEY_FACEBOOK );
+						User.removeSocialMedium(Consts.KEY_FACEBOOK);
 						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
 					}
 				}
@@ -199,7 +198,7 @@ public class SettingsFragment extends Fragment implements Screen
 					@Override
 					public void success()
 					{
-						User.addMedium( Consts.KEY_TWITTER );
+						User.addSocialMedium(Consts.KEY_TWITTER);
 						m_twitterSwitch.setChecked( true );
 						Toast.makeText( getActivity(), R.string.message_connect_success, Toast.LENGTH_LONG ).show();
 					}
@@ -216,7 +215,7 @@ public class SettingsFragment extends Fragment implements Screen
 					@Override
 					public void success( final Object value )
 					{
-						User.removeMedium( Consts.KEY_TWITTER );
+						User.removeSocialMedium(Consts.KEY_TWITTER);
 						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
 					}
 				}
@@ -238,7 +237,7 @@ public class SettingsFragment extends Fragment implements Screen
 					@Override
 					public void success()
 					{
-						User.addMedium( Consts.KEY_TUMBLR );
+						User.addSocialMedium(Consts.KEY_TUMBLR);
 						m_tumblrSwitch.setChecked( true );
 						Toast.makeText( getActivity(), R.string.message_connect_success, Toast.LENGTH_LONG ).show();
 					}
@@ -255,7 +254,7 @@ public class SettingsFragment extends Fragment implements Screen
 					@Override
 					public void success( final Object value )
 					{
-						User.removeMedium( Consts.KEY_TUMBLR );
+						User.removeSocialMedium(Consts.KEY_TUMBLR);
 						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
 					}
 				}
@@ -277,7 +276,7 @@ public class SettingsFragment extends Fragment implements Screen
 						@Override
 						public void success()
 						{
-							User.addMedium( Consts.KEY_REDDIT );
+							User.addSocialMedium(Consts.KEY_REDDIT);
 							m_redditSwitch.setChecked( true );
 							Toast.makeText( getActivity(), R.string.message_connect_success, Toast.LENGTH_LONG ).show();
 						}
@@ -294,7 +293,7 @@ public class SettingsFragment extends Fragment implements Screen
 					@Override
 					public void success( final Object value )
 					{
-						User.removeMedium( Consts.KEY_REDDIT );
+						User.removeSocialMedium(Consts.KEY_REDDIT);
 						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
 					}
 				}

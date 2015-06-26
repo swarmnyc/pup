@@ -18,7 +18,7 @@ namespace SWARM.PuP.Web.ViewModels
 
             this.PortraitUrl = user.PortraitUrl;
 
-            this.Media = user.Media.Select(medium => medium.Type).ToList(); 
+            this.Media = user.SocialMedia.Select(medium => medium.Type).ToList(); 
         }
 
         public string Email { get; set; }

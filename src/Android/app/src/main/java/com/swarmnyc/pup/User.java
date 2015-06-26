@@ -11,7 +11,6 @@ public class User
 	private static final String KEY_USER         = "User";
 
 	public static  CurrentUserInfo current = CurrentUserInfo.Null;
-	private static Gson            gson    = new Gson();
 
 	public static void init()
 	{
@@ -22,7 +21,7 @@ public class User
 
 			if ( !StringUtils.isEmpty( json ) )
 			{
-				current = gson.fromJson( json, CurrentUserInfo.class );
+				current = new Gson().fromJson( json, CurrentUserInfo.class );
 			}
 		}
 	}
@@ -37,7 +36,7 @@ public class User
 		User.current = userInfo;
 
 		Config.setLong( KEY_USER_EXPIRES, System.currentTimeMillis() + (int) current.getExpiresIn() );
-		Config.setString( KEY_USER, gson.toJson( current ) );
+		Config.setString( KEY_USER, new Gson().toJson( current ) );
 
 		EventBus.getBus().post( new UserChangedEvent( goHome ) );
 	}
@@ -56,18 +55,18 @@ public class User
 		return current != CurrentUserInfo.Null;
 	}
 
-	public static void addMedium( final String type ) {
-		current.getMedia().add( type );
-		Config.setString( KEY_USER, gson.toJson( current ) );
+	public static void addSocialMedium(final String type) {
+		current.getSocialMedia().add( type );
+		Config.setString( KEY_USER, new Gson().toJson( current ) );
 	}
 
-	public static void removeMedium( final String type ) {
-		current.getMedia().remove( type );
-		Config.setString( KEY_USER, gson.toJson( current ) );
+	public static void removeSocialMedium(final String type) {
+		current.getSocialMedia().remove( type );
+		Config.setString( KEY_USER, new Gson().toJson( current ) );
 	}
 
 	public static void update()
 	{
-		Config.setString( KEY_USER, gson.toJson( current ) );
+		Config.setString( KEY_USER, new Gson().toJson( current ) );
 	}
 }

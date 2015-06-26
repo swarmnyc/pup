@@ -6,10 +6,12 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -30,21 +32,24 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.internal.ButterKnifeProcessor;
 
 public class MainActivity extends AppCompatActivity {
-    private static MainActivity instance;
+    private static MainActivity m_instance;
+    private boolean launchDefault;
+    private View m_scrollToEndView;
 
     @InjectView(R.id.toolbar)
     Toolbar m_toolbar;
-    private boolean launchDefault;
+
+    @InjectView(R.id.drawer_layout)
+    ViewGroup m_root;
 
     public MainActivity() {
-        instance = this;
+        m_instance = this;
     }
 
     public static MainActivity getInstance() {
-        return instance;
+        return m_instance;
     }
 
     @Override
@@ -70,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
         m_tracker.enableExceptionReporting(false);
 
         //User Voice
-        com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config(getString(R.string.uservoice_id));
+        com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config(getString(R.string
+                        .uservoice_id
+        ));
         config.setForumId(272754);
         UserVoice.init(config, this);
 
@@ -91,6 +98,21 @@ public class MainActivity extends AppCompatActivity {
                 Navigator.ToLobby(p.get(1), "From Intend", false);
             }
         }
+
+
+       /* m_softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged() {
+            @Override
+            public void onSoftKeyboardHide() {
+
+            }
+
+            @Override
+            public void onSoftKeyboardShow() {
+                if (m_scrollToEndView != null) {
+                    scrollToEnd();
+                }
+            }
+        });*/
     }
 
     @Override
@@ -103,6 +125,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         EventBus.getBus().unregister(this);
+    }
+
+
+
+    public void setViewToScrollToEndWhenKeyboardUp(View view) {
+        m_scrollToEndView = view;
     }
 
     public Toolbar getToolbar() {
@@ -153,11 +181,13 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    public void hideIme() {
-        if (getCurrentFocus() == null) {
+    public void hideSoftKeyboard() {
+        if ( getCurrentFocus() == null )
+        {
             return;
         }
-        if (getCurrentFocus().getWindowToken() == null) {
+        if ( getCurrentFocus().getWindowToken() == null )
+        {
             return;
         }
 
@@ -165,6 +195,26 @@ public class MainActivity extends AppCompatActivity {
                 Context.INPUT_METHOD_SERVICE
         );
 
-        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        imm.hideSoftInputFromWindow( getCurrentFocus().getWindowToken(), 0 );
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        m_instance = null;
+    }
+
+    private void scrollToEnd() {
+        Log.d("Keyboard", "On");
+        final RecyclerView recyclerView = (RecyclerView) m_scrollToEndView;
+        if (recyclerView != null) {
+            Log.d("Keyboard", "On");
+            recyclerView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
+                }
+            },100);
+        }
     }
 }

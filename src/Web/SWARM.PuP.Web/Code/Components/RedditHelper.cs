@@ -15,7 +15,7 @@ namespace SWARM.PuP.Web.Code.Components
     {
         public static bool RefreshRedditToken(this PuPUser user, bool force = false)
         {
-            SocialMedium medium = user.Media.FirstOrDefault(x => x.Type == SocialMediumType.Reddit);
+            SocialMedium medium = user.SocialMedia.FirstOrDefault(x => x.Type == SocialMediumType.Reddit);
             if (force || (medium != null && medium.ExpireAtUtc < DateTime.UtcNow.AddSeconds(100)))
             {
                 user.UpdateRedditToken(false, medium.Secret);
@@ -32,7 +32,7 @@ namespace SWARM.PuP.Web.Code.Components
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.UserAgent = "partyupplayer";
-            request.Headers.Add("Authorization", "bearer " + user.Media.First(x => x.Type == SocialMediumType.Reddit).Token);
+            request.Headers.Add("Authorization", "bearer " + user.SocialMedia.First(x => x.Type == SocialMediumType.Reddit).Token);
 
             request.Write("api_type=json");
 
@@ -49,7 +49,7 @@ namespace SWARM.PuP.Web.Code.Components
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.UserAgent = "partyupplayer";
-            request.Headers.Add("Authorization", "bearer " + user.Media.First(x => x.Type == SocialMediumType.Reddit).Token);
+            request.Headers.Add("Authorization", "bearer " + user.SocialMedia.First(x => x.Type == SocialMediumType.Reddit).Token);
             
             request.Write(String.Format("text={0}&sr={1}&kind=self&title={2}&iden={3}&captcha={4}", text, sr, title, captchaId, captcha));
 
@@ -95,12 +95,12 @@ namespace SWARM.PuP.Web.Code.Components
         {
             var userService = PuPApplication.Current.Ioc.Resolve<IUserService>();
 
-            if (user.Media.Contains(medium))
+            if (user.SocialMedia.Contains(medium))
             {
-                user.Media.Remove(medium);
+                user.SocialMedia.Remove(medium);
             }
 
-            user.Media.Add(medium);
+            user.SocialMedia.Add(medium);
             userService.Update(user);
         }
     }

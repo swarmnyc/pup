@@ -13,7 +13,6 @@ import butterknife.InjectView;
 
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.*;
-import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatRoomService;
 import com.swarmnyc.pup.models.Lobby;
@@ -25,8 +24,8 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static final int HEADER = 0;
     private static final int SYSTEM = -1;
     private static final int ITEM = 1;
-    ChatRoomService m_chatRoomService;
-    List<ChatMessage> m_chatMessages;
+    private  ChatRoomService m_chatRoomService;
+    private  List<ChatMessage> m_chatMessages;
     private Context m_context;
     private Lobby m_lobby;
     private LayoutInflater m_inflater;
@@ -70,7 +69,7 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public int getItemViewType(final int position) {
         if (m_chatMessages.size() == 0) {
-            return position == HEADER ? HEADER : SYSTEM;
+            return HEADER;
         } else {
             if (position == HEADER) {
                 return HEADER;
@@ -85,7 +84,7 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public int getItemCount() {
         if (m_chatMessages.size() == 0) {
-            return m_lobby.isDwellingUser(User.current.getId()) ? 2 : 1;
+            return 1;
         } else {
             return m_chatMessages.size() + 1;
         }
@@ -95,6 +94,10 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onDetachedFromRecyclerView(final RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
         m_chatRoomService.leave();
+    }
+
+    public int getMessageCount() {
+        return m_chatMessages.size();
     }
 
     private ChatMessage getChatMessage(final int location) {
