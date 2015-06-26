@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -35,8 +36,10 @@ import com.swarmnyc.pup.chat.ChatRoomService;
 import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.GamePlatformUtils;
+import com.swarmnyc.pup.components.HideKeyboadFocusChangeListener;
 import com.swarmnyc.pup.components.Screen;
 import com.swarmnyc.pup.components.Utility;
+import com.swarmnyc.pup.components.ViewAnimationUtils;
 import com.swarmnyc.pup.events.LobbyUserChangeEvent;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.Lobby;
@@ -93,6 +96,7 @@ public class LobbyFragment extends Fragment implements Screen {
     private String m_lobbyId;
     private LobbyChatAdapter m_lobbyChatAdapter;
     private LinearLayoutManager m_chatListLayoutManager;
+    private boolean m_first = true;
 
     @Override
     public void setArguments(final Bundle args) {
@@ -122,25 +126,64 @@ public class LobbyFragment extends Fragment implements Screen {
 
         MainActivity.getInstance().getToolbar().setTitle(m_lobbyName);
 
-        m_lobbyService.getLobby(
-                m_lobbyId, new ServiceCallback<Lobby>() {
-                    @Override
-                    public void success(final Lobby value) {
-                        if (isDetached())
-                            return;
+        //scrolling to end when has focus
+        //m_messageText.setOnFocusChangeListener(new HideKeyboadFocusChangeListener(getActivity()));
 
-                        m_lobby = value;
+        m_messageText.setOnFocusChangeListener(new HideKeyboadFocusChangeListener(getActivity()) {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                super.onFocusChange(v, hasFocus);
+                if (hasFocus) {
+                    //Log.d("Scrolling", "Do");
+                    m_chatList.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            m_chatList.scrollToPosition(m_lobbyChatAdapter.getItemCount() - 1);
+                        }
+                    },100);
+                }
+            }
+        });
 
-                        initialize();
+        //Tap to Hide SoftKeyboard
+        m_chatList.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    //Log.d("Touch", "Event:"+ event);
+                    if (event.getEventTime() - event.getDownTime() < 100) {
+                        //Log.d("Touch", "Tap");
+                        MainActivity.getInstance().hideSoftKeyboard();
                     }
                 }
-        );
+
+                return false;
+            }
+        });
+
+        MainActivity.getInstance().setViewToScrollToEndWhenKeyboardUp(m_chatList);
     }
 
     @Override
     public void onResume() {
         super.onStart();
         EventBus.getBus().register(this);
+
+        if (m_lobby == null) {
+            m_lobbyService.getLobby(
+                    m_lobbyId, new ServiceCallback<Lobby>() {
+                        @Override
+                        public void success(final Lobby value) {
+                            if (isDetached())
+                                return;
+
+                            m_lobby = value;
+
+                            initialize();
+                        }
+                    }
+            );
+        }
 
         if (m_chatRoomService != null) {
             m_chatRoomService.login(false);
@@ -170,6 +213,8 @@ public class LobbyFragment extends Fragment implements Screen {
         if (m_memberFragment != null) {
             MainDrawerFragment.getInstance().removeRightDrawer(m_memberFragment);
         }
+
+        MainActivity.getInstance().setViewToScrollToEndWhenKeyboardUp(null);
     }
 
     @Override
@@ -245,11 +290,12 @@ public class LobbyFragment extends Fragment implements Screen {
         m_memberFragment.setLobby(m_lobby);
         MainDrawerFragment.getInstance().setRightDrawer(m_memberFragment);
 
-        initialize2(true);
+        //Join chat
+        m_chatRoomService.login(true);
     }
 
-    private void initialize2(boolean loadHistory) {
-        //joinLobby button and text panel
+    private void switchButton() {
+        //Show or Hide joinLobby button
         if (User.isLoggedIn()) {
             LobbyUserInfo user = m_lobby.getAliveUser(User.current.getId());
             if (user == null) {
@@ -263,8 +309,6 @@ public class LobbyFragment extends Fragment implements Screen {
             m_joinButton.setVisibility(View.VISIBLE);
             m_textPanel.setVisibility(View.GONE);
         }
-
-        m_chatRoomService.login(loadHistory);
     }
 
     @OnClick(R.id.btn_send)
@@ -307,7 +351,8 @@ public class LobbyFragment extends Fragment implements Screen {
     public void postLobbyUserChanged(LobbyUserChangeEvent event) {
         //Once user join the lobby, refresh UI
         if (event.isCurrentUser()) {
-            initialize2(false);
+            m_chatRoomService.login(false);
+            switchButton();
         }
     }
 
@@ -317,9 +362,11 @@ public class LobbyFragment extends Fragment implements Screen {
             return;
 
         //After receive history
-        m_messageText.setEnabled(true);
-        m_sendButton.setEnabled(true);
-        m_loadingImage.setVisibility(View.GONE);
+        if (m_first){
+            m_first = false;
+            switchButton();
+            ViewAnimationUtils.hideWithAnimation(getActivity(),m_loadingImage);
+        }
 
         List<ChatMessage> messages = event.getMessages();
         if (messages.size() == 1) {
@@ -376,4 +423,5 @@ public class LobbyFragment extends Fragment implements Screen {
         }
 
     }
+
 }
