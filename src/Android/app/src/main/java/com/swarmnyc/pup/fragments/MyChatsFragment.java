@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.swarmnyc.pup.Consts;
+import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.Services.LobbyService;
@@ -55,6 +56,7 @@ public class MyChatsFragment extends Fragment implements Screen {
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         ButterKnife.inject(this, view);
+        PuPApplication.getInstance().getComponent().inject( this );
         m_myChatAdapter = new MyChatAdapter(this.getActivity());
         m_myChatAdapter.AddReachEndAction(new Action() {
             @Override
@@ -85,11 +87,19 @@ public class MyChatsFragment extends Fragment implements Screen {
     @Override
     public void onStart() {
         super.onStart();
-        MainDrawerFragment.getInstance().highLight(Consts.KEY_MY_LOBBIES);
+//        MainDrawerFragment.getInstance().highLight(Consts.KEY_MY_LOBBIES);
+
+        fetchMoreData();
+    }
+
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
         MainActivity.getInstance().getToolbar().setTitle(R.string.text_lobbies);
         MainActivity.getInstance().getToolbar().setSubtitle(null);
 
-        fetchMoreData();
     }
 
     private void fetchMoreData() {

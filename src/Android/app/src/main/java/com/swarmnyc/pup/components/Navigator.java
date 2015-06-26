@@ -85,7 +85,7 @@ public class Navigator
 				T fragment = fragmentClass.newInstance();
 				fragment.setArguments( bundle );
 				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				fragmentTransaction.replace( R.id.fragment_container, fragment, tag );
+//				fragmentTransaction.replace( R.id.fragment_container, fragment, tag );
 				if ( backable )
 				{
 					fragmentTransaction.addToBackStack( tag );

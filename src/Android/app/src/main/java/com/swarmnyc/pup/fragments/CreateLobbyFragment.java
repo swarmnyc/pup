@@ -340,7 +340,7 @@ public class CreateLobbyFragment extends Fragment
 	{
 		super.onStart();
 		MainActivity.getInstance().hideToolbar();
-		MainDrawerFragment.getInstance().highLight( Consts.KEY_LOBBIES );
+//		MainDrawerFragment.getInstance().highLight( Consts.KEY_LOBBIES );
 	}
 
 	@Override

@@ -203,7 +203,7 @@ public class LobbyFragment extends Fragment implements Screen {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        MainDrawerFragment.getInstance().highLight(null);
+//        MainDrawerFragment.getInstance().highLight(null);
     }
 
     @Override

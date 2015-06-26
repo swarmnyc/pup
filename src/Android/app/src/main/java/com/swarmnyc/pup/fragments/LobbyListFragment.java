@@ -333,7 +333,7 @@ public class LobbyListFragment extends Fragment implements Screen
 	public void onStart()
 	{
 		super.onStart();
-		MainDrawerFragment.getInstance().highLight( Consts.KEY_LOBBIES );
+//		MainDrawerFragment.getInstance().highLight( Consts.KEY_LOBBIES );
 	}
 
 	@Override

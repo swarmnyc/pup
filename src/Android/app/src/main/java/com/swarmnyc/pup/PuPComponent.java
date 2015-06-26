@@ -30,4 +30,6 @@ public interface PuPComponent
 	void inject( MyChatAdapter myChatAdapter );
 
 	void inject( SettingsFragment settingsFragment );
+
+	void inject( MyChatsFragment myChatsFragment );
 }

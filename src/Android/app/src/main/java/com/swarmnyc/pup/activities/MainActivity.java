@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,9 +30,13 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.Navigator;
+import com.swarmnyc.pup.fragments.LobbyListFragment;
 import com.swarmnyc.pup.fragments.MainDrawerFragment;
+import com.swarmnyc.pup.fragments.MyChatsFragment;
+import com.swarmnyc.pup.fragments.SettingsFragment;
 import com.uservoice.uservoicesdk.UserVoice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -35,57 +44,64 @@ import butterknife.InjectView;
 
 public class MainActivity extends AppCompatActivity {
     private static MainActivity m_instance;
-    private boolean launchDefault;
-    private View m_scrollToEndView;
+    private        boolean      launchDefault;
+    private        View         m_scrollToEndView;
 
-    @InjectView(R.id.toolbar)
-    Toolbar m_toolbar;
+    @InjectView( R.id.toolbar )   Toolbar   m_toolbar;
+    @InjectView( R.id.viewpager ) ViewPager m_viewPager;
+    @InjectView( R.id.tabs )  TabLayout m_tabLayout;
 
-    @InjectView(R.id.drawer_layout)
-    ViewGroup m_root;
+    //    @InjectView(R.id.drawer_layout)
+    //    ViewGroup m_root;
 
-    public MainActivity() {
+    public MainActivity()
+    {
         m_instance = this;
     }
 
-    public static MainActivity getInstance() {
+    public static MainActivity getInstance()
+    {
         return m_instance;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected void onCreate( Bundle savedInstanceState )
+    {
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.activity_main );
 
-        ButterKnife.inject(this);
-        PuPApplication.getInstance().getComponent().inject(this);
-        m_toolbar.setSubtitleTextColor(getResources().getColor(R.color.pup_grey));
+        ButterKnife.inject( this );
+        PuPApplication.getInstance().getComponent().inject( this );
+        m_toolbar.setSubtitleTextColor( getResources().getColor( R.color.pup_grey ) );
 
         Display display = getWindowManager().getDefaultDisplay();
         Point windowSize = new Point();
-        display.getSize(windowSize);
+        display.getSize( windowSize );
         Consts.windowWidth = windowSize.x;
         Consts.windowHeight = windowSize.y;
 
         //Google
-        GoogleAnalytics m_googleAnalytics = GoogleAnalytics.getInstance(this);
-        m_googleAnalytics.setLocalDispatchPeriod(1800);
+        GoogleAnalytics m_googleAnalytics = GoogleAnalytics.getInstance( this );
+        m_googleAnalytics.setLocalDispatchPeriod( 1800 );
 
-        Tracker m_tracker = m_googleAnalytics.newTracker(getString(R.string.google_tracker_key));
-        m_tracker.enableExceptionReporting(false);
+        Tracker m_tracker = m_googleAnalytics.newTracker( getString( R.string.google_tracker_key ) );
+        m_tracker.enableExceptionReporting( false );
 
         //User Voice
-        com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config(getString(R.string
-                        .uservoice_id
-        ));
-        config.setForumId(272754);
-        UserVoice.init(config, this);
+        com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config(
+            getString(
+                R.string.uservoice_id
+            )
+        );
+        config.setForumId( 272754 );
+        UserVoice.init( config, this );
 
-        Navigator.init(this, m_tracker);
+        Navigator.init( this, m_tracker );
 
-        if (!Config.getBool("ShowedSplash")) {
-            Config.setBool("ShowedSplash", true);
-            startActivity(new Intent(this, SplashActivity.class));
+        if ( !Config.getBool( "ShowedSplash" ) )
+        {
+            Config.setBool( "ShowedSplash", true );
+            startActivity( new Intent( this, SplashActivity.class));
         }
 
         Intent intent = getIntent();
@@ -99,7 +115,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        if ( m_viewPager != null) {
+            setupViewPager( m_viewPager );
+        }
 
+        m_tabLayout.setupWithViewPager( m_viewPager );
        /* m_softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged() {
             @Override
             public void onSoftKeyboardHide() {
@@ -125,6 +145,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         EventBus.getBus().unregister(this);
+    }
+
+
+    private void setupViewPager(ViewPager viewPager) {
+        Adapter adapter = new Adapter(getSupportFragmentManager());
+        adapter.addFragment(new LobbyListFragment(), "FIND A GAME");
+        adapter.addFragment(new MyChatsFragment(), "MY GAMES");
+        adapter.addFragment(new SettingsFragment(), "PROFILE");
+        viewPager.setAdapter(adapter);
     }
 
 
@@ -215,6 +244,41 @@ public class MainActivity extends AppCompatActivity {
                     recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
                 }
             },100);
+        }
+    }
+
+    static class Adapter extends FragmentPagerAdapter
+    {
+        private final List<Fragment> mFragments      = new ArrayList<>();
+        private final List<String>   mFragmentTitles = new ArrayList<>();
+
+        public Adapter( FragmentManager fm )
+        {
+            super( fm );
+        }
+
+        public void addFragment( Fragment fragment, String title )
+        {
+            mFragments.add( fragment );
+            mFragmentTitles.add( title );
+        }
+
+        @Override
+        public Fragment getItem( int position )
+        {
+            return mFragments.get( position );
+        }
+
+        @Override
+        public int getCount()
+        {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle( int position )
+        {
+            return mFragmentTitles.get( position );
         }
     }
 }

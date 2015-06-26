@@ -97,7 +97,7 @@ public class SettingsFragment extends Fragment implements Screen
 	public void onStart()
 	{
 		super.onStart();
-		MainDrawerFragment.getInstance().highLight( Consts.KEY_SETTINGS );
+//		MainDrawerFragment.getInstance().highLight( Consts.KEY_SETTINGS );
 	}
 
 	@Override
