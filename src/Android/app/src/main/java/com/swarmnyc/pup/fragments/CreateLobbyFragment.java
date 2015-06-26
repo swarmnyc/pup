@@ -22,11 +22,7 @@ import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
-import com.swarmnyc.pup.components.Action;
-import com.swarmnyc.pup.components.DialogHelper;
-import com.swarmnyc.pup.components.HideKeyboadFocusChangeListener;
-import com.swarmnyc.pup.components.Navigator;
-import com.swarmnyc.pup.components.Utility;
+import com.swarmnyc.pup.components.*;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.*;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
@@ -129,8 +125,8 @@ public class CreateLobbyFragment extends Fragment
 			return;
 		}
 
-
-		MainActivity.getInstance().hideSoftKeyboard();
+		//TODO: Change to Lose focus
+		SoftKeyboardHelper.hideSoftKeyboard();
 
 		DialogHelper.showProgressDialog( R.string.message_lobby_creating );
 
@@ -245,7 +241,7 @@ public class CreateLobbyFragment extends Fragment
 						m_gameNameTextEdit.setText( "" );
 						UserVoice.launchPostIdea( getActivity() );
 					} else  {
-						MainActivity.getInstance().hideSoftKeyboard();
+						SoftKeyboardHelper.hideSoftKeyboard();
 						if ( StringUtils.isNotEmpty( m_selectedGame.getPictureUrl() ) )
 						{
 							Picasso.with( getActivity() ).load( m_selectedGame.getPictureUrl() ).centerCrop().fit().into(
@@ -260,8 +256,8 @@ public class CreateLobbyFragment extends Fragment
 			}
 		);
 
-		m_gameNameTextEdit.setOnFocusChangeListener(new HideKeyboadFocusChangeListener(getActivity()));
-		m_descriptionText.setOnFocusChangeListener(new HideKeyboadFocusChangeListener(getActivity()));
+		m_gameNameTextEdit.setOnFocusChangeListener(new HideKeyboardFocusChangedListener(getActivity()));
+		m_descriptionText.setOnFocusChangeListener(new HideKeyboardFocusChangedListener(getActivity()));
 
 		m_gamePlatformSelectView.setPlatformSelectionChangedListener(
 			new GamePlatformSelectView.OnPlatformSelectionChangedListener()

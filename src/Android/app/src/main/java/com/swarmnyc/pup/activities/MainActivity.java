@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
@@ -25,6 +26,7 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.Navigator;
+import com.swarmnyc.pup.components.SoftKeyboardHelper;
 import com.swarmnyc.pup.fragments.MainDrawerFragment;
 import com.uservoice.uservoicesdk.UserVoice;
 
@@ -36,7 +38,6 @@ import butterknife.InjectView;
 public class MainActivity extends AppCompatActivity {
     private static MainActivity m_instance;
     private boolean launchDefault;
-    private View m_scrollToEndView;
 
     @InjectView(R.id.toolbar)
     Toolbar m_toolbar;
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         display.getSize(windowSize);
         Consts.windowWidth = windowSize.x;
         Consts.windowHeight = windowSize.y;
+        ViewConfiguration vc = ViewConfiguration.get( this );
+        Consts.TOUCH_SLOP = vc.getScaledTouchSlop();
 
         //Google
         GoogleAnalytics m_googleAnalytics = GoogleAnalytics.getInstance(this);
@@ -83,11 +86,13 @@ public class MainActivity extends AppCompatActivity {
 
         Navigator.init(this, m_tracker);
 
+        //Show Splash or not
         if (!Config.getBool("ShowedSplash")) {
             Config.setBool("ShowedSplash", true);
             startActivity(new Intent(this, SplashActivity.class));
         }
 
+        //Redirect to Lobby
         Intent intent = getIntent();
         Uri data = intent.getData();
         launchDefault = true;
@@ -98,27 +103,13 @@ public class MainActivity extends AppCompatActivity {
                 Navigator.ToLobby(p.get(1), "From Intend", false);
             }
         }
-
-
-       /* m_softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged() {
-            @Override
-            public void onSoftKeyboardHide() {
-
-            }
-
-            @Override
-            public void onSoftKeyboardShow() {
-                if (m_scrollToEndView != null) {
-                    scrollToEnd();
-                }
-            }
-        });*/
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         EventBus.getBus().register(this);
+        SoftKeyboardHelper.init(m_root, this );
     }
 
     @Override
@@ -127,10 +118,18 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getBus().unregister(this);
     }
 
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        SoftKeyboardHelper.uninit();
+    }
 
-
-    public void setViewToScrollToEndWhenKeyboardUp(View view) {
-        m_scrollToEndView = view;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        m_instance = null;
+        Navigator.init( null, null );
     }
 
     public Toolbar getToolbar() {
@@ -179,42 +178,5 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
-    }
-
-    public void hideSoftKeyboard() {
-        if ( getCurrentFocus() == null )
-        {
-            return;
-        }
-        if ( getCurrentFocus().getWindowToken() == null )
-        {
-            return;
-        }
-
-        InputMethodManager imm = (InputMethodManager) getSystemService(
-                Context.INPUT_METHOD_SERVICE
-        );
-
-        imm.hideSoftInputFromWindow( getCurrentFocus().getWindowToken(), 0 );
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        m_instance = null;
-    }
-
-    private void scrollToEnd() {
-        Log.d("Keyboard", "On");
-        final RecyclerView recyclerView = (RecyclerView) m_scrollToEndView;
-        if (recyclerView != null) {
-            Log.d("Keyboard", "On");
-            recyclerView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
-                }
-            },100);
-        }
     }
 }

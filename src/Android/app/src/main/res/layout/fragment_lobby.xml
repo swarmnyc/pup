@@ -15,8 +15,8 @@
     <com.swarmnyc.pup.view.AnimatedImageView
         android:id="@+id/img_loading"
         android:src="@drawable/pup_animation"
-        android:layout_width="240dp"
-        android:layout_height="240dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
 

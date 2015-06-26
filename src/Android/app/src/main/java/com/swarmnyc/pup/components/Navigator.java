@@ -19,48 +19,54 @@ import java.util.List;
 
 public class Navigator
 {
-	private static FragmentActivity activity;
+	private static FragmentActivity m_activity;
+	private static Tracker          m_tracker;
 
-	public static void init( final FragmentActivity activity, final Tracker tracker )
+	public static void init( FragmentActivity activity, Tracker tracker )
 	{
-		Navigator.activity = activity;
+		m_activity = activity;
+		m_tracker = tracker;
 
-		activity.getSupportFragmentManager().addOnBackStackChangedListener(
-			new FragmentManager.OnBackStackChangedListener()
-			{
-				@Override
-				public void onBackStackChanged()
+		if ( activity != null )
+		{
+
+			activity.getSupportFragmentManager().addOnBackStackChangedListener(
+				new FragmentManager.OnBackStackChangedListener()
 				{
-					if ( activity.getSupportFragmentManager().getBackStackEntryCount() == 0 )
+					@Override
+					public void onBackStackChanged()
 					{
-						activity.finish();
-					}
-					else
-					{
-						List<Fragment> fragments = activity.getSupportFragmentManager().getFragments();
-
-						Fragment f = null;
-						int p = fragments.size() - 1;
-						while ( p >= 0 )
+						if ( m_activity.getSupportFragmentManager().getBackStackEntryCount() == 0 )
 						{
-							if ( Screen.class.isInstance( fragments.get( p ) ) )
+							m_activity.finish();
+						}
+						else
+						{
+							List<Fragment> fragments = m_activity.getSupportFragmentManager().getFragments();
+
+							Fragment f = null;
+							int p = fragments.size() - 1;
+							while ( p >= 0 )
 							{
-								f = fragments.get( p );
-								break;
+								if ( Screen.class.isInstance( fragments.get( p ) ) )
+								{
+									f = fragments.get( p );
+									break;
+								}
+
+								p--;
 							}
 
-							p--;
-						}
-
-						if ( f != null )
-						{
-							tracker.setScreenName( f.toString() );
-							tracker.send( new HitBuilders.ScreenViewBuilder().build() );
+							if ( f != null )
+							{
+								m_tracker.setScreenName( f.toString() );
+								m_tracker.send( new HitBuilders.ScreenViewBuilder().build() );
+							}
 						}
 					}
 				}
-			}
-		);
+			);
+		}
 	}
 
 	public static void ToCreateLobby()
@@ -74,7 +80,7 @@ public class Navigator
 	{
 		try
 		{
-			FragmentManager fragmentManager = activity.getSupportFragmentManager();
+			FragmentManager fragmentManager = m_activity.getSupportFragmentManager();
 
 			String tag = fragmentClass.getName();
 			boolean fragmentPopped = fragmentManager.popBackStackImmediate( tag, 0 );
@@ -126,13 +132,13 @@ public class Navigator
 
 	private static void popOnce()
 	{
-		FragmentManager fragmentManager = activity.getSupportFragmentManager();
+		FragmentManager fragmentManager = m_activity.getSupportFragmentManager();
 		fragmentManager.popBackStack();
 	}
 
 	private static <T> void pop( Class<T> name )
 	{
-		FragmentManager fragmentManager = activity.getSupportFragmentManager();
+		FragmentManager fragmentManager = m_activity.getSupportFragmentManager();
 		fragmentManager.popBackStack( name.getName(), 0 );
 	}
 }

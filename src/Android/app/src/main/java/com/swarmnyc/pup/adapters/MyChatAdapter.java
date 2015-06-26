@@ -50,7 +50,6 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
     private Action<Lobby> m_removeAction;
 
     public MyChatAdapter(final Activity activity) {
-        PuPApplication.getInstance().getComponent().inject(this);
         m_activity = activity;
         m_inflater = m_activity.getLayoutInflater();
         m_lobbies = new ArrayList<>();

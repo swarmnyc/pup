@@ -5,11 +5,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.swarmnyc.pup.Consts;
+import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.Services.LobbyService;
@@ -36,7 +38,7 @@ public class MyChatsFragment extends Fragment implements Screen {
     RecyclerView m_chatList;
 
     private boolean m_noMoreData;
-    private int pageIndex = 0;
+    private int pageIndex;
     private MyChatAdapter m_myChatAdapter;
     private Lobby m_removedLobby;
 
@@ -55,6 +57,9 @@ public class MyChatsFragment extends Fragment implements Screen {
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         ButterKnife.inject(this, view);
+        PuPApplication.getInstance().getComponent().inject(this);
+        pageIndex = 0;
+        m_noMoreData = false;
         m_myChatAdapter = new MyChatAdapter(this.getActivity());
         m_myChatAdapter.AddReachEndAction(new Action() {
             @Override

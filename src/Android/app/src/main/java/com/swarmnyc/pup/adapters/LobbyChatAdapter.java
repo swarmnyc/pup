@@ -23,28 +23,34 @@ import java.util.List;
 public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int HEADER = 0;
     private static final int SYSTEM = -1;
-    private static final int ITEM = 1;
-    private  ChatRoomService m_chatRoomService;
-    private  List<ChatMessage> m_chatMessages;
-    private Context m_context;
-    private Lobby m_lobby;
-    private LayoutInflater m_inflater;
+    private static final int ITEM   = 1;
+    public static int               FixedItem = 1;
+    private       ChatRoomService   m_chatRoomService;
+    private       List<ChatMessage> m_chatMessages;
+    private       Context           m_context;
+    private       Lobby             m_lobby;
+    private       LayoutInflater    m_inflater;
 
     public LobbyChatAdapter(
-            final Context context, final Lobby lobby
-    ) {
+        final Context context, final Lobby lobby
+    )
+    {
         m_context = context;
         m_lobby = lobby;
-        m_inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        m_inflater = (LayoutInflater) m_context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         m_chatMessages = new LinkedList<>();
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        if (viewType == HEADER) {
-            View view = m_inflater.inflate(R.layout.item_lobby_chat_header, parent, false);
-            return new HeaderViewHolder(view);
-        } else if (viewType == SYSTEM) {
+    public RecyclerView.ViewHolder onCreateViewHolder( final ViewGroup parent, final int viewType )
+    {
+        if ( viewType == HEADER )
+        {
+            View view = m_inflater.inflate( R.layout.item_lobby_chat_header, parent, false );
+            return new HeaderViewHolder( view );
+        }
+        else if ( viewType == SYSTEM )
+        {
             View view = m_inflater.inflate(R.layout.item_lobby_chat_system, parent, false);
             return new SystemViewHolder(view);
         } else {
