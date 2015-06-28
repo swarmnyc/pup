@@ -59,7 +59,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 
-public class LobbyFragment extends Fragment implements Screen {
+public class LobbyFragment extends BaseFragment implements Screen {
     @Inject
     LobbyService m_lobbyService;
 
@@ -124,7 +124,7 @@ public class LobbyFragment extends Fragment implements Screen {
 
         setHasOptionsMenu(true);
 
-        MainActivity.getInstance().getToolbar().setTitle(m_lobbyName);
+        getActivity().setTitle( m_lobbyName );
 
         //scrolling to end when has focus
         //m_messageText.setOnFocusChangeListener(new HideKeyboadFocusChangeListener(getActivity()));
@@ -153,7 +153,7 @@ public class LobbyFragment extends Fragment implements Screen {
                     //Log.d("Touch", "Event:"+ event);
                     if (event.getEventTime() - event.getDownTime() < 100) {
                         //Log.d("Touch", "Tap");
-                        MainActivity.getInstance().hideSoftKeyboard();
+//                        MainActivity.getInstance().hideSoftKeyboard();
                     }
                 }
 
@@ -161,7 +161,7 @@ public class LobbyFragment extends Fragment implements Screen {
             }
         });
 
-        MainActivity.getInstance().setViewToScrollToEndWhenKeyboardUp(m_chatList);
+//        MainActivity.getInstance().setViewToScrollToEndWhenKeyboardUp(m_chatList);
     }
 
     @Override
@@ -210,11 +210,11 @@ public class LobbyFragment extends Fragment implements Screen {
     public void onDetach() {
         super.onDetach();
 
-        if (m_memberFragment != null) {
-            MainDrawerFragment.getInstance().removeRightDrawer(m_memberFragment);
-        }
+//        if (m_memberFragment != null) {
+//            MainDrawerFragment.getInstance().removeRightDrawer(m_memberFragment);
+//        }
 
-        MainActivity.getInstance().setViewToScrollToEndWhenKeyboardUp(null);
+//        MainActivity.getInstance().setViewToScrollToEndWhenKeyboardUp(null);
     }
 
     @Override
@@ -247,7 +247,7 @@ public class LobbyFragment extends Fragment implements Screen {
         m_chatList.setVisibility(View.VISIBLE);
 
         //title
-        MainActivity.getInstance().getToolbar().setTitle(m_lobby.getName());
+        setTitle( m_lobby.getName() );
 
         //subtitle
         long offset = m_lobby.getStartTime().getTime() - TimeUtils.todayTimeMillis();
@@ -272,7 +272,7 @@ public class LobbyFragment extends Fragment implements Screen {
                 )
         );
 
-        MainActivity.getInstance().getToolbar().setSubtitle(subtitle);
+        setSubtitle( subtitle );
 
         m_chatRoomService = m_chatService.getChatRoomService(getActivity(), m_lobby);
 
@@ -288,7 +288,8 @@ public class LobbyFragment extends Fragment implements Screen {
 
         m_memberFragment = new MemberFragment();
         m_memberFragment.setLobby(m_lobby);
-        MainDrawerFragment.getInstance().setRightDrawer(m_memberFragment);
+        // TODO SJ
+//        MainDrawerFragment.getInstance().setRightDrawer(m_memberFragment);
 
         //Join chat
         m_chatRoomService.login(true);

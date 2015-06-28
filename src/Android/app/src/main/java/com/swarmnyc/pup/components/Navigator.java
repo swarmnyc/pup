@@ -1,6 +1,7 @@
 package com.swarmnyc.pup.components;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,6 +12,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.fragments.CreateLobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
@@ -114,14 +116,18 @@ public class Navigator
 		Bundle bundle = new Bundle();
 		bundle.putString( Consts.KEY_LOBBY_ID, id );
 		bundle.putString( Consts.KEY_LOBBY_NAME, name );
+//
+//		if ( pop )
+//		{
+//			//pop( CreateLobbyFragment.class );
+//			popOnce();
+//		}
+//
+//		To( LobbyFragment.class, bundle, true );
 
-		if ( pop )
-		{
-			//pop( CreateLobbyFragment.class );
-			popOnce();
-		}
-
-		To( LobbyFragment.class, bundle, true );
+		final Intent intent = new Intent( activity, LobbyActivity.class );
+		intent.putExtras( bundle );
+		activity.startActivity( intent );
 	}
 
 	private static void popOnce()

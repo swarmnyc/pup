@@ -271,7 +271,7 @@ public class MainDrawerFragment extends Fragment
 
 	public void setRightDrawer( final Fragment fragment )
 	{
-//		getActivity().getSupportFragmentManager().beginTransaction().replace( R.id.main_drawer_right, fragment ).commit();
+		getActivity().getSupportFragmentManager().beginTransaction().replace( R.id.main_drawer_right, fragment ).commit();
 
 		m_drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END );
 	}

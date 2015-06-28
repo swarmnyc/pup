@@ -1,6 +1,7 @@
 package com.swarmnyc.pup.fragments;
 
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -46,7 +47,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class LobbyListFragment extends Fragment implements Screen
+public class LobbyListFragment extends BaseFragment implements Screen
 {
 	@InjectView( R.id.txt_game_serach ) public      AutoCompleteTextView   m_gameSearch;
 	@InjectView( R.id.layout_sliding_panel ) public SlidingUpPanelLayout   m_slidingPanel;
@@ -83,8 +84,6 @@ public class LobbyListFragment extends Fragment implements Screen
 		super.onAttach( activity );
 		this.activity = (MainActivity) activity;
 
-
-		updateTitle();
 
 	}
 
@@ -336,6 +335,14 @@ public class LobbyListFragment extends Fragment implements Screen
 //		MainDrawerFragment.getInstance().highLight( Consts.KEY_LOBBIES );
 	}
 
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		updateTitle();
+	}
+
 	@Override
 	public void onSaveInstanceState( final Bundle outState )
 	{
@@ -433,9 +440,8 @@ public class LobbyListFragment extends Fragment implements Screen
 	private void updateTitle()
 	{
 		final String title = null == m_lobbyFilter.getGame() ? "All Lobbies" : m_lobbyFilter.getGame().getName();
-		final Toolbar actionBar = MainActivity.getInstance().getToolbar();
-		actionBar.setTitle( title );
-		actionBar.setSubtitle( null );
+		setTitle( title );
+		setSubtitle( null );
 
 		if ( m_lobbyFilter.getPlatforms().size() > 0 )
 		{
@@ -457,9 +463,11 @@ public class LobbyListFragment extends Fragment implements Screen
 
 			Spanned subtitle = Html.fromHtml( String.format( "<small>%s</small>", stringBuilder.toString() ) );
 
-			actionBar.setSubtitle( subtitle );
+			setSubtitle( subtitle );
 		}
 	}
+
+
 
 	private static class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.BaseViewHolder>
 	{

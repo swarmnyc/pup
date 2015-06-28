@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         m_instance = this;
     }
 
+    // TODO @wade this method should not exist, either use getActivity from a fragment or pass the context.
     public static MainActivity getInstance()
     {
         return m_instance;
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.inject( this );
         PuPApplication.getInstance().getComponent().inject( this );
         m_toolbar.setSubtitleTextColor( getResources().getColor( R.color.pup_grey ) );
+        setSupportActionBar( m_toolbar );
 
         Display display = getWindowManager().getDefaultDisplay();
         Point windowSize = new Point();
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             List<String> p = data.getPathSegments();
             if (p.size() == 2 && p.get(0).equals("lobby")) {
                 launchDefault = false;
-                Navigator.ToLobby(p.get(1), "From Intend", false);
+                Navigator.ToLobby(p.get(1), "From Intent", false);
             }
         }
 

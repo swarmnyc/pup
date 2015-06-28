@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.write_external_storage" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <permission
@@ -29,6 +29,7 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".activities.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -39,37 +40,55 @@
         </activity>
         <activity
             android:name=".activities.MainActivity"
+            android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:exported="true"
             android:windowSoftInputMode="adjustResize|stateUnchanged" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="partyupplayer"/>
+
+                <data android:scheme="partyupplayer" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="pup.azurewebsites.net" android:pathPattern="/lobby/.*"/>
+
+                <data
+                    android:host="pup.azurewebsites.net"
+                    android:pathPattern="/lobby/.*"
+                    android:scheme="http" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="pup-dev.azurewebsites.net" android:pathPattern="/lobby/.*"/>
+
+                <data
+                    android:host="pup-dev.azurewebsites.net"
+                    android:pathPattern="/lobby/.*"
+                    android:scheme="http" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="partyupplayer.com" android:pathPattern="/lobby/.*"/>
+
+                <data
+                    android:host="partyupplayer.com"
+                    android:pathPattern="/lobby/.*"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
 
@@ -78,6 +97,7 @@
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="com.swarmnyc.pup" />
             </intent-filter>
         </receiver>
@@ -85,19 +105,27 @@
         <service android:name=".gcm.GcmIntentService" />
 
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
-
-        <activity android:name="com.facebook.FacebookActivity"
-                  android:configChanges=
-                          "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-                  android:theme="@android:style/Theme.Translucent.NoTitleBar"
-                  android:label="@string/app_name" />
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <meta-data
-                android:name="com.facebook.sdk.ApplicationId"
-                android:value="@string/facebook_app_id" />
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
         <meta-data
-                android:name="io.fabric.ApiKey"
-                android:value="@string/fabric_app_key" />
+            android:name="io.fabric.ApiKey"
+            android:value="@string/fabric_app_key" />
+
+        <activity
+            android:name=".activities.LobbyActivity"
+            android:label="@string/title_activity_lobby"
+            android:parentActivityName=".activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.swarmnyc.pup.activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

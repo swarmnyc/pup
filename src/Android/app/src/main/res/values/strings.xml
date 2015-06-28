@@ -53,7 +53,7 @@
     <string name="text_register">Register for PUP</string>
     <string name="text_register_and_join"><![CDATA[Register & Join]]></string>
     <string name="text_members">Members</string>
-    <string name="text_lobbies">My Chats</string>
+    <string name="text_lobbies">My Games</string>
     <string name="text_send">Send</string>
     <string name="text_undo">Undo</string>
     <string name="text_user_name_info">We\'ll be adding integrations for additional systems</string>
@@ -82,5 +82,8 @@
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
     <string name="msg_loading_more_lobbies">Loading more games...</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
