@@ -16,6 +16,7 @@ import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.fragments.CreateLobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
+import com.swarmnyc.pup.models.Lobby;
 
 import java.util.List;
 
@@ -130,6 +131,18 @@ public class Navigator
 		activity.startActivity( intent );
 	}
 
+	public static void ToLobby( final Lobby lobby )
+	{
+		Bundle bundle = new Bundle();
+		bundle.putString( Consts.KEY_LOBBY_ID, lobby.getId() );
+		bundle.putString( Consts.KEY_LOBBY_NAME, lobby.getName() );
+		bundle.putString( Consts.KEY_LOBBY_IMAGE, lobby.getPictureUrl() );
+
+		final Intent intent = new Intent( activity, LobbyActivity.class );
+		intent.putExtras( bundle );
+		activity.startActivity( intent );
+	}
+
 	private static void popOnce()
 	{
 		FragmentManager fragmentManager = activity.getSupportFragmentManager();
@@ -141,4 +154,6 @@ public class Navigator
 		FragmentManager fragmentManager = activity.getSupportFragmentManager();
 		fragmentManager.popBackStack( name.getName(), 0 );
 	}
+
+
 }

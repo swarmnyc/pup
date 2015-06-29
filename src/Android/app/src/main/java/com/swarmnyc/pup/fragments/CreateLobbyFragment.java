@@ -150,7 +150,7 @@ public class CreateLobbyFragment extends Fragment
 				public void success( final Lobby value )
 				{
 					DialogHelper.hide();
-					Navigator.ToLobby( value.getId(), value.getName(), true );
+					Navigator.ToLobby( value );
 				}
 			}
 		);

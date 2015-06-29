@@ -3,32 +3,32 @@
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="false" >
     <item
         android:drawable="@drawable/pup_01"
-        android:duration="0" />
+        android:duration="100" />
     <item
         android:drawable="@drawable/pup_02"
-        android:duration="0" />
+        android:duration="100" />
     <item
         android:drawable="@drawable/pup_03"
-        android:duration="0" />
+        android:duration="100" />
     <item
         android:drawable="@drawable/pup_04"
-        android:duration="0" />
+        android:duration="100" />
     <item
         android:drawable="@drawable/pup_05"
-        android:duration="0" />
+        android:duration="100" />
     <item
         android:drawable="@drawable/pup_06"
-        android:duration="0" />
+        android:duration="100" />
     <item
         android:drawable="@drawable/pup_05"
-        android:duration="0" />
+        android:duration="100" />
     <item
         android:drawable="@drawable/pup_04"
-        android:duration="0" />
+        android:duration="100" />
     <item
         android:drawable="@drawable/pup_03"
-        android:duration="0" />
+        android:duration="100" />
     <item
         android:drawable="@drawable/pup_02"
-        android:duration="0" />
+        android:duration="100"  />
 </animation-list>

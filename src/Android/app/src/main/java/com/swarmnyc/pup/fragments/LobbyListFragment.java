@@ -626,9 +626,7 @@ public class LobbyListFragment extends BaseFragment implements Screen
 						public void onClick( final View v )
 						{
 							Navigator.ToLobby(
-								lobbyListItemView.getLobby().getId(),
-								lobbyListItemView.getLobby().getName(),
-								false
+								lobbyListItemView.getLobby()
 							);
 						}
 					}

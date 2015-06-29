@@ -1,6 +1,7 @@
 package com.swarmnyc.pup;
 
 import com.swarmnyc.pup.Services.UserService;
+import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.activities.SplashActivity;
 import com.swarmnyc.pup.adapters.LobbyChatAdapter;
@@ -32,4 +33,8 @@ public interface PuPComponent
 	void inject( SettingsFragment settingsFragment );
 
 	void inject( MyChatsFragment myChatsFragment );
+
+	void inject( LobbyActivity lobbyActivity );
+
+	void inject( MemberFragment memberFragment );
 }

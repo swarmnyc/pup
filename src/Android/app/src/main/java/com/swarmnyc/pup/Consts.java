@@ -19,12 +19,14 @@ public class Consts
 	public static final String KEY_SETTINGS   = "settings";
 	public static final String KEY_LOBBY_ID   = "LobbyId";
 	public static final String KEY_LOBBY_NAME = "LobbyName";
+	public static final String KEY_LOBBY_IMAGE = "LobbyImage";
 	public static final String KEY_FACEBOOK   = "Facebook";
 	public static final String KEY_TWITTER    = "Twitter";
 	public static final String KEY_REDDIT     = "Reddit";
 	public static final String KEY_TUMBLR     = "Tumblr";
 
-	public final static int PAGE_SIZE = 20;
+	public final static int    PAGE_SIZE       = 20;
+
 	public static int windowWidth;
 	public static int windowHeight;
 

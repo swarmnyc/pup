@@ -14,21 +14,24 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
-import com.swarmnyc.pup.EventBus;
-import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.StringUtils;
+import com.swarmnyc.pup.*;
+import com.swarmnyc.pup.Services.LobbyService;
+import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.events.LobbyUserChangeEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MemberFragment extends Fragment
 {
-	@InjectView( R.id.list_members )
-	RecyclerView m_memberList;
-	private Lobby m_lobby;
+	@Inject                          LobbyService  m_lobbyService;
+
+	@InjectView( R.id.list_members ) RecyclerView  m_memberList;
+	private                          Lobby         m_lobby;
+	private                          MemberAdapter m_memberAdapter;
 
 	@Override
 	public View onCreateView(
@@ -42,21 +45,27 @@ public class MemberFragment extends Fragment
 	public void onViewCreated( View view, Bundle savedInstanceState )
 	{
 		super.onViewCreated( view, savedInstanceState );
+		PuPApplication.getInstance().getComponent().inject( this );
 		ButterKnife.inject( this, view );
 
-		m_memberList.setAdapter( new MemberAdapter( this.getActivity(), m_lobby.getUsers() ) );
+
+		m_memberAdapter = new MemberAdapter( this.getActivity(), new ArrayList<LobbyUserInfo>() );
+		m_memberList.setAdapter( m_memberAdapter );
 		m_memberList.setLayoutManager( new LinearLayoutManager( this.getActivity() ) );
+
 	}
 
 	public void setLobby( Lobby lobby )
 	{
 		m_lobby = lobby;
+
+		refresh();
 	}
 
 	public void refresh()
 	{
 		if ( this.isAdded() )
-		{ m_memberList.setAdapter( new MemberAdapter( this.getActivity(), m_lobby.getUsers() ) ); }
+		{ m_memberAdapter.setUsers( m_lobby.getUsers() ); }
 	}
 
 	@Override
@@ -64,6 +73,24 @@ public class MemberFragment extends Fragment
 	{
 		super.onStart();
 		EventBus.getBus().register( this );
+
+		final String lobbyId = getActivity().getIntent().getStringExtra( Consts.KEY_LOBBY_ID );
+
+		if (StringUtils.isNotEmpty( lobbyId ))
+
+		m_lobbyService.getLobby(
+			lobbyId, new ServiceCallback<Lobby>()
+			{
+				@Override
+				public void success( final Lobby value )
+				{
+					if ( isAdded() )
+					{
+						setLobby( value );
+					}
+				}
+			}
+		);
 	}
 
 	@Override
@@ -124,13 +151,19 @@ public class MemberFragment extends Fragment
 			m_activity = activity;
 			m_inflater = activity.getLayoutInflater();
 
+			setUsers( users );
+
+		}
+
+		public void setUsers( final List<LobbyUserInfo> users )
+		{
+			m_users.clear();
 			for ( LobbyUserInfo user : users )
 			{
 				if ( !user.getIsLeave() )
 				{ m_users.add( user ); }
 			}
 		}
-
 
 		@Override
 		public MemberViewHolder onCreateViewHolder( final ViewGroup parent, final int viewType )

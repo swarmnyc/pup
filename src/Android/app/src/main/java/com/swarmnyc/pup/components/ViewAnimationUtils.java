@@ -71,8 +71,9 @@ public class ViewAnimationUtils
 
 		// create the animator for this view (the start radius is zero)
 		Animator anim =
-			android.view.ViewAnimationUtils.createCircularReveal( view, cx, cy, 0, finalRadius );
+			android.view.ViewAnimationUtils.createCircularReveal( view, cx, cy, finalRadius/2, finalRadius );
 
+		anim.setDuration( 100 );
 		anim.start();
 	}
 

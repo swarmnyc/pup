@@ -1,7 +1,15 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="BaseAppTheme">
+    </style>
+
+
+    <style name="LobbyTheme" parent="BaseAppTheme">
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- colorPrimary is used for the default action bar background -->
         <item name="windowActionModeOverlay">true</item>
 
@@ -47,6 +55,12 @@
     <style name="MainActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColor">@color/pup_teal</item>
         <item name="android:textColorPrimary">@color/pup_teal</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ExpandedTitleText" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColor">@color/pup_orange</item>
+        <item name="android:textColorPrimary">@color/pup_orange</item>
         <item name="android:textStyle">bold</item>
     </style>
 
