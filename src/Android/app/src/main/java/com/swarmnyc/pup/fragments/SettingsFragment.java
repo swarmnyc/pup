@@ -27,7 +27,7 @@ import com.swarmnyc.pup.components.Screen;
 
 import javax.inject.Inject;
 
-public class SettingsFragment extends Fragment implements Screen
+public class SettingsFragment extends BaseFragment implements Screen
 {
 	@Inject
 	UserService m_userService;
@@ -77,8 +77,9 @@ public class SettingsFragment extends Fragment implements Screen
 		super.onViewCreated( view, savedInstanceState );
 		ButterKnife.inject( this, view );
 		PuPApplication.getInstance().getComponent().inject( this );
-		MainActivity.getInstance().getToolbar().setTitle( R.string.label_settings );
-		MainActivity.getInstance().getToolbar().setSubtitle( null );
+
+		setTitle( R.string.label_settings );
+		setSubtitle( null );
 
 		if ( StringUtils.isNotEmpty( User.current.getPortraitUrl() ) )
 		{
@@ -92,6 +93,8 @@ public class SettingsFragment extends Fragment implements Screen
 		m_redditSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_REDDIT) );
 		m_tumblrSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_TUMBLR) );
 	}
+
+
 
 	@Override
 	public void onStart()

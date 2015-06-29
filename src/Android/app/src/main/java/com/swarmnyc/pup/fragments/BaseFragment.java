@@ -23,6 +23,11 @@ public class BaseFragment extends Fragment
 		getAppCompatActivity().setTitle( title );
 	}
 
+	public void setTitle( final int title )
+	{
+		getAppCompatActivity().setTitle( title );
+	}
+
 
 	public void setSubtitle(CharSequence title)
 	{
