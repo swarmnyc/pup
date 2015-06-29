@@ -52,7 +52,7 @@ public class LobbyListFragment extends BaseFragment implements Screen
 	@InjectView( R.id.txt_game_serach ) public      AutoCompleteTextView   m_gameSearch;
 	@InjectView( R.id.layout_sliding_panel ) public SlidingUpPanelLayout   m_slidingPanel;
 	@InjectView( R.id.list_lobby ) public           RecyclerView           m_lobbyRecyclerView;
-	@InjectView( R.id.btn_create_lobby ) public     ImageButton            m_createLobbyButton;
+//	@InjectView( R.id.btn_create_lobby ) public     ImageButton            m_createLobbyButton;
 	@InjectView( R.id.platform_select ) public      GamePlatformSelectView m_gamePlatformSelectView;
 	@InjectView( R.id.layout_empty_results ) public ViewGroup              m_emptyResults;
 	@Inject                                         GameService            gameService;
@@ -72,11 +72,7 @@ public class LobbyListFragment extends BaseFragment implements Screen
 	{
 	}
 
-	@OnClick( R.id.btn_create_lobby )
-	public void onCreateLobbyButtonClicked()
-	{
-		Navigator.ToCreateLobby();
-	}
+
 
 	@Override
 	public void onAttach( Activity activity )
@@ -223,15 +219,15 @@ public class LobbyListFragment extends BaseFragment implements Screen
 				{
 					if ( m_panelSize == 0 && v > 0 )
 					{
-						com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(
-							getActivity(), m_createLobbyButton
-						);
+//						com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(
+//							getActivity(), m_createLobbyButton
+//						);
 					}
 					else if ( m_panelSize == 1.0 && v < 1.0f )
 					{
-						com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(
-							getActivity(), m_createLobbyButton
-						);
+//						com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(
+//							getActivity(), m_createLobbyButton
+//						);
 
 					}
 					m_panelSize = v;

@@ -57,17 +57,17 @@
 
         </RelativeLayout>
 
-        <ImageButton
-                android:id="@+id/btn_create_lobby"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ico_float_orange_add"
-                android:background="@android:color/transparent"
-                android:gravity="center"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="@dimen/margin_2x"/>
+        <!--<ImageButton-->
+                <!--android:id="@+id/btn_create_lobby"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@drawable/ico_float_orange_add"-->
+                <!--android:background="@android:color/transparent"-->
+                <!--android:gravity="center"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_margin="@dimen/margin_2x"/>-->
 
 
     </RelativeLayout>

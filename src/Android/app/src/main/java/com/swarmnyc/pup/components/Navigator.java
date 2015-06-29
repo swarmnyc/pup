@@ -13,6 +13,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.activities.LobbyActivity;
+import com.swarmnyc.pup.activities.LobbyCreateActivity;
 import com.swarmnyc.pup.fragments.CreateLobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyFragment;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
@@ -68,7 +69,10 @@ public class Navigator
 
 	public static void ToCreateLobby()
 	{
-		To( CreateLobbyFragment.class, null, true );
+		final Intent intent = new Intent( activity, LobbyCreateActivity.class );
+		activity.startActivity( intent );
+
+//		To( CreateLobbyFragment.class, null, true );
 	}
 
 	public static <T extends Fragment> void To(

@@ -121,8 +121,16 @@
         <activity
             android:name=".activities.LobbyActivity"
             android:label="@string/title_activity_lobby"
-            android:theme="@style/LobbyTheme"
+            android:parentActivityName=".activities.MainActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/LobbyTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.swarmnyc.pup.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.LobbyCreateActivity"
+            android:label="@string/title_activity_lobby_create"
             android:parentActivityName=".activities.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

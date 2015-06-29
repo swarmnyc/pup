@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
+import butterknife.OnClick;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.squareup.otto.Subscribe;
@@ -158,7 +159,11 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
-
+    @OnClick( R.id.fab_create_lobby )
+    public void onCreateLobbyButtonClicked()
+    {
+        Navigator.ToCreateLobby();
+    }
 
     public void setViewToScrollToEndWhenKeyboardUp(View view) {
         m_scrollToEndView = view;
