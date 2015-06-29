@@ -5,6 +5,7 @@ import android.os.Message;
 
 import com.swarmnyc.pup.ChatMessageReceiveEvent;
 import com.swarmnyc.pup.EventBus;
+import com.swarmnyc.pup.StringUtils;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 
@@ -35,10 +36,10 @@ public class MockChatRoomService extends ChatRoomService
 					user.setUserName( "Name" );
 				}
 
-				list.add( new ChatMessage( user, "Test " + i ) );
+				list.add( new ChatMessage( user,String.valueOf( i ), "Test " + i,0 ) );
 			}
 
-			EventBus.getBus().post(new ChatMessageReceiveEvent("", list));
+			EventBus.getBus().post( new ChatMessageReceiveEvent( "", false, list ) );
 		}
 	};
 
@@ -49,8 +50,8 @@ public class MockChatRoomService extends ChatRoomService
 		LobbyUserInfo user = new LobbyUserInfo();
 		user.setId( "0" );
 		user.setId( "Name" );
-		list.add( new ChatMessage( user, message ) );
-		EventBus.getBus().post(new ChatMessageReceiveEvent("", list));
+		list.add( new ChatMessage( user, String.valueOf( System.currentTimeMillis() ), message,0 ) );
+		EventBus.getBus().post( new ChatMessageReceiveEvent( "", false, list ) );
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class MockChatRoomService extends ChatRoomService
 	}
 
 	@Override
-	public void loadChatHistory()
+	public void loadChatHistory(long date)
 	{
 	}
 

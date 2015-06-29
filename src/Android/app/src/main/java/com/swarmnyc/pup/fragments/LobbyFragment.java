@@ -28,6 +28,7 @@ import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.components.*;
 import com.swarmnyc.pup.components.ViewAnimationUtils;
 import com.swarmnyc.pup.events.LobbyUserChangeEvent;
+import com.swarmnyc.pup.events.RequireChatHistoryEvent;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
@@ -36,9 +37,9 @@ import com.swarmnyc.pup.view.DividerItemDecoration;
 import com.swarmnyc.pup.view.ShareView;
 
 import javax.inject.Inject;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 
 public class LobbyFragment extends Fragment implements Screen
@@ -385,6 +386,12 @@ public class LobbyFragment extends Fragment implements Screen
 	}
 
 	@Subscribe
+	public void handleChatHistoryRequire( RequireChatHistoryEvent event )
+	{
+		m_chatRoomService.loadChatHistory(m_lobbyChatAdapter.getFirstChatMessage().getSentAt());
+	}
+
+	@Subscribe
 	public void receiveMessage( ChatMessageReceiveEvent event )
 	{
 		if ( !event.getLobbyId().equals( m_lobbyId ) )
@@ -393,16 +400,16 @@ public class LobbyFragment extends Fragment implements Screen
 		//After receive history
 		if ( m_first )
 		{
-			m_first = false;
 			switchButton();
 			ViewAnimationUtils.hideWithAnimation( getActivity(), m_loadingImage );
 		}
 
-		List<ChatMessage> messages = event.getMessages();
-		if ( messages.size() == 1 )
+		ArrayList<ChatMessage> messages = (ArrayList<ChatMessage>)event.getMessages();
+		if ( event.isNewMessage() && messages.size() == 1 )
 		{
+			// New System Message
 			ChatMessage cm = messages.get( 0 );
-			if ( cm.isNewMessage() && cm.isSystemMessage() && cm.getCode() != null )
+			if (cm.isSystemMessage() && cm.getCode() != null )
 			{
 				boolean isCurrentUser = false;
 				//Join and Left System messages.
@@ -448,39 +455,50 @@ public class LobbyFragment extends Fragment implements Screen
 			}
 		}
 
-		// Scrolling
 		m_lastListScrollingTime = System.currentTimeMillis();
 		int oldSize = m_lobbyChatAdapter.getItemCount();
 
-		m_lobbyChatAdapter.addMessages( messages );
+		if ( event.isNewMessage() ){
+			m_lobbyChatAdapter.addMessages( messages );
 
-		int size = m_lobbyChatAdapter.getItemCount();
-		if ( size == LobbyChatAdapter.FixedItem && m_lobby.isAliveUser( User.current.getId() ) )
-		{
-			m_sharePanel.setVisibility( View.VISIBLE );
-			m_sharePanel.setLobbyService( m_lobbyService );
-			m_sharePanel.setLobby( m_lobby );
+		}else {
+			Collections.reverse(messages);
+			m_lobbyChatAdapter.showLoadMore( messages.size() == Consts.PAGE_SIZE);
+			m_lobbyChatAdapter.addMessages(0, messages );
 		}
-		else
-		{
-			m_sharePanel.setVisibility( View.GONE );
-			int lastPosition = m_chatListLayoutManager.findLastVisibleItemPosition();
-			if ( Math.abs( oldSize - lastPosition ) < 3 ) //it almost is on the end, scrolling
+
+		// Scrolling
+		if ( event.isNewMessage() || m_first ){
+			int size = m_lobbyChatAdapter.getItemCount();
+			if ( size == 1 && m_lobby.isAliveUser( User.current.getId() ) )
 			{
-				Log.d( "Scrolling", "After Receive Message" );
-				m_chatList.post(
-					new Runnable()
-					{
-						@Override
-						public void run()
+				//no message, show share item
+				m_sharePanel.setVisibility( View.VISIBLE );
+				m_sharePanel.setLobbyService( m_lobbyService );
+				m_sharePanel.setLobby( m_lobby );
+			}
+			else
+			{
+				m_sharePanel.setVisibility( View.GONE );
+				int lastPosition = m_chatListLayoutManager.findLastVisibleItemPosition();
+				if ( Math.abs( oldSize - lastPosition ) < 3 ) //it almost is on the end, scrolling
+				{
+					Log.d( "Scrolling", "After Receive Message" );
+					m_chatList.post(
+						new Runnable()
 						{
-							m_chatList.scrollToPosition( m_lobbyChatAdapter.getItemCount() - 1 );
+							@Override
+							public void run()
+							{
+								m_chatList.scrollToPosition( m_lobbyChatAdapter.getItemCount() - 1 );
+							}
 						}
-					}
-				);
+					);
+				}
 			}
 		}
 
+		m_first = false;
 	}
 
 }

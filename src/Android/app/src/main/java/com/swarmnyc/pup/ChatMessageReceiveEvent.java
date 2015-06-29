@@ -5,11 +5,14 @@ import com.swarmnyc.pup.chat.ChatMessage;
 import java.util.List;
 
 public class ChatMessageReceiveEvent {
-    private String lobbyId;
+    private String  lobbyId;
+    private boolean m_newMessage;
     private List<ChatMessage> messages;
 
-    public ChatMessageReceiveEvent(String lobbyId, List<ChatMessage> messages) {
+    public ChatMessageReceiveEvent( String lobbyId, boolean newMessage, List<ChatMessage> messages )
+    {
         this.lobbyId = lobbyId;
+        m_newMessage = newMessage;
         this.messages = messages;
     }
 
@@ -19,5 +22,10 @@ public class ChatMessageReceiveEvent {
 
     public String getLobbyId() {
         return lobbyId;
+    }
+
+    public boolean isNewMessage()
+    {
+        return m_newMessage;
     }
 }

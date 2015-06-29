@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         m_googleAnalytics.setLocalDispatchPeriod(1800);
 
         Tracker m_tracker = m_googleAnalytics.newTracker(getString(R.string.google_tracker_key));
-        m_tracker.enableExceptionReporting(false);
+        m_tracker.enableExceptionReporting(true);
 
         //User Voice
         com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config(getString(R.string

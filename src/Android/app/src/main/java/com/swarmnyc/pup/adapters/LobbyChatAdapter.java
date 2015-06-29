@@ -5,208 +5,297 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-
 import com.squareup.picasso.Picasso;
-import com.swarmnyc.pup.*;
+import com.swarmnyc.pup.EventBus;
+import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.StringUtils;
+import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.chat.ChatMessage;
-import com.swarmnyc.pup.chat.ChatRoomService;
+import com.swarmnyc.pup.events.RequireChatHistoryEvent;
 import com.swarmnyc.pup.models.Lobby;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
-public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int HEADER = 0;
-    private static final int SYSTEM = -1;
-    private static final int ITEM   = 1;
-    public static int               FixedItem = 1;
-    private       ChatRoomService   m_chatRoomService;
-    private       List<ChatMessage> m_chatMessages;
-    private       Context           m_context;
-    private       Lobby             m_lobby;
-    private       LayoutInflater    m_inflater;
+public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+{
+	private static final int HEADER      = 0;
+	private static final int SYSTEM      = -1;
+	private static final int LoadControl = -2;
+	private static final int ITEM        = 1;
+	private List<ChatMessage> m_chatMessages;
+	private HashSet<String>  m_chatMessageIds;
+	private Context           m_context;
+	private Lobby             m_lobby;
+	private LayoutInflater    m_inflater;
+	private boolean           m_showReadMore;
 
-    public LobbyChatAdapter(
-        final Context context, final Lobby lobby
-    )
-    {
-        m_context = context;
-        m_lobby = lobby;
-        m_inflater = (LayoutInflater) m_context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-        m_chatMessages = new LinkedList<>();
-    }
+	public LobbyChatAdapter(
+		final Context context, final Lobby lobby
+	)
+	{
+		m_context = context;
+		m_lobby = lobby;
+		m_inflater = (LayoutInflater) m_context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+		m_chatMessages = new ArrayList<>();
+		m_chatMessageIds = new HashSet<>(  );
+	}
 
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder( final ViewGroup parent, final int viewType )
-    {
-        if ( viewType == HEADER )
-        {
-            View view = m_inflater.inflate( R.layout.item_lobby_chat_header, parent, false );
-            return new HeaderViewHolder( view );
-        }
-        else if ( viewType == SYSTEM )
-        {
-            View view = m_inflater.inflate(R.layout.item_lobby_chat_system, parent, false);
-            return new SystemViewHolder(view);
-        } else {
-            View view = m_inflater.inflate(R.layout.item_lobby_chat, parent, false);
-            return new ItemViewHolder(view);
-        }
-    }
+	@Override
+	public RecyclerView.ViewHolder onCreateViewHolder( final ViewGroup parent, final int viewType )
+	{
+		if ( viewType == HEADER )
+		{
+			View view = m_inflater.inflate( R.layout.item_lobby_chat_header, parent, false );
+			return new HeaderViewHolder( view );
+		}
+		else if ( viewType == LoadControl )
+		{
+			View view = m_inflater.inflate( R.layout.item_lobby_load_control, parent, false );
+			return new LoadControlViewHolder( view );
+		}
+		else if ( viewType == SYSTEM )
+		{
+			View view = m_inflater.inflate( R.layout.item_lobby_chat_system, parent, false );
+			return new SystemViewHolder( view );
+		}
+		else
+		{
+			View view = m_inflater.inflate( R.layout.item_lobby_chat, parent, false );
+			return new ItemViewHolder( view );
+		}
+	}
 
-    @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        if (ItemViewHolder.class.isInstance(holder)) {
-            ItemViewHolder item = ((ItemViewHolder) holder);
-            ChatMessage message = getChatMessage(position);
-            item.setCharMessage(message);
-        } else if (SystemViewHolder.class.isInstance(holder)) {
-            if (m_chatMessages.size() > 0) {
-                ((SystemViewHolder) holder).setMessage(getChatMessage(position));
-            }
-        }
-    }
+	@Override
+	public void onBindViewHolder( final RecyclerView.ViewHolder holder, final int position )
+	{
+		if ( ItemViewHolder.class.isInstance( holder ) )
+		{
+			ItemViewHolder item = ( (ItemViewHolder) holder );
+			ChatMessage message = getChatMessage( position );
+			item.setCharMessage( message );
+		}
+		else if ( SystemViewHolder.class.isInstance( holder ) )
+		{
+			if ( m_chatMessages.size() > 0 )
+			{
+				( (SystemViewHolder) holder ).setMessage( getChatMessage( position ) );
+			}
+		}
+	}
 
-    @Override
-    public int getItemViewType(final int position) {
-        if (m_chatMessages.size() == 0) {
-            return HEADER;
-        } else {
-            if (position == HEADER) {
-                return HEADER;
-            } else if (getChatMessage(position).isSystemMessage()) {
-                return SYSTEM;
-            } else {
-                return ITEM;
-            }
-        }
-    }
+	@Override
+	public int getItemViewType( final int position )
+	{
+		if ( m_chatMessages.size() == 0 )
+		{
+			return HEADER;
+		}
+		else
+		{
+			if ( position == 0 )
+			{
+				return HEADER;
+			}
+			else if ( position == 1 && m_showReadMore )
+			{
+				return LoadControl;
+			}
+			else if ( getChatMessage( position ).isSystemMessage() )
+			{
+				return SYSTEM;
+			}
+			else
+			{
+				return ITEM;
+			}
+		}
+	}
 
-    @Override
-    public int getItemCount() {
-        if (m_chatMessages.size() == 0) {
-            return 1;
-        } else {
-            return m_chatMessages.size() + 1;
-        }
-    }
+	@Override
+	public int getItemCount()
+	{
+		if ( m_chatMessages.size() == 0 )
+		{
+			// Header
+			return 1;
+		}
+		else
+		{
+			// Header + LoadControl
+			return m_chatMessages.size()  + (m_showReadMore ? 2 : 1);
+		}
+	}
 
-    @Override
-    public void onDetachedFromRecyclerView(final RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        m_chatRoomService.leave();
-    }
+	@Override
+	public void onDetachedFromRecyclerView( final RecyclerView recyclerView )
+	{
+		super.onDetachedFromRecyclerView( recyclerView );
+	}
 
-    public int getMessageCount() {
-        return m_chatMessages.size();
-    }
+	public ChatMessage getChatMessage( final int location )
+	{
+		return m_chatMessages.get( location - (m_showReadMore ? 2 : 1) );
+	}
 
-    private ChatMessage getChatMessage(final int location) {
-        return m_chatMessages.get(location - 1);
-    }
+	public ChatMessage getFirstChatMessage()
+	{
+		return m_chatMessages.get( 0 );
+	}
 
-    public void addMessages(List<ChatMessage> messages) {
-        ChatMessage previous = null;
-        if (m_chatMessages.size()>0)
-        {
-            previous = m_chatMessages.get(m_chatMessages.size()-1);
-        }
+	public void addMessages( int location, List<ChatMessage> messages )
+	{
+		ChatMessage previous = null;
+		if ( location > 0 )
+		{
+			previous = m_chatMessages.get( location - 1 );
+		}
 
-        for (ChatMessage message : messages) {
-            if (previous != null && !previous.isSystemMessage() && !message.isSystemMessage() && message.getUser().getId().equals(previous.getUser().getId())) {
-                previous.setBody(previous.getBody() + "\r\n" + message.getBody());
-            } else {
-                previous = message;
-                m_chatMessages.add(message);
-            }
-        }
+		for ( ChatMessage message : messages )
+		{
+			if(m_chatMessageIds.contains(message.getId())){
+				continue;
+			}
 
-        notifyDataSetChanged();
-    }
+			m_chatMessageIds.add( message.getId() );
 
-    class ItemViewHolder extends RecyclerView.ViewHolder {
-        @InjectView(R.id.contentPanel)
-        ViewGroup container;
+			if ( previous != null && !previous.isSystemMessage() && !message.isSystemMessage() && message.getUser()
+			                                                                                             .getId()
+			                                                                                             .equals(
+				                                                                                             previous
+					                                                                                             .getUser()
+					                                                                                             .getId()
+			                                                                                             ) )
+			{
+				previous.setBody( previous.getBody() + "\r\n" + message.getBody() );
+			}
+			else
+			{
+				previous = message;
+				m_chatMessages.add( location++, message );
+			}
+		}
 
-        @InjectView(R.id.img_portrait)
-        ImageView portrait;
+		notifyDataSetChanged();
+	}
 
-        @InjectView(R.id.text_name)
-        TextView nameText;
+	public void addMessages( List<ChatMessage> messages )
+	{
+		addMessages( m_chatMessages.size(), messages );
+	}
 
-        @InjectView(R.id.text_message)
-        TextView messageText;
+	public void showLoadMore( boolean canReadMore )
+	{
+		m_showReadMore = canReadMore;
+	}
 
-        public ItemViewHolder(final View view) {
-            super(view);
+	class ItemViewHolder extends RecyclerView.ViewHolder
+	{
+		@InjectView( R.id.contentPanel ) ViewGroup container;
 
-            ButterKnife.inject(this, view);
-        }
+		@InjectView( R.id.img_portrait ) ImageView portrait;
 
-        public void setCharMessage(final ChatMessage chatMessage) {
-            if (StringUtils.isEmpty(chatMessage.getUser().getPortraitUrl())) {
-                portrait.setImageResource(R.drawable.default_portrait);
-            } else {
-                Picasso.with(m_context).load(chatMessage.getUser().getPortraitUrl()).into(portrait);
-            }
+		@InjectView( R.id.text_name ) TextView nameText;
 
-            nameText.setText(chatMessage.getUser().getUserName());
-            messageText.setText(chatMessage.getBody());
+		@InjectView( R.id.text_message ) TextView messageText;
 
-            if (chatMessage.getUser().getId().equals(User.current.getId())) {
-                container.setBackgroundResource(R.color.pup_my_chat);
-            } else {
-                container.setBackgroundResource(R.color.pup_white);
-            }
-        }
-    }
+		public ItemViewHolder( final View view )
+		{
+			super( view );
 
-    class HeaderViewHolder extends RecyclerView.ViewHolder {
-        @InjectView(R.id.img_game)
-        ImageView gameImageView;
+			ButterKnife.inject( this, view );
+		}
 
-        @InjectView(R.id.text_name)
-        TextView lobbyNameText;
+		public void setCharMessage( final ChatMessage chatMessage )
+		{
+			if ( StringUtils.isEmpty( chatMessage.getUser().getPortraitUrl() ) )
+			{
+				portrait.setImageResource( R.drawable.default_portrait );
+			}
+			else
+			{
+				Picasso.with( m_context ).load( chatMessage.getUser().getPortraitUrl() ).into( portrait );
+			}
 
-        @InjectView(R.id.text_lobby_type)
-        TextView lobbyTypeText;
+			nameText.setText( chatMessage.getUser().getUserName() );
+			messageText.setText( chatMessage.getBody() );
 
-        @InjectView(R.id.text_description)
-        TextView lobbyDescriptionText;
+			if ( chatMessage.getUser().getId().equals( User.current.getId() ) )
+			{
+				container.setBackgroundResource( R.color.pup_my_chat );
+			}
+			else
+			{
+				container.setBackgroundResource( R.color.pup_white );
+			}
+		}
+	}
 
-        public HeaderViewHolder(final View view) {
-            super(view);
+	class HeaderViewHolder extends RecyclerView.ViewHolder
+	{
+		@InjectView( R.id.img_game ) ImageView gameImageView;
 
-            ButterKnife.inject(this, view);
+		@InjectView( R.id.text_name ) TextView lobbyNameText;
 
-            //name
-            lobbyNameText.setText(m_lobby.getOwner().getUserName() + "'s\n" + m_lobby.getName());
+		@InjectView( R.id.text_lobby_type ) TextView lobbyTypeText;
 
-            //img
-            if (StringUtils.isNotEmpty(m_lobby.getPictureUrl())) {
-                Picasso.with(m_context).load(m_lobby.getPictureUrl()).centerCrop().fit().into(gameImageView);
-            }
+		@InjectView( R.id.text_description ) TextView lobbyDescriptionText;
 
-            //type
-            lobbyTypeText.setText(String.format("%s,%s", m_lobby.getPlayStyle(), m_lobby.getSkillLevel()));
+		public HeaderViewHolder( final View view )
+		{
+			super( view );
 
-            //description
-            lobbyDescriptionText.setText(m_lobby.getDescription());
-        }
-    }
+			ButterKnife.inject( this, view );
 
-    class SystemViewHolder extends RecyclerView.ViewHolder {
-        public SystemViewHolder(final View view) {
-            super(view);
-        }
+			//name
+			lobbyNameText.setText( m_lobby.getOwner().getUserName() + "'s\n" + m_lobby.getName() );
 
-        public void setMessage(final ChatMessage chatMessage) {
-            ((TextView) itemView).setText(chatMessage.getBody());
-        }
-    }
+			//img
+			if ( StringUtils.isNotEmpty( m_lobby.getPictureUrl() ) )
+			{
+				Picasso.with( m_context ).load( m_lobby.getPictureUrl() ).centerCrop().fit().into( gameImageView );
+			}
+
+			//type
+			lobbyTypeText.setText( String.format( "%s,%s", m_lobby.getPlayStyle(), m_lobby.getSkillLevel() ) );
+
+			//description
+			lobbyDescriptionText.setText( m_lobby.getDescription() );
+		}
+	}
+
+	class SystemViewHolder extends RecyclerView.ViewHolder
+	{
+		public SystemViewHolder( final View view )
+		{
+			super( view );
+		}
+
+		public void setMessage( final ChatMessage chatMessage )
+		{
+			( (TextView) itemView ).setText( chatMessage.getBody() );
+		}
+	}
+
+	class LoadControlViewHolder extends RecyclerView.ViewHolder
+	{
+		public LoadControlViewHolder( final View view )
+		{
+			super( view );
+			view.setOnClickListener(
+				new View.OnClickListener()
+				{
+					@Override
+					public void onClick( final View v )
+					{
+						EventBus.getBus().post( new RequireChatHistoryEvent() );
+					}
+				}
+			);
+		}
+	}
 }
