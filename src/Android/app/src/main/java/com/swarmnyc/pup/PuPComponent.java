@@ -28,8 +28,6 @@ public interface PuPComponent
 
 	void inject( LobbyChatAdapter lobbyChatAdapter );
 
-	void inject( MyChatAdapter myChatAdapter );
-
 	void inject( SettingsFragment settingsFragment );
 
 	void inject( MyChatsFragment myChatsFragment );

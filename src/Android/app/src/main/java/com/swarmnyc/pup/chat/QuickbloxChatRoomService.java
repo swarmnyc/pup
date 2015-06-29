@@ -12,12 +12,7 @@ import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.model.QBUser;
-import com.swarmnyc.pup.AsyncCallback;
-import com.swarmnyc.pup.Config;
-import com.swarmnyc.pup.EventBus;
-import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.ChatMessageReceiveEvent;
-import com.swarmnyc.pup.User;
+import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
@@ -26,7 +21,6 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class QuickbloxChatRoomService extends ChatRoomService
@@ -54,7 +48,7 @@ public class QuickbloxChatRoomService extends ChatRoomService
 			QBChatMessage chatMessage = new QBChatMessage();
 			chatMessage.setBody( message );
 			chatMessage.setProperty( "userId", User.current.getId() );
-			chatMessage.setDateSent( new Date().getTime() / 1000 );
+			//chatMessage.setDateSent( new Date().getTime() / 1000 );
 			chatMessage.setSaveToHistory( true );
 			m_chat.sendMessage( chatMessage );
 		}
@@ -117,14 +111,15 @@ public class QuickbloxChatRoomService extends ChatRoomService
 								messages.add(
 									new ChatMessage(
 										user,
+										chatMessage.getId(),
 										chatMessage.getBody(),
-										true,
+										chatMessage.getDateSent(),
 										String.valueOf( chatMessage.getProperty( "code" ) ),
 										String.valueOf( chatMessage.getProperty( "codeBody" ) )
 									)
 								);
 
-								EventBus.getBus().post(new ChatMessageReceiveEvent(m_lobby.getId(), messages));
+								EventBus.getBus().post(new ChatMessageReceiveEvent(m_lobby.getId(), true, messages));
 							}
 						}
 					);
@@ -163,7 +158,7 @@ public class QuickbloxChatRoomService extends ChatRoomService
 								@Override
 								public void run()
 								{
-									loadChatHistory();
+									loadChatHistory(0);
 								}
 							}
 						);
@@ -227,10 +222,14 @@ public class QuickbloxChatRoomService extends ChatRoomService
 	}
 
 	@Override
-	public void loadChatHistory()
+	public void loadChatHistory(long date)
 	{
 		QBRequestGetBuilder customObjectRequestBuilder = new QBRequestGetBuilder();
-		customObjectRequestBuilder.setPagesLimit( 1000 );
+		customObjectRequestBuilder.setPagesLimit( Consts.PAGE_SIZE );
+		customObjectRequestBuilder.sortDesc( "date_sent" );
+		if ( date > 0 ){
+			customObjectRequestBuilder.lte( "date_sent", date );
+		}
 
 		QBChatService.getDialogMessages(
 			m_dialog, customObjectRequestBuilder, new QBEntityCallbackImpl<ArrayList<QBChatMessage>>()
@@ -249,10 +248,10 @@ public class QuickbloxChatRoomService extends ChatRoomService
 								{
 									LobbyUserInfo user = getLobbyUserInfo( message );
 
-									cms.add( new ChatMessage( user, message.getBody() ) );
+									cms.add( new ChatMessage( user,message.getId(), message.getBody(), message.getDateSent() ) );
 								}
 
-								EventBus.getBus().post(new ChatMessageReceiveEvent(m_lobby.getId(), cms));
+								EventBus.getBus().post(new ChatMessageReceiveEvent(m_lobby.getId(), false, cms));
 							}
 						}
 					);

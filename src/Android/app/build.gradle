@@ -2,16 +2,23 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
 android {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
     defaultConfig {
         applicationId "com.swarmnyc.pup"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 2
-        versionName "0.2"
+        versionCode 3
+        versionName "0.3"
 //        multiDexEnabled = true
+        buildConfigField "Boolean", "ENABLE_LOG_REFROFIT", properties.getProperty("enableLog.refrofit", "false")
+        buildConfigField "Boolean", "ENABLE_LOG_CHAT", properties.getProperty("enableLog.chat", "false")
     }
+
+
     buildTypes {
         release {
             minifyEnabled true

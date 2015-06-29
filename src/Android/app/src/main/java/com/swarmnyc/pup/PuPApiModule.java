@@ -39,7 +39,7 @@ public class PuPApiModule {
                         }
                         }
                 })
-	            .setLogLevel( BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE )
+	            .setLogLevel( BuildConfig.ENABLE_LOG_REFROFIT ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE )
                 .setConverter( new GsonConverter( gson ) )
                 .build();
     }

@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
@@ -32,6 +33,7 @@ import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
+import com.swarmnyc.pup.components.SoftKeyboardHelper;
 import com.swarmnyc.pup.fragments.MainDrawerFragment;
 import com.swarmnyc.pup.fragments.MyChatsFragment;
 import com.swarmnyc.pup.fragments.SettingsFragment;
@@ -45,15 +47,14 @@ import butterknife.InjectView;
 
 public class MainActivity extends AppCompatActivity {
     private static MainActivity m_instance;
-    private        boolean      launchDefault;
-    private        View         m_scrollToEndView;
+    private boolean launchDefault;
 
     @InjectView( R.id.toolbar )   Toolbar   m_toolbar;
     @InjectView( R.id.viewpager ) ViewPager m_viewPager;
     @InjectView( R.id.tabs )  TabLayout m_tabLayout;
 
-    //    @InjectView(R.id.drawer_layout)
-    //    ViewGroup m_root;
+        @InjectView(R.id.main_content)
+        ViewGroup m_root;
 
     public MainActivity()
     {
@@ -82,13 +83,15 @@ public class MainActivity extends AppCompatActivity {
         display.getSize( windowSize );
         Consts.windowWidth = windowSize.x;
         Consts.windowHeight = windowSize.y;
+        ViewConfiguration vc = ViewConfiguration.get( this );
+        Consts.TOUCH_SLOP = vc.getScaledTouchSlop();
 
         //Google
         GoogleAnalytics m_googleAnalytics = GoogleAnalytics.getInstance( this );
         m_googleAnalytics.setLocalDispatchPeriod( 1800 );
 
-        Tracker m_tracker = m_googleAnalytics.newTracker( getString( R.string.google_tracker_key ) );
-        m_tracker.enableExceptionReporting( false );
+        Tracker m_tracker = m_googleAnalytics.newTracker(getString(R.string.google_tracker_key));
+        m_tracker.enableExceptionReporting(true);
 
         //User Voice
         com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config(
@@ -101,12 +104,14 @@ public class MainActivity extends AppCompatActivity {
 
         Navigator.init( this, m_tracker );
 
-        if ( !Config.getBool( "ShowedSplash" ) )
-        {
-            Config.setBool( "ShowedSplash", true );
-            startActivity( new Intent( this, SplashActivity.class));
+
+        //Show Splash or not
+        if (!Config.getBool("ShowedSplash")) {
+            Config.setBool("ShowedSplash", true);
+            startActivity(new Intent(this, SplashActivity.class));
         }
 
+        //Redirect to Lobby
         Intent intent = getIntent();
         Uri data = intent.getData();
         launchDefault = true;
@@ -142,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         EventBus.getBus().register(this);
+        SoftKeyboardHelper.init(m_root, this );
     }
 
     @Override
@@ -150,6 +156,12 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getBus().unregister(this);
     }
 
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+//        SoftKeyboardHelper.uninit();
+    }
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
@@ -165,9 +177,7 @@ public class MainActivity extends AppCompatActivity {
         Navigator.ToCreateLobby();
     }
 
-    public void setViewToScrollToEndWhenKeyboardUp(View view) {
-        m_scrollToEndView = view;
-    }
+
 
     public Toolbar getToolbar() {
         return m_toolbar;
@@ -217,42 +227,9 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    public void hideSoftKeyboard() {
-        if ( getCurrentFocus() == null )
-        {
-            return;
-        }
-        if ( getCurrentFocus().getWindowToken() == null )
-        {
-            return;
-        }
 
-        InputMethodManager imm = (InputMethodManager) getSystemService(
-                Context.INPUT_METHOD_SERVICE
-        );
 
-        imm.hideSoftInputFromWindow( getCurrentFocus().getWindowToken(), 0 );
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        m_instance = null;
-    }
-
-    private void scrollToEnd() {
-        Log.d("Keyboard", "On");
-        final RecyclerView recyclerView = (RecyclerView) m_scrollToEndView;
-        if (recyclerView != null) {
-            Log.d("Keyboard", "On");
-            recyclerView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
-                }
-            },100);
-        }
-    }
 
     static class Adapter extends FragmentPagerAdapter
     {
@@ -288,4 +265,5 @@ public class MainActivity extends AppCompatActivity {
             return mFragmentTitles.get( position );
         }
     }
+
 }

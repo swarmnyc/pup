@@ -28,7 +28,7 @@ public class QuickbloxChatService implements ChatService
 	public QuickbloxChatService(  )
 	{
 		//Login API
-		QBChatService.setDebugEnabled( BuildConfig.DEBUG );
+		QBChatService.setDebugEnabled( BuildConfig.ENABLE_LOG_CHAT );
 		QBSettings.getInstance().fastConfigInit(
 			Config.getConfigString( R.string.QB_APP_ID ),
 			Config.getConfigString( R.string.QB_APP_KEY ),

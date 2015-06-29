@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.*;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,6 +23,10 @@ import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
+import com.swarmnyc.pup.*;
+import com.swarmnyc.pup.Services.LobbyService;
+import com.swarmnyc.pup.Services.ServiceCallback;
+import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.LobbyChatAdapter;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatRoomService;
@@ -29,6 +34,7 @@ import com.swarmnyc.pup.chat.ChatService;
 import com.swarmnyc.pup.components.*;
 import com.swarmnyc.pup.components.ViewAnimationUtils;
 import com.swarmnyc.pup.events.LobbyUserChangeEvent;
+import com.swarmnyc.pup.events.RequireChatHistoryEvent;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
@@ -38,11 +44,14 @@ import com.swarmnyc.pup.view.ShareView;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 
 public class LobbyFragment extends BaseFragment implements Screen
+
 {
 	@Inject LobbyService m_lobbyService;
 
@@ -53,6 +62,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 	@InjectView( R.id.backdrop )           ImageView               m_headerImage;
 	@InjectView( R.id.collapsing_toolbar ) CollapsingToolbarLayout m_collapsingToolbarLayout;
 	@InjectView( R.id.toolbar )            Toolbar                 m_toolbar;
+
 
 	@InjectView( R.id.text_panel ) ViewGroup m_textPanel;
 
@@ -68,14 +78,6 @@ public class LobbyFragment extends BaseFragment implements Screen
 
 	@InjectView( R.id.img_loading ) ImageView m_loadingImage;
 
-	private boolean m_loadHistory = true;
-	private Lobby               m_lobby;
-	private String              m_lobbyName;
-	private MemberFragment      m_memberFragment;
-	private String              m_lobbyId;
-	private LobbyChatAdapter    m_lobbyChatAdapter;
-	private LinearLayoutManager m_chatListLayoutManager;
-	private boolean m_first = true;
 	private String m_lobbyImage;
 
 	@Override
@@ -92,6 +94,16 @@ public class LobbyFragment extends BaseFragment implements Screen
 		m_lobbyImage = args.getString( Consts.KEY_LOBBY_IMAGE );
 	}
 
+	private Lobby               m_lobby;
+	private String              m_lobbyName;
+	private String              m_lobbyId;
+	private MemberFragment      m_memberFragment;
+	private LobbyChatAdapter    m_lobbyChatAdapter;
+	private LinearLayoutManager m_chatListLayoutManager;
+	private boolean m_first = true;
+	private long m_lastListScrollingTime;
+	float m_touchDownX;
+	float m_touchDownY;
 
 	@Override
 	public View onCreateView(
@@ -113,7 +125,6 @@ public class LobbyFragment extends BaseFragment implements Screen
 		ButterKnife.inject( this, view );
 
 		setHasOptionsMenu( true );
-
 
 		if ( StringUtils.isNotEmpty( m_lobbyImage ) )
 		{
@@ -142,33 +153,38 @@ public class LobbyFragment extends BaseFragment implements Screen
 
 		getAppCompatActivity().setSupportActionBar( m_toolbar );
 
-		//scrolling to end when has focus
-		//m_messageText.setOnFocusChangeListener(new HideKeyboadFocusChangeListener(getActivity()));
 
-		m_messageText.setOnFocusChangeListener(
-			new HideKeyboadFocusChangeListener( getActivity() )
+		m_first = true;
+		m_lobby = null;
+		m_memberFragment = null;
+		m_lobbyChatAdapter = null;
+		m_chatListLayoutManager = null;
+
+
+		// Scroll down when Keyboard up
+		SoftKeyboardHelper.setSoftKeyboardCallback(
+			new Action()
 			{
 				@Override
-				public void onFocusChange( View v, boolean hasFocus )
+				public void call( final Object value )
 				{
-					super.onFocusChange( v, hasFocus );
-					if ( hasFocus )
+					if ( System.currentTimeMillis() - m_lastListScrollingTime < 1000 )
 					{
-						//Log.d("Scrolling", "Do");
-						m_chatList.postDelayed(
-							new Runnable()
-							{
-								@Override
-								public void run()
-								{
-									m_chatList.scrollToPosition( m_lobbyChatAdapter.getItemCount() - 1 );
-								}
-							}, 100
-						);
+						return;
 					}
+
+					m_lastListScrollingTime = System.currentTimeMillis();
+
+					Log.d( "Scrolling", "After Keyboard up" );
+					m_chatList.scrollToPosition( m_lobbyChatAdapter.getItemCount() - 1 );
+
 				}
 			}
 		);
+
+
+		//scrolling to end when has focus
+		m_messageText.setOnFocusChangeListener( new HideKeyboardFocusChangedListener( getActivity() ) );
 
 		//Tap to Hide SoftKeyboard
 		m_chatList.setOnTouchListener(
@@ -177,13 +193,22 @@ public class LobbyFragment extends BaseFragment implements Screen
 				@Override
 				public boolean onTouch( View v, MotionEvent event )
 				{
-					if ( event.getAction() == MotionEvent.ACTION_UP )
+
+					if ( event.getAction() == MotionEvent.ACTION_DOWN )
 					{
-						//Log.d("Touch", "Event:"+ event);
-						if ( event.getEventTime() - event.getDownTime() < 100 )
+						m_touchDownX = event.getX();
+						m_touchDownY = event.getY();
+					}
+					else if ( event.getAction() == MotionEvent.ACTION_UP )
+					{
+						Log.d( "Touch", "Event:" + event );
+						if ( Math.abs( m_touchDownX - event.getX() ) < Consts.TOUCH_SLOP && Math.abs(
+							m_touchDownY
+							- event.getY()
+						) < Consts.TOUCH_SLOP )
 						{
-							//Log.d("Touch", "Tap");
-							//                        MainActivity.getInstance().hideSoftKeyboard();
+							Log.d( "Touch", "Tap" );
+							SoftKeyboardHelper.hideSoftKeyboard();
 						}
 					}
 
@@ -192,7 +217,6 @@ public class LobbyFragment extends BaseFragment implements Screen
 			}
 		);
 
-		//        MainActivity.getInstance().setViewToScrollToEndWhenKeyboardUp(m_chatList);
 	}
 
 	@Override
@@ -209,21 +233,23 @@ public class LobbyFragment extends BaseFragment implements Screen
 					@Override
 					public void success( final Lobby value )
 					{
+
 						if ( isAdded() )
 						{
 							setLobby( value );
 						}
+
 					}
 				}
 			);
 		}
 
-		setTitle( m_lobbyName );
 
 		if ( m_chatRoomService != null )
 		{
 			m_chatRoomService.login( false );
 		}
+
 	}
 
 	@Override
@@ -239,6 +265,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 	}
 
 	@Override
+
 	public void onAttach( Activity activity )
 	{
 		super.onAttach( activity );
@@ -247,22 +274,12 @@ public class LobbyFragment extends BaseFragment implements Screen
 		//        MainDrawerFragment.getInstance().highLight(null);
 	}
 
-	@Override
-	public void onDetach()
-	{
-		super.onDetach();
 
-		//        if (m_memberFragment != null) {
-		//            MainDrawerFragment.getInstance().removeRightDrawer(m_memberFragment);
-		//        }
-
-		//        MainActivity.getInstance().setViewToScrollToEndWhenKeyboardUp(null);
-	}
-
-	@Override
 	public void onDestroyView()
 	{
 		super.onDestroyView();
+
+		SoftKeyboardHelper.removeSoftKeyboardCallback();
 		ButterKnife.reset( this );
 	}
 
@@ -277,8 +294,8 @@ public class LobbyFragment extends BaseFragment implements Screen
 	{
 		if ( item.getItemId() == R.id.menu_members )
 		{
-//			MainDrawerFragment.getInstance().showRightDrawer();
-			return true;
+		// TODO move to activity
+				return true;
 		}
 		else
 		{
@@ -347,10 +364,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 			)
 		);
 
-//		m_memberFragment = new MemberFragment();
-//		m_memberFragment.setLobby( m_lobby );
-		// TODO SJ
-		//        MainDrawerFragment.getInstance().setRightDrawer(m_memberFragment);
+
 
 		//Join chat
 		m_chatRoomService.login( true );
@@ -361,16 +375,16 @@ public class LobbyFragment extends BaseFragment implements Screen
 		//Show or Hide joinLobby button
 		if ( User.isLoggedIn() )
 		{
-			LobbyUserInfo user = m_lobby.getAliveUser( User.current.getId() );
-			if ( user == null )
-			{
-				m_joinButton.setVisibility( View.VISIBLE );
-				m_textPanel.setVisibility( View.GONE );
-			}
-			else
+
+			if ( m_lobby.isAliveUser( User.current.getId()) )
 			{
 				m_joinButton.setVisibility( View.GONE );
 				m_textPanel.setVisibility( View.VISIBLE );
+			}
+			else
+			{
+				m_joinButton.setVisibility( View.VISIBLE );
+				m_textPanel.setVisibility( View.GONE );
 			}
 		}
 		else
@@ -438,6 +452,12 @@ public class LobbyFragment extends BaseFragment implements Screen
 	}
 
 	@Subscribe
+	public void handleChatHistoryRequire( RequireChatHistoryEvent event )
+	{
+		m_chatRoomService.loadChatHistory(m_lobbyChatAdapter.getFirstChatMessage().getSentAt());
+	}
+
+	@Subscribe
 	public void receiveMessage( ChatMessageReceiveEvent event )
 	{
 		if ( !event.getLobbyId().equals( m_lobbyId ) )
@@ -446,18 +466,19 @@ public class LobbyFragment extends BaseFragment implements Screen
 		//After receive history
 		if ( m_first )
 		{
-			m_first = false;
+
 			switchButton();
-			m_loadingImage.setVisibility( View.GONE );
-//			ViewAnimationUtils.hideWithAnimation( getActivity(), m_loadingImage );
+			ViewAnimationUtils.hideWithAnimation( getActivity(), m_loadingImage );
 		}
 
-		List<ChatMessage> messages = event.getMessages();
-		if ( messages.size() == 1 )
+		ArrayList<ChatMessage> messages = (ArrayList<ChatMessage>)event.getMessages();
+		if ( event.isNewMessage() && messages.size() == 1 )
 		{
+			// New System Message
 			ChatMessage cm = messages.get( 0 );
-			if ( cm.isNewMessage() && cm.isSystemMessage() && cm.getCode() != null )
+			if (cm.isSystemMessage() && cm.getCode() != null )
 			{
+
 				boolean isCurrentUser = false;
 				//Join and Left System messages.
 				if ( cm.getCode().equals( "Join" ) && cm.getCodeBody() != null )
@@ -501,25 +522,52 @@ public class LobbyFragment extends BaseFragment implements Screen
 				}
 			}
 		}
-		int oldSize = m_lobbyChatAdapter.getMessageCount();
 
-		m_lobbyChatAdapter.addMessages( messages );
 
-		int size = m_lobbyChatAdapter.getMessageCount();
-		if ( size == 0 && m_lobby.isAliveUser( User.current.getId() ) )
-		{
-			m_sharePanel.setVisibility( View.VISIBLE );
-			m_sharePanel.setLobbyService( m_lobbyService );
-			m_sharePanel.setLobby( m_lobby );
-		}
-		else
-		{
-			m_sharePanel.setVisibility( View.GONE );
-			int lastPosition = m_chatListLayoutManager.findLastVisibleItemPosition();
-			if ( ( lastPosition + 3 ) > oldSize ) //it is on the end, scrolling
-				m_chatList.scrollToPosition( size );
+		m_lastListScrollingTime = System.currentTimeMillis();
+		int oldSize = m_lobbyChatAdapter.getItemCount();
+
+		if ( event.isNewMessage() ){
+			m_lobbyChatAdapter.addMessages( messages );
+
+		}else {
+			Collections.reverse( messages );
+			m_lobbyChatAdapter.showLoadMore( messages.size() == Consts.PAGE_SIZE);
+			m_lobbyChatAdapter.addMessages(0, messages );
 		}
 
+		// Scrolling
+		if ( event.isNewMessage() || m_first ){
+			int size = m_lobbyChatAdapter.getItemCount();
+			if ( size == 1 && m_lobby.isAliveUser( User.current.getId() ) )
+			{
+				//no message, show share item
+				m_sharePanel.setVisibility( View.VISIBLE );
+				m_sharePanel.setLobbyService( m_lobbyService );
+				m_sharePanel.setLobby( m_lobby );
+			}
+			else
+			{
+				m_sharePanel.setVisibility( View.GONE );
+				int lastPosition = m_chatListLayoutManager.findLastVisibleItemPosition();
+				if ( Math.abs( oldSize - lastPosition ) < 3 ) //it almost is on the end, scrolling
+				{
+					Log.d( "Scrolling", "After Receive Message" );
+					m_chatList.post(
+						new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								m_chatList.scrollToPosition( m_lobbyChatAdapter.getItemCount() - 1 );
+							}
+						}
+					);
+				}
+			}
+		}
+
+		m_first = false;
 	}
 
 }

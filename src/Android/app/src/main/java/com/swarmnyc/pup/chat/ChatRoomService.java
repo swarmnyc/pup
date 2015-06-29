@@ -8,5 +8,5 @@ public abstract class ChatRoomService
 
 	public abstract void leave();
 
-	public abstract void loadChatHistory();
+	public abstract void loadChatHistory(long date);
 }

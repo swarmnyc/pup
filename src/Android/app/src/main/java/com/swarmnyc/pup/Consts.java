@@ -25,8 +25,9 @@ public class Consts
 	public static final String KEY_REDDIT     = "Reddit";
 	public static final String KEY_TUMBLR     = "Tumblr";
 
-	public final static int    PAGE_SIZE       = 20;
+	public final static int PAGE_SIZE  = 20;
 
+	public static int TOUCH_SLOP;
 	public static int windowWidth;
 	public static int windowHeight;
 

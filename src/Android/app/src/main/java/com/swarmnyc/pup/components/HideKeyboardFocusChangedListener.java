@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 
-public class HideKeyboadFocusChangeListener implements View.OnFocusChangeListener {
+public class HideKeyboardFocusChangedListener implements View.OnFocusChangeListener {
     private Activity m_activity;
 
-    public HideKeyboadFocusChangeListener(Activity activity) {
+    public HideKeyboardFocusChangedListener( Activity activity ) {
         m_activity = activity;
     }
 

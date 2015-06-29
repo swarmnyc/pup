@@ -1,5 +1,6 @@
 package com.swarmnyc.pup.fragments;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -22,11 +23,7 @@ import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
-import com.swarmnyc.pup.components.Action;
-import com.swarmnyc.pup.components.DialogHelper;
-import com.swarmnyc.pup.components.HideKeyboadFocusChangeListener;
-import com.swarmnyc.pup.components.Navigator;
-import com.swarmnyc.pup.components.Utility;
+import com.swarmnyc.pup.components.*;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.*;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
@@ -46,6 +43,9 @@ public class CreateLobbyFragment extends Fragment
 
 	@Inject
 	LobbyService m_lobbyService;
+
+	@InjectView( R.id.layout_lobby_create )
+	ViewGroup m_rootView;
 
 	@InjectView( R.id.img_game )
 	ImageView m_gameImageView;
@@ -81,6 +81,14 @@ public class CreateLobbyFragment extends Fragment
 	boolean                                   m_customDateTime;
 	AutoCompleteForPicturedModelAdapter<Game> m_gameAdapter;
 	int                                       m_timeOffset;
+
+	@Override
+	public void onAttach( final Activity activity )
+	{
+		super.onAttach( activity );
+
+
+	}
 
 	@Override
 	public void onDateSet( final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth )
@@ -129,8 +137,8 @@ public class CreateLobbyFragment extends Fragment
 			return;
 		}
 
-
-		MainActivity.getInstance().hideSoftKeyboard();
+		//TODO: Change to Lose focus
+		SoftKeyboardHelper.hideSoftKeyboard();
 
 		DialogHelper.showProgressDialog( R.string.message_lobby_creating );
 
@@ -177,6 +185,8 @@ public class CreateLobbyFragment extends Fragment
 		return "Create Lobby";
 	}
 
+
+
 	@Override
 	public View onCreateView(
 		LayoutInflater inflater,
@@ -201,6 +211,7 @@ public class CreateLobbyFragment extends Fragment
 		PuPApplication.getInstance().getComponent().inject( this );
 		ButterKnife.inject( this, view );
 		EventBus.getBus().register( this );
+		SoftKeyboardHelper.init(  m_rootView, getActivity());
 
 		m_gameAdapter = new AutoCompleteForPicturedModelAdapter<>( this.getActivity() );
 
@@ -245,7 +256,7 @@ public class CreateLobbyFragment extends Fragment
 						m_gameNameTextEdit.setText( "" );
 						UserVoice.launchPostIdea( getActivity() );
 					} else  {
-						MainActivity.getInstance().hideSoftKeyboard();
+						SoftKeyboardHelper.hideSoftKeyboard();
 						if ( StringUtils.isNotEmpty( m_selectedGame.getPictureUrl() ) )
 						{
 							Picasso.with( getActivity() ).load( m_selectedGame.getPictureUrl() ).centerCrop().fit().into(
@@ -260,8 +271,8 @@ public class CreateLobbyFragment extends Fragment
 			}
 		);
 
-		m_gameNameTextEdit.setOnFocusChangeListener(new HideKeyboadFocusChangeListener(getActivity()));
-		m_descriptionText.setOnFocusChangeListener(new HideKeyboadFocusChangeListener(getActivity()));
+		m_gameNameTextEdit.setOnFocusChangeListener(new HideKeyboardFocusChangedListener(getActivity()));
+		m_descriptionText.setOnFocusChangeListener(new HideKeyboardFocusChangedListener(getActivity()));
 
 		m_gamePlatformSelectView.setPlatformSelectionChangedListener(
 			new GamePlatformSelectView.OnPlatformSelectionChangedListener()
