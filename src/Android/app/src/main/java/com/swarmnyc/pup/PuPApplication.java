@@ -1,46 +1,62 @@
 package com.swarmnyc.pup;
 
 import android.app.Application;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Point;
-import android.view.Display;
-
-import com.swarmnyc.pup.components.*;
-import com.uservoice.uservoicesdk.UserVoice;
+import com.swarmnyc.pup.chat.MessageService;
 
 public class PuPApplication extends Application
 {
-    private static PuPApplication instance;
-    private PuPComponent component;
+	private static PuPApplication instance;
+	private        PuPComponent   component;
 
-    public static PuPApplication getInstance() {
-        return instance;
-    }
+	public static PuPApplication getInstance()
+	{
+		return instance;
+	}
 
-    public PuPComponent getComponent() {
-        return component;
-    }
+	public PuPComponent getComponent()
+	{
+		return component;
+	}
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        instance = this;
-        Config.init(this);
-        User.init();
+	@Override
+	public void onCreate()
+	{
+		super.onCreate();
+		instance = this;
+		Config.init( this );
+		User.init();
 
-        this.component = DaggerPuPComponent.builder().build();
+		this.component = DaggerPuPComponent.builder().build();
 
-        ApiSettings.PuPServerPath = Config.getConfigString( R.string.PuP_Url );
-    }
+		ApiSettings.PuPServerPath = Config.getConfigString( R.string.PuP_Url );
 
-    public int getAppVersion() {
-        try {
-            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            return packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            // should never happen
-            throw new RuntimeException("Could not get package name: " + e);
-        }
-    }
+		if ( User.isLoggedIn() )
+		{
+			StartMessageService();
+		}
+	}
+
+
+	public void StartMessageService(){
+		startService( new Intent( this, MessageService.class ) );
+	}
+
+	public int getAppVersion()
+	{
+		try
+		{
+			PackageInfo packageInfo = getPackageManager().getPackageInfo( getPackageName(), 0 );
+			return packageInfo.versionCode;
+		}
+		catch ( PackageManager.NameNotFoundException e )
+		{
+			// should never happen
+			throw new RuntimeException( "Could not get package name: " + e );
+		}
+	}
+
+
 }

@@ -32,10 +32,10 @@ public class GcmHelper
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private GoogleCloudMessaging googleCloudMessaging;
-    private Activity activity;
+    private Context activity;
     private String regId;
 
-    public GcmHelper( Activity activity ) {
+    public GcmHelper( Context activity ) {
         this.activity = activity;
     }
 
@@ -59,12 +59,12 @@ public class GcmHelper
      * it doesn't, display a dialog that allows users to download the APK from
      * the Google Play Store or enable it in the device's system settings.
      */
-    public boolean checkPlayServices() {
+    private boolean checkPlayServices() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, activity, PLAY_SERVICES_RESOLUTION_REQUEST)
-                        .show();
+//                GooglePlayServicesUtil.getErrorDialog(resultCode, activity, PLAY_SERVICES_RESOLUTION_REQUEST)
+//                        .show();
             } else {
                 Log.i(TAG, "This device is not supported.");
             }
@@ -107,7 +107,7 @@ public class GcmHelper
      * Stores the registration ID and app versionCode in the application's
      * shared preferences.
      */
-    private void registerInBackground() {
+    public void registerInBackground() {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {

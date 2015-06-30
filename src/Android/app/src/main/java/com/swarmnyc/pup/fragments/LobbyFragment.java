@@ -10,7 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,16 +26,11 @@ import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
-import com.swarmnyc.pup.*;
-import com.swarmnyc.pup.Services.LobbyService;
-import com.swarmnyc.pup.Services.ServiceCallback;
-import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.LobbyChatAdapter;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatRoomService;
-import com.swarmnyc.pup.chat.ChatService;
+import com.swarmnyc.pup.chat.QuickbloxChatRoomService;
 import com.swarmnyc.pup.components.*;
-import com.swarmnyc.pup.components.ViewAnimationUtils;
 import com.swarmnyc.pup.events.LobbyUserChangeEvent;
 import com.swarmnyc.pup.events.RequireChatHistoryEvent;
 import com.swarmnyc.pup.events.UserChangedEvent;
@@ -46,7 +44,6 @@ import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
 
@@ -54,8 +51,6 @@ public class LobbyFragment extends BaseFragment implements Screen
 
 {
 	@Inject LobbyService m_lobbyService;
-
-	@Inject ChatService m_chatService;
 
 	ChatRoomService m_chatRoomService;
 
@@ -79,13 +74,6 @@ public class LobbyFragment extends BaseFragment implements Screen
 	@InjectView( R.id.img_loading ) ImageView m_loadingImage;
 
 	private String m_lobbyImage;
-
-
-
-
-
-
-
 
 	private Lobby               m_lobby;
 	private String              m_lobbyName;
@@ -129,7 +117,8 @@ public class LobbyFragment extends BaseFragment implements Screen
 		if ( StringUtils.isNotEmpty( m_lobbyImage ) )
 		{
 			Picasso.with( getActivity() ).load( m_lobbyImage ).centerCrop().fit().into(
-				m_headerImage, new Callback() {
+				m_headerImage, new Callback()
+				{
 					@Override
 					public void onSuccess()
 					{
@@ -153,13 +142,10 @@ public class LobbyFragment extends BaseFragment implements Screen
 
 		getAppCompatActivity().setSupportActionBar( m_toolbar );
 
-
-		m_first = true;
 		m_lobby = null;
 		m_memberFragment = null;
 		m_lobbyChatAdapter = null;
 		m_chatListLayoutManager = null;
-
 
 		// Scroll down when Keyboard up
 		SoftKeyboardHelper.setSoftKeyboardCallback(
@@ -182,7 +168,6 @@ public class LobbyFragment extends BaseFragment implements Screen
 			}
 		);
 
-
 		//scrolling to end when has focus
 		m_messageText.setOnFocusChangeListener( new HideKeyboardFocusChangedListener( getActivity() ) );
 
@@ -201,13 +186,12 @@ public class LobbyFragment extends BaseFragment implements Screen
 					}
 					else if ( event.getAction() == MotionEvent.ACTION_UP )
 					{
-						Log.d( "Touch", "Event:" + event );
+						//Log.d( "Touch", "Event:" + event );
 						if ( Math.abs( m_touchDownX - event.getX() ) < Consts.TOUCH_SLOP && Math.abs(
-							m_touchDownY
-							- event.getY()
+							m_touchDownY - event.getY()
 						) < Consts.TOUCH_SLOP )
 						{
-							Log.d( "Touch", "Tap" );
+							//Log.d( "Touch", "Tap" );
 							SoftKeyboardHelper.hideSoftKeyboard();
 						}
 					}
@@ -224,32 +208,6 @@ public class LobbyFragment extends BaseFragment implements Screen
 	{
 		super.onStart();
 		EventBus.getBus().register( this );
-
-//		if ( m_lobby == null )
-//		{
-//			m_lobbyService.getLobby(
-//				m_lobbyId, new ServiceCallback<Lobby>()
-//				{
-//					@Override
-//					public void success( final Lobby value )
-//					{
-//
-//						if ( isAdded() )
-//						{
-//							setLobby( value );
-//						}
-//
-//					}
-//				}
-//			);
-//		}
-
-
-		if ( m_chatRoomService != null )
-		{
-			m_chatRoomService.login( false );
-		}
-
 	}
 
 	@Override
@@ -257,14 +215,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 	{
 		super.onStop();
 		EventBus.getBus().unregister( this );
-
-		if ( m_chatRoomService != null )
-		{
-			m_chatRoomService.leave();
-		}
 	}
-
-
 
 	public void onDestroyView()
 	{
@@ -273,8 +224,6 @@ public class LobbyFragment extends BaseFragment implements Screen
 		SoftKeyboardHelper.removeSoftKeyboardCallback();
 		ButterKnife.reset( this );
 	}
-
-
 
 	@Override
 	public String toString()
@@ -332,8 +281,13 @@ public class LobbyFragment extends BaseFragment implements Screen
 
 		setSubtitle( subtitle );
 
-		m_chatRoomService = m_chatService.getChatRoomService( getActivity(), m_lobby );
+		initChatRoom();
+	}
 
+	private void initChatRoom()
+	{
+		ViewAnimationUtils.showWithAnimation( getActivity(), m_loadingImage );
+		m_first = true;
 		m_chatListLayoutManager = new LinearLayoutManager( getActivity() );
 		m_lobbyChatAdapter = new LobbyChatAdapter( getActivity(), m_lobby );
 		m_chatList.setAdapter( m_lobbyChatAdapter );
@@ -344,10 +298,18 @@ public class LobbyFragment extends BaseFragment implements Screen
 			)
 		);
 
-
-
-		//Join chat
-		m_chatRoomService.login( true );
+		if ( m_lobby.isAliveUser( User.current.getId() ) )
+		{
+			// Get Data
+			m_chatRoomService = new QuickbloxChatRoomService( getActivity(), m_lobby );
+			m_chatRoomService.login();
+			m_chatRoomService.loadChatHistory( 0 );
+		}
+		else
+		{
+			// Get DATA by Rest API
+			switchButton();
+		}
 	}
 
 	private void switchButton()
@@ -355,8 +317,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 		//Show or Hide joinLobby button
 		if ( User.isLoggedIn() )
 		{
-
-			if ( m_lobby.isAliveUser( User.current.getId()) )
+			if ( m_lobby.isAliveUser( User.current.getId() ) )
 			{
 				m_joinButton.setVisibility( View.GONE );
 				m_textPanel.setVisibility( View.VISIBLE );
@@ -398,6 +359,9 @@ public class LobbyFragment extends BaseFragment implements Screen
 					@Override
 					public void success( final Object value )
 					{
+						addUserIntoLobby( User.current );
+						EventBus.getBus().post( new LobbyUserChangeEvent( ) );
+						initChatRoom();
 						DialogHelper.hide();
 					}
 				}
@@ -421,69 +385,104 @@ public class LobbyFragment extends BaseFragment implements Screen
 	}
 
 	@Subscribe
-	public void postLobbyUserChanged( LobbyUserChangeEvent event )
-	{
-		//Once user join the lobby, refresh UI
-		if ( event.isCurrentUser() )
-		{
-			m_chatRoomService.login( false );
-			switchButton();
-		}
-	}
-
-	@Subscribe
 	public void handleChatHistoryRequire( RequireChatHistoryEvent event )
 	{
-		m_chatRoomService.loadChatHistory(m_lobbyChatAdapter.getFirstChatMessage().getSentAt());
+		m_chatRoomService.loadChatHistory( m_lobbyChatAdapter.getFirstChatMessage().getSentAt() );
 	}
 
 	@Subscribe
-	public void receiveMessage( ChatMessageReceiveEvent event )
+	public void receiveMessage( final ChatMessageReceiveEvent event )
 	{
-		if ( !event.getLobbyId().equals( m_lobbyId ) )
-		{ return; }
+		getActivity().runOnUiThread(
+			new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					if ( !event.getRoomId().equals( m_lobby.getTagValue( "QBChatRoomId" ) ) )
+					{ return; }
 
-		//After receive history
-		if ( m_first )
-		{
+					//After receive history
+					if ( m_first )
+					{
+						switchButton();
+						ViewAnimationUtils.hideWithAnimation( getActivity(), m_loadingImage );
+					}
 
-			switchButton();
-			ViewAnimationUtils.hideWithAnimation( getActivity(), m_loadingImage );
-		}
+					ArrayList<ChatMessage> messages = processSystemMessages( event );
 
-		ArrayList<ChatMessage> messages = (ArrayList<ChatMessage>)event.getMessages();
+					m_lastListScrollingTime = System.currentTimeMillis();
+					int oldSize = m_lobbyChatAdapter.getItemCount();
+
+					if ( event.isNewMessage() )
+					{
+						m_lobbyChatAdapter.addMessages( messages );
+
+					}
+					else
+					{
+						Collections.reverse( messages );
+						m_lobbyChatAdapter.showLoadMore( messages.size() == Consts.PAGE_SIZE );
+						m_lobbyChatAdapter.addMessages( 0, messages );
+					}
+
+					// Scrolling
+					if ( event.isNewMessage() || m_first )
+					{
+						int size = m_lobbyChatAdapter.getItemCount();
+						if ( size == 0 && m_lobby.isAliveUser( User.current.getId() ) )
+						{
+							//no message, show share item
+							m_sharePanel.setVisibility( View.VISIBLE );
+							m_sharePanel.setLobbyService( m_lobbyService );
+							m_sharePanel.setLobby( m_lobby );
+						}
+						else
+						{
+							m_sharePanel.setVisibility( View.GONE );
+							int lastPosition = m_chatListLayoutManager.findLastVisibleItemPosition();
+							if ( Math.abs( oldSize - lastPosition ) < 3 ) //it almost is on the end, scrolling
+							{
+								Log.d( "Scrolling", "After Receive Message" );
+								m_chatList.post(
+									new Runnable()
+									{
+										@Override
+										public void run()
+										{
+											m_chatList.scrollToPosition( m_lobbyChatAdapter.getItemCount() - 1 );
+										}
+									}
+								);
+							}
+						}
+					}
+
+					m_first = false;
+				}
+			}
+		);
+	}
+
+	private ArrayList<ChatMessage> processSystemMessages( final ChatMessageReceiveEvent event )
+	{
+		ArrayList<ChatMessage> messages = (ArrayList<ChatMessage>) event.getMessages();
 		if ( event.isNewMessage() && messages.size() == 1 )
 		{
 			// New System Message
 			ChatMessage cm = messages.get( 0 );
-			if (cm.isSystemMessage() && cm.getCode() != null )
+			if ( cm.isSystemMessage() && cm.getCode() != null )
 			{
-
-				boolean isCurrentUser = false;
 				//Join and Left System messages.
 				if ( cm.getCode().equals( "Join" ) && cm.getCodeBody() != null )
 				{
 					UserInfo[] users = Utility.fromJson( cm.getCodeBody(), UserInfo[].class );
 					for ( UserInfo u : users )
 					{
-						isCurrentUser = u.getId().equals( User.current.getId() );
-						LobbyUserInfo user = m_lobby.getUser( u.getId() );
-						if ( user == null )
-						{
-							user = new LobbyUserInfo();
-							user.setId( u.getId() );
-							user.setUserName( u.getUserName() );
-							user.setPortraitUrl( u.getPortraitUrl() );
-							m_lobby.getUsers().add( user );
-						}
-						else
-						{
-							//rejoin
-							user.setIsLeave( false );
-						}
+						addUserIntoLobby( u );
 					}
 
-					EventBus.getBus().post( new LobbyUserChangeEvent( isCurrentUser ) );
+					EventBus.getBus().post( new LobbyUserChangeEvent( ) );
 				}
 				else if ( cm.getCode().equals( "Leave" ) && cm.getCodeBody() != null )
 				{
@@ -498,56 +497,30 @@ public class LobbyFragment extends BaseFragment implements Screen
 						}
 					}
 
-					EventBus.getBus().post( new LobbyUserChangeEvent( false ) );
+					EventBus.getBus().post( new LobbyUserChangeEvent( ) );
 				}
 			}
 		}
 
+		return messages;
+	}
 
-		m_lastListScrollingTime = System.currentTimeMillis();
-		int oldSize = m_lobbyChatAdapter.getItemCount();
-
-		if ( event.isNewMessage() ){
-			m_lobbyChatAdapter.addMessages( messages );
-
-		}else {
-			Collections.reverse( messages );
-			m_lobbyChatAdapter.showLoadMore( messages.size() == Consts.PAGE_SIZE);
-			m_lobbyChatAdapter.addMessages(0, messages );
+	private void addUserIntoLobby( final UserInfo u )
+	{
+		LobbyUserInfo user = m_lobby.getUser( u.getId() );
+		if ( user == null )
+		{
+			user = new LobbyUserInfo();
+			user.setId( u.getId() );
+			user.setUserName( u.getUserName() );
+			user.setPortraitUrl( u.getPortraitUrl() );
+			m_lobby.getUsers().add( user );
 		}
-
-		// Scrolling
-		if ( event.isNewMessage() || m_first ){
-			int size = m_lobbyChatAdapter.getItemCount();
-			if ( size == 1 && m_lobby.isAliveUser( User.current.getId() ) )
-			{
-				//no message, show share item
-				m_sharePanel.setVisibility( View.VISIBLE );
-				m_sharePanel.setLobbyService( m_lobbyService );
-				m_sharePanel.setLobby( m_lobby );
-			}
-			else
-			{
-				m_sharePanel.setVisibility( View.GONE );
-				int lastPosition = m_chatListLayoutManager.findLastVisibleItemPosition();
-				if ( Math.abs( oldSize - lastPosition ) < 3 ) //it almost is on the end, scrolling
-				{
-					Log.d( "Scrolling", "After Receive Message" );
-					m_chatList.post(
-						new Runnable()
-						{
-							@Override
-							public void run()
-							{
-								m_chatList.scrollToPosition( m_lobbyChatAdapter.getItemCount() - 1 );
-							}
-						}
-					);
-				}
-			}
+		else
+		{
+			//rejoin
+			user.setIsLeave( false );
 		}
-
-		m_first = false;
 	}
 
 }
