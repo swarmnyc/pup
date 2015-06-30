@@ -80,19 +80,12 @@ public class LobbyFragment extends BaseFragment implements Screen
 
 	private String m_lobbyImage;
 
-	@Override
-	public void setArguments( final Bundle args )
-	{
-		super.setArguments( args );
-		loadFromBundle( args );
-	}
 
-	public void loadFromBundle( final Bundle args )
-	{
-		m_lobbyId = args.getString( Consts.KEY_LOBBY_ID );
-		m_lobbyName = args.getString( Consts.KEY_LOBBY_NAME );
-		m_lobbyImage = args.getString( Consts.KEY_LOBBY_IMAGE );
-	}
+
+
+
+
+
 
 	private Lobby               m_lobby;
 	private String              m_lobbyName;
@@ -104,6 +97,15 @@ public class LobbyFragment extends BaseFragment implements Screen
 	private long m_lastListScrollingTime;
 	float m_touchDownX;
 	float m_touchDownY;
+
+	@Override
+	public void onAttach( Activity activity )
+	{
+		super.onAttach( activity );
+		final Bundle bundle = activity.getIntent().getExtras();
+		loadFromBundle( bundle );
+		//        MainDrawerFragment.getInstance().highLight(null);
+	}
 
 	@Override
 	public View onCreateView(
@@ -123,8 +125,6 @@ public class LobbyFragment extends BaseFragment implements Screen
 		super.onViewCreated( view, savedInstanceState );
 		PuPApplication.getInstance().getComponent().inject( this );
 		ButterKnife.inject( this, view );
-
-		setHasOptionsMenu( true );
 
 		if ( StringUtils.isNotEmpty( m_lobbyImage ) )
 		{
@@ -225,24 +225,24 @@ public class LobbyFragment extends BaseFragment implements Screen
 		super.onStart();
 		EventBus.getBus().register( this );
 
-		if ( m_lobby == null )
-		{
-			m_lobbyService.getLobby(
-				m_lobbyId, new ServiceCallback<Lobby>()
-				{
-					@Override
-					public void success( final Lobby value )
-					{
-
-						if ( isAdded() )
-						{
-							setLobby( value );
-						}
-
-					}
-				}
-			);
-		}
+//		if ( m_lobby == null )
+//		{
+//			m_lobbyService.getLobby(
+//				m_lobbyId, new ServiceCallback<Lobby>()
+//				{
+//					@Override
+//					public void success( final Lobby value )
+//					{
+//
+//						if ( isAdded() )
+//						{
+//							setLobby( value );
+//						}
+//
+//					}
+//				}
+//			);
+//		}
 
 
 		if ( m_chatRoomService != null )
@@ -264,15 +264,6 @@ public class LobbyFragment extends BaseFragment implements Screen
 		}
 	}
 
-	@Override
-
-	public void onAttach( Activity activity )
-	{
-		super.onAttach( activity );
-		final Bundle bundle = activity.getIntent().getExtras();
-		loadFromBundle( bundle );
-		//        MainDrawerFragment.getInstance().highLight(null);
-	}
 
 
 	public void onDestroyView()
@@ -283,30 +274,19 @@ public class LobbyFragment extends BaseFragment implements Screen
 		ButterKnife.reset( this );
 	}
 
-	@Override
-	public void onCreateOptionsMenu( final Menu menu, final MenuInflater inflater )
-	{
-		inflater.inflate( R.menu.menu_lobby, menu );
-	}
 
-	@Override
-	public boolean onOptionsItemSelected( final MenuItem item )
-	{
-		if ( item.getItemId() == R.id.menu_members )
-		{
-		// TODO move to activity
-				return true;
-		}
-		else
-		{
-			return super.onOptionsItemSelected( item );
-		}
-	}
 
 	@Override
 	public String toString()
 	{
 		return "Lobby: " + m_lobbyName;
+	}
+
+	public void loadFromBundle( final Bundle args )
+	{
+		m_lobbyId = args.getString( Consts.KEY_LOBBY_ID );
+		m_lobbyName = args.getString( Consts.KEY_LOBBY_NAME );
+		m_lobbyImage = args.getString( Consts.KEY_LOBBY_IMAGE );
 	}
 
 	public void setLobby( final Lobby value )

@@ -15,19 +15,16 @@ import butterknife.InjectView;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.*;
-import com.swarmnyc.pup.Services.LobbyService;
-import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.events.LobbyUserChangeEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MemberFragment extends Fragment
 {
-	@Inject                          LobbyService  m_lobbyService;
+//	@Inject                          LobbyService  m_lobbyService;
 
 	@InjectView( R.id.list_members ) RecyclerView  m_memberList;
 	private                          Lobby         m_lobby;
@@ -76,21 +73,21 @@ public class MemberFragment extends Fragment
 
 		final String lobbyId = getActivity().getIntent().getStringExtra( Consts.KEY_LOBBY_ID );
 
-		if (StringUtils.isNotEmpty( lobbyId ))
+//		if (StringUtils.isNotEmpty( lobbyId ))
 
-		m_lobbyService.getLobby(
-			lobbyId, new ServiceCallback<Lobby>()
-			{
-				@Override
-				public void success( final Lobby value )
-				{
-					if ( isAdded() )
-					{
-						setLobby( value );
-					}
-				}
-			}
-		);
+//		m_lobbyService.getLobby(
+//			lobbyId, new ServiceCallback<Lobby>()
+//			{
+//				@Override
+//				public void success( final Lobby value )
+//				{
+//					if ( isAdded() )
+//					{
+//						setLobby( value );
+//					}
+//				}
+//			}
+//		);
 	}
 
 	@Override
@@ -163,6 +160,7 @@ public class MemberFragment extends Fragment
 				if ( !user.getIsLeave() )
 				{ m_users.add( user ); }
 			}
+			notifyDataSetChanged();
 		}
 
 		@Override

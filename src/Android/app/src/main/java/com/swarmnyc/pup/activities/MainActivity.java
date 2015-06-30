@@ -193,14 +193,14 @@ public class MainActivity extends AppCompatActivity {
         FacebookHelper.handleActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public void onBackPressed() {
-        if (MainDrawerFragment.getInstance().isDrawOpens()) {
-            MainDrawerFragment.getInstance().closeDrawers();
-        } else {
-            super.onBackPressed();
-        }
-    }
+//    @Override
+//    public void onBackPressed() {
+//        if (MainDrawerFragment.getInstance().isDrawOpens()) {
+//            MainDrawerFragment.getInstance().closeDrawers();
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
 
     public void retrieveMessage(final String message) {
         //TODO: Push Notification
