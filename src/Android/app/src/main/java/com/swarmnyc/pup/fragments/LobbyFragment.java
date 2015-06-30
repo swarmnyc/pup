@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -62,6 +63,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 	@InjectView( R.id.backdrop )           ImageView               m_headerImage;
 	@InjectView( R.id.collapsing_toolbar ) CollapsingToolbarLayout m_collapsingToolbarLayout;
 	@InjectView( R.id.toolbar )            Toolbar                 m_toolbar;
+	@InjectView( R.id.layout_coordinator ) CoordinatorLayout       m_coordinatorLayout;
 
 
 	@InjectView( R.id.text_panel ) ViewGroup m_textPanel;
@@ -79,12 +81,6 @@ public class LobbyFragment extends BaseFragment implements Screen
 	@InjectView( R.id.img_loading ) ImageView m_loadingImage;
 
 	private String m_lobbyImage;
-
-
-
-
-
-
 
 
 	private Lobby               m_lobby;
@@ -126,10 +122,12 @@ public class LobbyFragment extends BaseFragment implements Screen
 		PuPApplication.getInstance().getComponent().inject( this );
 		ButterKnife.inject( this, view );
 
+
 		if ( StringUtils.isNotEmpty( m_lobbyImage ) )
 		{
 			Picasso.with( getActivity() ).load( m_lobbyImage ).centerCrop().fit().into(
-				m_headerImage, new Callback() {
+				m_headerImage, new Callback()
+				{
 					@Override
 					public void onSuccess()
 					{
