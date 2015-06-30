@@ -1,4 +1,4 @@
-package com.swarmnyc.pup.components;
+package com.swarmnyc.pup.gcm;
 
 import android.app.Activity;
 import android.content.Context;
@@ -24,22 +24,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayServicesHelper {
+public class GcmHelper
+{
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final String PROPERTY_REG_ID = "registration_id";
-    private static final String TAG = "PlayServicesHelper";
+    private static final String TAG = "GcmHelper";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private GoogleCloudMessaging googleCloudMessaging;
     private Activity activity;
     private String regId;
 
-    public PlayServicesHelper(Activity activity) {
+    public GcmHelper( Activity activity ) {
         this.activity = activity;
-        checkPlayService();
     }
 
-    private void checkPlayService() {
+    public void registerGCM() {
         // Check device for Play Services APK. If check succeeds, proceed with
         // GCM registration.
         if (checkPlayServices()) {
@@ -67,10 +67,10 @@ public class PlayServicesHelper {
                         .show();
             } else {
                 Log.i(TAG, "This device is not supported.");
-                activity.finish();
             }
             return false;
         }
+
         return true;
     }
 
