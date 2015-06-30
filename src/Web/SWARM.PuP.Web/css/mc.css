@@ -1,0 +1,29 @@
+input { border: 2px solid #48c1c4; -webkit-appearance: none; -webkit-border-radius: 3px; -moz-border-radius: 3px; 
+border-radius: 3px; 
+height: 50px; width:300px !important;
+font-size: 28px;
+}
+input:focus { 
+border:solid 2px #48c1c4; 
+}
+
+.button {
+border:solid 1px #ea5f00; 
+padding:10px 10px; 
+margin:0 0 20px; 
+font-family:Arial, sans-serif; 
+font-size:1.2em;
+text-transform:uppercase;
+font-weight:bold;
+color:#ffffff;
+cursor:pointer;
+background-color: #fd6900;
+height: 50px; width:150px !important;}
+.button:hover {
+background-color: #ea5f00;}
+
+#mc-embedded-subscribe { }
+#mc-embedded-subscribe-form { } 	
+#mce-EMAIL{ }
+.mailContainer{width:500px; margin:0 auto; text-align:center;
+	 }
