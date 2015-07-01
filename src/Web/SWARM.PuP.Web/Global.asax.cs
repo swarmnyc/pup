@@ -31,7 +31,6 @@ namespace SWARM.PuP.Web
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(Ioc);
             DependencyResolver.SetResolver(new AutofacDependencyResolver(Ioc));

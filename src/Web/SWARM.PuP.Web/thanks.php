@@ -1,0 +1,238 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico">
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico">
+    
+	<title>Find like minded gamers to play with | PartyUpPlayer</title>
+	<meta name="application-name" content="Find like minded gamers to play with | PartyUpPlayer" />
+	<meta name="description" content="PartyUpPlayer (PUP) helps you find the best people to game with based on your gaming style and skill on any platform, XBOX, PSN, PC or Steam."/>
+	<meta name="keywords" content="find gamers, find players, looking for gamer, looking for group, looking for players, find party, find gamers, party up, find players online, find mmo guild, fing squad, lfg" />
+	<meta name="author" content="SWARMNYC LLC">
+	<meta NAME="RATING" CONTENT="General"/>
+	<meta Name="Distribution" Content="Global"/>
+
+    <meta property="og:title" content="Find like minded gamers to play with | PartyUpPlayer">
+    <meta property="og:description" content="PartyUpPlayer (PUP) helps you find the best people to game with based on your gaming style and skill on any platform, XBOX, PSN, PC or Steam.">
+    <meta property="og:url" content="http://partyupplayer.com">
+    <meta property="og:image" content="">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="address=no">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+
+    <!--[if lt IE 9]>
+        <script src="js/html5.js"></script>
+        <script src="js/respond.js"></script>
+    <![endif]-->
+</head>
+<body class="no-js">
+    <div class="main">
+        <header>
+            <div class="wrap">
+                <img src="upload/1phonetop.png" height="532" width="252" alt="" class="header-img">
+                <div class="header-wrapper">
+                    <h1>PartyUp<span>Player</span></h1>
+                    <p><strong><p><strong>Find gamers to play with.</strong></p></strong></p>
+					<p class="h1">Amazing! You rock. We're getting close to release now so you should hear from us soon. In the mean time <a style="color:white; font-weight: bold; text-decoration: underline" href="https://twitter.com/intent/tweet?text=Check%20out%20PUP%20and%20find%20people%20to%20game%20with!&url=http%3A%2F%2Fpartyupplayer.com&via=partyupplayer">help us grow</a> by spreading the word, and please take this super short survey.</p>
+					<!--<p class="autor">Beta access coming some time in 2014. Shoot us your email and we'll keep you posted</a></p> -->
+                    <div class="buttons-wrapper">
+                        <a href="https://docs.google.com/forms/d/1gze-ouTCerLV7YCv8BiykizoP-dQi1sboQoFm700mdo/viewform?c=0&w=1" class="button" target="_blank">Sure, take me to the survey</a>                   
+                    </div>
+                </div>
+                <!-- /.header-wrapper -->
+            </div>
+            <!-- /.wrap -->
+        </header>
+        <div class="spanning">
+            <div class="promo clearfix">
+                <div class="wrap">
+                    <div class="promo-wrapper clearfix">
+                        <div class="promo-column">
+                            <i class="fa fa-user-plus fa-3x"></i>
+                            <h5>Party Up</h5>
+                            <p>No more waiting around trying to find people to play with, we've made grouping as simple as possible. </p>
+                        </div>
+                        <div class="promo-column">
+                            <i class="fa fa-gamepad fa-3x"></i>
+                            <h5>Play Together</h5>
+                            <p>Whether its one other person, a group, raid, or a zerg, you'll be playing with people you like. </p>
+                        </div>
+                        <div class="promo-column">
+                            <i class="fa fa-thumbs-o-up fa-3x"></i>
+                            <h5>Have fun</h5>
+                            <p>Playing with folks you like means having fun, and that also means making new friends around games. </p>
+                        </div>
+                        <div class="promo-column">
+                            <i class="fa fa-cubes fa-3x"></i>
+                            <h5>ON PC / XBOX / PSN</h5>
+                            <p>We're rolling into beta with support for every major platform including Steam.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.wrap -->
+            </div>
+            <!-- /.promo clearfix -->
+            <div class="discover clearfix">
+                <div class="wrap" id="beta">
+                    <div class="discover-content clearfix">
+                        <h2>PUP needs your help</h2>
+                        <p>We're looking for community advocates to spread the word in the gaming universe about PUP. Do you have what it takes?</p><br>
+                                           
+						<div class="buttons-wrapper">
+                        <a href="http://steamcommunity.com/groups/PartyUpPlayer/discussions/0/618458030687177397/" class="button" target="_blank">Apply on <i class="fa fa-steam-square"></i></a>                                    
+
+						</div>
+					<div class="discover-button clearfix">
+                    <!--        <a href="#" class="button button-download">
+                                <span class="button-download-title">Download for</span>
+                                <span class="button-download-subtitle">Apple iOS</span>
+                            </a>
+                            <a href="#" class="button button-download android">
+                                <span class="button-download-title">Download for</span>
+                                <span class="button-download-subtitle">Android</span>
+                            </a> -->
+                        </div> 
+                    </div>
+                    <div class="discover-img">
+                       <div class="discover-img-inside"><img src="upload/2phonemiddle.png" height="486" width="634" alt=""></div>
+                    </div>
+                </div>
+                <!-- /.wrap -->
+            </div>
+            <!-- /.discover clearfix -->
+        <div class="video clearfix">
+                <div class="wrap">
+                    <div class="video-title">The team</div>
+                    <div class="video-subtitle">PUP is being built by <a href="http://swarmnyc.com" target="_blank">SWARM</a>, an independent app development studio specializing in mobile, wearable, and second screen devices. We were founded in 2013 and have built apps for startups, growth stage companies and enterprise clients. We are experts in creating beautiful and functional products that people love.
+					</div>
+                    
+                    <div class="video-share-wrapper clearfix">
+                        <ul class="social-list clearfix">
+                       <!--     <li class="video-share-title">Share it with your friends:</li>
+                            <li><a href="#" class="social-twitter">via <strong>Twitter</strong></a></li>
+                            <li><a href="#" class="social-facebook">via <strong>Facebook</strong></a></li>
+                            <li><a href="#" class="social-google">via <strong>Google+</strong></a></li> -->
+                        </ul>
+                    </div>
+                </div>
+                <!-- /.wrap -->
+            </div>
+            <!-- /.videos clearfix -->
+
+            <div class="comments clearfix">
+                <div class="wrap">
+                    <div class="tab">
+                        <div class="box visible">
+                            <h4>People talking about <a href="http://twitter.com/partyupplayer">PUP</a></h4>
+                            <p><em>"It's just so simple. I wish that XBOX had something like this in the dashboard."</em> - SlapMahFro</em></p>
+                        </div>
+                        <div class="box">
+                            <h4>Users loving <a href="https://www.facebook.com/PartyUpPlayer">PUP</a></h4>
+                            <p><em>"I tried the early beta and loved it! Can't wait for more folks to be on this so I can really get into it."</em> - SugarCookieSquirrel</p>
+                        </div>
+                        <div class="box">
+                            <h4>Folks enjoying <a href="http://twitter.com/partyupplayer">PUP</a></h4>
+                            <p><em>"Had an absolutely killer play session thanks to you guys. You rock!"</em> - bcrfan</p>
+                        </div>
+                        <ul class="tabs">
+                            <li class="active"></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+<!--                        <a href="#" class="tab-prev"></a>
+                        <a href="#" class="tab-next"></a>
+-->                      
+                    </div>
+                </div>
+                <!-- /.wrap -->
+            </div>
+            <!-- /.comments clearfix -->
+                  <div class="simple clearfix">
+                <div class="wrap">
+                    <div class="simple-content">
+                        <h3>Built <u>by</u> gamers <u>for</u> gamers</h3>
+                        <ul>
+                            <li class="clearfix"><span><i class="fa fa-th"></i> Any game any time.</span></li>
+                            <li class="clearfix"><span><i class="fa fa-steam"></i></i> Steam/PC, XBOX Live, and PSN</span></li>
+                            <li class="clearfix"><span><i class="fa fa-lightbulb-o"></i> Intelligent lobby system.</span></li>
+                            <li class="clearfix"><span><i class="fa fa-sort-alpha-asc"></i> No more random match ups.</span></li>
+                            <!--<form action="http://swarmnyc.createsend.com/t/d/s/jyhiu/" method="post">
+							<input id="fieldEmail" name="cm-jyhiu-jyhiu" type="email" placeholder="Enter your email." class="input-text2" required />
+							<button type="submit" class="button smallbutton">Sign me up</button> -->
+						</form>
+                        </ul>
+                        
+                        
+                    </div>
+                    <div class="simple-img">
+                        <img src="upload/discover.png" height="508" width="587" alt="">
+                    </div>
+                </div>
+                <!-- /.wrap -->
+            </div>
+            <!-- /.simple clearfix -->
+      <!--      <div class="newsletter clearfix">
+                <div class="wrap">
+                    <div class="newsletter-title">our newsletter</div>
+                    <div class="newsletter-form clearfix">
+                        <form action="">
+                            <input type="email" placeholder="john@doe.com" class="input-text">
+                            <input type="button" class="button" value="Subscribe">
+                        </form>
+                    </div>
+                    <p>If you want to receive monthly updates from us just pop your email in the box. We think that spam is for jerks. And we are no jerks.</p>
+                </div>
+                <!-- /.wrap -->
+            </div>
+            <!-- /.newsletter clearfix -->
+        </div>
+        <!-- /.spanning-columns -->
+    </div>
+    <!-- /.main -->
+    <footer>
+        <div class="wrap">
+            <p>Gaming together since 2014 - <a href="http://swarmnyc.com">SWARM</a> &copy; 2015 | <a href="http://partyupplayer.com">Blog</a> | <a href="javascript:;" onClick="window.open('tos.php','myWin','scrollbars=yes,width=1000,height=400');">Terms of Service</a> | hello @ swarmnyc.com | <a href="http://twitter.com/partyupplayer">facebook</a> | <a href="https://twitter.com/partyupplayer">@partyupplayer</a> | <a href="http://steamcommunity.com/groups/PartyUpPlayer/">steam</a></p> 
+        </div>
+        <!-- /.wrap -->
+    </footer>
+    <script src="js/jquery.js"></script>
+    <script src="js/library.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/retina.js"></script>
+    <!-- AddThis Smart Layers BEGIN -->
+<!-- Go to http://www.addthis.com/get/smart-layers to customize -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-52d833613d5c9539"></script>
+<script type="text/javascript">
+  addthis.layers({
+    'theme' : 'transparent',
+    'share' : {
+      'position' : 'left',
+      'numPreferredServices' : 4
+    }   
+  });
+</script>
+
+<!-- Twitter Widget -->
+<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+<!-- AddThis Smart Layers END -->
+
+<script type="text/javascript">
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-43683040-6', 'partyupplayer.com');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
