@@ -137,7 +137,7 @@ public class CreateLobbyFragment extends Fragment
 			return;
 		}
 
-		DialogHelper.showProgressDialog( R.string.message_lobby_creating );
+		DialogHelper.showProgressDialog(getActivity(), R.string.message_lobby_creating );
 
 		List<GamePlatform> platforms = m_gamePlatformSelectView.getSelectedGamePlatforms();
 
@@ -348,7 +348,6 @@ public class CreateLobbyFragment extends Fragment
 	public void onStart()
 	{
 		super.onStart();
-		MainActivity.getInstance().hideToolbar();
 //		MainDrawerFragment.getInstance().highLight( Consts.KEY_LOBBIES );
 	}
 
@@ -356,7 +355,6 @@ public class CreateLobbyFragment extends Fragment
 	public void onStop()
 	{
 		super.onStop();
-		MainActivity.getInstance().showToolbar();
 	}
 
 	@Override

@@ -380,7 +380,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 	{
 		if ( User.isLoggedIn() )
 		{
-			DialogHelper.showProgressDialog( R.string.message_processing );
+			DialogHelper.showProgressDialog(getActivity(), R.string.message_processing );
 			m_lobbyService.join(
 				m_lobby.getId(), new ServiceCallback()
 				{
@@ -460,6 +460,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 					m_sharePanel.setVisibility( View.VISIBLE );
 					m_sharePanel.setLobbyService( m_lobbyService );
 					m_sharePanel.setLobby( m_lobby );
+					m_sharePanel.setActivity( this.getActivity() );
 				}
 				else
 				{

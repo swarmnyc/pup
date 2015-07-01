@@ -105,7 +105,7 @@ public class RegisterDialogFragment extends TempFragmentDialog
 			}
 		}
 
-		DialogHelper.showProgressDialog( R.string.message_processing );
+		DialogHelper.showProgressDialog(getActivity(), R.string.message_processing );
 		m_userService.register(
 			m_emailText.getText().toString(),
 			m_nameText.getText().toString(),

@@ -81,13 +81,13 @@ public class GcmIntentService extends IntentService {
         notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
         // show message on text view
-        if (MainActivity.getInstance() != null) {
+        /*if (MainActivity.getInstance() != null) {
             MainActivity.getInstance().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     MainActivity.getInstance().retrieveMessage(messageValue);
                 }
             });
-        }
+        }*/
     }
 }

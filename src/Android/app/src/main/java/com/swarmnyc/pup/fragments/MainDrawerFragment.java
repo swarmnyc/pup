@@ -143,7 +143,7 @@ public class MainDrawerFragment extends Fragment
 
 		m_drawerMenuContainer.getLayoutParams().width = (int) ( Consts.windowWidth * 0.90 );
 
-		initializeDrawer( MainActivity.getInstance().isLaunchDefaultFragment() );
+		//initializeDrawer( MainActivity.getInstance().isLaunchDefaultFragment() );
 	}
 
 	public void selectItem( int position )

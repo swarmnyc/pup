@@ -150,7 +150,7 @@ public class QuickbloxChatRoomService extends ChatRoomService
 							@Override
 							public void run()
 							{
-								DialogHelper.showError( "load chat history errors: " + errors );
+								DialogHelper.showError(m_activity, "load chat history errors: " + errors );
 
 							}
 						}
