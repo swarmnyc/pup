@@ -1,5 +1,6 @@
 package com.swarmnyc.pup.adapters;
 
+import android.animation.*;
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -16,14 +17,17 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.picasso.Picasso;
+import com.swarmnyc.pup.ChatMessageReceiveEvent;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
+import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.GamePlatformUtils;
-import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.models.Lobby;
+import com.swarmnyc.pup.models.PuPTag;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatViewHolder> implements View.OnTouchListener
@@ -69,12 +73,12 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 		notifyItemInserted( start + 1 );
 	}
 
-	public void AddReachEndAction( Action action )
+	public void addReachEndAction( Action action )
 	{
 		m_reachEndAction = action;
 	}
 
-	public void AddRemoveAction( Action<Lobby> action )
+	public void addRemoveAction( Action<Lobby> action )
 	{
 		m_removeAction = action;
 	}
@@ -198,13 +202,32 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 					else
 					{
 						//click
-//						Navigator.ToLobby( m_activity, m_currentViewHolder.m_lobby );
+						//						Navigator.ToLobby( m_activity, m_currentViewHolder.m_lobby );
 					}
 				}
 				break;
 		}
 
 		return m_handled;
+	}
+
+	public void updateLastMessage( final ChatMessageReceiveEvent event )
+	{
+		for ( int i = 0; i < m_lobbies.size(); i++ )
+		{
+			Lobby lobby = m_lobbies.get( i );
+			if ( event.getRoomId().equals( lobby.getTagValue( "QBChatRoomId" ) ) )
+			{
+				ChatMessage message = event.getMessages().get( event.getMessages().size() - 1 );
+				lobby.setLastMessage( message.getBody() );
+				lobby.setLastMessageAt( new Date( message.getSentAt() * 1000 ) );
+				lobby.setUnreadMessageCount( lobby.getUnreadMessageCount() + event.getMessages().size() );
+
+				lobby.getTags().add( new PuPTag( "SHINE", "1" ) );
+				notifyItemChanged( i );
+				break;
+			}
+		}
 	}
 
 	public class MyChatViewHolder extends RecyclerView.ViewHolder
@@ -283,6 +306,13 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 			else
 			{
 				m_gameImageBorder.setVisibility( View.VISIBLE );
+			}
+
+			if ( lobby.getTagValueAndRemove( "SHINE" ) != null )
+			{
+				final Animator animator = AnimatorInflater.loadAnimator( m_activity, R.animator.blinking );
+				animator.setTarget( m_gameImageBorder );
+				animator.start();
 			}
 		}
 	}

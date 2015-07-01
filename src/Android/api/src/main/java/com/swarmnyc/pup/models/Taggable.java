@@ -46,4 +46,18 @@ public abstract class Taggable
 
 		return null;
 	}
+
+	public String getTagValueAndRemove( String key )
+	{
+		for ( PuPTag tag : tags )
+		{
+			if ( tag.key.equals( key ) )
+			{
+				tags.remove( tag );
+				return tag.value;
+			}
+		}
+
+		return null;
+	}
 }

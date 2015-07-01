@@ -152,7 +152,7 @@ public class MessageService extends Service
 
 					QBRequestGetBuilder request = new QBRequestGetBuilder();
 					request.setPagesLimit( 10 );
-					request.sortDesc( "date_sent" );
+					//request.sortDesc( "date_sent" );
 
 					final ArrayList<QBDialog> result = QBChatService.getChatDialogs(
 						QBDialogType.GROUP, request, (Bundle) null
@@ -242,8 +242,8 @@ public class MessageService extends Service
 				@Override
 				public void run()
 				{
+					//No sure Otto is good for Service. but see first.
 					EventBus.getBus().post( new ChatMessageReceiveEvent( message.getDialogId(), true, messages ) );
-
 				}
 			}
 		);
