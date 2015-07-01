@@ -94,6 +94,11 @@ public class LobbyListFragment extends BaseFragment implements Screen
 		LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
 	)
 	{
+		Log.d(
+			"LobbyListFragment",
+			String.format( "onCreateView (inflater = %s\n, container = %s\n, savedInstanceState = %s\n)",inflater,
+			container,
+			savedInstanceState));
 		m_layoutInflater = inflater;
 		PuPApplication.getInstance().getComponent().inject( this );
 		View view = inflater.inflate( R.layout.fragment_lobby_list, container, false );
@@ -113,6 +118,7 @@ public class LobbyListFragment extends BaseFragment implements Screen
 						m_slidingPanel.setPanelState( SlidingUpPanelLayout.PanelState.COLLAPSED );
 					}
 					reloadData( 0 );
+					updateTitle();
 				}
 			}
 		);
@@ -163,6 +169,7 @@ public class LobbyListFragment extends BaseFragment implements Screen
 						m_lobbyFilter.setGame( selectedGame );
 
 						reloadData( 0 );
+						updateTitle();
 						hideKeyboard();
 						m_slidingPanel.setPanelState( SlidingUpPanelLayout.PanelState.COLLAPSED );
 					}
@@ -186,17 +193,18 @@ public class LobbyListFragment extends BaseFragment implements Screen
 					final CharSequence s, final int start, final int before, final int count
 				)
 				{
-
+					if ( before > 0 && s.length() == 0 )
+					{
+						m_lobbyFilter.setGame( null );
+						reloadData( 0 );
+						updateTitle();
+					}
 				}
 
 				@Override
 				public void afterTextChanged( final Editable s )
 				{
-					if ( s.length() == 0 )
-					{
-						m_lobbyFilter.setGame( null );
-						reloadData( 0 );
-					}
+
 				}
 			}
 		);
@@ -314,6 +322,7 @@ public class LobbyListFragment extends BaseFragment implements Screen
 		if (null == savedInstanceState)
 		{
 			reloadData( 0 );
+
 		}
 		super.onViewCreated( view, savedInstanceState );
 	}
@@ -415,7 +424,7 @@ public class LobbyListFragment extends BaseFragment implements Screen
 			}
 		);
 
-		updateTitle();
+
 	}
 
 	private void hideKeyboard()

@@ -214,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
 				}
 			}
 		);
+
 	}
 
     @OnClick( R.id.fab_create_lobby )
