@@ -4,8 +4,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Text;
 using System.Web.Http;
 using System.Web.Http.Filters;
+using System.Web.Http.Results;
 using MongoDB.Bson;
 using MongoDB.Driver.Builders;
 using SWARM.PuP.Web.Models;
@@ -42,7 +45,7 @@ namespace SWARM.PuP.Web.ApiControllers
         }
 
         [HttpGet, Route("Message/{lobbyId}")]
-        public IEnumerable<QuickbloxMessage> Message(string lobbyId)
+        public IHttpActionResult Message(string lobbyId)
         {
             //TODO: the just and only for Quicklbox.
             var lobby = _lobbyService.GetById(lobbyId);
@@ -54,7 +57,11 @@ namespace SWARM.PuP.Web.ApiControllers
             var url = string.Format("{0}?chat_dialog_id={1}&limit=19&sort_desc=date_sent", QuickbloxApiTypes.Message, lobby.GetTagValue(QuickbloxHttpHelper.Const_ChatRoomId));
             var request = QuickbloxHttpHelper.Create(url, HttpMethod.Get);
 
-            return request.GetJson<QuickbloxMessageQueryResult>().items;
+            var result = request.ReadAll();
+            
+            int start = result.IndexOf("[", StringComparison.Ordinal);
+            result = result.Substring(start, result.Length - start - 1);
+            return ResponseMessage(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(result, Encoding.UTF8, "text/json") });
         }
 
         [Authorize, Route("My")]

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace SWARM.PuP.Web.Services.Quickblox
@@ -19,14 +20,5 @@ namespace SWARM.PuP.Web.Services.Quickblox
         public int recipient_id { get; set; }
         public int sender_id { get; set; }
         public QuickbloxAttachment[] attachments { get; set; }
-    }
-
-    public class QuickbloxMessageQueryResult
-    {
-        public int limit { get; set; }
-
-        public int skip { get; set; }
-
-        public IList<QuickbloxMessage> items { get; set; }
     }
 }
