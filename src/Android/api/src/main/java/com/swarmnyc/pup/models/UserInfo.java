@@ -8,6 +8,16 @@ public class UserInfo
 	String userName;
 	String portraitUrl;
 
+	public UserInfo(  )
+	{
+
+	}
+
+	public UserInfo( final String id )
+	{
+		this.id = id;
+	}
+
 	public String getId()
 	{
 		return id;

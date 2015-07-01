@@ -5,6 +5,7 @@ import com.swarmnyc.pup.RestApis.LobbyRestApi;
 import com.swarmnyc.pup.RestApis.RestApiCallback;
 import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.models.Lobby;
+import com.swarmnyc.pup.models.QBChatMessage2;
 import retrofit.client.Response;
 
 import java.text.SimpleDateFormat;
@@ -79,6 +80,23 @@ public class LobbyServiceImpl implements LobbyService
 				{
 					if ( callback != null )
 					{ callback.success( list ); }
+				}
+			}
+		);
+	}
+
+	@Override
+	public void getMessages(
+		final String id, final ServiceCallback<List<QBChatMessage2>> callback
+	)
+	{
+		this.lobbyRestApi.message(
+			id, new RestApiCallback<List<QBChatMessage2>>() {
+				@Override
+				public void success( final List<QBChatMessage2> qbChatMessage2s, final Response response )
+				{
+					if ( callback != null )
+					{ callback.success( qbChatMessage2s ); }
 				}
 			}
 		);

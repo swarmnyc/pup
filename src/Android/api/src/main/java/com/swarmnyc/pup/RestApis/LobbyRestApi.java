@@ -1,9 +1,6 @@
 package com.swarmnyc.pup.RestApis;
 
-import com.swarmnyc.pup.models.GamePlatform;
-import com.swarmnyc.pup.models.Lobby;
-import com.swarmnyc.pup.models.PlayStyle;
-import com.swarmnyc.pup.models.SkillLevel;
+import com.swarmnyc.pup.models.*;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +31,9 @@ public interface LobbyRestApi {
 
     @GET("/Lobby/{LobbyId}")
     void get(@Path("LobbyId") String lobbyId, Callback<Lobby> Lobby);
+
+    @GET("/Lobby/Message/{LobbyId}")
+    void message(@Path("LobbyId") String lobbyId, Callback<List<QBChatMessage2>> Lobby);
 
     @POST("/Lobby")
     void create(@Body Lobby lobby, Callback<Lobby> callback);

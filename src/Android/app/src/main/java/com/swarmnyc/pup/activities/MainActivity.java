@@ -160,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         EventBus.getBus().register(this);
-        SoftKeyboardHelper.init( m_coordinatorLayout, this );
     }
 
     @Override
