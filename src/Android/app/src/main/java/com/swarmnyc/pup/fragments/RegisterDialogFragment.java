@@ -118,6 +118,7 @@ public class RegisterDialogFragment extends TempFragmentDialog
 					m_dialog.dismiss();
 					DialogHelper.hide();
 					User.login( value, goHome );
+					PuPApplication.getInstance().StartMessageService();
 				}
 			}
 		);

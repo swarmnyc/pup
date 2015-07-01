@@ -8,26 +8,26 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import com.swarmnyc.pup.Consts;
+import com.swarmnyc.pup.R;
 
 public class SoftKeyboardHelper
 {
-	public static final int KEY = 47851;
 
 	public static void setSoftKeyboardCallback( View rootView, Action callback )
 	{
 		GlobalLayoutListener globalLayoutListener = new GlobalLayoutListener( rootView, callback );
-		rootView.setTag( KEY, globalLayoutListener );
+		rootView.setTag( R.id.GlobalLayoutListener, globalLayoutListener );
 
 		rootView.getViewTreeObserver().addOnGlobalLayoutListener( globalLayoutListener );
 	}
 
 	public static void removeSoftKeyboardCallback( View rootView )
 	{
-		GlobalLayoutListener globalLayoutListener = (GlobalLayoutListener) rootView.getTag( KEY );
+		GlobalLayoutListener globalLayoutListener = (GlobalLayoutListener) rootView.getTag( R.id.GlobalLayoutListener );
 		if ( globalLayoutListener != null )
 		{
 			rootView.getViewTreeObserver().removeOnGlobalLayoutListener( globalLayoutListener );
-			rootView.setTag( KEY, null );
+			rootView.setTag( R.id.GlobalLayoutListener, null );
 		}
 	}
 

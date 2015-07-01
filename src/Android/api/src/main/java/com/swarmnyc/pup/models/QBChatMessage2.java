@@ -2,11 +2,17 @@ package com.swarmnyc.pup.models;
 
 public class QBChatMessage2
 {
+	String _id;
 	String chat_dialog_id;
 	int date_sent;
 	int send_to_chat;
 	String message;
 	String userId;
+
+	public String get_id()
+	{
+		return _id;
+	}
 
 	public String getChat_dialog_id()
 	{

@@ -24,7 +24,6 @@ import java.util.List;
 
 public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-	private static final int HEADER      = 0;
 	private static final int SYSTEM      = -1;
 	private static final int LoadControl = -2;
 	private static final int ITEM        = 1;
@@ -49,12 +48,6 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder( final ViewGroup parent, final int viewType )
 	{
-		//        if ( viewType == HEADER )
-		//        {
-		//            View view = m_inflater.inflate( R.layout.item_lobby_chat_header, parent, false );
-		//            return new HeaderViewHolder( view );
-		//        }
-		//        else
 		if ( viewType == LoadControl )
 		{
 			View view = m_inflater.inflate( R.layout.item_lobby_load_control, parent, false );
@@ -111,8 +104,7 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 	@Override
 	public int getItemCount()
 	{
-
-		// Header + LoadControl
+		//  LoadControl
 		return m_chatMessages.size() + ( m_showReadMore ? 1 : 0 );
 	}
 
@@ -146,13 +138,12 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 			m_chatMessageIds.add( message.getId() );
 
-			if ( previous != null && !previous.isSystemMessage() && !message.isSystemMessage() && message.getUser()
-			                                                                                             .getId()
-			                                                                                             .equals(
-				                                                                                             previous
-					                                                                                             .getUser()
-					                                                                                             .getId()
-			                                                                                             ) )
+			if ( previous != null &&
+			     !previous.isSystemMessage() &&
+			     !message.isSystemMessage() &&
+			     message.getUser().getId().equals(
+				     previous.getUser().getId()
+			     ) )
 
 			{
 				previous.setBody( previous.getBody() + "\r\n" + message.getBody() );
@@ -161,8 +152,12 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 			{
 				previous = message;
 
-				m_chatMessages.add( location++, message );
+				//temporary switch user;
+				if ( message.getUser()!=null ){
+					message.setUser(m_lobby.getUser( message.getUser().getId() ));
+				}
 
+				m_chatMessages.add( location++, message );
 			}
 		}
 

@@ -14,6 +14,7 @@ import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.model.QBUser;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.components.DialogHelper;
+import com.swarmnyc.pup.events.EnterChatRoomEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 import org.jivesoftware.smack.SmackException;
@@ -21,6 +22,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class QuickbloxChatRoomService extends ChatRoomService
@@ -28,14 +30,12 @@ public class QuickbloxChatRoomService extends ChatRoomService
 	private QBGroupChat          m_chat;
 	private Lobby                m_lobby;
 	private QBDialog             m_dialog;
-	private QuickbloxChatService m_quickbloxChatService;
 	private Activity             m_activity;
 
 	public QuickbloxChatRoomService(
-		final QuickbloxChatService quickbloxChatService, Activity activity, final Lobby lobby
+		final Activity activity, final Lobby lobby
 	)
 	{
-		m_quickbloxChatService = quickbloxChatService;
 		m_activity = activity;
 		m_lobby = lobby;
 	}
@@ -58,148 +58,32 @@ public class QuickbloxChatRoomService extends ChatRoomService
 		}
 	}
 
-	@Override
-	public void login( final boolean loadHistory )
-	{
-        leave();
-		QBUser user = new QBUser();
-		if ( User.isLoggedIn() && m_lobby.isAliveUser(User.current.getId()) )
-		{
-			user.setLogin( User.current.getId() );
-			user.setPassword( Config.getConfigString( R.string.QB_APP_PW ) );
-		}
-		else
-		{
-			user.setLogin( Config.getConfigString( R.string.QB_APP_DEFAULT_USER ) );
-			user.setPassword( Config.getConfigString( R.string.QB_APP_PW ) );
-		}
-
-		m_quickbloxChatService.login(
-			m_activity, user, new AsyncCallback()
-			{
-				@Override
-				public void success()
-				{
-					joinRoom( loadHistory );
-				}
-			}
-		);
-	}
-
-	private void joinRoom( final boolean loadHistory )
+	public void login()
 	{
 		m_dialog = new QBDialog( m_lobby.getTagValue( "QBChatRoomId" ) );
 		m_dialog.setRoomJid( Config.getConfigString( R.string.QB_APP_ID ) + "_" + m_dialog.getDialogId() + "@muc.chat.quickblox.com" );
-		m_dialog.setUserId( m_quickbloxChatService.getUser().getId() );
+		m_dialog.setUserId( QBChatService.getInstance().getUser().getId() );
 
-		m_chat = QBChatService.getInstance().getGroupChatManager().createGroupChat( m_dialog.getRoomJid() );
-		m_chat.addMessageListener(
-			new QBMessageListenerImpl()
-			{
-				@Override
-				public void processMessage( final QBChat sender, final QBChatMessage chatMessage )
-				{
-					m_activity.runOnUiThread(
-						new Runnable()
-						{
-							@Override
-							public void run()
-							{
-								List<ChatMessage> messages = new ArrayList<>();
-								LobbyUserInfo user = getLobbyUserInfo( chatMessage );
+		m_chat = QBChatService.getInstance().getGroupChatManager().getGroupChat( m_dialog.getRoomJid() );
 
-								messages.add(
-									new ChatMessage(
-										user,
-										chatMessage.getId(),
-										chatMessage.getBody(),
-										chatMessage.getDateSent(),
-										String.valueOf( chatMessage.getProperty( "code" ) ),
-										String.valueOf( chatMessage.getProperty( "codeBody" ) )
-									)
-								);
+		if ( m_chat == null )
+		{
+			m_chat = QBChatService.getInstance().getGroupChatManager().createGroupChat( m_dialog.getRoomJid() );
+		}
 
-								EventBus.getBus().post(new ChatMessageReceiveEvent(m_lobby.getId(), true, messages));
-							}
-						}
-					);
-				}
-
-				@Override
-				public void processError( final QBChat sender, final QBChatException exception, final QBChatMessage message )
-				{
-					m_activity.runOnUiThread(
-						new Runnable()
-						{
-							@Override
-							public void run()
-							{
-								DialogHelper.showError( "chat error: " + exception.toString() );
-							}
-						}
-					);
-				}
-			}
-		);
-
-		DiscussionHistory history = new DiscussionHistory();
-		history.setMaxStanzas( 0 );
-		m_chat.join(
-			history, new QBEntityCallbackImpl()
-			{
-				@Override
-				public void onSuccess()
-				{
-					if ( loadHistory )
-					{
-						m_activity.runOnUiThread(
-							new Runnable()
-							{
-								@Override
-								public void run()
-								{
-									loadChatHistory(0);
-								}
-							}
-						);
-					}
-				}
-
-				@Override
-				public void onError( final List errors )
-				{
-					m_activity.runOnUiThread(
-						new Runnable()
-						{
-							@Override
-							public void run()
-							{
-								DialogHelper.showError( "login chat errors: " + errors );
-							}
-						}
-					);
-				}
-			}
-		);
+		EventBus.getBus().post( new EnterChatRoomEvent(m_chat) );
 	}
 
 	private LobbyUserInfo getLobbyUserInfo( final QBChatMessage chatMessage )
 	{
 		String userId = (String) chatMessage.getProperty( "userId" );
-		if ( userId == null || userId.equals( Config.getConfigString( R.string.QB_APP_DEFAULT_USER ) ) )
+		if ( userId == null)
 		{
 			return null;
 		}
 		else
 		{
-			LobbyUserInfo user = m_lobby.getUser( userId );
-
-			if ( user == null )
-			{
-				user = new LobbyUserInfo();
-				user.setId( userId );
-				user.setUserName( (String) chatMessage.getProperty( "userName" ) );
-			}
+			LobbyUserInfo user = new LobbyUserInfo(userId);
 
 			return user;
 		}
@@ -251,7 +135,7 @@ public class QuickbloxChatRoomService extends ChatRoomService
 									cms.add( new ChatMessage( user,message.getId(), message.getBody(), message.getDateSent() ) );
 								}
 
-								EventBus.getBus().post(new ChatMessageReceiveEvent(m_lobby.getId(), false, cms));
+								EventBus.getBus().post(new ChatMessageReceiveEvent(m_dialog.getDialogId(), false, cms));
 							}
 						}
 					);

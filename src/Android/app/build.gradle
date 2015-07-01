@@ -42,7 +42,7 @@ dependencies {
     compile project(':api')
     compile files('libs/quickblox-android-sdk-core-2.2.3.jar')
     compile files('libs/quickblox-android-sdk-chat-2.2.3.jar')
-    compile files('libs/quickblox-android-sdk-messages-2.2.3.jar')
+    //compile files('libs/quickblox-android-sdk-messages-2.2.3.jar')
     compile 'com.google.dagger:dagger:2.0'
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.android.support:support-v4:22.2.0'
