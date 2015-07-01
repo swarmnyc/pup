@@ -41,6 +41,22 @@ namespace SWARM.PuP.Web.ApiControllers
             return _lobbyService.Filter(filter);
         }
 
+        [HttpGet, Route("Message/{lobbyId}")]
+        public IEnumerable<QuickbloxMessage> Message(string lobbyId)
+        {
+            //TODO: the just and only for Quicklbox.
+            var lobby = _lobbyService.GetById(lobbyId);
+            if (lobby == null)
+            {
+                throw new ArgumentException(ErrorCode.E003NotFoundLobby);
+            }
+
+            var url = string.Format("{0}?chat_dialog_id={1}&limit=19&sort_desc=date_sent", QuickbloxApiTypes.Message, lobby.GetTagValue(QuickbloxHttpHelper.Const_ChatRoomId));
+            var request = QuickbloxHttpHelper.Create(url, HttpMethod.Get);
+
+            return request.GetJson<QuickbloxMessageQueryResult>().items;
+        }
+
         [Authorize, Route("My")]
         public IEnumerable<Lobby> GetMy([FromUri] LobbyFilter filter)
         {
