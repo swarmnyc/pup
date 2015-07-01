@@ -17,6 +17,7 @@ import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.adapters.MyChatAdapter;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.Screen;
+import com.swarmnyc.pup.components.UnreadCounter;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.DividerItemDecoration;
 
@@ -96,7 +97,6 @@ public class MyChatsFragment extends BaseFragment implements Screen
 	public void onStart()
 	{
 		super.onStart();
-		//        MainDrawerFragment.getInstance().highLight(Consts.KEY_MY_LOBBIES);
 
 		fetchMoreData();
 	}
@@ -118,7 +118,7 @@ public class MyChatsFragment extends BaseFragment implements Screen
 
 	public void updateTitle()
 	{
-		setTitle( R.string.text_lobbies );
+		setTitle( getString( R.string.text_lobbies) + " (" + UnreadCounter.total() + ")" );
 		setSubtitle( null );
 	}
 
@@ -192,6 +192,7 @@ public class MyChatsFragment extends BaseFragment implements Screen
 		if ( !event.isNewMessage() )
 			return;
 
+		updateTitle();
 		m_myChatAdapter.updateLastMessage(event);
 	}
 }

@@ -164,7 +164,6 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 		notifyDataSetChanged();
 	}
 
-
 	public void addMessages( List<ChatMessage> messages )
 	{
 		addMessages( m_chatMessages.size(), messages );

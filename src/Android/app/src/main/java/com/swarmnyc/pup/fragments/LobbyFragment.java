@@ -287,6 +287,8 @@ public class LobbyFragment extends BaseFragment implements Screen
 		setSubtitle( subtitle );
 
 		initChatRoom();
+
+		UnreadCounter.reset( m_lobby.getRoomId() );
 	}
 
 	private void initChatRoom()
@@ -333,7 +335,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 							);
 						}
 
-						receiveMessage( new ChatMessageReceiveEvent( m_lobbyId, false, list ) );
+						receiveMessage( new ChatMessageReceiveEvent( m_lobby.getRoomId(), false, list ) );
 					}
 				}
 			);
@@ -421,11 +423,8 @@ public class LobbyFragment extends BaseFragment implements Screen
 	@Subscribe
 	public void receiveMessage( final ChatMessageReceiveEvent event )
 	{
-
-		if ( event.getRoomId().equals( m_lobby.getTagValue( "QBChatRoomId" ) ) || event.getRoomId()
-		                                                                               .equals( m_lobbyId ) )
+		if ( event.getRoomId().equals( m_lobby.getRoomId()))
 		{
-
 			//After receive history
 			if ( m_first )
 			{

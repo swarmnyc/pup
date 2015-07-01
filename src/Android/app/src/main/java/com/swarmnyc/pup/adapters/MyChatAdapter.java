@@ -23,6 +23,7 @@ import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.GamePlatformUtils;
+import com.swarmnyc.pup.components.UnreadCounter;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.PuPTag;
 
@@ -62,6 +63,11 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 	public void AddLobbies( List<Lobby> newLobbies )
 	{
 		int start = m_lobbies.size();
+		for ( Lobby newLobby : newLobbies )
+		{
+			UnreadCounter.reset( newLobby.getRoomId(), newLobby.getUnreadMessageCount() );
+		}
+
 		m_lobbies.addAll( newLobbies );
 		notifyItemRangeInserted( start, newLobbies.size() );
 	}
@@ -216,12 +222,11 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 		for ( int i = 0; i < m_lobbies.size(); i++ )
 		{
 			Lobby lobby = m_lobbies.get( i );
-			if ( event.getRoomId().equals( lobby.getTagValue( "QBChatRoomId" ) ) )
+			if ( event.getRoomId().equals( lobby.getRoomId() ) )
 			{
 				ChatMessage message = event.getMessages().get( event.getMessages().size() - 1 );
 				lobby.setLastMessage( message.getBody() );
 				lobby.setLastMessageAt( new Date( message.getSentAt() * 1000 ) );
-				lobby.setUnreadMessageCount( lobby.getUnreadMessageCount() + event.getMessages().size() );
 
 				lobby.getTags().add( new PuPTag( "SHINE", "1" ) );
 				notifyItemChanged( i );
@@ -299,7 +304,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 				DateUtils.getRelativeTimeSpanString( lobby.getStartTime().getTime() )
 			);
 
-			if ( lobby.getUnreadMessageCount() == 0 )
+			if ( UnreadCounter.get(m_lobby.getRoomId()) == 0 )
 			{
 				m_gameImageBorder.setVisibility( View.GONE );
 			}

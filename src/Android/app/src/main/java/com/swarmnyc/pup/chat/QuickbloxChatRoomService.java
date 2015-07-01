@@ -60,7 +60,7 @@ public class QuickbloxChatRoomService extends ChatRoomService
 
 	public void login()
 	{
-		m_dialog = new QBDialog( m_lobby.getTagValue( "QBChatRoomId" ) );
+		m_dialog = new QBDialog( m_lobby.getRoomId() );
 		m_dialog.setRoomJid( Config.getConfigString( R.string.QB_APP_ID ) + "_" + m_dialog.getDialogId() + "@muc.chat.quickblox.com" );
 		m_dialog.setUserId( QBChatService.getInstance().getUser().getId() );
 

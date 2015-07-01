@@ -19,6 +19,7 @@ import com.quickblox.users.model.QBUser;
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.chat.ChatMessage;
+import com.swarmnyc.pup.components.UnreadCounter;
 import com.swarmnyc.pup.events.EnterChatRoomEvent;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 import org.jivesoftware.smack.ConnectionListener;
@@ -237,6 +238,8 @@ public class MessageService extends Service
 					String.valueOf( message.getProperty( "codeBody" ) )
 				)
 			);
+
+			UnreadCounter.Add( message.getDialogId(), 1);
 
 			m_handler.post(new Runnable()			{
 				@Override
