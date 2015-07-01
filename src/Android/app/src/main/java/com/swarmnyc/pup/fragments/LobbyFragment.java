@@ -37,6 +37,7 @@ import com.swarmnyc.pup.events.RequireChatHistoryEvent;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
+import com.swarmnyc.pup.models.QBChatMessage2;
 import com.swarmnyc.pup.models.UserInfo;
 import com.swarmnyc.pup.view.DividerItemDecoration;
 import com.swarmnyc.pup.view.ShareView;
@@ -45,6 +46,7 @@ import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -152,7 +154,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 
 		// Scroll down when Keyboard up
 		SoftKeyboardHelper.setSoftKeyboardCallback(
-			new Action()
+			m_coordinatorLayout, new Action()
 			{
 				@Override
 				public void call( final Object value )
@@ -195,7 +197,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 						) < Consts.TOUCH_SLOP )
 						{
 							//Log.d( "Touch", "Tap" );
-							SoftKeyboardHelper.hideSoftKeyboard();
+							SoftKeyboardHelper.hideSoftKeyboard( getActivity() );
 						}
 					}
 
@@ -224,7 +226,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 	{
 		super.onDestroyView();
 
-		SoftKeyboardHelper.removeSoftKeyboardCallback();
+		SoftKeyboardHelper.removeSoftKeyboardCallback( m_coordinatorLayout );
 		ButterKnife.reset( this );
 	}
 
@@ -311,7 +313,21 @@ public class LobbyFragment extends BaseFragment implements Screen
 		else
 		{
 			// Get DATA by Rest API
-			switchButton();
+			m_lobbyService.getMessages(
+				m_lobbyId, new ServiceCallback<List<QBChatMessage2>>()
+				{
+					@Override
+					public void success( final List<QBChatMessage2> result )
+					{
+						List<ChatMessage> list = new ArrayList<ChatMessage>(  );
+
+						for ( QBChatMessage2 message : result )
+						{
+							list.add( new ChatMessage( new LobbyUserInfo(message.getUserId()) ) );
+						}
+					}
+				}
+			);
 		}
 	}
 
@@ -363,7 +379,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 					public void success( final Object value )
 					{
 						addUserIntoLobby( User.current );
-						EventBus.getBus().post( new LobbyUserChangeEvent( ) );
+						EventBus.getBus().post( new LobbyUserChangeEvent() );
 						initChatRoom();
 						DialogHelper.hide();
 					}
@@ -485,7 +501,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 						addUserIntoLobby( u );
 					}
 
-					EventBus.getBus().post( new LobbyUserChangeEvent( ) );
+					EventBus.getBus().post( new LobbyUserChangeEvent() );
 				}
 				else if ( cm.getCode().equals( "Leave" ) && cm.getCodeBody() != null )
 				{
@@ -500,7 +516,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 						}
 					}
 
-					EventBus.getBus().post( new LobbyUserChangeEvent( ) );
+					EventBus.getBus().post( new LobbyUserChangeEvent() );
 				}
 			}
 		}

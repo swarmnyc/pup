@@ -11,60 +11,46 @@ import com.swarmnyc.pup.Consts;
 
 public class SoftKeyboardHelper
 {
-	private static Activity             m_activity;
-	private static View                 m_rootView;
-	private static InputMethodManager   m_inputMethodManager;
-	private static GlobalLayoutListener m_globalLayoutListener;
+	public static final int KEY = 47851;
 
-	public static void init( View rootView, Activity activity )
+	public static void setSoftKeyboardCallback( View rootView, Action callback )
 	{
-		m_activity = activity;
-		m_rootView = rootView;
-		m_inputMethodManager = (InputMethodManager) activity.getSystemService( Context.INPUT_METHOD_SERVICE );
-		m_globalLayoutListener = null;
+		GlobalLayoutListener globalLayoutListener = new GlobalLayoutListener( rootView, callback );
+		rootView.setTag( KEY, globalLayoutListener );
+
+		rootView.getViewTreeObserver().addOnGlobalLayoutListener( globalLayoutListener );
 	}
 
-	public static void uninit()
+	public static void removeSoftKeyboardCallback( View rootView )
 	{
-		removeSoftKeyboardCallback();
-		m_activity = null;
-		m_inputMethodManager = null;
-		m_rootView = null;
-		m_globalLayoutListener = null;
-	}
-
-	public static void setSoftKeyboardCallback( Action callback )
-	{
-		m_globalLayoutListener = new GlobalLayoutListener(m_rootView, callback );
-		m_rootView.getViewTreeObserver().addOnGlobalLayoutListener( m_globalLayoutListener );
-	}
-
-	public static void removeSoftKeyboardCallback()
-	{
-		if ( m_rootView != null && m_globalLayoutListener != null )
+		GlobalLayoutListener globalLayoutListener = (GlobalLayoutListener) rootView.getTag( KEY );
+		if ( globalLayoutListener != null )
 		{
-			m_rootView.getViewTreeObserver().removeOnGlobalLayoutListener( m_globalLayoutListener );
-			m_globalLayoutListener = null;
+			rootView.getViewTreeObserver().removeOnGlobalLayoutListener( globalLayoutListener );
+			rootView.setTag( KEY, null );
 		}
 	}
 
-	public static void hideSoftKeyboard()
+	public static void hideSoftKeyboard( Activity activity )
 	{
-		if ( m_activity.getCurrentFocus() == null )
+		if ( activity.getCurrentFocus() == null )
 		{
 			return;
 		}
-		if ( m_activity.getCurrentFocus().getWindowToken() == null )
+		if ( activity.getCurrentFocus().getWindowToken() == null )
 		{
 			return;
 		}
 
-		m_inputMethodManager.hideSoftInputFromWindow( m_activity.getCurrentFocus().getWindowToken(), 0 );
+		( (InputMethodManager) activity.getSystemService( Context.INPUT_METHOD_SERVICE ) ).hideSoftInputFromWindow(
+			activity.getCurrentFocus().getWindowToken(),
+			0
+		);
 	}
 
 	private static class GlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener
 	{
-		private View   m_view;
+		private View m_view;
 		private Action m_callback;
 
 		public GlobalLayoutListener( final View view, final Action callback )

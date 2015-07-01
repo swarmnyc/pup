@@ -137,9 +137,6 @@ public class CreateLobbyFragment extends Fragment
 			return;
 		}
 
-		//TODO: Change to Lose focus
-		SoftKeyboardHelper.hideSoftKeyboard();
-
 		DialogHelper.showProgressDialog( R.string.message_lobby_creating );
 
 		List<GamePlatform> platforms = m_gamePlatformSelectView.getSelectedGamePlatforms();
@@ -213,7 +210,6 @@ public class CreateLobbyFragment extends Fragment
 		PuPApplication.getInstance().getComponent().inject( this );
 		ButterKnife.inject( this, view );
 		EventBus.getBus().register( this );
-		SoftKeyboardHelper.init(  m_rootView, getActivity());
 
 		m_gameAdapter = new AutoCompleteForPicturedModelAdapter<>( this.getActivity() );
 
@@ -258,7 +254,7 @@ public class CreateLobbyFragment extends Fragment
 						m_gameNameTextEdit.setText( "" );
 						UserVoice.launchPostIdea( getActivity() );
 					} else  {
-						SoftKeyboardHelper.hideSoftKeyboard();
+						SoftKeyboardHelper.hideSoftKeyboard(getActivity());
 						if ( StringUtils.isNotEmpty( m_selectedGame.getPictureUrl() ) )
 						{
 							Picasso.with( getActivity() ).load( m_selectedGame.getPictureUrl() ).centerCrop().fit().into(
