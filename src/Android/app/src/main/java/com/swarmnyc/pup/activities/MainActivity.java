@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,12 +41,13 @@ public class MainActivity extends AppCompatActivity {
     private static MainActivity m_instance;
     private        boolean      launchDefault;
 
-    @InjectView( R.id.toolbar )   Toolbar   m_toolbar;
-    @InjectView( R.id.viewpager ) ViewPager m_viewPager;
-    @InjectView( R.id.tabs )      TabLayout m_tabLayout;
+    @InjectView( R.id.toolbar )   Toolbar      m_toolbar;
+    @InjectView( R.id.viewpager ) ViewPager    m_viewPager;
+    @InjectView( R.id.tabs )      TabLayout    m_tabLayout;
+    @InjectView( R.id.appbar )    AppBarLayout m_appBarLayout;
 
-    @InjectView( R.id.layout_coordinator ) ViewGroup       m_root;
-    private                                TabPagerAdapter m_tabPagerAdapter;
+    @InjectView( R.id.layout_coordinator ) CoordinatorLayout m_coordinatorLayout;
+    private                                TabPagerAdapter   m_tabPagerAdapter;
 
     public MainActivity()
     {
@@ -116,36 +119,26 @@ public class MainActivity extends AppCompatActivity {
         if ( m_viewPager != null) {
             setupViewPager( m_viewPager );
 
-            m_viewPager.addOnPageChangeListener( new ViewPager.OnPageChangeListener() {
-                                                     @Override
-                                                     public void onPageScrolled(
-                                                         final int position,
-                                                         final float positionOffset,
-                                                         final int positionOffsetPixels
-                                                     )
-                                                     {
 
-                                                     }
-
-                                                     @Override
-                                                     public void onPageSelected( final int position )
-                                                     {
-                                                         final Fragment fragment = m_tabPagerAdapter.getItem( position );
-                                                         if (fragment instanceof BaseFragment)
-                                                         {
-                                                             ((BaseFragment) fragment).updateTitle();
-                                                         }
-                                                     }
-
-                                                     @Override
-                                                     public void onPageScrollStateChanged( final int state )
-                                                     {
-
-                                                     }
-                                                 } );
         }
 
-        m_tabLayout.setupWithViewPager( m_viewPager );
+        if (User.isLoggedIn())
+        {
+            m_tabLayout.setupWithViewPager( m_viewPager );
+        }
+        else
+        {
+            m_tabLayout.setVisibility( View.GONE );
+
+            final ViewGroup.LayoutParams layoutParams = m_toolbar.getLayoutParams();
+
+            if (layoutParams instanceof AppBarLayout.LayoutParams)
+            {
+                ((AppBarLayout.LayoutParams) layoutParams).setScrollFlags(
+                   AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+                );
+            }
+        }
 
        /* m_softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged() {
             @Override
@@ -167,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         EventBus.getBus().register(this);
-        SoftKeyboardHelper.init(m_root, this );
+        SoftKeyboardHelper.init( m_coordinatorLayout, this );
     }
 
     @Override
@@ -183,13 +176,45 @@ public class MainActivity extends AppCompatActivity {
 //        SoftKeyboardHelper.uninit();
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        m_tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
-        m_tabPagerAdapter.addFragment( new LobbyListFragment(), "FIND A GAME" );
-        m_tabPagerAdapter.addFragment( new MyChatsFragment(), "MY GAMES" );
-        m_tabPagerAdapter.addFragment( new SettingsFragment(), "PROFILE" );
-        viewPager.setAdapter( m_tabPagerAdapter );
-    }
+	private void setupViewPager( ViewPager viewPager )
+	{
+		m_tabPagerAdapter = new TabPagerAdapter( getSupportFragmentManager() );
+		m_tabPagerAdapter.addFragment( new LobbyListFragment(), "FIND A GAME" );
+		if ( User.isLoggedIn() )
+		{
+			m_tabPagerAdapter.addFragment( new MyChatsFragment(), "MY GAMES" );
+			m_tabPagerAdapter.addFragment( new SettingsFragment(), "PROFILE" );
+		}
+		viewPager.setAdapter( m_tabPagerAdapter );
+		m_viewPager.addOnPageChangeListener(
+			new ViewPager.OnPageChangeListener()
+			{
+				@Override
+				public void onPageScrolled(
+					final int position, final float positionOffset, final int positionOffsetPixels
+				)
+				{
+
+				}
+
+				@Override
+				public void onPageSelected( final int position )
+				{
+					final Fragment fragment = m_tabPagerAdapter.getItem( position );
+					if ( fragment instanceof BaseFragment )
+					{
+						( (BaseFragment) fragment ).updateTitle();
+					}
+				}
+
+				@Override
+				public void onPageScrollStateChanged( final int state )
+				{
+
+				}
+			}
+		);
+	}
 
     @OnClick( R.id.fab_create_lobby )
     public void onCreateLobbyButtonClicked()
