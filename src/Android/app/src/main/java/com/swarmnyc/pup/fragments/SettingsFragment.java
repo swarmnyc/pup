@@ -101,6 +101,12 @@ public class SettingsFragment extends BaseFragment implements Screen
 	public void onResume()
 	{
 		super.onResume();
+	}
+
+
+	@Override
+	public void updateTitle()
+	{
 		setTitle( R.string.label_settings );
 		setSubtitle( null );
 	}

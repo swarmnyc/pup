@@ -198,7 +198,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 					else
 					{
 						//click
-						Navigator.ToLobby( m_activity, m_currentViewHolder.m_lobby );
+//						Navigator.ToLobby( m_activity, m_currentViewHolder.m_lobby );
 					}
 				}
 				break;

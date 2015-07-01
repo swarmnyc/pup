@@ -108,9 +108,13 @@ public class MyChatsFragment extends BaseFragment implements Screen
 	public void onResume()
 	{
 		super.onResume();
+
+	}
+
+	public void updateTitle()
+	{
 		setTitle( R.string.text_lobbies );
 		setSubtitle( null );
-
 	}
 
 	private void fetchMoreData()

@@ -15,30 +15,25 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import butterknife.OnClick;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.squareup.otto.Subscribe;
-import com.swarmnyc.pup.Config;
-import com.swarmnyc.pup.Consts;
-import com.swarmnyc.pup.EventBus;
-import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.Navigator;
-import com.swarmnyc.pup.fragments.LobbyListFragment;
 import com.swarmnyc.pup.components.SoftKeyboardHelper;
+import com.swarmnyc.pup.fragments.BaseFragment;
+import com.swarmnyc.pup.fragments.LobbyListFragment;
 import com.swarmnyc.pup.fragments.MyChatsFragment;
 import com.swarmnyc.pup.fragments.SettingsFragment;
 import com.uservoice.uservoicesdk.UserVoice;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class MainActivity extends AppCompatActivity {
     private static MainActivity m_instance;
@@ -48,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
     @InjectView( R.id.viewpager ) ViewPager m_viewPager;
     @InjectView( R.id.tabs )      TabLayout m_tabLayout;
 
-    @InjectView( R.id.layout_coordinator ) ViewGroup m_root;
+    @InjectView( R.id.layout_coordinator ) ViewGroup       m_root;
+    private                                TabPagerAdapter m_tabPagerAdapter;
 
     public MainActivity()
     {
@@ -119,9 +115,38 @@ public class MainActivity extends AppCompatActivity {
 
         if ( m_viewPager != null) {
             setupViewPager( m_viewPager );
+
+            m_viewPager.addOnPageChangeListener( new ViewPager.OnPageChangeListener() {
+                                                     @Override
+                                                     public void onPageScrolled(
+                                                         final int position,
+                                                         final float positionOffset,
+                                                         final int positionOffsetPixels
+                                                     )
+                                                     {
+
+                                                     }
+
+                                                     @Override
+                                                     public void onPageSelected( final int position )
+                                                     {
+                                                         final Fragment fragment = m_tabPagerAdapter.getItem( position );
+                                                         if (fragment instanceof BaseFragment)
+                                                         {
+                                                             ((BaseFragment) fragment).updateTitle();
+                                                         }
+                                                     }
+
+                                                     @Override
+                                                     public void onPageScrollStateChanged( final int state )
+                                                     {
+
+                                                     }
+                                                 } );
         }
 
         m_tabLayout.setupWithViewPager( m_viewPager );
+
        /* m_softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged() {
             @Override
             public void onSoftKeyboardHide() {
@@ -159,11 +184,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new LobbyListFragment(), "FIND A GAME");
-        adapter.addFragment(new MyChatsFragment(), "MY GAMES");
-        adapter.addFragment(new SettingsFragment(), "PROFILE");
-        viewPager.setAdapter(adapter);
+        m_tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
+        m_tabPagerAdapter.addFragment( new LobbyListFragment(), "FIND A GAME" );
+        m_tabPagerAdapter.addFragment( new MyChatsFragment(), "MY GAMES" );
+        m_tabPagerAdapter.addFragment( new SettingsFragment(), "PROFILE" );
+        viewPager.setAdapter( m_tabPagerAdapter );
     }
 
     @OnClick( R.id.fab_create_lobby )
@@ -223,15 +248,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
-    static class Adapter extends FragmentPagerAdapter
+    static class TabPagerAdapter extends FragmentPagerAdapter
     {
         private final List<Fragment> mFragments      = new ArrayList<>();
         private final List<String>   mFragmentTitles = new ArrayList<>();
 
-        public Adapter( FragmentManager fm )
+        public TabPagerAdapter( FragmentManager fm )
         {
             super( fm );
         }

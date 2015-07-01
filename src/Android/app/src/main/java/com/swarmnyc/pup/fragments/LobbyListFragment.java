@@ -68,7 +68,6 @@ public class LobbyListFragment extends BaseFragment implements Screen
 	}
 
 
-
 	@Override
 	public void onAttach( Activity activity )
 	{
@@ -331,7 +330,6 @@ public class LobbyListFragment extends BaseFragment implements Screen
 	public void onResume()
 	{
 		super.onResume();
-		updateTitle();
 	}
 
 	@Override
@@ -428,9 +426,10 @@ public class LobbyListFragment extends BaseFragment implements Screen
 		imm.hideSoftInputFromWindow( m_gameSearch.getWindowToken(), 0 );
 	}
 
-	private void updateTitle()
+	@Override
+	public void updateTitle()
 	{
-		final String title = null == m_lobbyFilter.getGame() ? "All Lobbies" : m_lobbyFilter.getGame().getName();
+		final String title = null == m_lobbyFilter.getGame() ? "All Games" : m_lobbyFilter.getGame().getName();
 		setTitle( title );
 		setSubtitle( null );
 
