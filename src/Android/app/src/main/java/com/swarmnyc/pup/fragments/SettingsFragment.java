@@ -78,8 +78,7 @@ public class SettingsFragment extends BaseFragment implements Screen
 		ButterKnife.inject( this, view );
 		PuPApplication.getInstance().getComponent().inject( this );
 
-		setTitle( R.string.label_settings );
-		setSubtitle( null );
+
 
 		if ( StringUtils.isNotEmpty( User.current.getPortraitUrl() ) )
 		{
@@ -96,11 +95,14 @@ public class SettingsFragment extends BaseFragment implements Screen
 
 
 
+
+
 	@Override
-	public void onStart()
+	public void onResume()
 	{
-		super.onStart();
-//		MainDrawerFragment.getInstance().highLight( Consts.KEY_SETTINGS );
+		super.onResume();
+		setTitle( R.string.label_settings );
+		setSubtitle( null );
 	}
 
 	@Override

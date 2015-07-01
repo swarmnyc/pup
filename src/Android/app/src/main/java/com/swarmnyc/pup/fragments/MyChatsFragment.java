@@ -2,157 +2,178 @@ package com.swarmnyc.pup.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
-import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.MyChatAdapter;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.Screen;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.DividerItemDecoration;
 
+import javax.inject.Inject;
 import java.util.List;
 
-import javax.inject.Inject;
+public class MyChatsFragment extends BaseFragment implements Screen
+{
+	@Inject LobbyService m_lobbyService;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+	@InjectView( R.id.list_chat ) RecyclerView m_chatList;
 
-public class MyChatsFragment extends Fragment implements Screen {
-    @Inject
-    LobbyService m_lobbyService;
+	private boolean       m_noMoreData;
+	private int           pageIndex;
+	private MyChatAdapter m_myChatAdapter;
+	private Lobby         m_removedLobby;
 
-    @InjectView(R.id.list_chat)
-    RecyclerView m_chatList;
+	@Override
+	public String toString()
+	{
+		return "My Lobbies";
+	}
 
-    private boolean m_noMoreData;
-    private int pageIndex;
-    private MyChatAdapter m_myChatAdapter;
-    private Lobby m_removedLobby;
+	@Override
+	public View onCreateView(
+		LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
+	)
+	{
+		return inflater.inflate( R.layout.fragment_my_chats, container, false );
+	}
 
-    @Override
-    public String toString() {
-        return "My Lobbies";
-    }
+	@Override
+	public void onViewCreated( final View view, final Bundle savedInstanceState )
+	{
+		ButterKnife.inject( this, view );
+		PuPApplication.getInstance().getComponent().inject( this );
+		pageIndex = 0;
+		m_noMoreData = false;
+		m_myChatAdapter = new MyChatAdapter( this.getActivity() );
+		m_myChatAdapter.AddReachEndAction(
+			new Action()
+			{
+				@Override
+				public void call( Object value )
+				{
+					fetchMoreData();
+				}
+			}
+		);
 
-    @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
-    ) {
-        return inflater.inflate(R.layout.fragment_my_chats, container, false);
-    }
+		m_myChatAdapter.AddRemoveAction(
+			new Action<Lobby>()
+			{
+				@Override
+				public void call( Lobby lobby )
+				{
+					m_removedLobby = lobby;
+					m_lobbyService.leave(
+						lobby.getId(), new ServiceCallback()
+						{
+							@Override
+							public void success( final Object value )
+							{
+								showUndo();
+							}
+						}
+					);
+				}
+			}
+		);
+		m_chatList.setAdapter( m_myChatAdapter );
+		m_chatList.setLayoutManager( new LinearLayoutManager( this.getActivity() ) );
+		m_chatList.addItemDecoration( new DividerItemDecoration( getActivity(), DividerItemDecoration.VERTICAL_LIST
+                                      ) );
+	}
 
-    @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        ButterKnife.inject(this, view);
-        PuPApplication.getInstance().getComponent().inject(this);
-        pageIndex = 0;
-        m_noMoreData = false;
-        m_myChatAdapter = new MyChatAdapter(this.getActivity());
-        m_myChatAdapter.AddReachEndAction(new Action() {
-            @Override
-            public void call(Object value) {
-                fetchMoreData();
-            }
-        });
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		//        MainDrawerFragment.getInstance().highLight(Consts.KEY_MY_LOBBIES);
 
-        m_myChatAdapter.AddRemoveAction(new Action<Lobby>() {
-            @Override
-            public void call(Lobby lobby) {
-                m_removedLobby = lobby;
-                m_lobbyService.leave(
-                        lobby.getId(), new ServiceCallback() {
-                            @Override
-                            public void success(final Object value) {
-                                showUndo();
-                            }
-                        }
-                );
-            }
-        });
-        m_chatList.setAdapter(m_myChatAdapter);
-        m_chatList.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        m_chatList.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-//        MainDrawerFragment.getInstance().highLight(Consts.KEY_MY_LOBBIES);
-
-        fetchMoreData();
-    }
+		fetchMoreData();
+	}
 
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        MainActivity.getInstance().getToolbar().setTitle(R.string.text_lobbies);
-        MainActivity.getInstance().getToolbar().setSubtitle(null);
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		setTitle( R.string.text_lobbies );
+		setSubtitle( null );
 
-    }
+	}
 
-    private void fetchMoreData() {
-        if (m_noMoreData) {
-            return;
-        }
+	private void fetchMoreData()
+	{
+		if ( m_noMoreData )
+		{
+			return;
+		}
 
-        LobbyFilter filter = new LobbyFilter();
-        filter.setPageIndex(pageIndex++);
-        m_lobbyService.getMyLobbies(
-                filter, new ServiceCallback<List<Lobby>>() {
-                    @Override
-                    public void success(final List<Lobby> value) {
-                        if (!isAdded())
-                            return;
+		LobbyFilter filter = new LobbyFilter();
+		filter.setPageIndex( pageIndex++ );
+		m_lobbyService.getMyLobbies(
+			filter, new ServiceCallback<List<Lobby>>()
+			{
+				@Override
+				public void success( final List<Lobby> value )
+				{
+					if ( !isAdded() )
+					{ return; }
 
-                        if (value.size() == 0) {
-                            m_noMoreData = true;
-                        } else {
-                            if (value.size() < Consts.PAGE_SIZE) {
-                                m_noMoreData = true;
-                            }
+					if ( value.size() == 0 )
+					{
+						m_noMoreData = true;
+					}
+					else
+					{
+						if ( value.size() < Consts.PAGE_SIZE )
+						{
+							m_noMoreData = true;
+						}
 
-                            m_myChatAdapter.AddLobbies(value);
-                        }
-                    }
-                }
-        );
-    }
+						m_myChatAdapter.AddLobbies( value );
+					}
+				}
+			}
+		);
+	}
 
-    private void showUndo() {
-        Snackbar snackbar = Snackbar.make(m_chatList, R.string.message_leave_room, Snackbar.LENGTH_LONG);
-        snackbar.setAction(
-                R.string.text_undo, new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View v) {
-                        m_lobbyService.join(
-                                m_removedLobby.getId(), new ServiceCallback() {
-                                    @Override
-                                    public void success(final Object value) {
-                                        m_myChatAdapter.AddLobby(m_removedLobby);
-                                    }
-                                }
-                        );
-                    }
-                }
-        );
-        snackbar.getView().setPadding(0, 30, 0, 30);
-        snackbar.setActionTextColor(getResources().getColor(R.color.pup_white));
-        snackbar.getView().setBackgroundResource(R.color.pup_orange);
-        snackbar.show();
-    }
+	private void showUndo()
+	{
+		Snackbar snackbar = Snackbar.make( m_chatList, R.string.message_leave_room, Snackbar.LENGTH_LONG );
+		snackbar.setAction(
+			R.string.text_undo, new View.OnClickListener()
+			{
+				@Override
+				public void onClick( final View v )
+				{
+					m_lobbyService.join(
+						m_removedLobby.getId(), new ServiceCallback()
+						{
+							@Override
+							public void success( final Object value )
+							{
+								m_myChatAdapter.AddLobby( m_removedLobby );
+							}
+						}
+					);
+				}
+			}
+		);
+		snackbar.getView().setPadding( 0, 30, 0, 30 );
+		snackbar.setActionTextColor( getResources().getColor( R.color.pup_white ) );
+		snackbar.getView().setBackgroundResource( R.color.pup_orange );
+		snackbar.show();
+	}
 }

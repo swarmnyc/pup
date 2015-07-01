@@ -1,6 +1,7 @@
 package com.swarmnyc.pup.components;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,43 +34,44 @@ public class Navigator
 
 		if ( activity != null )
 		{
+			// TODO Track pages differently
 
-			activity.getSupportFragmentManager().addOnBackStackChangedListener(
-				new FragmentManager.OnBackStackChangedListener()
-				{
-					@Override
-					public void onBackStackChanged()
-					{
-						if ( m_activity.getSupportFragmentManager().getBackStackEntryCount() == 0 )
-						{
-							m_activity.finish();
-						}
-						else
-						{
-							List<Fragment> fragments = m_activity.getSupportFragmentManager().getFragments();
-
-							Fragment f = null;
-							int p = fragments.size() - 1;
-							while ( p >= 0 )
-							{
-								if ( Screen.class.isInstance( fragments.get( p ) ) )
-								{
-									f = fragments.get( p );
-									break;
-								}
-
-								p--;
-							}
-
-							if ( f != null )
-							{
-								m_tracker.setScreenName( f.toString() );
-								m_tracker.send( new HitBuilders.ScreenViewBuilder().build() );
-							}
-						}
-					}
-				}
-			);
+//			activity.getSupportFragmentManager().addOnBackStackChangedListener(
+//				new FragmentManager.OnBackStackChangedListener()
+//				{
+//					@Override
+//					public void onBackStackChanged()
+//					{
+//						if ( m_activity.getSupportFragmentManager().getBackStackEntryCount() == 0 )
+//						{
+//							m_activity.finish();
+//						}
+//						else
+//						{
+//							List<Fragment> fragments = m_activity.getSupportFragmentManager().getFragments();
+//
+//							Fragment f = null;
+//							int p = fragments.size() - 1;
+//							while ( p >= 0 )
+//							{
+//								if ( Screen.class.isInstance( fragments.get( p ) ) )
+//								{
+//									f = fragments.get( p );
+//									break;
+//								}
+//
+//								p--;
+//							}
+//
+//							if ( f != null )
+//							{
+//								m_tracker.setScreenName( f.toString() );
+//								m_tracker.send( new HitBuilders.ScreenViewBuilder().build() );
+//							}
+//						}
+//					}
+//				}
+//			);
 		}
 	}
 
@@ -141,16 +143,16 @@ public class Navigator
 		m_activity.startActivity( intent );
 	}
 
-	public static void ToLobby( final Lobby lobby )
+	public static void ToLobby( final Context context, final Lobby lobby )
 	{
 		Bundle bundle = new Bundle();
 		bundle.putString( Consts.KEY_LOBBY_ID, lobby.getId() );
 		bundle.putString( Consts.KEY_LOBBY_NAME, lobby.getName() );
 		bundle.putString( Consts.KEY_LOBBY_IMAGE, lobby.getPictureUrl() );
 
-		final Intent intent = new Intent( m_activity, LobbyActivity.class );
+		final Intent intent = new Intent( context, LobbyActivity.class );
 		intent.putExtras( bundle );
-		m_activity.startActivity( intent );
+		context.startActivity( intent );
 	}
 
 	private static void popOnce()
