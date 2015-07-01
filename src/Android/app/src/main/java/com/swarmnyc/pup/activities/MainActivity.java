@@ -1,40 +1,35 @@
 package com.swarmnyc.pup.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import butterknife.OnClick;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.squareup.otto.Subscribe;
-import com.swarmnyc.pup.Config;
-import com.swarmnyc.pup.Consts;
-import com.swarmnyc.pup.EventBus;
-import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.Navigator;
-import com.swarmnyc.pup.fragments.LobbyListFragment;
 import com.swarmnyc.pup.components.SoftKeyboardHelper;
-import com.swarmnyc.pup.fragments.MainDrawerFragment;
+import com.swarmnyc.pup.fragments.BaseFragment;
+import com.swarmnyc.pup.fragments.LobbyListFragment;
 import com.swarmnyc.pup.fragments.MyChatsFragment;
 import com.swarmnyc.pup.fragments.SettingsFragment;
 import com.uservoice.uservoicesdk.UserVoice;
@@ -42,19 +37,17 @@ import com.uservoice.uservoicesdk.UserVoice;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-
 public class MainActivity extends AppCompatActivity {
     private static MainActivity m_instance;
-    private boolean launchDefault;
+    private        boolean      launchDefault;
 
-    @InjectView( R.id.toolbar )   Toolbar   m_toolbar;
-    @InjectView( R.id.viewpager ) ViewPager m_viewPager;
-    @InjectView( R.id.tabs )  TabLayout m_tabLayout;
+    @InjectView( R.id.toolbar )   Toolbar      m_toolbar;
+    @InjectView( R.id.viewpager ) ViewPager    m_viewPager;
+    @InjectView( R.id.tabs )      TabLayout    m_tabLayout;
+    @InjectView( R.id.appbar )    AppBarLayout m_appBarLayout;
 
-        @InjectView(R.id.main_content)
-        ViewGroup m_root;
+    @InjectView( R.id.layout_coordinator ) CoordinatorLayout m_coordinatorLayout;
+    private                                TabPagerAdapter   m_tabPagerAdapter;
 
     public MainActivity()
     {
@@ -90,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
         GoogleAnalytics m_googleAnalytics = GoogleAnalytics.getInstance( this );
         m_googleAnalytics.setLocalDispatchPeriod( 1800 );
 
-        Tracker m_tracker = m_googleAnalytics.newTracker(getString(R.string.google_tracker_key));
-        m_tracker.enableExceptionReporting(true);
+        Tracker m_tracker = m_googleAnalytics.newTracker( getString( R.string.google_tracker_key ) );
+        m_tracker.enableExceptionReporting( true );
 
         //User Voice
         com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config(
@@ -106,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Show Splash or not
-        if (!Config.getBool("ShowedSplash")) {
+        if ( !Config.getBool( "ShowedSplash")) {
             Config.setBool("ShowedSplash", true);
             startActivity(new Intent(this, SplashActivity.class));
         }
@@ -125,9 +118,28 @@ public class MainActivity extends AppCompatActivity {
 
         if ( m_viewPager != null) {
             setupViewPager( m_viewPager );
+
+
         }
 
-        m_tabLayout.setupWithViewPager( m_viewPager );
+        if (User.isLoggedIn())
+        {
+            m_tabLayout.setupWithViewPager( m_viewPager );
+        }
+        else
+        {
+            m_tabLayout.setVisibility( View.GONE );
+
+            final ViewGroup.LayoutParams layoutParams = m_toolbar.getLayoutParams();
+
+            if (layoutParams instanceof AppBarLayout.LayoutParams)
+            {
+                ((AppBarLayout.LayoutParams) layoutParams).setScrollFlags(
+                   AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+                );
+            }
+        }
+
        /* m_softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged() {
             @Override
             public void onSoftKeyboardHide() {
@@ -143,11 +155,12 @@ public class MainActivity extends AppCompatActivity {
         });*/
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
         EventBus.getBus().register(this);
-        SoftKeyboardHelper.init(m_root, this );
+        SoftKeyboardHelper.init( m_coordinatorLayout, this );
     }
 
     @Override
@@ -163,13 +176,45 @@ public class MainActivity extends AppCompatActivity {
 //        SoftKeyboardHelper.uninit();
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new LobbyListFragment(), "FIND A GAME");
-        adapter.addFragment(new MyChatsFragment(), "MY GAMES");
-        adapter.addFragment(new SettingsFragment(), "PROFILE");
-        viewPager.setAdapter(adapter);
-    }
+	private void setupViewPager( ViewPager viewPager )
+	{
+		m_tabPagerAdapter = new TabPagerAdapter( getSupportFragmentManager() );
+		m_tabPagerAdapter.addFragment( new LobbyListFragment(), "FIND A GAME" );
+		if ( User.isLoggedIn() )
+		{
+			m_tabPagerAdapter.addFragment( new MyChatsFragment(), "MY GAMES" );
+			m_tabPagerAdapter.addFragment( new SettingsFragment(), "PROFILE" );
+		}
+		viewPager.setAdapter( m_tabPagerAdapter );
+		m_viewPager.addOnPageChangeListener(
+			new ViewPager.OnPageChangeListener()
+			{
+				@Override
+				public void onPageScrolled(
+					final int position, final float positionOffset, final int positionOffsetPixels
+				)
+				{
+
+				}
+
+				@Override
+				public void onPageSelected( final int position )
+				{
+					final Fragment fragment = m_tabPagerAdapter.getItem( position );
+					if ( fragment instanceof BaseFragment )
+					{
+						( (BaseFragment) fragment ).updateTitle();
+					}
+				}
+
+				@Override
+				public void onPageScrollStateChanged( final int state )
+				{
+
+				}
+			}
+		);
+	}
 
     @OnClick( R.id.fab_create_lobby )
     public void onCreateLobbyButtonClicked()
@@ -228,15 +273,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
-    static class Adapter extends FragmentPagerAdapter
+    static class TabPagerAdapter extends FragmentPagerAdapter
     {
         private final List<Fragment> mFragments      = new ArrayList<>();
         private final List<String>   mFragmentTitles = new ArrayList<>();
 
-        public Adapter( FragmentManager fm )
+        public TabPagerAdapter( FragmentManager fm )
         {
             super( fm );
         }

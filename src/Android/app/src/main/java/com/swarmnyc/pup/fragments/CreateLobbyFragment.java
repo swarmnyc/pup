@@ -158,7 +158,9 @@ public class CreateLobbyFragment extends Fragment
 				public void success( final Lobby value )
 				{
 					DialogHelper.hide();
-					Navigator.ToLobby( value );
+					Navigator.ToLobby(getActivity(),  value );
+
+					getActivity().finish(); // Finish this activity.
 				}
 			}
 		);

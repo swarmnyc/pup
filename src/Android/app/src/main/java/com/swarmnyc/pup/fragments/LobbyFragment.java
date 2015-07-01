@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -57,6 +58,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 	@InjectView( R.id.backdrop )           ImageView               m_headerImage;
 	@InjectView( R.id.collapsing_toolbar ) CollapsingToolbarLayout m_collapsingToolbarLayout;
 	@InjectView( R.id.toolbar )            Toolbar                 m_toolbar;
+	@InjectView( R.id.layout_coordinator ) CoordinatorLayout       m_coordinatorLayout;
 
 
 	@InjectView( R.id.text_panel ) ViewGroup m_textPanel;
@@ -113,6 +115,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 		super.onViewCreated( view, savedInstanceState );
 		PuPApplication.getInstance().getComponent().inject( this );
 		ButterKnife.inject( this, view );
+
 
 		if ( StringUtils.isNotEmpty( m_lobbyImage ) )
 		{

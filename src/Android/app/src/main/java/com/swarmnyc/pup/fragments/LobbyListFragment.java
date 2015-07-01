@@ -1,16 +1,13 @@
 package com.swarmnyc.pup.fragments;
 
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
@@ -21,9 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.Filter.GameFilter;
@@ -71,7 +66,6 @@ public class LobbyListFragment extends BaseFragment implements Screen
 	public LobbyListFragment()
 	{
 	}
-
 
 
 	@Override
@@ -336,7 +330,6 @@ public class LobbyListFragment extends BaseFragment implements Screen
 	public void onResume()
 	{
 		super.onResume();
-		updateTitle();
 	}
 
 	@Override
@@ -433,9 +426,10 @@ public class LobbyListFragment extends BaseFragment implements Screen
 		imm.hideSoftInputFromWindow( m_gameSearch.getWindowToken(), 0 );
 	}
 
-	private void updateTitle()
+	@Override
+	public void updateTitle()
 	{
-		final String title = null == m_lobbyFilter.getGame() ? "All Lobbies" : m_lobbyFilter.getGame().getName();
+		final String title = null == m_lobbyFilter.getGame() ? "All Games" : m_lobbyFilter.getGame().getName();
 		setTitle( title );
 		setSubtitle( null );
 
@@ -622,7 +616,7 @@ public class LobbyListFragment extends BaseFragment implements Screen
 						public void onClick( final View v )
 						{
 							Navigator.ToLobby(
-								lobbyListItemView.getLobby()
+								m_context, lobbyListItemView.getLobby()
 							);
 						}
 					}
