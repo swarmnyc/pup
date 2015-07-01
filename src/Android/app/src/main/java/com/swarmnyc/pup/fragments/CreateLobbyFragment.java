@@ -21,7 +21,6 @@ import com.swarmnyc.pup.Services.Filter.GameFilter;
 import com.swarmnyc.pup.Services.GameService;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
-import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
 import com.swarmnyc.pup.components.*;
 import com.swarmnyc.pup.events.UserChangedEvent;
@@ -31,48 +30,35 @@ import com.swarmnyc.pup.view.HorizontalSpinner;
 import com.uservoice.uservoicesdk.UserVoice;
 
 import javax.inject.Inject;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CreateLobbyFragment extends Fragment
 	implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener
 {
-	@Inject
-	GameService m_gameService;
+	@Inject GameService m_gameService;
 
-	@Inject
-	LobbyService m_lobbyService;
+	@Inject LobbyService m_lobbyService;
 
-	@InjectView( R.id.layout_lobby_create )
-	ViewGroup m_rootView;
+	@InjectView( R.id.layout_lobby_create ) ViewGroup m_rootView;
 
-	@InjectView( R.id.img_game )
-	ImageView m_gameImageView;
+	@InjectView( R.id.img_game ) ImageView m_gameImageView;
 
-	@InjectView( R.id.text_name )
-	AutoCompleteTextView m_gameNameTextEdit;
+	@InjectView( R.id.text_name ) AutoCompleteTextView m_gameNameTextEdit;
 
-	@InjectView( R.id.platform_select )
-	GamePlatformSelectView m_gamePlatformSelectView;
+	@InjectView( R.id.platform_select ) GamePlatformSelectView m_gamePlatformSelectView;
 
-	@InjectView( R.id.spinner_play_style )
-	HorizontalSpinner m_playStyleSpinner;
+	@InjectView( R.id.spinner_play_style ) HorizontalSpinner m_playStyleSpinner;
 
-	@InjectView( R.id.spinner_gamer_skill )
-	HorizontalSpinner m_gamerSkillSpinner;
+	@InjectView( R.id.spinner_gamer_skill ) HorizontalSpinner m_gamerSkillSpinner;
 
-	@InjectView( R.id.text_date )
-	TextView m_dateText;
+	@InjectView( R.id.text_date ) TextView m_dateText;
 
-	@InjectView( R.id.text_time )
-	TextView m_timeText;
+	@InjectView( R.id.text_time ) TextView m_timeText;
 
-	@InjectView( R.id.text_description )
-	EditText m_descriptionText;
+	@InjectView( R.id.text_description ) EditText m_descriptionText;
 
-	@InjectView( R.id.btn_submit )
-	Button m_submitButton;
+	@InjectView( R.id.btn_submit ) Button m_submitButton;
 
 	GameFilter m_gameFilter = new GameFilter();
 	Game                                      m_selectedGame;
@@ -137,7 +123,7 @@ public class CreateLobbyFragment extends Fragment
 			return;
 		}
 
-		DialogHelper.showProgressDialog(getActivity(), R.string.message_lobby_creating );
+		DialogHelper.showProgressDialog( getActivity(), R.string.message_lobby_creating );
 
 		List<GamePlatform> platforms = m_gamePlatformSelectView.getSelectedGamePlatforms();
 
@@ -155,7 +141,7 @@ public class CreateLobbyFragment extends Fragment
 				public void success( final Lobby value )
 				{
 					DialogHelper.hide();
-					Navigator.ToLobby(getActivity(),  value );
+					Navigator.ToLobby( getActivity(), value );
 
 					getActivity().finish(); // Finish this activity.
 				}
@@ -183,7 +169,6 @@ public class CreateLobbyFragment extends Fragment
 	{
 		return "Create Lobby";
 	}
-
 
 
 	@Override
@@ -226,9 +211,15 @@ public class CreateLobbyFragment extends Fragment
 							@Override
 							public void success( List<Game> value )
 							{
-								if (value.size() == 0){
+								if ( value.size() == 0 )
+								{
 									Game game = new Game();
-									game.setThumbnailPictureUrl( Utility.getResourceUri( getActivity(), R.drawable.ico_plus ).toString() );
+									game.setThumbnailPictureUrl(
+										Utility.getResourceUri(
+											getActivity(),
+											R.drawable.ico_plus
+										).toString()
+									);
 									game.setName( getString( R.string.text_request_game ) );
 									value.add( game );
 								}
@@ -250,16 +241,23 @@ public class CreateLobbyFragment extends Fragment
 				public void onItemClick( AdapterView<?> parent, View view, int position, long id )
 				{
 					m_selectedGame = m_gameAdapter.getItem( position );
-					if ( m_selectedGame.getId() == null ){
+					if ( m_selectedGame.getId() == null )
+					{
 						m_gameNameTextEdit.setText( "" );
 						UserVoice.launchPostIdea( getActivity() );
-					} else  {
-						SoftKeyboardHelper.hideSoftKeyboard(getActivity());
+					}
+					else
+					{
+						SoftKeyboardHelper.hideSoftKeyboard( getActivity() );
 						if ( StringUtils.isNotEmpty( m_selectedGame.getPictureUrl() ) )
 						{
-							Picasso.with( getActivity() ).load( m_selectedGame.getPictureUrl() ).centerCrop().fit().into(
-								m_gameImageView
-							);
+							Picasso.with( getActivity() )
+							       .load( m_selectedGame.getPictureUrl() )
+							       .centerCrop()
+							       .fit()
+							       .into(
+								       m_gameImageView
+							       );
 						}
 
 						m_gamePlatformSelectView.setAvailablePlatforms( m_selectedGame.getPlatforms() );
@@ -269,8 +267,8 @@ public class CreateLobbyFragment extends Fragment
 			}
 		);
 
-		m_gameNameTextEdit.setOnFocusChangeListener(new HideKeyboardFocusChangedListener(getActivity()));
-		m_descriptionText.setOnFocusChangeListener(new HideKeyboardFocusChangedListener(getActivity()));
+		m_gameNameTextEdit.setOnFocusChangeListener( new HideKeyboardFocusChangedListener( getActivity() ) );
+		m_descriptionText.setOnFocusChangeListener( new HideKeyboardFocusChangedListener( getActivity() ) );
 
 		m_gamePlatformSelectView.setPlatformSelectionChangedListener(
 			new GamePlatformSelectView.OnPlatformSelectionChangedListener()
@@ -311,7 +309,7 @@ public class CreateLobbyFragment extends Fragment
 					removeTime( range );
 
 					datePickerDialog.getDatePicker().setMaxDate(
-						range.getTimeInMillis() + 8 * DateUtils.DAY_IN_MILLIS - 1
+						range.getTimeInMillis() + 14 * DateUtils.DAY_IN_MILLIS - 1
 					);
 					datePickerDialog.getDatePicker().setMinDate( range.getTimeInMillis() );
 					datePickerDialog.show();
@@ -348,7 +346,7 @@ public class CreateLobbyFragment extends Fragment
 	public void onStart()
 	{
 		super.onStart();
-//		MainDrawerFragment.getInstance().highLight( Consts.KEY_LOBBIES );
+		//		MainDrawerFragment.getInstance().highLight( Consts.KEY_LOBBIES );
 	}
 
 	@Override
@@ -403,8 +401,8 @@ public class CreateLobbyFragment extends Fragment
 				s = this.getActivity().getString( R.string.text_tomorrow );
 				break;
 			default:
-				SimpleDateFormat format = new SimpleDateFormat("MMM dd",Locale.getDefault());
-				s = format.format(m_selectedDate.getTime());
+				SimpleDateFormat format = new SimpleDateFormat( "MMM dd", Locale.getDefault() );
+				s = format.format( m_selectedDate.getTime() );
 				break;
 		}
 
@@ -413,12 +411,26 @@ public class CreateLobbyFragment extends Fragment
 
 	private void setTime( int hour, int min )
 	{
-		String s;
-		m_selectedDate.set( Calendar.HOUR_OF_DAY, hour );
-		m_selectedDate.set( Calendar.MINUTE, min );
-		m_timeOffset = (int) ( ( m_selectedDate.getTimeInMillis() - Calendar.getInstance().getTimeInMillis() )
+		Calendar c = (Calendar) m_selectedDate.clone();
+		c.set( Calendar.HOUR_OF_DAY, hour );
+		c.set( Calendar.MINUTE, min );
+
+		m_timeOffset = (int) ( ( c.getTimeInMillis() - Calendar.getInstance().getTimeInMillis() )
 		                       / DateUtils.MINUTE_IN_MILLIS
 		);
+
+		if ( m_timeOffset < 0 )
+		{
+			Toast.makeText( this.getActivity(), R.string.message_create_lobby_wrong_chose_time, Toast.LENGTH_LONG )
+			     .show();
+			return;
+		}
+
+		m_selectedDate.set( Calendar.HOUR_OF_DAY, hour );
+		m_selectedDate.set( Calendar.MINUTE, min );
+
+		String s;
+
 		m_timeOffset = Math.max( m_timeOffset, 20 );
 		if ( m_dateOffset == 0 && m_timeOffset <= 60 )
 		{
@@ -426,8 +438,8 @@ public class CreateLobbyFragment extends Fragment
 		}
 		else
 		{
-			SimpleDateFormat format = new SimpleDateFormat("h:mm a",Locale.getDefault());
-			s = format.format(m_selectedDate.getTime());
+			SimpleDateFormat format = new SimpleDateFormat( "h:mm a", Locale.getDefault() );
+			s = format.format( m_selectedDate.getTime() );
 		}
 
 		m_timeText.setText( s );
