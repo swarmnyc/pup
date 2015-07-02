@@ -19,7 +19,8 @@ import com.quickblox.users.model.QBUser;
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.components.UnreadCounter;
-import com.swarmnyc.pup.events.EnterChatRoomEvent;
+import com.swarmnyc.pup.events.AfterEnterChatRoomEvent;
+import com.swarmnyc.pup.events.AfterLeaveLobbyEvent;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.XMPPConnection;
@@ -131,9 +132,31 @@ public class MessageService extends Service
 	}
 
 	@Subscribe
-	public void afterEnterRoom( EnterChatRoomEvent event )
+	public void handleEnterRoom( AfterEnterChatRoomEvent event )
 	{
 		startListener( event.getChat() );
+	}
+
+	@Subscribe
+	public void handleLeaveRoom( AfterLeaveLobbyEvent event )
+	{
+		try
+		{
+			String chatId = Config.getConfigString( R.string.QB_APP_ID )
+			                + "_"
+			                + event.getRoomId()
+			                + "@muc.chat.quickblox.com";
+
+			QBGroupChat chat = QBChatService.getInstance().getGroupChatManager().getGroupChat( chatId );
+			if ( chat.isJoined() )
+			{
+				chat.leave();
+			}
+		}
+		catch ( Exception e )
+		{
+			Log.e( TAG, "Leave failed", e );
+		}
 	}
 
 	private void processChatRooms()

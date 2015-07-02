@@ -2,27 +2,21 @@ package com.swarmnyc.pup.chat;
 
 import android.app.Activity;
 import android.os.Bundle;
-import com.quickblox.chat.QBChat;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBGroupChat;
-import com.quickblox.chat.exception.QBChatException;
-import com.quickblox.chat.listeners.QBMessageListenerImpl;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.core.request.QBRequestGetBuilder;
-import com.quickblox.users.model.QBUser;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.components.DialogHelper;
-import com.swarmnyc.pup.events.EnterChatRoomEvent;
+import com.swarmnyc.pup.events.AfterEnterChatRoomEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smackx.muc.DiscussionHistory;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class QuickbloxChatRoomService extends ChatRoomService
@@ -71,7 +65,7 @@ public class QuickbloxChatRoomService extends ChatRoomService
 			m_chat = QBChatService.getInstance().getGroupChatManager().createGroupChat( m_dialog.getRoomJid() );
 		}
 
-		EventBus.getBus().post( new EnterChatRoomEvent(m_chat) );
+		EventBus.getBus().post( new AfterEnterChatRoomEvent(m_chat) );
 	}
 
 	private LobbyUserInfo getLobbyUserInfo( final QBChatMessage chatMessage )

@@ -12,11 +12,14 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.Consts;
+import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
+import com.swarmnyc.pup.events.AfterLeaveLobbyEvent;
 import com.swarmnyc.pup.fragments.LobbyFragment;
 import com.swarmnyc.pup.fragments.MemberFragment;
 import com.swarmnyc.pup.models.Lobby;
@@ -63,28 +66,26 @@ public class LobbyActivity extends AppCompatActivity
 				@Override
 				public void success( final Lobby value )
 				{
-					final Fragment lobbyFragment = getSupportFragmentManager().findFragmentById( R.id.fragment_lobby );
-					if (null != lobbyFragment && lobbyFragment instanceof LobbyFragment)
-					{
-						((LobbyFragment) lobbyFragment).setLobby( value );
-					}
-
-					final Fragment memberFragment = getSupportFragmentManager().findFragmentById( R.id.fragment_lobby_members );
-					if (null != memberFragment && memberFragment instanceof MemberFragment)
-					{
-						((MemberFragment) memberFragment).setLobby( value );
-					}
+					m_lobby = value;
+					init();
 				}
 			}
 		);
 	}
-
 
 	@Override
 	public void onResume()
 	{
 		super.onResume();
 		PuPApplication.getInstance().startMessageService();
+		EventBus.getBus().register( this );
+	}
+
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+		EventBus.getBus().unregister( this );
 	}
 
 	@Override
@@ -111,6 +112,29 @@ public class LobbyActivity extends AppCompatActivity
 		}
 
 		return super.onOptionsItemSelected( item );
+	}
+
+	@Subscribe
+	public void handleLeaveLobby( AfterLeaveLobbyEvent event )
+	{
+		m_drawerLayout.closeDrawers();
+		init();
+	}
+
+	private void init()
+	{
+		final Fragment lobbyFragment = getSupportFragmentManager().findFragmentById( R.id.fragment_lobby );
+		if ( null != lobbyFragment && lobbyFragment instanceof LobbyFragment )
+		{
+			( (LobbyFragment) lobbyFragment ).setLobby( m_lobby );
+		}
+
+		final Fragment memberFragment = getSupportFragmentManager().findFragmentById( R.id
+			                                                                              .fragment_lobby_members );
+		if ( null != memberFragment && memberFragment instanceof MemberFragment )
+		{
+			( (MemberFragment) memberFragment ).setLobby( m_lobby );
+		}
 	}
 
 }

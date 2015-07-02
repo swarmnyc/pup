@@ -416,7 +416,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 	}
 
 	@Subscribe
-	public void postUserChanged( UserChangedEvent event )
+	public void handleUserChanged( UserChangedEvent event )
 	{
 		if ( User.isLoggedIn() )
 		{

@@ -2,11 +2,11 @@ package com.swarmnyc.pup.events;
 
 import com.quickblox.chat.QBGroupChat;
 
-public class EnterChatRoomEvent
+public class AfterEnterChatRoomEvent
 {
 	private QBGroupChat m_chat;
 
-	public EnterChatRoomEvent( final QBGroupChat chat )
+	public AfterEnterChatRoomEvent( final QBGroupChat chat )
 	{
 		m_chat = chat;
 	}
