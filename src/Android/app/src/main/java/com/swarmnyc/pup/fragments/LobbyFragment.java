@@ -33,7 +33,6 @@ import com.swarmnyc.pup.chat.ChatRoomService;
 import com.swarmnyc.pup.chat.QuickbloxChatRoomService;
 import com.swarmnyc.pup.components.*;
 import com.swarmnyc.pup.events.LobbyUserChangeEvent;
-import com.swarmnyc.pup.events.RequireChatHistoryEvent;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
@@ -51,8 +50,9 @@ import java.util.Locale;
 
 
 public class LobbyFragment extends BaseFragment implements Screen
-
 {
+	private static final String TAG = LobbyFragment.class.getSimpleName();
+
 	@Inject LobbyService m_lobbyService;
 
 	ChatRoomService m_chatRoomService;
@@ -79,16 +79,17 @@ public class LobbyFragment extends BaseFragment implements Screen
 
 	private String m_lobbyImage;
 
-	private Lobby               m_lobby;
-	private String              m_lobbyName;
-	private String              m_lobbyId;
-	private MemberFragment      m_memberFragment;
+	private Lobby  m_lobby;
+	private String m_lobbyName;
+	private String m_lobbyId;
+
 	private LobbyChatAdapter    m_lobbyChatAdapter;
 	private LinearLayoutManager m_chatListLayoutManager;
 	private boolean m_first = true;
 	private long m_lastListScrollingTime;
 	float m_touchDownX;
 	float m_touchDownY;
+	private boolean m_hasMoreMessage;
 
 	@Override
 	public void onAttach( Activity activity )
@@ -96,7 +97,6 @@ public class LobbyFragment extends BaseFragment implements Screen
 		super.onAttach( activity );
 		final Bundle bundle = activity.getIntent().getExtras();
 		loadFromBundle( bundle );
-		//        MainDrawerFragment.getInstance().highLight(null);
 	}
 
 	@Override
@@ -148,7 +148,6 @@ public class LobbyFragment extends BaseFragment implements Screen
 		getAppCompatActivity().setSupportActionBar( m_toolbar );
 
 		m_lobby = null;
-		m_memberFragment = null;
 		m_lobbyChatAdapter = null;
 		m_chatListLayoutManager = null;
 
@@ -166,7 +165,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 
 					m_lastListScrollingTime = System.currentTimeMillis();
 
-					Log.d( "Scrolling", "After Keyboard up" );
+					Log.d( TAG, "After Keyboard up" );
 					m_chatList.scrollToPosition( m_lobbyChatAdapter.getItemCount() - 1 );
 
 				}
@@ -191,12 +190,12 @@ public class LobbyFragment extends BaseFragment implements Screen
 					}
 					else if ( event.getAction() == MotionEvent.ACTION_UP )
 					{
-						//Log.d( "Touch", "Event:" + event );
+						//Log.d( TAG, "TouchEvent:" + event );
 						if ( Math.abs( m_touchDownX - event.getX() ) < Consts.TOUCH_SLOP && Math.abs(
 							m_touchDownY - event.getY()
 						) < Consts.TOUCH_SLOP )
 						{
-							//Log.d( "Touch", "Tap" );
+							//Log.d( TAG, "TouchTap" );
 							SoftKeyboardHelper.hideSoftKeyboard( getActivity() );
 						}
 					}
@@ -297,6 +296,17 @@ public class LobbyFragment extends BaseFragment implements Screen
 		m_first = true;
 		m_chatListLayoutManager = new LinearLayoutManager( getActivity() );
 		m_lobbyChatAdapter = new LobbyChatAdapter( getActivity(), m_lobby );
+		m_lobbyChatAdapter.setReachBeginAction(
+			new Action()
+			{
+				@Override
+				public void call( final Object value )
+				{
+					loadChatHistoryRequire();
+				}
+			}
+		);
+
 		m_chatList.setAdapter( m_lobbyChatAdapter );
 		m_chatList.setLayoutManager( m_chatListLayoutManager );
 		m_chatList.addItemDecoration(
@@ -382,7 +392,7 @@ public class LobbyFragment extends BaseFragment implements Screen
 	{
 		if ( User.isLoggedIn() )
 		{
-			DialogHelper.showProgressDialog(getActivity(), R.string.message_processing );
+			DialogHelper.showProgressDialog( getActivity(), R.string.message_processing );
 			m_lobbyService.join(
 				m_lobby.getId(), new ServiceCallback()
 				{
@@ -415,15 +425,9 @@ public class LobbyFragment extends BaseFragment implements Screen
 	}
 
 	@Subscribe
-	public void handleChatHistoryRequire( RequireChatHistoryEvent event )
-	{
-		m_chatRoomService.loadChatHistory( m_lobbyChatAdapter.getFirstChatMessage().getSentAt() );
-	}
-
-	@Subscribe
 	public void receiveMessage( final ChatMessageReceiveEvent event )
 	{
-		if ( event.getRoomId().equals( m_lobby.getRoomId()))
+		if ( event.getRoomId().equals( m_lobby.getRoomId() ) )
 		{
 			//After receive history
 			if ( m_first )
@@ -434,8 +438,10 @@ public class LobbyFragment extends BaseFragment implements Screen
 
 			ArrayList<ChatMessage> messages = processSystemMessages( event );
 
+			boolean scollingToEnd = m_first || ( m_lobbyChatAdapter.getItemCount()
+			                                     - m_chatListLayoutManager.findLastVisibleItemPosition() < 3
+			);
 			m_lastListScrollingTime = System.currentTimeMillis();
-			int oldSize = m_lobbyChatAdapter.getItemCount();
 
 			if ( event.isNewMessage() )
 			{
@@ -445,14 +451,15 @@ public class LobbyFragment extends BaseFragment implements Screen
 			else
 			{
 				Collections.reverse( messages );
-				m_lobbyChatAdapter.showLoadMore( messages.size() == Consts.PAGE_SIZE );
+				m_hasMoreMessage = messages.size() == Consts.PAGE_SIZE;
 				m_lobbyChatAdapter.addMessages( 0, messages );
 			}
 
-			// Scrolling
+			final int size = m_lobbyChatAdapter.getItemCount();
+
+			// SharePanel
 			if ( event.isNewMessage() || m_first )
 			{
-				int size = m_lobbyChatAdapter.getItemCount();
 				if ( size == 0 && m_lobby.isAliveUser( User.current.getId() ) )
 				{
 					//no message, show share item
@@ -464,25 +471,35 @@ public class LobbyFragment extends BaseFragment implements Screen
 				else
 				{
 					m_sharePanel.setVisibility( View.GONE );
-					int lastPosition = m_chatListLayoutManager.findLastVisibleItemPosition();
-					if ( Math.abs( oldSize - lastPosition ) < 3 ) //it almost is on the end, scrolling
-					{
-						Log.d( "Scrolling", "After Receive Message" );
-						m_chatList.post(
-							new Runnable()
-							{
-								@Override
-								public void run()
-								{
-									m_chatList.scrollToPosition( m_lobbyChatAdapter.getItemCount() - 1 );
-								}
-							}
-						);
-					}
 				}
 			}
 
+			// Scrolling
+			if ( scollingToEnd )
+			{
+				Log.d( TAG, "Scrolling After Receive Message" );
+				m_chatList.post(
+					new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							m_chatList.scrollToPosition( size - 1 );
+						}
+					}
+				);
+			}
+
 			m_first = false;
+		}
+	}
+
+	private void loadChatHistoryRequire()
+	{
+		if ( m_hasMoreMessage )
+		{
+			Log.d( TAG, "Load another History" );
+			m_chatRoomService.loadChatHistory( m_lobbyChatAdapter.getFirstChatMessage().getSentAt() );
 		}
 	}
 

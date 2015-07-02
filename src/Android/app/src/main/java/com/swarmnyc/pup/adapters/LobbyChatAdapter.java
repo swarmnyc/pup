@@ -15,7 +15,7 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.StringUtils;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.chat.ChatMessage;
-import com.swarmnyc.pup.events.RequireChatHistoryEvent;
+import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.models.Lobby;
 
 import java.util.ArrayList;
@@ -25,14 +25,13 @@ import java.util.List;
 public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
 	private static final int SYSTEM      = -1;
-	private static final int LoadControl = -2;
 	private static final int ITEM        = 1;
 	private List<ChatMessage> m_chatMessages;
 	private HashSet<String>   m_chatMessageIds;
 	private Context           m_context;
 	private Lobby             m_lobby;
 	private LayoutInflater    m_inflater;
-	private boolean           m_showReadMore;
+	private Action            m_reachBeginAction;
 
 	public LobbyChatAdapter(
 		final Context context, final Lobby lobby
@@ -48,12 +47,7 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder( final ViewGroup parent, final int viewType )
 	{
-		if ( viewType == LoadControl )
-		{
-			View view = m_inflater.inflate( R.layout.item_lobby_load_control, parent, false );
-			return new LoadControlViewHolder( view );
-		}
-		else if ( viewType == SYSTEM )
+		if ( viewType == SYSTEM )
 		{
 			View view = m_inflater.inflate( R.layout.item_lobby_chat_system, parent, false );
 			return new SystemViewHolder( view );
@@ -68,6 +62,11 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 	@Override
 	public void onBindViewHolder( final RecyclerView.ViewHolder holder, final int position )
 	{
+		if ( position == 0 && m_reachBeginAction!=null )
+		{
+			m_reachBeginAction.call( null );
+		}
+
 		if ( ItemViewHolder.class.isInstance( holder ) )
 		{
 			ItemViewHolder item = ( (ItemViewHolder) holder );
@@ -86,11 +85,7 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 	@Override
 	public int getItemViewType( final int position )
 	{
-		if ( position == 0 && m_showReadMore )
-		{
-			return LoadControl;
-		}
-		else if ( getChatMessage( position ).isSystemMessage() )
+		if ( getChatMessage( position ).isSystemMessage() )
 		{
 			return SYSTEM;
 		}
@@ -105,13 +100,17 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 	public int getItemCount()
 	{
 		//  LoadControl
-		return m_chatMessages.size() + ( m_showReadMore ? 1 : 0 );
+		return m_chatMessages.size();
 	}
 
+	public void setReachBeginAction( Action action )
+	{
+		m_reachBeginAction = action;
+	}
 
 	public ChatMessage getChatMessage( final int location )
 	{
-		return m_chatMessages.get( location - ( m_showReadMore ? 1 : 0 ) );
+		return m_chatMessages.get( location );
 	}
 
 	public ChatMessage getFirstChatMessage()
@@ -125,7 +124,6 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 		if ( location > 0 )
 		{
 			previous = m_chatMessages.get( location - 1 );
-
 		}
 
 		for ( ChatMessage message : messages )
@@ -167,11 +165,6 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 	public void addMessages( List<ChatMessage> messages )
 	{
 		addMessages( m_chatMessages.size(), messages );
-	}
-
-	public void showLoadMore( boolean canReadMore )
-	{
-		m_showReadMore = canReadMore;
 	}
 
 	class ItemViewHolder extends RecyclerView.ViewHolder
@@ -216,7 +209,6 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 		}
 	}
 
-
 	class SystemViewHolder extends RecyclerView.ViewHolder
 	{
 		public SystemViewHolder( final View view )
@@ -229,24 +221,4 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 			( (TextView) itemView ).setText( chatMessage.getBody() );
 		}
 	}
-
-
-	class LoadControlViewHolder extends RecyclerView.ViewHolder
-	{
-		public LoadControlViewHolder( final View view )
-		{
-			super( view );
-			view.setOnClickListener(
-				new View.OnClickListener()
-				{
-					@Override
-					public void onClick( final View v )
-					{
-						EventBus.getBus().post( new RequireChatHistoryEvent() );
-					}
-				}
-			);
-		}
-	}
-
 }

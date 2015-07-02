@@ -57,7 +57,7 @@ public class MyChatsFragment extends BaseFragment implements Screen
 		pageIndex = 0;
 		m_noMoreData = false;
 		m_myChatAdapter = new MyChatAdapter( this.getActivity() );
-		m_myChatAdapter.addReachEndAction(
+		m_myChatAdapter.setReachEndAction(
 			new Action()
 			{
 				@Override

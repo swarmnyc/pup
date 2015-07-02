@@ -62,7 +62,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 		notifyItemInserted( start + 1 );
 	}
 
-	public void addReachEndAction( Action action )
+	public void setReachEndAction( Action action )
 	{
 		m_reachEndAction = action;
 	}
