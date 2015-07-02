@@ -79,6 +79,14 @@ public class LobbyActivity extends AppCompatActivity
 		);
 	}
 
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		PuPApplication.getInstance().startMessageService();
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu )
 	{

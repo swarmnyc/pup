@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         EventBus.getBus().register(this);
+        PuPApplication.getInstance().startMessageService();
     }
 
     @Override

@@ -21,6 +21,7 @@ import com.soundcloud.android.crop.Crop;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.Services.UserService;
+import com.swarmnyc.pup.chat.MessageService;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.PhotoHelper;
 import com.swarmnyc.pup.models.CurrentUserInfo;
@@ -118,7 +119,7 @@ public class RegisterDialogFragment extends TempFragmentDialog
 					m_dialog.dismiss();
 					DialogHelper.hide();
 					User.login( value, goHome );
-					PuPApplication.getInstance().StartMessageService();
+					PuPApplication.getInstance().startMessageService();
 				}
 			}
 		);

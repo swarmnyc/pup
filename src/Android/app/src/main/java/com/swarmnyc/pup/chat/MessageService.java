@@ -18,7 +18,6 @@ import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.model.QBUser;
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.*;
-import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.components.UnreadCounter;
 import com.swarmnyc.pup.events.EnterChatRoomEvent;
 import com.swarmnyc.pup.models.LobbyUserInfo;
@@ -28,11 +27,13 @@ import org.jivesoftware.smackx.muc.DiscussionHistory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MessageService extends Service
 {
 	private static final String TAG = MessageService.class.getSimpleName();
 	private MessageListener m_listener;
+	private AtomicBoolean trying = new AtomicBoolean( false );
 
 	@Override
 	public void onCreate()
@@ -55,6 +56,7 @@ public class MessageService extends Service
 			QBChatService.getInstance().addConnectionListener(
 				new ConnectionListener()
 				{
+
 					@Override
 					public void connected(
 						final XMPPConnection xmppConnection
@@ -136,6 +138,13 @@ public class MessageService extends Service
 
 	private void processChatRooms()
 	{
+		if ( trying.get() || QBChatService.getInstance().isLoggedIn() )
+		{
+			Log.d( TAG, "Still connected so skip" );
+			return;
+		}
+
+		trying.set( true );
 		AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>()
 		{
 			@Override
@@ -153,7 +162,6 @@ public class MessageService extends Service
 
 					QBRequestGetBuilder request = new QBRequestGetBuilder();
 					request.setPagesLimit( 10 );
-					//request.sortDesc( "date_sent" );
 
 					final ArrayList<QBDialog> result = QBChatService.getChatDialogs(
 						QBDialogType.GROUP, request, (Bundle) null
@@ -169,9 +177,9 @@ public class MessageService extends Service
 				}
 				catch ( Exception e )
 				{
-					e.printStackTrace();
+					Log.d( TAG, "GetChatDialogs failed: " + e );
 				}
-
+				trying.set( false );
 				return null;
 			}
 		};
@@ -213,7 +221,7 @@ public class MessageService extends Service
 
 	private class MessageListener extends QBMessageListenerImpl
 	{
-		Handler m_handler = new Handler( Looper.getMainLooper());
+		Handler m_handler = new Handler( Looper.getMainLooper() );
 
 		@Override
 		public void processMessage( final QBChat chat, final QBChatMessage message )
@@ -225,7 +233,7 @@ public class MessageService extends Service
 			String userId = (String) message.getProperty( "userId" );
 			if ( userId != null )
 			{
-				user = new LobbyUserInfo(userId);
+				user = new LobbyUserInfo( userId );
 			}
 
 			messages.add(
@@ -239,17 +247,19 @@ public class MessageService extends Service
 				)
 			);
 
-			UnreadCounter.Add( message.getDialogId(), 1);
+			UnreadCounter.Add( message.getDialogId(), 1 );
 
-			m_handler.post(new Runnable()			{
-				@Override
-				public void run()
+			m_handler.post(
+				new Runnable()
 				{
-					//No sure Otto is good for Service. but see first.
-					EventBus.getBus().post( new ChatMessageReceiveEvent( message.getDialogId(), true, messages ) );
+					@Override
+					public void run()
+					{
+						//No sure Otto is good for Service. but see first.
+						EventBus.getBus().post( new ChatMessageReceiveEvent( message.getDialogId(), true, messages ) );
+					}
 				}
-			}
-		);
+			);
 		}
 	}
 }

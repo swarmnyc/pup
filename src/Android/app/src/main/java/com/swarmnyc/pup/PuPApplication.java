@@ -32,16 +32,14 @@ public class PuPApplication extends Application
 		this.component = DaggerPuPComponent.builder().build();
 
 		ApiSettings.PuPServerPath = Config.getConfigString( R.string.PuP_Url );
-
-		if ( User.isLoggedIn() )
-		{
-			StartMessageService();
-		}
 	}
 
 
-	public void StartMessageService(){
-		startService( new Intent( this, MessageService.class ) );
+	public void startMessageService(){
+		if ( User.isLoggedIn() )
+		{
+			startService( new Intent( this, MessageService.class ) );
+		}
 	}
 
 	public int getAppVersion()

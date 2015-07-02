@@ -67,27 +67,6 @@ public class MyChatsFragment extends BaseFragment implements Screen
 				}
 			}
 		);
-
-		m_myChatAdapter.addRemoveAction(
-			new Action<Lobby>()
-			{
-				@Override
-				public void call( Lobby lobby )
-				{
-					m_removedLobby = lobby;
-					m_lobbyService.leave(
-						lobby.getId(), new ServiceCallback()
-						{
-							@Override
-							public void success( final Object value )
-							{
-								showUndo();
-							}
-						}
-					);
-				}
-			}
-		);
 		m_chatList.setAdapter( m_myChatAdapter );
 		m_chatList.setLayoutManager( new LinearLayoutManager( this.getActivity() ) );
 		m_chatList.addItemDecoration( new DividerItemDecoration( getActivity(), DividerItemDecoration.VERTICAL_LIST ) );
