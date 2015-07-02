@@ -9,15 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.swarmnyc.pup.Consts;
-import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.R;
+import com.squareup.otto.Subscribe;
+import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.adapters.MyChatAdapter;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.Screen;
+import com.swarmnyc.pup.components.UnreadCounter;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.DividerItemDecoration;
 
@@ -57,7 +57,7 @@ public class MyChatsFragment extends BaseFragment implements Screen
 		pageIndex = 0;
 		m_noMoreData = false;
 		m_myChatAdapter = new MyChatAdapter( this.getActivity() );
-		m_myChatAdapter.AddReachEndAction(
+		m_myChatAdapter.addReachEndAction(
 			new Action()
 			{
 				@Override
@@ -68,7 +68,7 @@ public class MyChatsFragment extends BaseFragment implements Screen
 			}
 		);
 
-		m_myChatAdapter.AddRemoveAction(
+		m_myChatAdapter.addRemoveAction(
 			new Action<Lobby>()
 			{
 				@Override
@@ -90,15 +90,13 @@ public class MyChatsFragment extends BaseFragment implements Screen
 		);
 		m_chatList.setAdapter( m_myChatAdapter );
 		m_chatList.setLayoutManager( new LinearLayoutManager( this.getActivity() ) );
-		m_chatList.addItemDecoration( new DividerItemDecoration( getActivity(), DividerItemDecoration.VERTICAL_LIST
-                                      ) );
+		m_chatList.addItemDecoration( new DividerItemDecoration( getActivity(), DividerItemDecoration.VERTICAL_LIST ) );
 	}
 
 	@Override
 	public void onStart()
 	{
 		super.onStart();
-		//        MainDrawerFragment.getInstance().highLight(Consts.KEY_MY_LOBBIES);
 
 		fetchMoreData();
 	}
@@ -108,12 +106,19 @@ public class MyChatsFragment extends BaseFragment implements Screen
 	public void onResume()
 	{
 		super.onResume();
+		EventBus.getBus().register( this );
+	}
 
+	@Override
+	public void onPause()
+	{
+		super.onPause();
+		EventBus.getBus().unregister( this );
 	}
 
 	public void updateTitle()
 	{
-		setTitle( R.string.text_lobbies );
+		setTitle( getString( R.string.text_lobbies) + " (" + UnreadCounter.total() + ")" );
 		setSubtitle( null );
 	}
 
@@ -179,5 +184,15 @@ public class MyChatsFragment extends BaseFragment implements Screen
 		snackbar.setActionTextColor( getResources().getColor( R.color.pup_white ) );
 		snackbar.getView().setBackgroundResource( R.color.pup_orange );
 		snackbar.show();
+	}
+
+	@Subscribe
+	public void receiveMessage( final ChatMessageReceiveEvent event )
+	{
+		if ( !event.isNewMessage() )
+			return;
+
+		updateTitle();
+		m_myChatAdapter.updateLastMessage(event);
 	}
 }

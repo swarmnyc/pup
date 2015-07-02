@@ -174,4 +174,9 @@ public class Lobby extends Taggable implements PicturedModel {
 
         return false;
     }
+
+    public String getRoomId()
+    {
+        return getTagValue( "QBChatRoomId" );
+    }
 }

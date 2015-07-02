@@ -2,6 +2,7 @@ package com.swarmnyc.pup.chat;
 
 import com.swarmnyc.pup.Config;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.models.LobbyUserInfo;
 import com.swarmnyc.pup.models.UserInfo;
 
 public class ChatMessage
@@ -47,6 +48,11 @@ public class ChatMessage
 	public UserInfo getUser()
 	{
 		return m_user;
+	}
+
+	public void setUser( final UserInfo user )
+	{
+		m_user = user;
 	}
 
 	public boolean isSystemMessage()

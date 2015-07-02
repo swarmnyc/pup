@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private static MainActivity m_instance;
     private        boolean      launchDefault;
 
     @InjectView( R.id.toolbar )   Toolbar      m_toolbar;
@@ -48,17 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
     @InjectView( R.id.layout_coordinator ) CoordinatorLayout m_coordinatorLayout;
     private                                TabPagerAdapter   m_tabPagerAdapter;
-
-    public MainActivity()
-    {
-        m_instance = this;
-    }
-
-    // TODO @wade this method should not exist, either use getActivity from a fragment or pass the context.
-    public static MainActivity getInstance()
-    {
-        return m_instance;
-    }
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -139,20 +127,6 @@ public class MainActivity extends AppCompatActivity {
                 );
             }
         }
-
-       /* m_softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged() {
-            @Override
-            public void onSoftKeyboardHide() {
-
-            }
-
-            @Override
-            public void onSoftKeyboardShow() {
-                if (m_scrollToEndView != null) {
-                    scrollToEnd();
-                }
-            }
-        });*/
     }
 
 
@@ -160,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         EventBus.getBus().register(this);
-        SoftKeyboardHelper.init( m_coordinatorLayout, this );
     }
 
     @Override
@@ -173,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop()
     {
         super.onStop();
-//        SoftKeyboardHelper.uninit();
     }
 
 	private void setupViewPager( ViewPager viewPager )
@@ -267,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         // TODO: Better Message content
-                        DialogHelper.showError(exception.getMessage());
+                        DialogHelper.showError(MainActivity.this, exception.getMessage());
                     }
                 }
         );

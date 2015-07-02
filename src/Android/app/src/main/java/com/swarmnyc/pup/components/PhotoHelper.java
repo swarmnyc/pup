@@ -29,7 +29,7 @@ public class PhotoHelper
 		m_fragment = fragment;
 		m_callback = callback;
 
-		DialogHelper.showOptions(
+		DialogHelper.showOptions( fragment.getActivity(),
 			new String[]{"Take a new photo", "Choose from gallery"}, new DialogInterface.OnClickListener()
 			{
 				@Override

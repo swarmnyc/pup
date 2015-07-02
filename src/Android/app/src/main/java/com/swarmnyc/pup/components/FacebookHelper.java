@@ -1,5 +1,6 @@
 package com.swarmnyc.pup.components;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;
 import com.facebook.*;
@@ -17,12 +18,12 @@ public class FacebookHelper
 {
 	static CallbackManager callbackManager;
 
-	public static void startLoginRequire( final AsyncCallback callback )
+	public static void startLoginRequire( final Activity activity, final AsyncCallback callback )
 	{
 		if ( callbackManager == null )
 		{
 			callbackManager = CallbackManager.Factory.create();
-			FacebookSdk.sdkInitialize( MainActivity.getInstance().getApplicationContext() );
+			FacebookSdk.sdkInitialize( activity.getApplicationContext() );
 
 			LoginManager.getInstance().registerCallback(
 				callbackManager, new FacebookCallback<LoginResult>()
@@ -40,7 +41,7 @@ public class FacebookHelper
 								public void success( final Object value )
 								{
 									User.addSocialMedium(Consts.KEY_FACEBOOK);
-									Toast.makeText( MainActivity.getInstance(), R.string.message_connect_success, Toast.LENGTH_LONG ).show();
+									Toast.makeText( activity, R.string.message_connect_success, Toast.LENGTH_LONG ).show();
 
 									if ( callback != null )
 									{ callback.success(); }
@@ -59,14 +60,14 @@ public class FacebookHelper
 					public void onError( final FacebookException e )
 					{
 						callback.failure();
-						Toast.makeText( MainActivity.getInstance(), R.string.message_connect_failure, Toast.LENGTH_LONG ).show();
+						Toast.makeText( activity, R.string.message_connect_failure, Toast.LENGTH_LONG ).show();
 					}
 				}
 			);
 		}
 
 		LoginManager.getInstance().logInWithPublishPermissions(
-			MainActivity.getInstance(), Arrays.asList( "publish_actions" )
+			activity, Arrays.asList( "publish_actions" )
 		);
 	}
 

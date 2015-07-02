@@ -168,7 +168,7 @@ public class SettingsFragment extends BaseFragment implements Screen
 	{
 		if ( m_fbSwitch.isChecked() )
 		{
-			FacebookHelper.startLoginRequire(
+			FacebookHelper.startLoginRequire(getActivity(),
 				new AsyncCallback()
 				{
 					@Override

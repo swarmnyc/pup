@@ -1,5 +1,6 @@
 package com.swarmnyc.pup.components;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -10,10 +11,10 @@ public class DialogHelper
 {
 	private static Dialog dialog;
 
-	public static void showProgressDialog( int id )
+	public static void showProgressDialog( Activity activity, int id )
 	{
-		ProgressDialog pd = new ProgressDialog( MainActivity.getInstance() );
-		pd.setMessage( MainActivity.getInstance().getString( id ) );
+		ProgressDialog pd = new ProgressDialog( activity );
+		pd.setMessage( activity.getString( id ) );
 		pd.setCancelable( false );
 		pd.show();
 
@@ -29,13 +30,13 @@ public class DialogHelper
 		}
 	}
 
-	public static void showError( final String message )
+	public static void showError( Activity activity, final String message )
 	{
-		AlertDialog.Builder builder = new AlertDialog.Builder( MainActivity.getInstance() );
-		builder.setTitle( MainActivity.getInstance().getString( R.string.message_error_title ) );
+		AlertDialog.Builder builder = new AlertDialog.Builder( activity );
+		builder.setTitle( activity.getString( R.string.message_error_title ) );
 		builder.setMessage( message );
 		builder.setIcon( android.R.drawable.ic_dialog_alert );
-		builder.setPositiveButton( MainActivity.getInstance().getString( R.string.text_ok ), null );
+		builder.setPositiveButton( activity.getString( R.string.text_ok ), null );
 		setDialog( builder.show() );
 	}
 
@@ -45,9 +46,9 @@ public class DialogHelper
 		DialogHelper.dialog = dialog;
 	}
 
-	public static void showOptions( final String[] strings, AlertDialog.OnClickListener clickListener )
+	public static void showOptions( Activity activity, final String[] strings, AlertDialog.OnClickListener clickListener )
 	{
-		AlertDialog.Builder builder = new AlertDialog.Builder( MainActivity.getInstance() );
+		AlertDialog.Builder builder = new AlertDialog.Builder( activity );
 		builder.setItems( strings, clickListener );
 		setDialog( builder.show() );
 	}

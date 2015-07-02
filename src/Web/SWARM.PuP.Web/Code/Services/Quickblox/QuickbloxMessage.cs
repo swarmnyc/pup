@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace SWARM.PuP.Web.Services.Quickblox
 {
     public class QuickbloxMessage
@@ -6,7 +9,8 @@ namespace SWARM.PuP.Web.Services.Quickblox
         {
             send_to_chat = 1;
         }
-        
+
+        public string userId { get; set; }
         public string code { get; set; }
         public string codeBody { get; set; }
         public string chat_dialog_id { get; set; }

@@ -1,4 +1,5 @@
 <resources>
+    <item type="id" name="GlobalLayoutListener" />
     <string name="font_roboto_slab">RobotoSlab-Regular.ttf</string>
     <string name="font_roboto_slab_bold">RobotoSlab-Bold.ttf</string>
 
@@ -65,6 +66,7 @@
     <string name="text_tumblr">Tumblr</string>
     <string name="text_share">Share</string>
     <string name="text_share_to_reddit">Share to Reddit</string>
+    <string name="message_create_lobby_wrong_chose_time">Hey! it is better to choose future time.</string>
 
     <string name="message_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
     <string name="message_lobby_creating">Creating</string>
