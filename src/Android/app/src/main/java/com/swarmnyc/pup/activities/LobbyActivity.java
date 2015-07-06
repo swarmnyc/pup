@@ -50,6 +50,7 @@ public class LobbyActivity extends AppCompatActivity
 		PuPApplication.getInstance().getComponent().inject( this );
 
 		setSupportActionBar( m_toolbar );
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		m_lobbyId = getIntent().getStringExtra( Consts.KEY_LOBBY_ID );
 
@@ -104,6 +105,11 @@ public class LobbyActivity extends AppCompatActivity
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
+
+		if ( id == android.R.id.home){
+			finish();
+			return true;
+		}
 
 		//noinspection SimplifiableIfStatement
 		if ( id == R.id.menu_members )
