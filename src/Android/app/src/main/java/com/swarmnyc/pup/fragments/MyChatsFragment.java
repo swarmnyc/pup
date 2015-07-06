@@ -16,7 +16,6 @@ import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.adapters.MyChatAdapter;
 import com.swarmnyc.pup.components.Action;
-import com.swarmnyc.pup.components.Screen;
 import com.swarmnyc.pup.components.UnreadCounter;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.DividerItemDecoration;
@@ -24,7 +23,7 @@ import com.swarmnyc.pup.view.DividerItemDecoration;
 import javax.inject.Inject;
 import java.util.List;
 
-public class MyChatsFragment extends BaseFragment implements Screen
+public class MyChatsFragment extends BaseFragment
 {
 	@Inject LobbyService m_lobbyService;
 
@@ -36,7 +35,7 @@ public class MyChatsFragment extends BaseFragment implements Screen
 	private Lobby         m_removedLobby;
 
 	@Override
-	public String toString()
+	public String getScreenName()
 	{
 		return "My Lobbies";
 	}

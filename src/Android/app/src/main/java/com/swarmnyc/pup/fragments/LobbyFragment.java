@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class LobbyFragment extends BaseFragment implements Screen
+public class LobbyFragment extends BaseFragment
 {
 	private static final String TAG = LobbyFragment.class.getSimpleName();
 
@@ -227,12 +227,6 @@ public class LobbyFragment extends BaseFragment implements Screen
 
 		SoftKeyboardHelper.removeSoftKeyboardCallback( m_coordinatorLayout );
 		ButterKnife.reset( this );
-	}
-
-	@Override
-	public String toString()
-	{
-		return "Lobby: " + m_lobbyName;
 	}
 
 	public void loadFromBundle( final Bundle args )
@@ -561,4 +555,9 @@ public class LobbyFragment extends BaseFragment implements Screen
 		}
 	}
 
+	@Override
+	protected String getScreenName()
+	{
+		return "Lobby: " + m_lobbyName;
+	}
 }

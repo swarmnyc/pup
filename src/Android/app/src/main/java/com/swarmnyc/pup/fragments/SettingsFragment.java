@@ -23,11 +23,10 @@ import com.swarmnyc.pup.Services.UserService;
 import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.PhotoHelper;
-import com.swarmnyc.pup.components.Screen;
 
 import javax.inject.Inject;
 
-public class SettingsFragment extends BaseFragment implements Screen
+public class SettingsFragment extends BaseFragment
 {
 	@Inject
 	UserService m_userService;
@@ -51,7 +50,7 @@ public class SettingsFragment extends BaseFragment implements Screen
 	Switch m_tumblrSwitch;
 
 	@Override
-	public String toString()
+	public String getScreenName()
 	{
 		return "Settings";
 	}

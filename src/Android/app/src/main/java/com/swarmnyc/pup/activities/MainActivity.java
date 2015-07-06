@@ -20,19 +20,15 @@ import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Tracker;
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.Navigator;
-import com.swarmnyc.pup.components.SoftKeyboardHelper;
 import com.swarmnyc.pup.fragments.BaseFragment;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
 import com.swarmnyc.pup.fragments.MyChatsFragment;
 import com.swarmnyc.pup.fragments.SettingsFragment;
-import com.uservoice.uservoicesdk.UserVoice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,25 +63,6 @@ public class MainActivity extends AppCompatActivity {
         ViewConfiguration vc = ViewConfiguration.get( this );
         Consts.TOUCH_SLOP = vc.getScaledTouchSlop();
 
-        //Google
-        GoogleAnalytics m_googleAnalytics = GoogleAnalytics.getInstance( this );
-        m_googleAnalytics.setLocalDispatchPeriod( 1800 );
-
-        Tracker m_tracker = m_googleAnalytics.newTracker( getString( R.string.google_tracker_key ) );
-        m_tracker.enableExceptionReporting( true );
-
-        //User Voice
-        com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config(
-            getString(
-                R.string.uservoice_id
-            )
-        );
-        config.setForumId( 272754 );
-        UserVoice.init( config, this );
-
-        Navigator.init( this, m_tracker );
-
-
         //Show Splash or not
         if ( !Config.getBool( "ShowedSplash")) {
             Config.setBool("ShowedSplash", true);
@@ -100,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             List<String> p = data.getPathSegments();
             if (p.size() == 2 && p.get(0).equals("lobby")) {
                 launchDefault = false;
-                Navigator.ToLobby(p.get(1), "From Intent", false);
+                Navigator.ToLobby( this, p.get(1), "From Intent" );
             }
         }
 
@@ -192,10 +169,8 @@ public class MainActivity extends AppCompatActivity {
     @OnClick( R.id.fab_create_lobby )
     public void onCreateLobbyButtonClicked()
     {
-        Navigator.ToCreateLobby();
+        Navigator.ToCreateLobby( this );
     }
-
-
 
     public Toolbar getToolbar() {
         return m_toolbar;

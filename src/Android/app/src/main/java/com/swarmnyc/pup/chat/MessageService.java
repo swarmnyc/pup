@@ -34,7 +34,7 @@ public class MessageService extends Service
 {
 	private static final String TAG = MessageService.class.getSimpleName();
 	private MessageListener m_listener;
-	private AtomicBoolean trying = new AtomicBoolean( false );
+	private AtomicBoolean   trying = new AtomicBoolean( false );
 
 	@Override
 	public void onCreate()
@@ -161,7 +161,10 @@ public class MessageService extends Service
 
 	private void processChatRooms()
 	{
-		if ( trying.get() || QBChatService.getInstance().isLoggedIn() )
+		boolean live = QBChatService.getInstance().getTokenExpirationDate() !=null &&
+		               QBChatService.getInstance().getTokenExpirationDate().getTime() > System.currentTimeMillis();
+
+		if ( trying.get() || QBChatService.getInstance().isLoggedIn() || live )
 		{
 			Log.d( TAG, "Still connected so skip" );
 			return;

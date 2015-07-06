@@ -72,8 +72,6 @@ public class CreateLobbyFragment extends Fragment
 	public void onAttach( final Activity activity )
 	{
 		super.onAttach( activity );
-
-
 	}
 
 	@Override
@@ -163,13 +161,6 @@ public class CreateLobbyFragment extends Fragment
 			return date.getTime();
 		}
 	}
-
-	@Override
-	public String toString()
-	{
-		return "Create Lobby";
-	}
-
 
 	@Override
 	public View onCreateView(
@@ -346,7 +337,6 @@ public class CreateLobbyFragment extends Fragment
 	public void onStart()
 	{
 		super.onStart();
-		//		MainDrawerFragment.getInstance().highLight( Consts.KEY_LOBBIES );
 	}
 
 	@Override

@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class LobbyListFragment extends BaseFragment implements Screen
+public class LobbyListFragment extends BaseFragment
 {
 	@InjectView( R.id.txt_game_serach ) public      AutoCompleteTextView   m_gameSearch;
 	@InjectView( R.id.layout_sliding_panel ) public SlidingUpPanelLayout   m_slidingPanel;
@@ -73,8 +73,6 @@ public class LobbyListFragment extends BaseFragment implements Screen
 	{
 		super.onAttach( activity );
 		this.activity = (MainActivity) activity;
-
-
 	}
 
 
@@ -626,7 +624,7 @@ public class LobbyListFragment extends BaseFragment implements Screen
 	}
 
 	@Override
-	public String toString()
+	public String getScreenName()
 	{
 		return "Lobby List";
 	}
