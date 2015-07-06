@@ -54,6 +54,7 @@ public class LobbyActivity extends AppCompatActivity
 		m_lobbyId = getIntent().getStringExtra( Consts.KEY_LOBBY_ID );
 
 		m_drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END );
+
 	}
 
 	@Override
