@@ -42,8 +42,7 @@ public abstract class BaseFragment extends Fragment
 	public void onStart()
 	{
 		super.onStart();
-		PuPApplication.getInstance().sendScreenToTracker( getScreenName() );
 	}
 
-	protected abstract String getScreenName();
+	public abstract String getScreenName();
 }

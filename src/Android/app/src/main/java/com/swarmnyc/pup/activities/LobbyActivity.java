@@ -127,6 +127,7 @@ public class LobbyActivity extends AppCompatActivity
 		if ( null != lobbyFragment && lobbyFragment instanceof LobbyFragment )
 		{
 			( (LobbyFragment) lobbyFragment ).setLobby( m_lobby );
+			PuPApplication.getInstance().sendScreenToTracker( ( (LobbyFragment) lobbyFragment ).getScreenName() );
 		}
 
 		final Fragment memberFragment = getSupportFragmentManager().findFragmentById( R.id

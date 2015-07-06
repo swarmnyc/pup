@@ -153,7 +153,9 @@ public class MainActivity extends AppCompatActivity {
 					final Fragment fragment = m_tabPagerAdapter.getItem( position );
 					if ( fragment instanceof BaseFragment )
 					{
-						( (BaseFragment) fragment ).updateTitle();
+                        BaseFragment bf = (BaseFragment) fragment ;
+                        bf.updateTitle();
+                        PuPApplication.getInstance().sendScreenToTracker( bf.getScreenName() );
 					}
 				}
 

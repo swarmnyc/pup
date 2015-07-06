@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.components.SoftKeyboardHelper;
 
@@ -16,6 +17,7 @@ public class LobbyCreateActivity extends AppCompatActivity
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_lobby_create );
 
+		PuPApplication.getInstance().sendScreenToTracker( "Create Lobby" );
 	}
 
 	@Override

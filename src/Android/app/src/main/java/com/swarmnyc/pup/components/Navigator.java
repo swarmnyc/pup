@@ -28,8 +28,6 @@ public class Navigator
 {
 	public static void ToCreateLobby( final Context context )
 	{
-		PuPApplication.getInstance().sendScreenToTracker( "Create Lobby" );
-
 		final Intent intent = new Intent( context, LobbyCreateActivity.class );
 		context.startActivity( intent );
 	}

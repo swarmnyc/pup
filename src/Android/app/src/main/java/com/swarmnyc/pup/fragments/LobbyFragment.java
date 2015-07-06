@@ -556,7 +556,7 @@ public class LobbyFragment extends BaseFragment
 	}
 
 	@Override
-	protected String getScreenName()
+	public String getScreenName()
 	{
 		return "Lobby: " + m_lobbyName;
 	}
