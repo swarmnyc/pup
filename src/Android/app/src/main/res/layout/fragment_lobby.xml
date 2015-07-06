@@ -8,25 +8,21 @@
 
     <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
-
             android:layout_width="match_parent"
             android:layout_height="@dimen/detail_backdrop_height"
-            android:fitsSystemWindows="true"
-
-            >
+            android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 android:fitsSystemWindows="true"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:contentScrim="?attr/colorPrimary"
                 app:expandedTitleMarginStart="48dp"
                 app:expandedTitleMarginEnd="64dp"
                 app:collapsedTitleTextAppearance="@style/MainActionBar"
-                app:expandedTitleTextAppearance="@style/ExpandedTitleText"
-                >
+                app:expandedTitleTextAppearance="@style/ExpandedTitleText">
 
             <ImageView
                     android:id="@+id/backdrop"
@@ -48,21 +44,19 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_chat"
+            android:visibility="gone"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:paddingBottom="55dp"/>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:tools="http://schemas.android.com/tools"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    >
-
-        <android.support.v7.widget.RecyclerView
-                android:id="@+id/list_chat"
-                android:visibility="gone"
-                android:scrollbars="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:layout_marginBottom="55dp"/>
+                    android:layout_height="match_parent">
 
         <ImageView
                 android:id="@+id/img_loading"

@@ -13,7 +13,7 @@ import com.swarmnyc.pup.R;
 public class SoftKeyboardHelper
 {
 
-	public static void setSoftKeyboardCallback( View rootView, Action callback )
+	public static void setSoftKeyboardCallback( View rootView, Action<Boolean> callback )
 	{
 		GlobalLayoutListener globalLayoutListener = new GlobalLayoutListener( rootView, callback );
 		rootView.setTag( R.id.GlobalLayoutListener, globalLayoutListener );
@@ -51,9 +51,9 @@ public class SoftKeyboardHelper
 	private static class GlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener
 	{
 		private View m_view;
-		private Action m_callback;
+		private Action<Boolean> m_callback;
 
-		public GlobalLayoutListener( final View view, final Action callback )
+		public GlobalLayoutListener( final View view, final Action<Boolean> callback )
 		{
 			m_view = view;
 			m_callback = callback;
@@ -70,11 +70,12 @@ public class SoftKeyboardHelper
 			if ( heightDifference > 100 )
 			{
 				Log.d( "SoftKeyboard", "Open" );
-				m_callback.call( null );
+				m_callback.call( true );
 			}
 			else
 			{
 				Log.d( "SoftKeyboard", "Close" );
+				m_callback.call( false );
 			}
 		}
 	}

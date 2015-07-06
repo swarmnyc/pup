@@ -3,6 +3,7 @@ package com.swarmnyc.pup.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -60,6 +61,7 @@ public class LobbyFragment extends BaseFragment
 	@InjectView( R.id.backdrop )           ImageView               m_headerImage;
 	@InjectView( R.id.collapsing_toolbar ) CollapsingToolbarLayout m_collapsingToolbarLayout;
 	@InjectView( R.id.toolbar )            Toolbar                 m_toolbar;
+	@InjectView( R.id.appbar )             AppBarLayout            m_appbar;
 	@InjectView( R.id.layout_coordinator ) CoordinatorLayout       m_coordinatorLayout;
 
 
@@ -74,8 +76,6 @@ public class LobbyFragment extends BaseFragment
 	@InjectView( R.id.list_chat ) RecyclerView m_chatList;
 
 	@InjectView( R.id.share_panel ) ShareView m_sharePanel;
-
-	@InjectView( R.id.img_loading ) ImageView m_loadingImage;
 
 	private String m_lobbyImage;
 
@@ -153,21 +153,25 @@ public class LobbyFragment extends BaseFragment
 
 		// Scroll down when Keyboard up
 		SoftKeyboardHelper.setSoftKeyboardCallback(
-			m_coordinatorLayout, new Action()
+			m_coordinatorLayout, new Action<Boolean>()
 			{
 				@Override
-				public void call( final Object value )
+				public void call( final Boolean up )
 				{
-					if ( System.currentTimeMillis() - m_lastListScrollingTime < 1000 )
+					if (System.currentTimeMillis() - m_lastListScrollingTime < 1000 )
 					{
 						return;
 					}
 
 					m_lastListScrollingTime = System.currentTimeMillis();
 
-					Log.d( TAG, "After Keyboard up" );
-					m_chatList.scrollToPosition( m_lobbyChatAdapter.getItemCount() - 1 );
-
+					if ( up ){
+						Log.d( TAG, "After Keyboard up" );
+						m_chatList.scrollToPosition( m_lobbyChatAdapter.getItemCount() - 1 );
+						collapseAppBar();
+					}else {
+						Log.d( TAG, "After Keyboard down" );
+					}
 				}
 			}
 		);
@@ -240,8 +244,6 @@ public class LobbyFragment extends BaseFragment
 	{
 		m_lobby = value;
 
-		m_chatList.setVisibility( View.VISIBLE );
-
 		//title
 		setTitle( m_lobby.getName() );
 
@@ -286,7 +288,6 @@ public class LobbyFragment extends BaseFragment
 
 	private void initChatRoom()
 	{
-		ViewAnimationUtils.showWithAnimation( getActivity(), m_loadingImage );
 		m_first = true;
 		m_chatListLayoutManager = new LinearLayoutManager( getActivity() );
 		m_lobbyChatAdapter = new LobbyChatAdapter( getActivity(), m_lobby );
@@ -418,6 +419,8 @@ public class LobbyFragment extends BaseFragment
 		}
 	}
 
+
+
 	@Subscribe
 	public void receiveMessage( final ChatMessageReceiveEvent event )
 	{
@@ -427,7 +430,6 @@ public class LobbyFragment extends BaseFragment
 			if ( m_first )
 			{
 				switchButton();
-				ViewAnimationUtils.hideWithAnimation( getActivity(), m_loadingImage );
 			}
 
 			ArrayList<ChatMessage> messages = processSystemMessages( event );
@@ -472,19 +474,60 @@ public class LobbyFragment extends BaseFragment
 			if ( scollingToEnd )
 			{
 				Log.d( TAG, "Scrolling After Receive Message" );
-				m_chatList.post(
-					new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							m_chatList.scrollToPosition( size - 1 );
-						}
-					}
-				);
+
+				m_chatList.scrollToPosition( size - 1 );
+				if ( m_chatList.getVisibility() == View.GONE )
+				{
+					initChatListAndAppBar();
+				}
 			}
 
 			m_first = false;
+		}
+	}
+
+	private void initChatListAndAppBar()
+	{
+		m_chatList.postDelayed(
+			new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					m_chatList.setVisibility( View.VISIBLE );
+
+					int height = Consts.windowHeight - m_appbar.getHeight() - m_textPanel.getHeight();
+
+					for ( int i = 0; i < m_chatList.getChildCount(); i++ )
+					{
+						height -= m_chatList.getChildAt( i ).getHeight();
+					}
+
+					if ( height < 0)
+					{
+						collapseAppBar();
+					}
+				}
+			}, 500
+		);
+	}
+
+	private void collapseAppBar()
+	{
+		CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) m_appbar
+		.getLayoutParams();
+		AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+		if ( behavior != null )
+		{
+			// I didn't find only scroll a little.
+			behavior.onNestedFling(
+				m_coordinatorLayout,
+				m_appbar,
+				null,
+				0,
+				m_appbar.getHeight(),
+				true
+			);
 		}
 	}
 
