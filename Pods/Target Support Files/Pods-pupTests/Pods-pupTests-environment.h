@@ -84,3 +84,9 @@
 #define COCOAPODS_VERSION_MINOR_SwiftLoader 2
 #define COCOAPODS_VERSION_PATCH_SwiftLoader 2
 
+// uservoice-iphone-sdk
+#define COCOAPODS_POD_AVAILABLE_uservoice_iphone_sdk
+#define COCOAPODS_VERSION_MAJOR_uservoice_iphone_sdk 3
+#define COCOAPODS_VERSION_MINOR_uservoice_iphone_sdk 2
+#define COCOAPODS_VERSION_PATCH_uservoice_iphone_sdk 3
+

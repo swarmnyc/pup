@@ -11,6 +11,7 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
 
     var myChatsView: MyChatsView?
     var data = MyChatsData();
+    var pullToRefresh = UIRefreshControl();
 
     required init(coder aDecoder: NSCoder)
     {
@@ -21,6 +22,13 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         // Here you can init your properties
 
+        data.getMyLobbies({
+            println("success!!!!!")
+        }, failure: {
+            println("couldn't get lobbies")
+        })
+
+        data.passOffAmount = self.changeTitleUnreadAmount;
     }
 
     override func loadView() {
@@ -28,32 +36,92 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
         myChatsView = MyChatsView()
         self.view = myChatsView!
         myChatsView?.setUpView(self)
+        self.myChatsView?.chatsCollection?.reloadData();
+//        data.getMyLobbies({
+//            println("success!!!!!")
+//            self.myChatsView?.chatsCollection?.reloadData();
+//        }, failure: {
+//            Error(alertTitle: "Couldn't get your chats", alertText: "Sorry, something went wrong. Try again!!!!!!");
+//        })
 
-        data.getMyLobbyies({
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated);
+
+        data.getMyLobbies({
             println("success!!!!!")
             self.myChatsView?.chatsCollection?.reloadData();
         }, failure: {
             Error(alertTitle: "Couldn't get your chats", alertText: "Sorry, something went wrong. Try again!!!!!!");
         })
 
+        self.navigationController?.navigationBar.translucent = false
+        self.navigationController?.navigationBar.setBackgroundImage(nil, forBarMetrics: UIBarMetrics.Default)
+        self.navigationController?.navigationBar.shadowImage = nil
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // currentUser.setPage("Find A Game");
-        self.title = "My Chats";
+        //self.title = "My Games";
 
 
         let menuImage = UIImage(named: "hamburgerMenu")
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: menuImage, style: UIBarButtonItemStyle.Plain, target: navigationController, action: "toggleSideMenu")
 
         self.navigationController?.navigationBar.translucent = false
         self.navigationController?.navigationBar.setBackgroundImage(nil, forBarMetrics: UIBarMetrics.Default)
         self.navigationController?.navigationBar.shadowImage = nil
 
+//        var rightSwipe = UISwipeGestureRecognizer(target: self, action: "swipedRight");
+//        rightSwipe.direction = UISwipeGestureRecognizerDirection.Right;
+//        self.myChatsView!.addGestureRecognizer(rightSwipe);
+
+        self.pullToRefresh.backgroundColor = UIColor(rgba: colors.tealMain);
+        self.pullToRefresh.tintColor = UIColor.whiteColor()
+        self.pullToRefresh.addTarget(self, action: "refreshTable", forControlEvents: UIControlEvents.ValueChanged);
+        self.myChatsView?.chatsCollection?.addSubview(self.pullToRefresh);
+
     }
 
+    func changeTitleUnreadAmount(amount: Int) {
+        println("change title!!!!")
+        self.title = "My Games (" + String(amount) + ")";
+    }
+
+    func refreshTable() {
+        println("refresh tabled!!!!")
+
+        self.data.getMyLobbies({
+            self.myChatsView?.chatsCollection?.reloadData();
+            self.pullToRefresh.endRefreshing();
+        }, failure: {
+            Error(alertTitle: "Couldn't Refresh The List", alertText: "Sorry about that...");
+            self.pullToRefresh.endRefreshing();
+        })
+    }
+
+    func swipedRight() {
+        var currentPageIndex = nav!.selectedIndex;
+
+        currentPageIndex--;
+        nav!.selectedIndex = currentPageIndex;
+        nav!.selectedViewController!.viewDidAppear(true)
+
+    }
+
+    func scrollViewDidScroll(scrollView: UIScrollView!) {
+
+        if (scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.frame.height - 100)) {
+            data.getMoreLobbies({
+                self.myChatsView?.chatsCollection!.reloadData()
+            }, failure: {
+                println("failed to get more lobbies")
+            })
+        }
+
+    }
 
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

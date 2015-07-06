@@ -20,6 +20,7 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
     var logInButton: JoinPupButton?
 
 
+
     var dateDisplay: DateDisplayView = DateDisplayView();
     var timeDisplay: TimeDisplayView = TimeDisplayView();
 
@@ -135,17 +136,31 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
         println("createLobby")
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        println("view will appear")
+        if (currentUser.loggedIn() == false) {
+            println("add to view")
+            logInButton?.addToAppView()
+        }
+
+
+    }
 
     func moveToLobby(newLobby: LobbyData) {
         let lobbyView = SingleLobbyController(info: newLobby)
-       // self.navigationController?.popViewControllerAnimated(false)
-        //autoreleasepool()
-        var viewControllerArray = NSMutableArray();
-        viewControllerArray.setArray(self.navigationController?.viewControllers as! [AnyObject]!)
 
-        viewControllerArray.replaceObjectAtIndex(viewControllerArray.count - 1,withObject: lobbyView)
         SwiftLoader.hide()
-        self.navigationController?.setViewControllers(viewControllerArray as [AnyObject], animated: true)
+        nav!.viewControllers?[1].pushViewController(lobbyView, animated: true);
+        nav!.selectedIndex = 1;
+        nav!.selectedViewController!.viewDidAppear(true)
+
+//        var viewControllerArray = NSMutableArray();
+//        viewControllerArray.setArray(self.navigationController?.viewControllers as! [AnyObject]!)
+//
+//        viewControllerArray.replaceObjectAtIndex(viewControllerArray.count - 1,withObject: lobbyView)
+//        SwiftLoader.hide()
+//        self.navigationController?.setViewControllers(viewControllerArray as [AnyObject], animated: true)
     }
 
     //Get text from the description editor
@@ -218,6 +233,11 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
         NSNotificationCenter.defaultCenter().removeObserver(self,
                 name: UIKeyboardWillHideNotification,
                 object: nil)
+        if (logInButton != nil) {
+            logInButton?.removeRegistrationView();
+        }
+
+
     }
 
 

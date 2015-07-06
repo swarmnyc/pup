@@ -52,7 +52,8 @@ class LobbyCreationModel {
 
         oldComponents.month = newComponents.month
         oldComponents.day = newComponents.day
-
+        oldComponents.hour = newComponents.hour
+        oldComponents.minute = newComponents.minute
 
         startTime = oldCalendar.dateFromComponents(oldComponents)!
         println(startTime)

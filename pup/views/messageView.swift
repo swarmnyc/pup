@@ -42,8 +42,7 @@ class MessageCell: UITableViewCell {
             var url = NSURL(string: item.picture.getPUPUrl())
             self.profilePicture.frame = CGRectMake(0,0,50,50);
             self.profilePicture.hnk_setImageFromURL(url!)
-            println("HAS URL!!!!!!!!")
-            println(url!)
+
         } else {
             self.profilePicture.image = image;
 
@@ -75,7 +74,7 @@ class MessageCell: UITableViewCell {
             userName.font = userName.font.fontWithSize(12)
             userName.backgroundColor = UIColor.clearColor();
             userName.textColor = UIColor(rgba: colors.mainGrey);
-            if (item.username.removeWhitespace()==currentUser.data.name.removeWhitespace()) {
+            if (item.username == currentUser.data.name) {
                 self.backgroundColor = UIColor(rgba: colors.lightGray)
             }
         }

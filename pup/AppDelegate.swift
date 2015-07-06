@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftLoader
+import uservoice_iphone_sdk
 
 var colors: appColors = appColors();
 
@@ -19,6 +20,11 @@ var currentUser: User = User()
 
 var appData: miscData = miscData()
 
+var nav:UITabBarController?
+let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
+var myGamesController = MyChatsController();
+var myChatsListener = MyChatsListener();
+
 
 //let cache = Shared.JSONCache
 //let cache = Haneke.sharedJSONCache
@@ -28,13 +34,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     var window: UIWindow?
-    var nav:UINavigationController?
 
 
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-
+//        getUserVoiceContactUsFormForModalDisplay
 
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
 
@@ -43,11 +48,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
        // var menuController: MenuNavigationController? = MenuNavigationController( menuTableViewController: MenuTableController(), contentViewController: LobbyListController())
-        self.nav = MenuNavigationController( menuTableViewController: MenuTableController(), contentViewController: LobbyListController())
-        self.nav!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(rgba: colors.tealMain)]
-         self.nav!.navigationBar.tintColor = UIColor(rgba: colors.tealMain)
-        self.window!.rootViewController = self.nav
-         self.nav!.setNavigationBarHidden(false, animated: false)
+        nav = TabBarController();
+//        nav?.delegate = TabBarController();
+//        self.nav!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(rgba: colors.tealMain)]
+//         self.nav!.navigationBar.tintColor = UIColor(rgba: colors.tealMain)
+
+
+        let allGames = UINavigationController(rootViewController: LobbyListController());
+        let myGames = UINavigationController(rootViewController: myGamesController);
+        let newGame = UINavigationController(rootViewController: CreateLobbyController());
+        let feedBack = UINavigationController(rootViewController: FeedBackController());
+        let settings = UINavigationController(rootViewController: SettingsController());
+
+        let controllers = [allGames, myGames, newGame, feedBack, settings];
+
+        nav!.viewControllers = controllers;
+        allGames.tabBarItem = UITabBarItem(title: "All Games", image: nil, tag: 0);
+        myGames.tabBarItem = UITabBarItem(title: "My Games", image: nil, tag: 1);
+        newGame.tabBarItem = UITabBarItem(title: "Create Game", image: nil, tag: 2);
+        feedBack.tabBarItem = UITabBarItem(title: "Feedback", image: nil, tag: 3);
+        settings.tabBarItem = UITabBarItem(title: "Settings", image: nil, tag: 4);
+        if (!currentUser.loggedIn()) {
+           myGames.tabBarItem.enabled = false;
+        }
+        self.window!.rootViewController = nav
+         //self.nav!.setNavigationBarHidden(false, animated: false)
         //self.nav!.title = "All Games"
 
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
@@ -95,6 +120,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        if (currentUser.loggedIn()) {
+            myChatsListener.quickBloxConnect?.createSession(true);
+        }
     }
 
     func applicationWillTerminate(application: UIApplication) {

@@ -13,13 +13,22 @@ class singleLobby {
     var quickBloxConnect: QuickBlox?
     var passMessagesToController: (() -> Void)?
     var recievedMessages = false;
-    var setUpSharing: (() -> Void)?
-
+    var reloadData:(() -> Void)?
+    var clearInputText: (() -> Void)?
     init() {
-        quickBloxConnect = QuickBlox();
-        quickBloxConnect?.handOffMessages = self.recieveMessages;
-        quickBloxConnect?.addNewMessage = self.addNewMessage;
-        quickBloxConnect?.sessionCreationSuccess = self.getMessages;
+//        quickBloxConnect = QuickBlox();
+//        quickBloxConnect?.handOffMessages = self.recieveMessages;
+//        quickBloxConnect?.clearText = self.clearText;
+//        quickBloxConnect?.addNewMessage = self.addNewMessage;
+//        quickBloxConnect?.sessionCreationSuccess = self.getMessages;
+
+//        func handOffMessages(response: QBResponse, messages: NSArray, responcePage: QBResponsePage)
+//        func clearText()
+//        func addNewMessage(message: QBChatMessage)
+//        func handOffChats()
+        println("setting clear the text")
+
+
     }
 
 
@@ -42,10 +51,36 @@ class singleLobby {
 
     }
 
+    func messagesReceived() {
+        println("messages recieved")
+        self.recievedMessages = true;
+    }
 
-    func getMessages() {
-        quickBloxConnect?.getMessages();
 
+
+    func sendMessage(message: String) {
+        self.data.sendMessage(message);
+    }
+
+    func showingShare() -> Bool {
+        println("showing sharing")
+        println(data.messages.count);
+        if (data.messages.count <= 0 && recievedMessages) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+
+
+    func clearText() {
+        println("clear text 1")
+        clearInputText?();
+    }
+
+    func addSelfToMembers() {
+        data.users.append(currentUser.getSelfAsSingleLobbyUser());
     }
 
     func joinLobby(success: () -> Void, failure: () -> Void) {
@@ -64,8 +99,7 @@ class singleLobby {
            if (error == nil) {
                self.data.isMember = true;
             success();
-            self.quickBloxConnect!.logoutOfChat();
-            self.quickBloxConnect!.createSession(self.data.isMember);
+            self.data.addSelfAsMember();
            } else {
                Error(alertTitle: "Couldn't Join Room", alertText: "We had some trouble getting you in, please try again...")
                failure()
@@ -78,22 +112,57 @@ class singleLobby {
     }
 
 
-    func recieveMessages(response: QBResponse, messages: NSArray, responcePage: QBResponsePage) {
+    func loadMoreHistory(success: ((messages: NSArray) -> Void), failure: (() -> Void)) {
 
-        data.addMessages(messages);
-        recievedMessages = true;
-        passMessagesToController?();
+        self.quickBloxConnect?.loadMoreHistory(success, failure: failure);
 
-        if (messages.count==0) {
-            setUpSharing?();
+    }
+
+
+    func insertMessagesToStartAndGetHeightOfMessages(messages: NSArray) -> CGFloat {
+           var height: CGFloat = 0.0;
+            for (var i = 0; i<messages.count; i++) {
+                self.data.addMessageAtStart(messages[i])
+                height += CGFloat(UIConstants.messageBaseSize) + UIConstants.getMessageAddition(messages[i].valueForKey("text") as! String);
+            }
+            return height;
+    }
+
+    func handOffMessages(response: QBResponse, messages: NSArray, responcePage: QBResponsePage) {
+
+        self.data.addMessages(messages);
+
+        if ((messages.count==0) && (self.recievedMessages == false)) {
+            println("set up sharing")
+            reloadData?();
         }
 
+        reloadData?();
+        self.recievedMessages = true;
+
+        self.quickBloxConnect?.addQBDelegates();
+
+
     }
 
-    func addNewMessage(newMessage: String) {
-        data.messages.append(Message(newMessage: newMessage))
-        passMessagesToController?();
-    }
+
+
+    func addNewMessage(message: QBChatMessage) {
+        self.recievedMessages = true;
+        println("adding new message")
+        var lastMessage = data.addSingleMessage(message);
+        println("last message was sent at - ")
+        println(lastMessage.timesent)
+        println("room time -")
+        println(data.updatedAtUtc);
+        println(data.lastMessageAt);
+        reloadData?();
+
+
+
+    func handOffChats() {
+        println("hand off chats!")
+    }  }
 
     func lastMessageIsUser() -> Bool {
         //if you are logged in, there are messages, and then if the last message was made by you
@@ -104,30 +173,7 @@ class singleLobby {
         return false
     }
 
-    func setID() {
-        quickBloxConnect?.roomID = data.QBChatRoomId;
-    }
 
-
-
-    func setRoomIDAndLogIn() {
-
-
-            self.quickBloxConnect?.lobbyId = self.data.QBChatRoomId;
-            self.loginToQuickBlox()
-
-
-    }
-
-
-    func loginToQuickBlox() {
-        quickBloxConnect?.createSession(self.data.isMember)
-
-    }
-
-    func logoutOfQuickBlox() {
-        quickBloxConnect?.logoutOfChat()
-    }
 
 
 

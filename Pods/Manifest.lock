@@ -25,6 +25,7 @@ PODS:
   - QuickBlox (2.2.5)
   - SnapKit (0.10.0)
   - SwiftLoader (0.2.2)
+  - uservoice-iphone-sdk (3.2.3)
 
 DEPENDENCIES:
   - Alamofire (~> 1.2)
@@ -37,6 +38,7 @@ DEPENDENCIES:
   - QuickBlox (~> 2.2.3)
   - SnapKit (~> 0.10.0)
   - SwiftLoader
+  - uservoice-iphone-sdk
 
 SPEC CHECKSUMS:
   Alamofire: 5550bf0b575ed1a4bf9be572f9463e1015cc169e
@@ -50,5 +52,6 @@ SPEC CHECKSUMS:
   QuickBlox: f13fb448a32d3c09efc71a9fd19d7f44092d9dbd
   SnapKit: 53696873f2cf84a15e8d7d0d9729ed4381196b16
   SwiftLoader: 9c5e547ae8e00b1c1079139492d6a273c7f73171
+  uservoice-iphone-sdk: 349d9ef36d3c43939d28390b9e86bb32b65fe983
 
 COCOAPODS: 0.37.2

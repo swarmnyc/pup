@@ -81,6 +81,10 @@ class JoinPupButtonView: PlatformButtonToggle {
         UIApplication.sharedApplication().windows.first!.addSubview(self)
     }
 
+    func addToAppView() {
+        UIApplication.sharedApplication().windows.first!.addSubview(self)
+    }
+
     func removeViews() {
         self.removeFromSuperview()
     }
@@ -117,7 +121,7 @@ class JoinPupButtonView: PlatformButtonToggle {
 
     func shortenView(keyboardHeight: CGFloat) {
         UIView.animateWithDuration(0.5, animations: {
-            var trans = CGAffineTransformMakeTranslation(0,-keyboardHeight);
+            var trans = CGAffineTransformMakeTranslation(0,-keyboardHeight + nav!.tabBar.frame.height);
             self.transform = trans;
 
         })

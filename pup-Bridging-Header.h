@@ -10,7 +10,9 @@
 @import Foundation;
 @import SystemConfiguration;
 @import MobileCoreServices;
+@import QuartzCore;
 
+#import <uservoice_iphone_sdk/UVConfig.h>
 #import <Quickblox/Quickblox.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>

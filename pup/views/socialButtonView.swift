@@ -102,6 +102,7 @@ class SocialButtonsView: UIView {
         textView.textAlignment = NSTextAlignment.Center
         textView.scrollEnabled = false;
         textView.userInteractionEnabled = false;
+        textView.font = UIFont.systemFontOfSize(11)
         textView.text = "No one's here yet.\n" +
                 "Why not invite some friends?"
 
@@ -138,7 +139,7 @@ class SocialButtonsView: UIView {
 
         self.snp_makeConstraints {
             (make) -> Void in
-            make.bottom.equalTo(self.superview!).offset(-UIConstants.buttonHeight)
+            make.bottom.equalTo(self.superview!).offset(0)
             make.left.equalTo(self.superview!).offset(0)
             make.right.equalTo(self.superview!).offset(0)
             make.height.equalTo(((UIScreen.mainScreen().bounds.size.width / 4) / (312 / 165)) * 3)
@@ -175,10 +176,10 @@ class SocialButtonsView: UIView {
 
         self.textView.snp_makeConstraints {
             (make) -> Void in
-            make.bottom.equalTo(self.self.buttons[0].snp_top).offset(-UIConstants.verticalPadding)
+            make.bottom.equalTo(self.self.buttons[0].snp_top).offset(-UIConstants.halfVerticalPadding)
             make.left.equalTo(self).offset(0)
             make.right.equalTo(self).offset(0)
-            make.height.equalTo(70)
+            make.height.equalTo((UIScreen.mainScreen().bounds.size.width / 4) / (312 / 165))
         }
     }
 

@@ -24,7 +24,7 @@ extension String {
     }
 
     func getPUPUrl() -> String {
-        return self.stringByReplacingOccurrencesOfString("~", withString: urls.siteBase, options: NSStringCompareOptions.LiteralSearch, range: nil)
+        return self.stringByReplacingOccurrencesOfString("~", withString: urls.siteBase, options: NSStringCompareOptions.LiteralSearch, range: nil).replace("\"",replacement: "");
     }
 
 

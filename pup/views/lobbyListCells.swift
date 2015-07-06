@@ -193,7 +193,6 @@ class gameCell: UITableViewCell {
         backImageView.clipsToBounds = true;
         backImageView.contentMode = UIViewContentMode.ScaleAspectFill;
         backImageView.frame.size = CGSizeMake(93, 93);
-        backImageView.backgroundColor = UIColor(rgba: colors.orange)
         backImageView.image = getImageWithColor(UIColor(rgba: colorFromSystem(data.platform)), CGSizeMake(93,93))
 
         imgView.clipsToBounds = true;

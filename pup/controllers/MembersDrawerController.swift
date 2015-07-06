@@ -11,7 +11,7 @@ class MembersDrawerController: UIViewController, UICollectionViewDelegate, UICol
 
     var users: Array<SingleLobbyUser>?
     var membersView: MembersDrawerView = MembersDrawerView()
-
+    var navBar: UINavigationController?
 
     required init(coder aDecoder: NSCoder)
     {
@@ -24,6 +24,10 @@ class MembersDrawerController: UIViewController, UICollectionViewDelegate, UICol
 
     }
 
+    func setNavigationBar(viewcontroller: UIViewController) {
+        self.navBar = viewcontroller.navigationController!;
+    }
+
     func populateUserList(users: Array<SingleLobbyUser>, owner: SingleLobbyUser) {
         self.users = users;
         self.users?.insert(owner, atIndex: 0);
@@ -31,9 +35,14 @@ class MembersDrawerController: UIViewController, UICollectionViewDelegate, UICol
     }
 
     func setUpSideBar() {
-        membersView.setUpView(self);
+        membersView.setUpView(self, navBarController: self.navBar!);
 
     }
+
+    func toggleDrawer() {
+        self.membersView.toggle();
+    }
+
 
     func removeViews() {
         self.membersView.removeViews();

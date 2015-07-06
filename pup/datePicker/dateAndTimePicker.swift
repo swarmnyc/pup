@@ -7,7 +7,7 @@ import Foundation
 import UIKit
 
 enum datePickerType {
-    case Date, Time;
+    case Date, Time, DateAndTime;
 }
 
 class DateAndTimePicker: UIView {
@@ -38,6 +38,8 @@ class DateAndTimePicker: UIView {
         switch pickerType {
             case .Date:
                 datePicker.datePickerMode = .Date
+            case .DateAndTime:
+                datePicker.datePickerMode = .DateAndTime
             default:
                 datePicker.datePickerMode = .Time
         }
@@ -66,9 +68,12 @@ class DateAndTimePicker: UIView {
 
         self.layer.cornerRadius = 15;
         self.layer.masksToBounds = true;
-        self.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.3).CGColor;
-        self.layer.shadowOpacity = 1;
-        self.layer.shadowRadius = 6.0;
+
+        self.layer.shadowOffset = CGSizeMake(1.0,1.0);
+        self.layer.shadowColor = UIColor.blackColor().CGColor;
+        self.layer.shadowRadius = 15.0;
+        self.layer.shadowOpacity = 0.8;
+
         self.clipsToBounds = true;
         self.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.99);
 

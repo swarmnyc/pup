@@ -17,6 +17,8 @@
 	<string>PUP</string>
 	<key>FacebookAppID</key>
 	<string>1651868985031195</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>

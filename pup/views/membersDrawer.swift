@@ -10,15 +10,17 @@ import Haneke
 
 class MembersDrawerView: UIView {
 
-    var transX = UIScreen.mainScreen().bounds.width * 0.9
-    var transMax = UIScreen.mainScreen().bounds.width * 0.9
+    var transX = UIScreen.mainScreen().bounds.width * 0.95
+    var transMax = UIScreen.mainScreen().bounds.width * 0.95
     var transMin = 0;
     var headerBackground: UIView = UIView();
     var header: UILabel = UILabel();
 
     var membersList: UICollectionView?
-
+    var touchToClose = UIView();
     var shadow: UIView = UIView();
+
+    var open = false;
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,11 +31,10 @@ class MembersDrawerView: UIView {
         super.init(coder: aDecoder)
     }
 
-    func setUpView(parentController: UIViewController) {
+    func setUpView(parentController: UIViewController, navBarController: UINavigationController) {
 
 
-        var panRecognizer = UIPanGestureRecognizer(target: self, action:"detectPan:")
-        self.addGestureRecognizer(panRecognizer)
+
 
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsetsZero;
@@ -56,10 +57,19 @@ class MembersDrawerView: UIView {
         shadow.userInteractionEnabled = false;
 
         addViews();
-        addConstraints();
+        createConstraints(navBarController);
 
-        var trans = CGAffineTransformMakeTranslation(UIScreen.mainScreen().bounds.width * 0.9, 0);
+        var trans = CGAffineTransformMakeTranslation(transX, 0);
         self.transform = trans;
+
+
+        var panRecognizer = UIPanGestureRecognizer(target: self, action:"detectPan:")
+        self.addGestureRecognizer(panRecognizer)
+
+        var tapGesture = UITapGestureRecognizer(target: self, action: "shadowClicked");
+        tapGesture.numberOfTapsRequired = 1;
+        tapGesture.numberOfTouchesRequired = 1;
+        self.touchToClose.addGestureRecognizer(tapGesture);
     }
 
 
@@ -70,7 +80,8 @@ class MembersDrawerView: UIView {
             self.shadow.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: alpha);
         })
 
-        shadow.userInteractionEnabled = userInteractionEnabled;
+        self.shadow.userInteractionEnabled = userInteractionEnabled;
+//        self.touchToClose.userInteractionEnabled = userInteractionEnabled;
 
 
         UIView.animateWithDuration(0.4, animations: { () -> Void in
@@ -79,13 +90,30 @@ class MembersDrawerView: UIView {
         })
     }
 
+    func toggle() {
+        if (self.open) {
+            animateDrawer(0.0, userInteractionEnabled: false, transX: CGFloat(transMax))
+            self.open = false;
+        } else {
+            animateDrawer(0.6, userInteractionEnabled: true, transX: CGFloat(transMin))
+            self.open = true;
+        }
+    }
+
+    func shadowClicked() {
+        println("shadowClicked");
+        animateDrawer(0.0, userInteractionEnabled: false, transX: CGFloat(transMax))
+        self.open = false;
+    }
 
     func detectPan(recognizer:UIPanGestureRecognizer) {
         var translation  = recognizer.translationInView(self.superview!)
         if (translation.x < -15) {
+            self.open = true;
             animateDrawer(0.6, userInteractionEnabled: true, transX: CGFloat(transMin))
 
         } else if (translation.x > 15) {
+            self.open = false;
             animateDrawer(0.0, userInteractionEnabled: false, transX: CGFloat(transMax))
 
         }
@@ -105,6 +133,7 @@ class MembersDrawerView: UIView {
     func addViews() {
         UIApplication.sharedApplication().windows.first!.addSubview(shadow)
         UIApplication.sharedApplication().windows.first!.addSubview(self)
+        self.addSubview(touchToClose)
         self.addSubview(headerBackground)
         self.addSubview(header)
         self.addSubview(membersList!)
@@ -112,7 +141,7 @@ class MembersDrawerView: UIView {
     }
 
 
-    func addConstraints() {
+    func createConstraints(navBar: UINavigationController) {
 
         self.snp_makeConstraints{
             (make) -> Void in
@@ -131,7 +160,7 @@ class MembersDrawerView: UIView {
 
 
         //get a copy of the navigation controller from side menu, which is  a UINavigationController, not UIViewController
-        var navController = UIApplication.sharedApplication().keyWindow!.rootViewController as! UINavigationController
+        var navController = navBar
 
         membersList!.snp_makeConstraints{
             (make) -> Void in
@@ -139,6 +168,14 @@ class MembersDrawerView: UIView {
             make.left.equalTo(self).offset(UIScreen.mainScreen().bounds.width * 0.1)
             make.bottom.equalTo(self).offset(0)
             make.right.equalTo(self).offset(0)
+        }
+
+        touchToClose.snp_makeConstraints{
+            (make) -> Void in
+            make.top.equalTo(self).offset(0)
+            make.left.equalTo(self).offset(0)
+            make.bottom.equalTo(self).offset(0)
+            make.width.equalTo(self).offset(0)
         }
 
         headerBackground.snp_makeConstraints {

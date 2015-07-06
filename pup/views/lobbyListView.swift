@@ -16,8 +16,8 @@ class LobbyListView: UIView {
     var table: UITableView = UITableView()
 
 
-    var floatingActionButton: floatingAction?
-    var fabDelegate: FABDelegate?
+//    var floatingActionButton: floatingAction?
+//    var fabDelegate: FABDelegate?
 
 
     override init(frame: CGRect) {
@@ -45,7 +45,7 @@ class LobbyListView: UIView {
     func setDelegates(delegate: UITableViewDelegate, dataSource: UITableViewDataSource, fabDelegate: FABDelegate) {
         table.delegate = delegate;
         table.dataSource = dataSource;
-        floatingActionButton?.fabDelegate = fabDelegate
+        //floatingActionButton?.fabDelegate = fabDelegate
     }
 
     func setUpTable() {
@@ -59,16 +59,16 @@ class LobbyListView: UIView {
 
 
 
-        let fabImage = UIImage(named: "FAB")
-        floatingActionButton = floatingAction()
-        floatingActionButton?.image = fabImage;
-        floatingActionButton?.contentMode = UIViewContentMode.ScaleAspectFill
-        floatingActionButton?.clipsToBounds = true;
-        floatingActionButton?.userInteractionEnabled = true
+//        let fabImage = UIImage(named: "FAB")
+//        floatingActionButton = floatingAction()
+//        floatingActionButton?.image = fabImage;
+//        floatingActionButton?.contentMode = UIViewContentMode.ScaleAspectFill
+//        floatingActionButton?.clipsToBounds = true;
+//        floatingActionButton?.userInteractionEnabled = true
 
 
         addSubview(table);
-        addSubview(floatingActionButton!)
+//        addSubview(floatingActionButton!)
 
         //addSubview(swipeDetectionView)
 
@@ -76,24 +76,24 @@ class LobbyListView: UIView {
     }
 
 
-    func pushFab() {
-
-        UIView.animateWithDuration(Double(0.3)) {
-            let trans = CGAffineTransformMakeScale(1.1, 1.1);
-            self.floatingActionButton?.transform = trans;
-            self.layoutIfNeeded()
-        }
-
-    }
-
-    func releaseFab() {
-        UIView.animateWithDuration(Double(0.2)) {
-            let trans = CGAffineTransformMakeScale(1.0, 1.0);
-            self.floatingActionButton?.transform = trans;
-            self.layoutIfNeeded()
-        }
-
-    }
+//    func pushFab() {
+//
+//        UIView.animateWithDuration(Double(0.3)) {
+//            let trans = CGAffineTransformMakeScale(1.1, 1.1);
+//            self.floatingActionButton?.transform = trans;
+//            self.layoutIfNeeded()
+//        }
+//
+//    }
+//
+//    func releaseFab() {
+//        UIView.animateWithDuration(Double(0.2)) {
+//            let trans = CGAffineTransformMakeScale(1.0, 1.0);
+//            self.floatingActionButton?.transform = trans;
+//            self.layoutIfNeeded()
+//        }
+//
+//    }
 
 
 
@@ -107,12 +107,12 @@ class LobbyListView: UIView {
             make.bottom.equalTo(self).offset(0)
         }
 
-        floatingActionButton?.snp_makeConstraints{ (make) -> Void in
-            make.centerX.equalTo(self)
-            make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)
-            make.width.equalTo(50)
-            make.height.equalTo(50)
-        }
+//        floatingActionButton?.snp_makeConstraints{ (make) -> Void in
+//            make.centerX.equalTo(self)
+//            make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)
+//            make.width.equalTo(50)
+//            make.height.equalTo(50)
+//        }
 
     }
 

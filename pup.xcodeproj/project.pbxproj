@@ -47,7 +47,9 @@
 		85DD25A029478F991A8BF4A9 /* coloredImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2C101B43889F6E228EB6 /* coloredImage.swift */; };
 		85DD26954D9F631A1FFC8FEF /* platformButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD27868059972BED2B656E /* platformButtonView.swift */; };
 		85DD26E3F2F4DDAB59670C4B /* lobbyListCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2B7D734F3205C2B6F994 /* lobbyListCells.swift */; };
+		85DD27397B426680604103B0 /* SocialSharingSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD296E0FA16E256A3817C5 /* SocialSharingSwitch.swift */; };
 		85DD273B03F5548C452DFBDC /* registrationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD23A1345A68AEF31DE584 /* registrationController.swift */; };
+		85DD278D837C0977D096AAC0 /* quickBloxDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD24F35095C5DB21147BE2 /* quickBloxDelegate.swift */; };
 		85DD27A3FF3778F7C14480FF /* users.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2D4861C2BBF20EE55949 /* users.swift */; };
 		85DD283AFDA2697E1053E7C2 /* lobbyCreation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD238EFD5444EC37120A93 /* lobbyCreation.swift */; };
 		85DD28658AE7C82D6D829653 /* arrayContains.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD25421C406DE9FE85197F /* arrayContains.swift */; };
@@ -61,6 +63,7 @@
 		85DD295AB93818BC3D619667 /* games.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2D29B05647DBEADF3610 /* games.swift */; };
 		85DD298643E34DFEA4639A17 /* registrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2B68DC691A5BC39ED657 /* registrationView.swift */; };
 		85DD29FC22EB39E6F64121A5 /* lobbyListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD20AB9A3A409E4F5EC302 /* lobbyListController.swift */; };
+		85DD2A25D0FDDAF9A004FF8C /* swipeBetweenTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD20E97B0D361643D348E9 /* swipeBetweenTabs.swift */; };
 		85DD2A2F042797025AA7CABC /* searchResultsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2B1AAA32DCBBCF075B61 /* searchResultsCell.swift */; };
 		85DD2A3E70CC205BE3CE68B8 /* overlayDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD232BAFF25FA8BE5B0095 /* overlayDelegate.swift */; };
 		85DD2A63419F9C7E1A851F67 /* singleLobbyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2EF7994C1C2784008A3E /* singleLobbyData.swift */; };
@@ -81,7 +84,9 @@
 		85DD2D0549CB0795A4CB448B /* horizontalScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2FE2DE6479C5ED1CF81A /* horizontalScrollView.swift */; };
 		85DD2D3DC3C1D5A44EEE8B4C /* ConstraintItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD20FAE439C461067693B5 /* ConstraintItem.swift */; };
 		85DD2D46FD764FFB08807954 /* createLobbyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2C5A26754E9EEB02E8F9 /* createLobbyController.swift */; };
+		85DD2D4A619021AB8E2F9949 /* tabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2CE0C2DE2C126E995A32 /* tabBarController.swift */; };
 		85DD2DB10A669B3888DDF73A /* SwiftLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2C5BCAA8ACABAC9DCE69 /* SwiftLoader.swift */; };
+		85DD2DC174028DC5CB87C196 /* useVoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD241EEFC3462CE7DDF8EA /* useVoice.swift */; };
 		85DD2DCC8C6E33DED8EF8987 /* errorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD27F3E7DC0D3E93059A12 /* errorAlert.swift */; };
 		85DD2DCE811E5EAE2E729E3A /* joinButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD22E1CB17BAA3D2E0A5D9 /* joinButton.swift */; };
 		85DD2DE7316FFFD64D16FCA8 /* Debugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2DAA0AAFEB5C200FA1F3 /* Debugging.swift */; };
@@ -93,7 +98,6 @@
 		85DD2EFE9627A68983E25694 /* SnapKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2758B62E2D8DB885C137 /* SnapKit.swift */; };
 		85DD2F1191EF8338EB29C62C /* settingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD23472B559B5911C5614F /* settingsController.swift */; };
 		85DD2F23913B03F97FE19DDA /* SocialConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD29856559BC7C119920EE /* SocialConnector.swift */; };
-		85DD2F5967B1FA589F7C445E /* SocialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD28D220255CCDE6DB7B7B /* SocialController.swift */; };
 		85DD2F6A81EFA0D9372ECA7B /* errorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD27F3E7DC0D3E93059A12 /* errorAlert.swift */; };
 		85DD2FDC8AAB1A025E72F4AA /* socialButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD25183E6F36BA0979FFEB /* socialButtonView.swift */; };
 		85DD2FEAD39D73394DB794B5 /* singleLobbyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2D0B9D2EE588EC1EFC53 /* singleLobbyController.swift */; };
@@ -138,6 +142,7 @@
 		8361C645BF26B1B51B7F8F15 /* Pods-pup.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pup.release.xcconfig"; path = "Pods/Target Support Files/Pods-pup/Pods-pup.release.xcconfig"; sourceTree = "<group>"; };
 		85DD2029C5F6BCC62DF11AE1 /* quickBloxConnect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = quickBloxConnect.swift; path = quickBlox/quickBloxConnect.swift; sourceTree = "<group>"; };
 		85DD20AB9A3A409E4F5EC302 /* lobbyListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = lobbyListController.swift; path = controllers/lobbyListController.swift; sourceTree = "<group>"; };
+		85DD20E97B0D361643D348E9 /* swipeBetweenTabs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = swipeBetweenTabs.swift; path = controllers/swipeBetweenTabs.swift; sourceTree = "<group>"; };
 		85DD20FAE439C461067693B5 /* ConstraintItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintItem.swift; sourceTree = "<group>"; };
 		85DD21221D7D3B56F29F04C3 /* MenuItemDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuItemDelegate.swift; path = protocols/MenuItemDelegate.swift; sourceTree = "<group>"; };
 		85DD21C1F8F541AB88061756 /* ENSideMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSideMenu.swift; sourceTree = "<group>"; };
@@ -157,8 +162,10 @@
 		85DD2382D78D98ACA6486F50 /* filterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = filterView.swift; path = views/filterView.swift; sourceTree = "<group>"; };
 		85DD238EFD5444EC37120A93 /* lobbyCreation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = lobbyCreation.swift; path = data/lobbyCreation.swift; sourceTree = "<group>"; };
 		85DD23A1345A68AEF31DE584 /* registrationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = registrationController.swift; path = controllers/registrationController.swift; sourceTree = "<group>"; };
+		85DD241EEFC3462CE7DDF8EA /* useVoice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = useVoice.swift; path = controllers/useVoice.swift; sourceTree = "<group>"; };
 		85DD243B4DE3F1C308B040E9 /* Constraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constraint.swift; sourceTree = "<group>"; };
 		85DD247410FFEEC9AB25B772 /* lobbyListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = lobbyListView.swift; path = views/lobbyListView.swift; sourceTree = "<group>"; };
+		85DD24F35095C5DB21147BE2 /* quickBloxDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = quickBloxDelegate.swift; path = protocols/quickBloxDelegate.swift; sourceTree = "<group>"; };
 		85DD24FE962F075571314E81 /* pup-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pup-Bridging-Header.h"; sourceTree = "<group>"; };
 		85DD250C500EFF5FF2F84027 /* searchResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = searchResultsController.swift; path = controllers/searchResultsController.swift; sourceTree = "<group>"; };
 		85DD25183E6F36BA0979FFEB /* socialButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = socialButtonView.swift; path = views/socialButtonView.swift; sourceTree = "<group>"; };
@@ -176,8 +183,8 @@
 		85DD27E31AD0E3012A386959 /* datePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = datePicker.swift; path = datePicker/datePicker.swift; sourceTree = "<group>"; };
 		85DD27F3E7DC0D3E93059A12 /* errorAlert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = errorAlert.swift; sourceTree = "<group>"; };
 		85DD288D63E96DC23BA925ED /* dateAndTimePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = dateAndTimePicker.swift; path = datePicker/dateAndTimePicker.swift; sourceTree = "<group>"; };
-		85DD28D220255CCDE6DB7B7B /* SocialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocialController.swift; path = controllers/SocialController.swift; sourceTree = "<group>"; };
 		85DD28D9F7E47CBB5773C363 /* searcherDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = searcherDelegate.swift; path = protocols/searcherDelegate.swift; sourceTree = "<group>"; };
+		85DD296E0FA16E256A3817C5 /* SocialSharingSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocialSharingSwitch.swift; path = views/SocialSharingSwitch.swift; sourceTree = "<group>"; };
 		85DD29856559BC7C119920EE /* SocialConnector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocialConnector.swift; path = data/SocialConnector.swift; sourceTree = "<group>"; };
 		85DD29BD2857C50C8DC41200 /* myChatsData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = myChatsData.swift; path = data/myChatsData.swift; sourceTree = "<group>"; };
 		85DD2A87AB8B4444A118B22F /* registrationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = registrationDelegate.swift; path = protocols/registrationDelegate.swift; sourceTree = "<group>"; };
@@ -197,6 +204,7 @@
 		85DD2C5B66D10B2F40BA8D74 /* lobbies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = lobbies.swift; path = data/lobbies.swift; sourceTree = "<group>"; };
 		85DD2C5BCAA8ACABAC9DCE69 /* SwiftLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftLoader.swift; sourceTree = "<group>"; };
 		85DD2C5D3D508A6931275758 /* buttonDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = buttonDelegate.swift; path = protocols/buttonDelegate.swift; sourceTree = "<group>"; };
+		85DD2CE0C2DE2C126E995A32 /* tabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = tabBarController.swift; path = controllers/tabBarController.swift; sourceTree = "<group>"; };
 		85DD2CEC756EF62BD80BC675 /* ConstraintRelation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintRelation.swift; sourceTree = "<group>"; };
 		85DD2D0B9D2EE588EC1EFC53 /* singleLobbyController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = singleLobbyController.swift; path = controllers/singleLobbyController.swift; sourceTree = "<group>"; };
 		85DD2D29B05647DBEADF3610 /* games.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = games.swift; path = data/games.swift; sourceTree = "<group>"; };
@@ -340,7 +348,11 @@
 				85DD2DCC8F24F4E4A65EB514 /* colorFromSystem.swift */,
 				85DD25183E6F36BA0979FFEB /* socialButtonView.swift */,
 				85DD29856559BC7C119920EE /* SocialConnector.swift */,
-				85DD28D220255CCDE6DB7B7B /* SocialController.swift */,
+				85DD296E0FA16E256A3817C5 /* SocialSharingSwitch.swift */,
+				85DD241EEFC3462CE7DDF8EA /* useVoice.swift */,
+				85DD20E97B0D361643D348E9 /* swipeBetweenTabs.swift */,
+				85DD2CE0C2DE2C126E995A32 /* tabBarController.swift */,
+				85DD24F35095C5DB21147BE2 /* quickBloxDelegate.swift */,
 			);
 			path = pup;
 			sourceTree = "<group>";
@@ -540,6 +552,7 @@
 				TargetAttributes = {
 					2CCC7F481B0A451400C16A85 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = 49E6AM57U3;
 					};
 					2CCC7F5D1B0A451400C16A85 = {
 						CreatedOnToolsVersion = 6.3.1;
@@ -818,8 +831,12 @@
 				85DD2FDC8AAB1A025E72F4AA /* socialButtonView.swift in Sources */,
 				85DD246B08BC01379750D106 /* gif.swift in Sources */,
 				85DD2F23913B03F97FE19DDA /* SocialConnector.swift in Sources */,
-				85DD2F5967B1FA589F7C445E /* SocialController.swift in Sources */,
 				85DD25A029478F991A8BF4A9 /* coloredImage.swift in Sources */,
+				85DD27397B426680604103B0 /* SocialSharingSwitch.swift in Sources */,
+				85DD2DC174028DC5CB87C196 /* useVoice.swift in Sources */,
+				85DD2A25D0FDDAF9A004FF8C /* swipeBetweenTabs.swift in Sources */,
+				85DD2D4A619021AB8E2F9949 /* tabBarController.swift in Sources */,
+				85DD278D837C0977D096AAC0 /* quickBloxDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -946,9 +963,12 @@
 			baseConfigurationReference = EA0401F85555E1D9628C94D0 /* Pods-pup.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = pup/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "pup-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -960,9 +980,12 @@
 			baseConfigurationReference = 8361C645BF26B1B51B7F8F15 /* Pods-pup.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = pup/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "pup-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;

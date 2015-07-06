@@ -31,6 +31,9 @@ class DateDisplayView: UIView, UITextFieldDelegate {
     func setUpView() {
         self.text.delegate = self;
 
+
+
+
         self.title.text = "WHEN?"
         self.title.textAlignment = NSTextAlignment.Center
         self.title.font = self.title.font.fontWithSize(10);
@@ -42,7 +45,7 @@ class DateDisplayView: UIView, UITextFieldDelegate {
         self.text.font = self.text.font.fontWithSize(19);
 
 
-        dateSelector.setUp(.Date, titleText: "WHEN?", maxDate: NSDate().dateByAddingDays(14), minimumDate: NSDate().dateByAddingMinutes(20), onComplete: {
+        dateSelector.setUp(.DateAndTime, titleText: "WHEN?", maxDate: NSDate().dateByAddingDays(14), minimumDate: NSDate().dateByAddingMinutes(20), onComplete: {
             (date) -> Void in
             var newestTime = self.successfulChange!(newDate: date)
             self.currentDate = newestTime;

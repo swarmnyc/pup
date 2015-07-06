@@ -154,7 +154,7 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         println(picker)
         println(info)
-        var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+        var chosenImage = info[UIImagePickerControllerEditedImage] as! UIImage
 
         registrationView.setImage(chosenImage)
         self.registrationView.layer.opacity = 1;

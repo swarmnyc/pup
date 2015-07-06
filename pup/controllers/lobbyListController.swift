@@ -12,7 +12,7 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
     var filter: FilterViewController! //controller for the filter
 
-
+    var pullToRefresh = UIRefreshControl();
 
     var parentController: UIViewController?
 
@@ -38,6 +38,8 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         self.view = listView
         listView?.setDelegates(self,dataSource: self, fabDelegate: self)
     }
+
+
 
 
     override func viewDidAppear(animated: Bool) {
@@ -66,8 +68,6 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         //makes it so that inside of a lobby their is no title on the back button
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
 
-        let menuImage = UIImage(named: "hamburgerMenu")
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: menuImage, style: UIBarButtonItemStyle.Plain, target: navigationController, action: "toggleSideMenu")
 
 
         //register the cell classes so we can reuse them
@@ -82,29 +82,52 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         })
 
 
-        var config = SwiftLoader.Config()
-        config.size = 150
-        config.spinnerColor = UIColor(rgba: colors.orange)
-        config.backgroundColor = UIColor.whiteColor()
-        SwiftLoader.setConfig(config);
 
-        SwiftLoader.show(title: "Loading Games", animated: false);
-        //var facebook = SocialButtonController(type: .Tumblr)
+        self.pullToRefresh.backgroundColor = UIColor(rgba: colors.tealMain);
+        self.pullToRefresh.tintColor = UIColor.whiteColor()
+        self.pullToRefresh.addTarget(self, action: "refreshTable", forControlEvents: UIControlEvents.ValueChanged);
+        self.listView?.table.addSubview(self.pullToRefresh);
+        self.listView?.table.setContentOffset(CGPointMake(0, -self.pullToRefresh.frame.size.height), animated: false);
 
 
     }
 
+    func refreshTable() {
+        println("refresh tabled!!!!")
+
+        self.model.refreshRequest({
+            self.updateData();
+            self.pullToRefresh.endRefreshing();
+        }, failure: {
+            Error(alertTitle: "Couldn't Refresh The List", alertText: "Sorry about that...");
+            self.pullToRefresh.endRefreshing();
+        })
+    }
+
+
+
+    //onscroll
+    //model.getMoreResults(self.updateData
+
+    func scrollViewDidScroll(scrollView: UIScrollView!) {
+        if (scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.frame.height - 100)) {
+           model.getMoreResults(self.updateData);
+        }
+
+
+
+    }
 
     func fabTouchDown() {
 
-        listView?.pushFab()
+//        listView?.pushFab()
 
     }
     func fabTouchUp() {
 
-        listView?.releaseFab()
-        let createLobby = CreateLobbyController()
-        self.navigationController?.pushViewController(createLobby, animated: true)
+//        listView?.releaseFab()
+//        let createLobby = CreateLobbyController()
+//        self.navigationController?.pushViewController(createLobby, animated: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -126,8 +149,10 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
     func updateData() {
+        self.pullToRefresh.endRefreshing();
+
+        model.loadMore = true;
         listView?.table.reloadData()
-        SwiftLoader.hide()
     }
 
 

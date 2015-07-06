@@ -66,6 +66,15 @@ class User {
 
     }
 
+    func getSelfAsSingleLobbyUser() -> SingleLobbyUser {
+
+        var data: NSDictionary = ["isLeave": false, "isOwner": false, "id": self.data.userId, "userName": self.data.name, "portraitUrl": self.data.picture];
+        return SingleLobbyUser(data: data);
+
+    }
+
+
+
     func loggedIn() -> Bool {
 
         if (data.loggedIn) {
@@ -95,6 +104,8 @@ class User {
 
         }
 
+        var myGames = nav!.tabBar.items?[1] as! UITabBarItem
+        myGames.enabled = false;
 
     }
 
@@ -140,6 +151,32 @@ class User {
         self.setLocalStorage()
     }
 
+    func enableMyGames() {
+        var myGames = nav!.tabBar.items?[1] as! UITabBarItem
+        myGames.enabled = true;
+    }
+
+    func updatePortrait(image: UIImage, success: () -> Void, failure: () -> Void) {
+
+        var img:UIImage = image
+
+        let imageData:NSData = NSData(data: UIImageJPEGRepresentation(img, 1.0))
+
+        SRWebClient.POST(appURLS().updatePortrait)
+        .headers(["Authorization":"Bearer " + self.data.accessToken])
+        .data(imageData, fieldName:"portrait", data: ["":""])
+        .send({(response:AnyObject!, status:Int) -> Void in
+            println(response);
+            self.data.picture = response as! String;
+            self.setLocalStorage();
+            success();
+            //process success response
+        },failure:{(error:NSError!) -> Void in
+            failure();
+            //process failure response
+        })
+
+    }
 
     func register(registrationData: (image: UIImage?, username: String, email: String), success: () -> Void) {
 
@@ -175,7 +212,7 @@ class User {
                              println(userData["accessToken"]!)
 
                              self.saveData(userData)
-
+                             self.enableMyGames()
                              success()
                          }
                      }
@@ -202,7 +239,7 @@ class User {
                 if (resp["success"] as! Bool) {
 
                     self.saveData(userData)
-
+                    self.enableMyGames()
                     success()
                 }
 

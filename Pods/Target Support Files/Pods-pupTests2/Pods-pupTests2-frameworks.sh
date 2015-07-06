@@ -57,6 +57,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Haneke.framework'
   install_framework 'SnapKit.framework'
   install_framework 'SwiftLoader.framework'
+  install_framework 'uservoice_iphone_sdk.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Alamofire.framework'
@@ -68,4 +69,5 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Haneke.framework'
   install_framework 'SnapKit.framework'
   install_framework 'SwiftLoader.framework'
+  install_framework 'uservoice_iphone_sdk.framework'
 fi

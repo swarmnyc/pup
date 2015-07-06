@@ -15,6 +15,7 @@ target 'pup' do
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
   pod 'JLToast'
+  pod 'uservoice-iphone-sdk'
 end
 
 target 'pupTests' do
@@ -26,6 +27,8 @@ target 'pupTests' do
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
+  pod 'uservoice-iphone-sdk'
+
 end
 
 target 'pupTests2' do
@@ -38,5 +41,7 @@ target 'pupTests2' do
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
+  pod 'uservoice-iphone-sdk'
+
 end
 

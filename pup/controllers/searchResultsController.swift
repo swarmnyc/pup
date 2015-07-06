@@ -5,6 +5,7 @@
 
 import Foundation
 import UIKit
+import uservoice_iphone_sdk
 
 class SearchResultsController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, SimpleButtonDelegate {
 
@@ -41,6 +42,12 @@ class SearchResultsController: UIViewController, UICollectionViewDataSource, UIC
 
     func touchUp(button: NSObject, type: String) {
         println("touched up request game")
+        var config: UVConfig = UVConfig(site: "swarmnyc.uservoice.com")
+        config.forumId = 272754;
+        config.showKnowledgeBase = true;
+        config.showForum = true;
+        UserVoice.initialize(config);
+        UserVoice.presentUserVoiceNewIdeaFormForParentViewController(self);
     }
 
     func touchDown(button: NSObject, type: String) {

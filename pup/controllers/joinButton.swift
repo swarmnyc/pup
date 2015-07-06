@@ -33,6 +33,10 @@ class JoinPupButton: UIViewController, SimpleButtonDelegate {
         }
     }
 
+    func addToAppView() {
+        joinButtonView.addToAppView()
+        joinButtonView.setUpConstraints();
+    }
 
     func shortenView(notification: NSNotification) {
 

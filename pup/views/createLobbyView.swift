@@ -51,7 +51,7 @@ class CreateLobbyView: UIView {
             UIView.animateWithDuration(0.5) {
                 var keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
                 var keyboardHeight = keyboardSize!.height;
-                var newSize = self.scrollView.frame.height - keyboardHeight;
+                var newSize = self.scrollView.frame.height - (keyboardHeight - nav!.tabBar.frame.height);
 
                 self.scrollView.snp_remakeConstraints {
                     (make) -> Void in
@@ -80,6 +80,7 @@ class CreateLobbyView: UIView {
                 make.left.equalTo(self).offset(0)
                 make.top.equalTo(self).offset(0)
                 make.right.equalTo(self).offset(0)
+                make.height.equalTo(UIScreen.mainScreen().bounds.height)
                 make.bottom.equalTo(self).offset(0)
 
             }
@@ -96,14 +97,17 @@ class CreateLobbyView: UIView {
     func setImage(imageUrl: String) {
 
         var url = NSURL(string: imageUrl.getPUPUrl())
-        //println(url)
+        println(url)
         var request:NSURLRequest = NSURLRequest(URL: url!)
         headerImage.backgroundColor = UIColor.blackColor();
+
         NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
-            var img = UIImage(data: data) as UIImage!
-            self.headerImage.image = img;
-            self.headerImage.contentMode = UIViewContentMode.ScaleAspectFill;
-            self.headerImage.clipsToBounds = true;
+            if (data != nil) {
+                var img = UIImage(data: data) as UIImage!
+                self.headerImage.image = img;
+                self.headerImage.contentMode = UIViewContentMode.ScaleAspectFill;
+                self.headerImage.clipsToBounds = true;
+            }
         })
 
     }
@@ -294,7 +298,7 @@ class CreateLobbyView: UIView {
         self.createLobbyButton.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.containerView).offset(0)
             make.right.equalTo(self.containerView).offset(0)
-            make.bottom.equalTo(self.containerView).offset(0)
+            make.bottom.equalTo(self.containerView).offset(-nav!.tabBar.frame.height)
             make.height.equalTo(58)
 
         }

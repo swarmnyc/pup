@@ -68,6 +68,7 @@ class MyChatsCell: UICollectionViewCell {
     var divider: UIView = UIView();
 
     var hasBeenSetUp = false;
+    var data: LobbyData?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -90,6 +91,8 @@ class MyChatsCell: UICollectionViewCell {
 
 
     func setUpCell(data: LobbyData) {
+        self.data = data;
+        self.data?.checkUnreadCounter = self.checkUnread;
         self.backgroundColor = UIColor(rgba: "#f1f1f1")
         if (data.timeInHuman == "Finished") {
             self.contentView.layer.opacity = 0.6
@@ -109,16 +112,14 @@ class MyChatsCell: UICollectionViewCell {
         lobbyImage.frame.size = CGSizeMake(42, 42);
         self.lobbyImage.hnk_setImageFromURL(url!)
         self.lobbyImage.backgroundColor = UIColor(rgba: colors.orange)
-        self.lobbyImage.alpha = 0;
-        self.lobbyImage.hnk_setImageFromURL(url!, placeholder:nil, format: nil, failure: nil, success: {
-            (image) -> Void in
-            self.lobbyImage.image = image;
-            UIView.animateWithDuration(0.3, animations: {
-                () -> Void in
-                self.lobbyImage.alpha = 1;
-            });
+        self.lobbyImage.hnk_setImageFromURL(url!)
 
-        })
+        if (data.unreadMessageCount==0) {
+            self.lobbyImage.layer.borderWidth = 0.0;
+        } else {
+            self.lobbyImage.layer.borderColor = UIColor(rgba: colors.tealMain).CGColor
+            self.lobbyImage.layer.borderWidth = 3.0;
+        }
 
 
 
@@ -193,6 +194,26 @@ class MyChatsCell: UICollectionViewCell {
             hasBeenSetUp = true;
         }
 
+    }
+
+    func removeBorder() {
+        self.data?.unreadMessageCount = 0;
+        if (data?.unreadMessageCount==0) {
+            self.lobbyImage.layer.borderWidth = 0.0;
+        } else {
+            self.lobbyImage.layer.borderColor = UIColor(rgba: colors.tealMain).CGColor
+            self.lobbyImage.layer.borderWidth = 3.0;
+        }
+    }
+
+    func checkUnread(amount: Int) {
+        println("checking unread")
+        if (data?.unreadMessageCount==0) {
+            self.lobbyImage.layer.borderWidth = 0.0;
+        } else {
+            self.lobbyImage.layer.borderColor = UIColor(rgba: colors.tealMain).CGColor
+            self.lobbyImage.layer.borderWidth = 3.0;
+        }
     }
 
 }
