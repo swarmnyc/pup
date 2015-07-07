@@ -44,6 +44,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LobbyListFragment extends BaseFragment
 {
@@ -62,7 +63,8 @@ public class LobbyListFragment extends BaseFragment
 	private LobbyFilter m_lobbyFilter = new LobbyFilter();
 	private GameFilter  m_gameFilter  = new GameFilter();
 	private AutoCompleteForPicturedModelAdapter<Game> gameAdapter;
-	private boolean m_canLoadMore = false;
+	private AtomicBoolean m_isLoading = new AtomicBoolean(false);
+	private boolean m_canLoadMore;
 
 	public LobbyListFragment()
 	{
@@ -270,6 +272,7 @@ public class LobbyListFragment extends BaseFragment
 		// m_createLobbyButton.setVisibility( User.isLoggedIn() ? View.VISIBLE : View.GONE ); Button should be
 		// visile aciton should be different.
 
+		m_canLoadMore = false;
 		m_lobbyAdapter = new LobbyAdapter( getActivity() );
 		m_lobbyAdapter.setReachEndAction(
 			new Action()
@@ -306,7 +309,6 @@ public class LobbyListFragment extends BaseFragment
 			m_lobbyFilter = Utility.fromJson( savedInstanceState.getString( "filter" ), LobbyFilter.class );
 			m_gamePlatformSelectView.setSelectedGamePlatforms( m_lobbyFilter.getPlatforms() );
 		}
-
 
 		return view;
 	}
@@ -385,14 +387,16 @@ public class LobbyListFragment extends BaseFragment
 
 	private void reloadData( final boolean restart )
 	{
+		if (m_isLoading.getAndSet( true )){
+			return; //Sometimes different event will trigger at the same time;
+		}
+
 		if ( restart )
 		{
-			DialogHelper.showProgressDialog( this.getActivity(), R.string.message_loading );
 			m_lobbyFilter.setStartTime( new Date() );
 		}
 		else
 		{
-			m_lobbyAdapter.startLoading();
 			m_lobbyFilter.setStartTime( m_lobbyAdapter.getLastItem().getStartTime() );
 		}
 
@@ -401,6 +405,7 @@ public class LobbyListFragment extends BaseFragment
 			com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation( getActivity(), m_emptyResults );
 		}
 
+		m_lobbyAdapter.startLoading();
 
 		lobbyService.getLobbies(
 			m_lobbyFilter, new ServiceCallback<List<Lobby>>()
@@ -408,14 +413,14 @@ public class LobbyListFragment extends BaseFragment
 				@Override
 				public void success( List<Lobby> lobbies )
 				{
+					m_isLoading.set( false );
+					m_lobbyAdapter.endLoading();
 					if ( restart )
 					{
-						DialogHelper.hide();
 						m_lobbyAdapter.setItem( lobbies );
 					}
 					else
 					{
-						m_lobbyAdapter.endLoading();
 						m_lobbyAdapter.addItem( lobbies );
 					}
 

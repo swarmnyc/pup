@@ -29,9 +29,12 @@ public abstract class SectionedRecyclerViewAdapter<TView extends RecyclerView.Vi
 
 	public void setItem( final List<TItem> list )
 	{
-		for ( Section<TItem> section : m_sections )
+		m_total = m_sections.size();
+		for ( int i = 0; i < m_total; i++ )
 		{
+			Section<TItem> section = m_sections.get( i );
 			section.getItems().clear();
+			section.setHeaderPosition( i );
 		}
 
 		addItem( list );
