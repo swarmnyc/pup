@@ -34,7 +34,8 @@ public class MessageService extends Service
 {
 	private static final String TAG = MessageService.class.getSimpleName();
 	private MessageListener m_listener;
-	private AtomicBoolean   trying = new AtomicBoolean( false );
+	private AtomicBoolean trying    = new AtomicBoolean( false );
+	private long          expiredAt = 0;
 
 	@Override
 	public void onCreate()
@@ -161,10 +162,9 @@ public class MessageService extends Service
 
 	private void processChatRooms()
 	{
-		boolean live = QBChatService.getInstance().getTokenExpirationDate() !=null &&
-		               QBChatService.getInstance().getTokenExpirationDate().getTime() > System.currentTimeMillis();
+		boolean live = expiredAt > System.currentTimeMillis();
 
-		if ( trying.get() || QBChatService.getInstance().isLoggedIn() || live )
+		if ( trying.get() || ( QBChatService.getInstance().isLoggedIn() && live ) )
 		{
 			Log.d( TAG, "Still connected so skip" );
 			return;
@@ -178,6 +178,11 @@ public class MessageService extends Service
 			{
 				try
 				{
+					if ( QBChatService.getInstance().isLoggedIn() )
+					{
+						QBChatService.getInstance().logout();
+					}
+
 					QBUser user = new QBUser();
 					user.setLogin( User.current.getId() );
 					user.setPassword( "swarmnyc" );
@@ -185,6 +190,7 @@ public class MessageService extends Service
 					QBSession session = QBAuth.createSession( user );
 					user.setId( session.getUserId() );
 					QBChatService.getInstance().login( user );
+					expiredAt = System.currentTimeMillis() + ( TimeUtils.minute_in_millis * 19 );
 
 					QBRequestGetBuilder request = new QBRequestGetBuilder();
 					request.setPagesLimit( 10 );

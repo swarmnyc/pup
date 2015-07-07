@@ -79,9 +79,6 @@ public class LobbyListItemView extends FrameLayout
 	{
 		m_lobby = lobby;
 
-
-
-
 		if ( StringUtils.isNotEmpty( lobby.getThumbnailPictureUrl() ) )
 		{
 			Picasso.with( getContext() ).load( lobby.getThumbnailPictureUrl() ).centerCrop().fit().into( m_gameImage );
