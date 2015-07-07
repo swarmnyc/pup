@@ -18,7 +18,6 @@ public abstract class SectionedRecyclerViewAdapter<TView extends RecyclerView.Vi
 
 	public void addSection( CharSequence title )
 	{
-		m_total++;
 		m_sections.add( new Section<TItem>( title, m_sections.size() ) );
 	}
 
@@ -29,12 +28,10 @@ public abstract class SectionedRecyclerViewAdapter<TView extends RecyclerView.Vi
 
 	public void setItem( final List<TItem> list )
 	{
-		m_total = m_sections.size();
-		for ( int i = 0; i < m_total; i++ )
+		m_total = 0;
+		for ( int i = 0; i < m_sections.size(); i++ )
 		{
-			Section<TItem> section = m_sections.get( i );
-			section.getItems().clear();
-			section.setHeaderPosition( i );
+			m_sections.get( i ).getItems().clear();
 		}
 
 		addItem( list );
@@ -42,20 +39,24 @@ public abstract class SectionedRecyclerViewAdapter<TView extends RecyclerView.Vi
 
 	public void addItem( TItem data )
 	{
-		notifyItemInserted( addDataInternal( data ) );
+		int p = addDataInternal( data );
+
+		updateSections();
+
+		notifyItemInserted( p );
 	}
 
 	public void addItem( List<TItem> list )
 	{
-		if ( list.size() == 0 )
+		if ( list.size() != 0 )
 		{
-			return;
+			for ( TItem data : list )
+			{
+				addDataInternal( data );
+			}
 		}
-
-		for ( TItem data : list )
-		{
-			addDataInternal( data );
-		}
+		
+		updateSections();
 
 		notifyDataSetChanged();
 	}
@@ -107,15 +108,28 @@ public abstract class SectionedRecyclerViewAdapter<TView extends RecyclerView.Vi
 	{
 		m_total++;
 		int position = computeLocalSection( data );
-		Section<TItem> dtSection = m_sections.get( position );
-		dtSection.addItem( data );
+		Section<TItem> section = m_sections.get( position );
+		section.addItem( data );
 
-		for ( int i = position + 1; i < m_sections.size(); i++ )
-		{
-			m_sections.get( i ).increaseHeaderPosition();
+		if ( section.getItems().size() == 1 ){
+			m_total++;
 		}
 
-		return dtSection.getHeaderPosition() + dtSection.getItems().size();
+		return section.getHeaderPosition() + section.getItems().size();
+	}
+
+	private void updateSections()
+	{
+		int p = 0;
+		for ( Section<TItem> section : m_sections )
+		{
+			if ( section.getItems().size() == 0 ){
+				section.setHeaderPosition( -1 );
+			}else {
+				section.setHeaderPosition( p );
+				p += section.getItems().size() + 1;
+			}
+		}
 	}
 
 	public static class Section<D>
@@ -159,11 +173,6 @@ public abstract class SectionedRecyclerViewAdapter<TView extends RecyclerView.Vi
 		public List<D> getItems()
 		{
 			return m_items;
-		}
-
-		public void increaseHeaderPosition()
-		{
-			m_header_position++;
 		}
 	}
 }
