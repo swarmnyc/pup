@@ -53,7 +53,7 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
 
             Debug.WriteLine(result.ToJson());
 
-            Assert.IsTrue(result.Any());
+            Assert.IsTrue(result.Result.Any());
         }
 
         [TestMethod]

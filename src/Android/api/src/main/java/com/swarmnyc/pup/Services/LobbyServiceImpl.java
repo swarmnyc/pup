@@ -6,6 +6,7 @@ import com.swarmnyc.pup.RestApis.RestApiCallback;
 import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.QBChatMessage2;
+import com.swarmnyc.pup.viewmodels.LobbySearchResult;
 import retrofit.client.Response;
 
 import java.text.SimpleDateFormat;
@@ -40,7 +41,7 @@ public class LobbyServiceImpl implements LobbyService
 	}
 
 	@Override
-	public void getLobbies( LobbyFilter filter, final ServiceCallback<List<Lobby>> callback )
+	public void getLobbies( LobbyFilter filter, final ServiceCallback<LobbySearchResult> callback )
 	{
 		if ( filter == null ) { filter = new LobbyFilter(); }
 
@@ -49,13 +50,13 @@ public class LobbyServiceImpl implements LobbyService
 			filter.getPlatforms(),
 			filter.getLevels(),
 			filter.getStyles(),
-			new RestApiCallback<List<Lobby>>()
+			new RestApiCallback<LobbySearchResult>()
 			{
 				@Override
-				public void success( List<Lobby> list, Response response )
+				public void success( LobbySearchResult result, Response response )
 				{
 					if ( callback != null )
-					{ callback.success( list ); }
+					{ callback.success( result ); }
 				}
 			}
 		);

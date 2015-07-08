@@ -1,10 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using MongoDB;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
+using SWARM.PuP.Web.ViewModels;
 
 namespace SWARM.PuP.Web.Services
 {
@@ -32,7 +37,7 @@ namespace SWARM.PuP.Web.Services
             return base.Add(lobby);
         }
 
-        public IQueryable<Lobby> Filter(LobbyFilter filter)
+        public LobbySearchResult Filter(LobbyFilter filter)
         {
             var query = All();
 
@@ -75,7 +80,36 @@ namespace SWARM.PuP.Web.Services
 
             query = DoOrderQuery(query, filter);
 
-            return query;
+            LobbySearchResult result = new LobbySearchResult();
+            result.Result = query.ToArray();
+
+            if (filter.NeedCount && filter.StartTimeUtc.HasValue)
+            {
+                // get count
+                DateTime tomorrow = DateTime.UtcNow.Date.AddDays(1).AddHours(-filter.TimeZone);
+                DateTime in2Day2 = tomorrow.AddDays(1);
+                DateTime in7Day2 = tomorrow.AddDays(6);
+
+                GroupArgs args = new GroupArgs();
+                args.Query = Query.GTE("StartTimeUtc", new BsonDateTime(filter.StartTimeUtc.Value));
+                args.Initial = new BsonDocument(new Dictionary<string, object>() { { "count", 1 } });
+                args.ReduceFunction = new BsonJavaScript("function( current, result ) { result.count++; }");
+                args.KeyFunction = new BsonJavaScript(string.Format(
+@"function(doc){{
+  	if(doc.StartTimeUtc >= ISODate('{2:yyyy-MM-ddTHH:mm:ssZ}')) return {{ type:3 }};
+	if(doc.StartTimeUtc >= ISODate('{1:yyyy-MM-ddTHH:mm:ssZ}')) return {{ type:2 }};
+	if(doc.StartTimeUtc >= ISODate('{0:yyyy-MM-ddTHH:mm:ssZ}')) return {{ type:1 }};			
+	return {{ type:0 }};
+}}", tomorrow, in2Day2, in7Day2));
+
+                var countResult = Collection.Group(args);
+                result.Counts = new int[4];
+                foreach (var c in countResult) {
+                    result.Counts[c.GetValue("type").ToInt32()] = c.GetValue("count").ToInt32();
+                }
+            }
+
+            return result;
         }
 
         public void Join(string lobbyId, PuPUser user)

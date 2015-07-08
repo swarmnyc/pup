@@ -152,6 +152,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\ApiControllers\ErrorCode.cs" />
+    <Compile Include="Code\Consts.cs" />
+    <Compile Include="Code\ViewModels\LobbySearchResult.cs" />
     <Compile Include="Code\Components\ShareHelper.cs" />
     <Compile Include="Code\Components\QueryString.cs" />
     <Compile Include="Code\Components\ModelValidateAttribute.cs" />

@@ -38,6 +38,7 @@ import com.swarmnyc.pup.models.Game;
 import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
+import com.swarmnyc.pup.viewmodels.LobbySearchResult;
 import com.uservoice.uservoicesdk.UserVoice;
 
 import javax.inject.Inject;
@@ -70,7 +71,6 @@ public class LobbyListFragment extends BaseFragment
 	public LobbyListFragment()
 	{
 	}
-
 
 	@Override
 	public void onAttach( Activity activity )
@@ -398,10 +398,12 @@ public class LobbyListFragment extends BaseFragment
 
 		if ( restart )
 		{
+			m_lobbyFilter.setNeedCount(true);
 			m_lobbyFilter.setStartTime( new Date() );
 		}
 		else
 		{
+			m_lobbyFilter.setNeedCount(false);
 			m_lobbyFilter.setStartTime( m_lobbyAdapter.getLastItem().getStartTime() );
 		}
 
@@ -413,26 +415,27 @@ public class LobbyListFragment extends BaseFragment
 		m_lobbyAdapter.startLoading();
 
 		lobbyService.getLobbies(
-			m_lobbyFilter, new ServiceCallback<List<Lobby>>()
+			m_lobbyFilter, new ServiceCallback<LobbySearchResult>()
 			{
 				@Override
-				public void success( List<Lobby> lobbies )
+				public void success( LobbySearchResult result )
 				{
 					m_refreshLayout.setRefreshing( false );
 					m_isLoading.set( false );
 					m_lobbyAdapter.endLoading();
 					if ( restart )
 					{
-						m_lobbyAdapter.setItem( lobbies );
+						m_lobbyAdapter.setItem( result.getResult() );
+						m_lobbyAdapter.setCount( result.getCounts() );
 					}
 					else
 					{
-						m_lobbyAdapter.addItem( lobbies );
+						m_lobbyAdapter.addItem( result.getResult() );
 					}
 
-					m_lobbyAdapter.setReachEndAction( Consts.PAGE_SIZE == lobbies.size() ? m_loadMore : null );
+					m_lobbyAdapter.setReachEndAction( Consts.PAGE_SIZE == result.getResult().size() ? m_loadMore : null );
 
-					if ( restart && lobbies.size() == 0 )
+					if ( restart && result.getResult().size() == 0 )
 					{
 						com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(
 							getActivity(), m_emptyResults

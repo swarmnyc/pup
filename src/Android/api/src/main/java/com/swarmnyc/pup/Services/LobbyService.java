@@ -3,6 +3,7 @@ package com.swarmnyc.pup.Services;
 import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.QBChatMessage2;
+import com.swarmnyc.pup.viewmodels.LobbySearchResult;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface LobbyService
 {
 	void getLobby( String gameId, ServiceCallback<Lobby> callback );
 
-	void getLobbies( LobbyFilter filter, ServiceCallback<List<Lobby>> callback );
+	void getLobbies( LobbyFilter filter, ServiceCallback<LobbySearchResult> callback );
 
 	void getMyLobbies( LobbyFilter filter, ServiceCallback<List<Lobby>> callback );
 

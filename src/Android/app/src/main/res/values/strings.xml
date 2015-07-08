@@ -88,4 +88,5 @@
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
     <string name="msg_loading_more_lobbies">Loading more games...</string>
+    <string name="text_next_week">Next week</string>
 </resources>

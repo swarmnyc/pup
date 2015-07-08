@@ -134,9 +134,10 @@ public abstract class SectionedRecyclerViewAdapter<TView extends RecyclerView.Vi
 
 	public static class Section<D>
 	{
-		int          m_header_position;
-		CharSequence m_title;
-		List<D>      m_items;
+		private	int          m_header_position;
+		private CharSequence m_title;
+		private	List<D>      m_items;
+		private int m_count;
 
 		public Section( CharSequence title, final int position )
 		{
@@ -173,6 +174,16 @@ public abstract class SectionedRecyclerViewAdapter<TView extends RecyclerView.Vi
 		public List<D> getItems()
 		{
 			return m_items;
+		}
+
+		public void setStaticCount( final int count )
+		{
+			m_count = count;
+		}
+
+		public int getStaticCount()
+		{
+			return m_count;
 		}
 	}
 }

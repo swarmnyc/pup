@@ -2,6 +2,9 @@ package com.swarmnyc.pup.viewmodels;
 
 import com.google.gson.annotations.SerializedName;
 import com.swarmnyc.pup.models.CurrentUserInfo;
+import com.swarmnyc.pup.models.Lobby;
+
+import java.util.List;
 
 public class UserRequestResult
 {
@@ -40,3 +43,4 @@ public class UserRequestResult
         this.user = user;
     }
 }
+

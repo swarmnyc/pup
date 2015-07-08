@@ -2,11 +2,13 @@ package com.swarmnyc.pup.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.TimeUtils;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.models.Lobby;
@@ -17,11 +19,14 @@ import java.util.GregorianCalendar;
 
 public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.BaseViewHolder, Lobby>
 {
-	private final long m_nextWeekTime;
 	private boolean m_isLoading = false;
 	private Context        m_context;
 	private LayoutInflater m_layoutInflater;
 	private Action         m_reachEndAction;
+	private final long m_tomorrowTime;
+	private final long m_thisWeekTime;
+	private final long m_nextWeekTime;
+
 
 	private static class ItemViewType
 	{
@@ -37,11 +42,19 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 		m_layoutInflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 
 		addSection( context.getString( R.string.text_happening_soon ) );
+		addSection( context.getString( R.string.text_tomorrow ) );
 		addSection( context.getString( R.string.text_later_this_week ) );
+		addSection( context.getString( R.string.text_next_week ) );
 
 		Calendar c = new GregorianCalendar();
-		c.add( Calendar.DAY_OF_MONTH, 2 ); // Two days
-		m_nextWeekTime = c.getTimeInMillis();
+		c.set( Calendar.HOUR_OF_DAY, 0 );
+		c.set( Calendar.MINUTE, 0 );
+		c.set( Calendar.SECOND, 0 );
+		c.set( Calendar.MILLISECOND, 0 );
+
+		m_tomorrowTime = c.getTimeInMillis() + TimeUtils.day_in_millis;
+		m_thisWeekTime = c.getTimeInMillis() + (TimeUtils.day_in_millis * 2);
+		m_nextWeekTime = c.getTimeInMillis() + (TimeUtils.day_in_millis * 7);
 	}
 
 	public void endLoading()
@@ -147,10 +160,28 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 		}
 	}
 
+	public void setCount( final int[] counts )
+	{
+		for ( int i = 0; i < counts.length; i++ )
+		{
+			getSections().get( i ).setStaticCount(counts[i]);
+		}
+	}
+
 	@Override
 	protected int computeLocalSection( final Lobby data )
 	{
-		return data.getStartTime().getTime() < m_nextWeekTime ? 0 : 1;
+		long time = data.getStartTime().getTime();
+		if ( time >= m_nextWeekTime  )
+			return 3;
+
+		if ( time >= m_thisWeekTime  )
+			return 2;
+
+		if ( time >= m_tomorrowTime  )
+			return 1;
+
+		return 0;
 	}
 
 
@@ -188,7 +219,7 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 
 		public void setSection( Section<Lobby> section )
 		{
-			( (TextView) itemView ).setText( section.getTitle() + " (" + section.getItems().size() + ")" );
+			( (TextView) itemView ).setText( section.getTitle() + " (" + section.getStaticCount() + ")" );
 		}
 	}
 
