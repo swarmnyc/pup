@@ -14,13 +14,13 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.picasso.Picasso;
-import com.swarmnyc.pup.events.ChatMessageReceiveEvent;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.GamePlatformUtils;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.components.UnreadCounter;
+import com.swarmnyc.pup.events.ChatMessageReceiveEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.PuPTag;
 
@@ -34,7 +34,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 	private final Activity       m_activity;
 	private final List<Lobby>    m_lobbies;
 
-	private Action       m_reachEndAction;
+	private Action m_reachEndAction;
 
 	public MyChatAdapter( final Activity activity )
 	{
@@ -62,6 +62,12 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 		notifyItemInserted( start + 1 );
 	}
 
+	public void removeLobbies( )
+	{
+		m_lobbies.clear();
+		notifyDataSetChanged();
+	}
+
 	public void setReachEndAction( Action action )
 	{
 		m_reachEndAction = action;
@@ -77,7 +83,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 	public void onBindViewHolder( final MyChatViewHolder holder, final int position )
 	{
 		holder.setLobby( m_lobbies.get( position ) );
-		if ( position == m_lobbies.size() )
+		if ( m_reachEndAction != null && position == m_lobbies.size() - 1 )
 		{
 			m_reachEndAction.call( null );
 		}

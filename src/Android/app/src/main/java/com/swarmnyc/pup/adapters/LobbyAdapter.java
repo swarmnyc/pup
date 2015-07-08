@@ -61,7 +61,7 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 
 	public Lobby getLastItem()
 	{
-		if ( getSections().size() ==0 )
+		if ( getSections().size() == 0 )
 		{
 			return null;
 		}
@@ -69,9 +69,10 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 		Lobby lobby = null;
 		for ( Section<Lobby> lobbySection : getSections() )
 		{
-			int size =lobbySection.getItems().size();
-			if ( size > 0 ){
-				lobby = lobbySection.getItems().get( lobbySection.getItems().size()-1 );
+			int size = lobbySection.getItems().size();
+			if ( size > 0 )
+			{
+				lobby = lobbySection.getItems().get( lobbySection.getItems().size() - 1 );
 			}
 		}
 
@@ -115,7 +116,8 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 		{
 		}*/
 
-		if ( m_reachEndAction!=null && !m_isLoading && i == getItemCount()-1 ){
+		if ( m_reachEndAction != null && !m_isLoading && i == getItemCount() - 1 )
+		{
 			m_reachEndAction.call( null );
 		}
 	}
@@ -134,9 +136,12 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 	@Override
 	public int getItemViewType( final int position )
 	{
-		if ( m_isLoading && position >= super.getItemCount() ){
+		if ( m_isLoading && position >= super.getItemCount() )
+		{
 			return ItemViewType.LoadingView;
-		} else {
+		}
+		else
+		{
 			Section section = getSection( position );
 			return section == null ? ItemViewType.RegularView : ItemViewType.SectionView;
 		}

@@ -1,16 +1,20 @@
 package com.swarmnyc.pup.fragments;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.otto.Subscribe;
-import com.swarmnyc.pup.*;
+import com.swarmnyc.pup.Consts;
+import com.swarmnyc.pup.EventBus;
+import com.swarmnyc.pup.PuPApplication;
+import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
@@ -28,11 +32,12 @@ public class MyChatsFragment extends BaseFragment
 {
 	@Inject LobbyService m_lobbyService;
 
-	@InjectView( R.id.list_chat ) RecyclerView m_chatList;
+	@InjectView( R.id.list_chat )      RecyclerView       m_chatList;
+	@InjectView( R.id.layout_refresh ) SwipeRefreshLayout m_refreshLayout;
 
-	private boolean       m_noMoreData;
 	private int           pageIndex;
 	private MyChatAdapter m_myChatAdapter;
+	private Action        m_loadMore;
 
 	@Override
 	public String getScreenName()
@@ -54,21 +59,38 @@ public class MyChatsFragment extends BaseFragment
 		ButterKnife.inject( this, view );
 		PuPApplication.getInstance().getComponent().inject( this );
 		pageIndex = 0;
-		m_noMoreData = false;
 		m_myChatAdapter = new MyChatAdapter( this.getActivity() );
-		m_myChatAdapter.setReachEndAction(
-			new Action()
+		m_loadMore = new Action()
+		{
+			@Override
+			public void call( Object value )
+			{
+				Log.d( "MyChats", "Load More" );
+
+				fetchMoreData();
+			}
+		};
+
+		m_chatList.setAdapter( m_myChatAdapter );
+		m_chatList.setLayoutManager( new LinearLayoutManager( this.getActivity() ) );
+		m_chatList.addItemDecoration(
+			new DividerItemDecoration(
+				getActivity(), DividerItemDecoration.VERTICAL_LIST
+			)
+		);
+
+		m_refreshLayout.setOnRefreshListener(
+			new SwipeRefreshLayout.OnRefreshListener()
 			{
 				@Override
-				public void call( Object value )
+				public void onRefresh()
 				{
+					pageIndex = 0;
+					m_myChatAdapter.removeLobbies();
 					fetchMoreData();
 				}
 			}
 		);
-		m_chatList.setAdapter( m_myChatAdapter );
-		m_chatList.setLayoutManager( new LinearLayoutManager( this.getActivity() ) );
-		m_chatList.addItemDecoration( new DividerItemDecoration( getActivity(), DividerItemDecoration.VERTICAL_LIST ) );
 	}
 
 	@Override
@@ -96,17 +118,12 @@ public class MyChatsFragment extends BaseFragment
 
 	public void updateTitle()
 	{
-		setTitle( getString( R.string.text_lobbies) + " (" + UnreadCounter.total() + ")" );
+		setTitle( getString( R.string.text_lobbies ) + " (" + UnreadCounter.total() + ")" );
 		setSubtitle( null );
 	}
 
 	private void fetchMoreData()
 	{
-		if ( m_noMoreData )
-		{
-			return;
-		}
-
 		LobbyFilter filter = new LobbyFilter();
 		filter.setPageIndex( pageIndex++ );
 		m_lobbyService.getMyLobbies(
@@ -115,18 +132,19 @@ public class MyChatsFragment extends BaseFragment
 				@Override
 				public void success( final List<Lobby> value )
 				{
+					m_refreshLayout.setRefreshing( false );
 					if ( !isAdded() )
 					{ return; }
 
 					if ( value.size() == 0 )
 					{
-						m_noMoreData = true;
+						m_myChatAdapter.setReachEndAction( null );
 					}
 					else
 					{
-						if ( value.size() < Consts.PAGE_SIZE )
+						if ( value.size() == Consts.PAGE_SIZE )
 						{
-							m_noMoreData = true;
+							m_myChatAdapter.setReachEndAction( m_loadMore );
 						}
 
 						m_myChatAdapter.AddLobbies( value );
@@ -139,10 +157,10 @@ public class MyChatsFragment extends BaseFragment
 	@Subscribe
 	public void receiveMessage( final ChatMessageReceiveEvent event )
 	{
-		if ( !event.isNewMessage() )
-			return;
+		if ( !event.isNewMessage() && isDetached() )
+		{ return; }
 
 		updateTitle();
-		m_myChatAdapter.updateLastMessage(event);
+		m_myChatAdapter.updateLastMessage( event );
 	}
 }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -52,6 +53,7 @@ public class LobbyListFragment extends BaseFragment
 	@InjectView( R.id.list_lobby ) public           RecyclerView           m_lobbyRecyclerView;
 	@InjectView( R.id.platform_select ) public      GamePlatformSelectView m_gamePlatformSelectView;
 	@InjectView( R.id.layout_empty_results ) public ViewGroup              m_emptyResults;
+	@InjectView( R.id.layout_refresh ) public       SwipeRefreshLayout     m_refreshLayout;
 	@Inject                                         GameService            gameService;
 	@Inject                                         LobbyService           lobbyService;
 	float m_panelSize = 0.0f;
@@ -208,9 +210,7 @@ public class LobbyListFragment extends BaseFragment
 			}
 		);
 
-
 		m_slidingPanel.setOverlayed( true );
-
 
 		m_slidingPanel.setPanelSlideListener(
 			new SlidingUpPanelLayout.PanelSlideListener()
@@ -295,6 +295,17 @@ public class LobbyListFragment extends BaseFragment
 				);
 			}
 		};
+
+		m_refreshLayout.setOnRefreshListener(
+			new SwipeRefreshLayout.OnRefreshListener()
+			{
+				@Override
+				public void onRefresh()
+				{
+					reloadData( true );
+				}
+			}
+		);
 
 
 		if ( null != savedInstanceState )
@@ -407,6 +418,7 @@ public class LobbyListFragment extends BaseFragment
 				@Override
 				public void success( List<Lobby> lobbies )
 				{
+					m_refreshLayout.setRefreshing( false );
 					m_isLoading.set( false );
 					m_lobbyAdapter.endLoading();
 					if ( restart )
