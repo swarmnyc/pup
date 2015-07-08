@@ -92,7 +92,7 @@ namespace SWARM.PuP.Web.Services
 
                 GroupArgs args = new GroupArgs();
                 args.Query = Query.GTE("StartTimeUtc", new BsonDateTime(filter.StartTimeUtc.Value));
-                args.Initial = new BsonDocument(new Dictionary<string, object>() { { "count", 1 } });
+                args.Initial = new BsonDocument(new Dictionary<string, object>() { { "count", 0 } });
                 args.ReduceFunction = new BsonJavaScript("function( current, result ) { result.count++; }");
                 args.KeyFunction = new BsonJavaScript(string.Format(
 @"function(doc){{
