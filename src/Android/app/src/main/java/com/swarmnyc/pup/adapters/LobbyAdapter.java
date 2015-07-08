@@ -30,18 +30,17 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 		static final int LoadingView = 2;
 	}
 
-
 	public LobbyAdapter( final Context context )
 	{
 		m_context = context;
 
 		m_layoutInflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 
-		addSection( "Happening Soon" );
-		addSection( "Later this week" );
+		addSection( context.getString( R.string.text_happening_soon ) );
+		addSection( context.getString( R.string.text_later_this_week ) );
 
 		Calendar c = new GregorianCalendar();
-		c.add( Calendar.DAY_OF_MONTH, 7 );
+		c.add( Calendar.DAY_OF_MONTH, 2 ); // Two days
 		m_nextWeekTime = c.getTimeInMillis();
 	}
 
@@ -116,7 +115,7 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 		{
 		}*/
 
-		if ( !m_isLoading && i == getItemCount()-1 ){
+		if ( m_reachEndAction!=null && !m_isLoading && i == getItemCount()-1 ){
 			m_reachEndAction.call( null );
 		}
 	}

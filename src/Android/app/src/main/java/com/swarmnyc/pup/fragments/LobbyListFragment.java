@@ -31,7 +31,6 @@ import com.swarmnyc.pup.activities.MainActivity;
 import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
 import com.swarmnyc.pup.adapters.LobbyAdapter;
 import com.swarmnyc.pup.components.Action;
-import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.GamePlatformUtils;
 import com.swarmnyc.pup.components.Utility;
 import com.swarmnyc.pup.models.Game;
@@ -63,8 +62,8 @@ public class LobbyListFragment extends BaseFragment
 	private LobbyFilter m_lobbyFilter = new LobbyFilter();
 	private GameFilter  m_gameFilter  = new GameFilter();
 	private AutoCompleteForPicturedModelAdapter<Game> gameAdapter;
-	private AtomicBoolean m_isLoading = new AtomicBoolean(false);
-	private boolean m_canLoadMore;
+	private AtomicBoolean m_isLoading = new AtomicBoolean( false );
+	private Action m_loadMore;
 
 	public LobbyListFragment()
 	{
@@ -268,40 +267,34 @@ public class LobbyListFragment extends BaseFragment
 
 		this.inflater = inflater;
 
-
 		// m_createLobbyButton.setVisibility( User.isLoggedIn() ? View.VISIBLE : View.GONE ); Button should be
 		// visile aciton should be different.
 
-		m_canLoadMore = false;
 		m_lobbyAdapter = new LobbyAdapter( getActivity() );
-		m_lobbyAdapter.setReachEndAction(
-			new Action()
-			{
-				@Override
-				public void call( final Object value )
-				{
-					if ( m_canLoadMore )
-					{
-						Log.d( "LobbyListFragment", "Load More" );
-						m_lobbyRecyclerView.postDelayed(
-							new Runnable()
-							{
-								@Override
-								public void run()
-								{
-									reloadData( false );
-								}
-							}, 500
-						);
-					}
-				}
-			}
-		);
 		m_lobbyRecyclerView.setAdapter( m_lobbyAdapter );
 
 		mLayoutManager = new LinearLayoutManager( getActivity() );
 
 		m_lobbyRecyclerView.setLayoutManager( mLayoutManager );
+
+		m_loadMore = new Action()
+		{
+			@Override
+			public void call( final Object value )
+			{
+				Log.d( "LobbyListFragment", "Load More" );
+				m_lobbyRecyclerView.postDelayed(
+					new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							reloadData( false );
+						}
+					}, 500
+				);
+			}
+		};
 
 
 		if ( null != savedInstanceState )
@@ -387,7 +380,8 @@ public class LobbyListFragment extends BaseFragment
 
 	private void reloadData( final boolean restart )
 	{
-		if (m_isLoading.getAndSet( true )){
+		if ( m_isLoading.getAndSet( true ) )
+		{
 			return; //Sometimes different event will trigger at the same time;
 		}
 
@@ -424,7 +418,7 @@ public class LobbyListFragment extends BaseFragment
 						m_lobbyAdapter.addItem( lobbies );
 					}
 
-					m_canLoadMore = Consts.PAGE_SIZE == lobbies.size();
+					m_lobbyAdapter.setReachEndAction( Consts.PAGE_SIZE == lobbies.size() ? m_loadMore : null );
 
 					if ( restart && lobbies.size() == 0 )
 					{

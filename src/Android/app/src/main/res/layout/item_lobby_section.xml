@@ -6,5 +6,6 @@
           android:textColor="@color/pup_light"
           android:paddingRight="@dimen/padding_normal"
           android:paddingLeft="@dimen/padding_normal"
+          android:textStyle="bold"
           tool:text="Header">
 </TextView>
