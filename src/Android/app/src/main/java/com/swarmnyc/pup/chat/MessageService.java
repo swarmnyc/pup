@@ -3,6 +3,7 @@ package com.swarmnyc.pup.chat;
 import android.app.Service;
 import android.content.Intent;
 import android.os.*;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.model.QBSession;
@@ -19,8 +20,8 @@ import com.quickblox.users.model.QBUser;
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.components.UnreadCounter;
-import com.swarmnyc.pup.events.AfterEnterChatRoomEvent;
 import com.swarmnyc.pup.events.AfterLeaveLobbyEvent;
+import com.swarmnyc.pup.events.ChatMessageReceiveEvent;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.XMPPConnection;
@@ -28,14 +29,18 @@ import org.jivesoftware.smackx.muc.DiscussionHistory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MessageService extends Service
 {
 	private static final String TAG = MessageService.class.getSimpleName();
 	private MessageListener m_listener;
-	private AtomicBoolean trying    = new AtomicBoolean( false );
-	private long          expiredAt = 0;
+	private AtomicBoolean                   m_trying         = new AtomicBoolean( false );
+	private Queue<EnsureChatConnectRequest> m_ensureRequests = new ArrayBlockingQueue<EnsureChatConnectRequest>( 10 );
+	private long                            m_expiredAt      = 0;
+	private Handler                         m_handler        = new Handler( Looper.getMainLooper() );
 
 	@Override
 	public void onCreate()
@@ -133,22 +138,13 @@ public class MessageService extends Service
 	}
 
 	@Subscribe
-	public void handleEnterRoom( AfterEnterChatRoomEvent event )
-	{
-		startListener( event.getChat() );
-	}
-
-	@Subscribe
 	public void handleLeaveRoom( AfterLeaveLobbyEvent event )
 	{
 		try
 		{
-			String chatId = Config.getConfigString( R.string.QB_APP_ID )
-			                + "_"
-			                + event.getRoomId()
-			                + "@muc.chat.quickblox.com";
+			String jId = generateJId( event.getRoomId() );
 
-			QBGroupChat chat = QBChatService.getInstance().getGroupChatManager().getGroupChat( chatId );
+			QBGroupChat chat = QBChatService.getInstance().getGroupChatManager().getGroupChat( jId );
 			if ( chat.isJoined() )
 			{
 				chat.leave();
@@ -160,17 +156,54 @@ public class MessageService extends Service
 		}
 	}
 
+	@Subscribe
+	public void addEnsureRequest( EnsureChatConnectRequest request )
+	{
+		m_ensureRequests.add( request );
+		processChatRooms();
+	}
+
+	public void processEnsureRequests()
+	{
+		EnsureChatConnectRequest request;
+		while ( ( request = m_ensureRequests.poll() ) != null )
+		{
+			String jid = generateJId( request.getRoomId() );
+
+			QBGroupChat chat = QBChatService.getInstance().getGroupChatManager().getGroupChat( jid );
+
+			if ( chat == null )
+			{
+				chat = QBChatService.getInstance().getGroupChatManager().createGroupChat( jid );
+			}
+
+			startListener( chat );
+
+			m_handler.post(request.getCallback());
+		}
+	}
+
+	@NonNull
+	public static String generateJId( final String roomId )
+	{
+		return Config.getConfigString( R.string.QB_APP_ID ) +
+		       "_" +
+		       roomId +
+		       "@muc.chat.quickblox.com";
+	}
+
 	private void processChatRooms()
 	{
-		boolean live = expiredAt > System.currentTimeMillis();
+		boolean live = m_expiredAt > System.currentTimeMillis();
 
-		if ( trying.get() || ( QBChatService.getInstance().isLoggedIn() && live ) )
+		if ( m_trying.get() || ( QBChatService.getInstance().isLoggedIn() && live ) )
 		{
 			Log.d( TAG, "Still connected so skip" );
+			processEnsureRequests();
 			return;
 		}
 
-		trying.set( true );
+		m_trying.set( true );
 		AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>()
 		{
 			@Override
@@ -190,7 +223,7 @@ public class MessageService extends Service
 					QBSession session = QBAuth.createSession( user );
 					user.setId( session.getUserId() );
 					QBChatService.getInstance().login( user );
-					expiredAt = System.currentTimeMillis() + ( TimeUtils.minute_in_millis * 19 );
+					m_expiredAt = System.currentTimeMillis() + ( TimeUtils.minute_in_millis * 19 );
 
 					QBRequestGetBuilder request = new QBRequestGetBuilder();
 					request.setPagesLimit( 10 );
@@ -206,12 +239,14 @@ public class MessageService extends Service
 
 						startListener( chat );
 					}
+
+					processEnsureRequests();
 				}
 				catch ( Exception e )
 				{
 					Log.d( TAG, "GetChatDialogs failed: " + e );
 				}
-				trying.set( false );
+				m_trying.set( false );
 				return null;
 			}
 		};
@@ -219,13 +254,13 @@ public class MessageService extends Service
 		task.execute( null, null, null );
 	}
 
-	private QBGroupChat getQbGroupChat( final String roomId )
+	private QBGroupChat getQbGroupChat( final String jId )
 	{
-		QBGroupChat chat = QBChatService.getInstance().getGroupChatManager().getGroupChat( roomId );
+		QBGroupChat chat = QBChatService.getInstance().getGroupChatManager().getGroupChat( jId );
 
 		if ( chat == null )
 		{
-			chat = QBChatService.getInstance().getGroupChatManager().createGroupChat( roomId );
+			chat = QBChatService.getInstance().getGroupChatManager().createGroupChat( jId );
 		}
 
 		return chat;
@@ -253,7 +288,6 @@ public class MessageService extends Service
 
 	private class MessageListener extends QBMessageListenerImpl
 	{
-		Handler m_handler = new Handler( Looper.getMainLooper() );
 
 		@Override
 		public void processMessage( final QBChat chat, final QBChatMessage message )

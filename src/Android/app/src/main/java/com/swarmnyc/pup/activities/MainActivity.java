@@ -25,6 +25,7 @@ import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.components.Navigator;
+import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.fragments.BaseFragment;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
 import com.swarmnyc.pup.fragments.MyChatsFragment;
@@ -83,27 +84,9 @@ public class MainActivity extends AppCompatActivity {
 
         if ( m_viewPager != null) {
             setupViewPager( m_viewPager );
-
-
         }
 
-        if (User.isLoggedIn())
-        {
-            m_tabLayout.setupWithViewPager( m_viewPager );
-        }
-        else
-        {
-            m_tabLayout.setVisibility( View.GONE );
-
-            final ViewGroup.LayoutParams layoutParams = m_toolbar.getLayoutParams();
-
-            if (layoutParams instanceof AppBarLayout.LayoutParams)
-            {
-                ((AppBarLayout.LayoutParams) layoutParams).setScrollFlags(
-                   AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
-                );
-            }
-        }
+        showTabsByUser(null);
     }
 
 
@@ -188,27 +171,6 @@ public class MainActivity extends AppCompatActivity {
         FacebookHelper.handleActivityResult(requestCode, resultCode, data);
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        if (MainDrawerFragment.getInstance().isDrawOpens()) {
-//            MainDrawerFragment.getInstance().closeDrawers();
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
-
-    public void retrieveMessage(final String message) {
-        //TODO: Push Notification
-    }
-
-    public void hideToolbar() {
-        m_toolbar.setVisibility(View.GONE);
-    }
-
-    public void showToolbar() {
-        m_toolbar.setVisibility(View.VISIBLE);
-    }
-
     @Subscribe
     public void runtimeError(final RuntimeException exception) {
         this.runOnUiThread(
@@ -220,6 +182,29 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    @Subscribe
+    public void showTabsByUser( UserChangedEvent event )
+    {
+        if (User.isLoggedIn())
+        {
+            m_tabLayout.setupWithViewPager( m_viewPager );
+            m_tabLayout.setVisibility( View.VISIBLE );
+        }
+        else
+        {
+            m_tabLayout.setVisibility( View.GONE );
+
+            final ViewGroup.LayoutParams layoutParams = m_toolbar.getLayoutParams();
+
+            if (layoutParams instanceof AppBarLayout.LayoutParams)
+            {
+                ((AppBarLayout.LayoutParams) layoutParams).setScrollFlags(
+                    AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+                );
+            }
+        }
     }
 
 

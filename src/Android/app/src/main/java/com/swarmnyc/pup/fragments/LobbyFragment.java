@@ -31,8 +31,8 @@ import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.adapters.LobbyChatAdapter;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.chat.ChatRoomService;
-import com.swarmnyc.pup.chat.QuickbloxChatRoomService;
 import com.swarmnyc.pup.components.*;
+import com.swarmnyc.pup.events.ChatMessageReceiveEvent;
 import com.swarmnyc.pup.events.LobbyUserChangeEvent;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.models.Lobby;
@@ -158,18 +158,21 @@ public class LobbyFragment extends BaseFragment
 				@Override
 				public void call( final Boolean up )
 				{
-					if (System.currentTimeMillis() - m_lastListScrollingTime < 1000 )
+					if ( System.currentTimeMillis() - m_lastListScrollingTime < 1000 )
 					{
 						return;
 					}
 
 					m_lastListScrollingTime = System.currentTimeMillis();
 
-					if ( up ){
+					if ( up )
+					{
 						Log.d( TAG, "After Keyboard up" );
 						m_chatList.scrollToPosition( m_lobbyChatAdapter.getItemCount() - 1 );
 						collapseAppBar();
-					}else {
+					}
+					else
+					{
 						Log.d( TAG, "After Keyboard down" );
 					}
 				}
@@ -313,8 +316,7 @@ public class LobbyFragment extends BaseFragment
 		if ( m_lobby.isAliveUser( User.current.getId() ) )
 		{
 			// Get Data
-			m_chatRoomService = new QuickbloxChatRoomService( getActivity(), m_lobby );
-			m_chatRoomService.login();
+			m_chatRoomService = new ChatRoomService( getActivity(), m_lobby );
 			m_chatRoomService.loadChatHistory( 0 );
 		}
 		else
@@ -420,7 +422,6 @@ public class LobbyFragment extends BaseFragment
 	}
 
 
-
 	@Subscribe
 	public void receiveMessage( final ChatMessageReceiveEvent event )
 	{
@@ -503,7 +504,7 @@ public class LobbyFragment extends BaseFragment
 						height -= m_chatList.getChildAt( i ).getHeight();
 					}
 
-					if ( height < 0)
+					if ( height < 0 )
 					{
 						collapseAppBar();
 					}
@@ -514,19 +515,13 @@ public class LobbyFragment extends BaseFragment
 
 	private void collapseAppBar()
 	{
-		CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) m_appbar
-		.getLayoutParams();
+		CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) m_appbar.getLayoutParams();
 		AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
 		if ( behavior != null )
 		{
 			// I didn't find only scroll a little.
 			behavior.onNestedFling(
-				m_coordinatorLayout,
-				m_appbar,
-				null,
-				0,
-				m_appbar.getHeight(),
-				true
+				m_coordinatorLayout, m_appbar, null, 0, m_appbar.getHeight(), true
 			);
 		}
 	}

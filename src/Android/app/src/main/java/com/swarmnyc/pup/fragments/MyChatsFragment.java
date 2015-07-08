@@ -17,6 +17,7 @@ import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.adapters.MyChatAdapter;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.UnreadCounter;
+import com.swarmnyc.pup.events.ChatMessageReceiveEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.DividerItemDecoration;
 
@@ -32,7 +33,6 @@ public class MyChatsFragment extends BaseFragment
 	private boolean       m_noMoreData;
 	private int           pageIndex;
 	private MyChatAdapter m_myChatAdapter;
-	private Lobby         m_removedLobby;
 
 	@Override
 	public String getScreenName()
@@ -134,34 +134,6 @@ public class MyChatsFragment extends BaseFragment
 				}
 			}
 		);
-	}
-
-	private void showUndo()
-	{
-		Snackbar snackbar = Snackbar.make( m_chatList, R.string.message_leave_room, Snackbar.LENGTH_LONG );
-		snackbar.setAction(
-			R.string.text_undo, new View.OnClickListener()
-			{
-				@Override
-				public void onClick( final View v )
-				{
-					m_lobbyService.join(
-						m_removedLobby.getId(), new ServiceCallback()
-						{
-							@Override
-							public void success( final Object value )
-							{
-								m_myChatAdapter.AddLobby( m_removedLobby );
-							}
-						}
-					);
-				}
-			}
-		);
-		snackbar.getView().setPadding( 0, 30, 0, 30 );
-		snackbar.setActionTextColor( getResources().getColor( R.color.pup_white ) );
-		snackbar.getView().setBackgroundResource( R.color.pup_orange );
-		snackbar.show();
 	}
 
 	@Subscribe

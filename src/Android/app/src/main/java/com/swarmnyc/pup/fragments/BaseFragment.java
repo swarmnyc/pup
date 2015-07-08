@@ -25,17 +25,23 @@ public abstract class BaseFragment extends Fragment
 
 	public void setTitle(CharSequence title)
 	{
-		getAppCompatActivity().setTitle( title );
+		if (! isDetached() ){
+			getAppCompatActivity().setTitle( title );
+		}
 	}
 
 	public void setTitle( final int title )
 	{
-		getAppCompatActivity().setTitle( title );
+		if (! isDetached() ){
+			getAppCompatActivity().setTitle( title );
+		}
 	}
 
 	public void setSubtitle(CharSequence title)
 	{
-		getAppCompatActivity().getSupportActionBar().setSubtitle( title );
+		if (! isDetached() ){
+			getAppCompatActivity().getSupportActionBar().setSubtitle( title );
+		}
 	}
 
 	@Override

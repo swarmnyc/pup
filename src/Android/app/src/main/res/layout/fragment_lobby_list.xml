@@ -15,18 +15,23 @@
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="com.swarmnyc.pup.ui.fragment.FragmentLobbyList"
-            >
+            tools:context="com.swarmnyc.pup.ui.fragment.FragmentLobbyList">
 
-        <android.support.v7.widget.RecyclerView
-                android:id="@+id/list_lobby"
-                android:scrollbars="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="7dp"
-                android:background="@color/pup_grey_bg"
-                android:paddingTop="@dimen/padding_half"
-                />
+            <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/layout_refresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                            android:id="@+id/list_lobby"
+                            android:scrollbars="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="7dp"
+                            android:background="@color/pup_grey_bg"
+                            android:paddingTop="@dimen/padding_half" />
+            </android.support.v4.widget.SwipeRefreshLayout>
+
 
         <RelativeLayout
                 android:id="@+id/layout_empty_results"
@@ -121,8 +126,6 @@
                 android:src="@drawable/bar_full_pull"
                 android:background="@android:color/transparent"
                 />
-
-
     </LinearLayout>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

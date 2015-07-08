@@ -14,7 +14,7 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.picasso.Picasso;
-import com.swarmnyc.pup.ChatMessageReceiveEvent;
+import com.swarmnyc.pup.events.ChatMessageReceiveEvent;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.components.Action;
