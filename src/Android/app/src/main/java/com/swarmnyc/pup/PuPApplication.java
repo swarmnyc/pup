@@ -16,6 +16,7 @@ public class PuPApplication extends Application
 	private static PuPApplication instance;
 	private        PuPComponent   component;
 	private Tracker m_tracker;
+	private boolean m_messageServiceUp;
 
 	public static PuPApplication getInstance()
 	{
@@ -57,6 +58,16 @@ public class PuPApplication extends Application
 	}
 
 
+	public boolean isMessageServiceUp()
+	{
+		return m_messageServiceUp;
+	}
+
+	public void setMessageServiceUp(boolean messageServiceUp )
+	{
+		m_messageServiceUp = messageServiceUp;
+	}
+
 	public void startMessageService(){
 		if ( User.isLoggedIn() )
 		{
@@ -82,6 +93,7 @@ public class PuPApplication extends Application
 			throw new RuntimeException( "Could not get package name: " + e );
 		}
 	}
+
 
 
 }

@@ -55,33 +55,30 @@ public abstract class SectionedRecyclerViewAdapter<TView extends RecyclerView.Vi
 				addDataInternal( data );
 			}
 		}
-		
+
 		updateSections();
 
 		notifyDataSetChanged();
 	}
 
-	public TItem getItem( final int i )
+	public TItem getItem( int i )
 	{
-		Section<TItem> section = null;
-		for ( int j = 0; j < m_sections.size(); j++ )
+		for ( Section<TItem> section : m_sections )
 		{
-			Section<TItem> temp = m_sections.get( j );
-			if ( i < temp.getHeaderPosition() )
+			int size = section.getItems().size();
+			if ( i > size )
 			{
-				break;
+				if ( size > 0 ){
+					i -= size + 1;
+				}
+
+				continue;
 			}
-			section = temp;
+
+			return section.getItems().get( i - 1 );
 		}
 
-		if ( section == null )
-		{
-			return null;
-		}
-		else
-		{
-			return section.getItems().get( i - section.getHeaderPosition() - 1 );
-		}
+		throw new RuntimeException( "Can't Find the Item at point:" + i );
 	}
 
 	@Override
@@ -111,7 +108,8 @@ public abstract class SectionedRecyclerViewAdapter<TView extends RecyclerView.Vi
 		Section<TItem> section = m_sections.get( position );
 		section.addItem( data );
 
-		if ( section.getItems().size() == 1 ){
+		if ( section.getItems().size() == 1 )
+		{
 			m_total++;
 		}
 
@@ -123,9 +121,12 @@ public abstract class SectionedRecyclerViewAdapter<TView extends RecyclerView.Vi
 		int p = 0;
 		for ( Section<TItem> section : m_sections )
 		{
-			if ( section.getItems().size() == 0 ){
+			if ( section.getItems().size() == 0 )
+			{
 				section.setHeaderPosition( -1 );
-			}else {
+			}
+			else
+			{
 				section.setHeaderPosition( p );
 				p += section.getItems().size() + 1;
 			}
@@ -134,10 +135,10 @@ public abstract class SectionedRecyclerViewAdapter<TView extends RecyclerView.Vi
 
 	public static class Section<D>
 	{
-		private	int          m_header_position;
+		private int          m_header_position;
 		private CharSequence m_title;
-		private	List<D>      m_items;
-		private int m_count;
+		private List<D>      m_items;
+		private int          m_count;
 
 		public Section( CharSequence title, final int position )
 		{

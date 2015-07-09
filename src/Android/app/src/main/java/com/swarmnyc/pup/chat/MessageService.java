@@ -118,8 +118,8 @@ public class MessageService extends Service
 	public int onStartCommand( Intent intent, int flags, int startId )
 	{
 		Log.d( TAG, "onStartCommand:" + intent + ", Flags:" + flags + ", startId:" + startId );
-
 		processChatRooms();
+		PuPApplication.getInstance().setMessageServiceUp( true );
 
 		return START_NOT_STICKY;
 	}
@@ -250,7 +250,7 @@ public class MessageService extends Service
 				}
 				catch ( Exception e )
 				{
-					Log.d( TAG, "GetChatDialogs failed: " + e );
+					Log.e( TAG, "GetChatDialogs failed", e );
 				}
 				m_trying.set( false );
 				return null;

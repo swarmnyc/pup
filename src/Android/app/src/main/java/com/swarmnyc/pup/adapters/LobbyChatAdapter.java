@@ -34,11 +34,10 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 	private Action            m_reachBeginAction;
 
 	public LobbyChatAdapter(
-		final Context context, final Lobby lobby
+		final Context context
 	)
 	{
 		m_context = context;
-		m_lobby = lobby;
 		m_inflater = (LayoutInflater) m_context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 		m_chatMessages = new ArrayList<>();
 		m_chatMessageIds = new HashSet<>();
@@ -165,6 +164,11 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 	public void addMessages( List<ChatMessage> messages )
 	{
 		addMessages( m_chatMessages.size(), messages );
+	}
+
+	public void setLobby( final Lobby lobby )
+	{
+		m_lobby = lobby;
 	}
 
 	class ItemViewHolder extends RecyclerView.ViewHolder

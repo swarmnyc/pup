@@ -182,6 +182,27 @@ public class LobbyFragment extends BaseFragment
 		//scrolling to end when has focus
 		m_messageText.setOnFocusChangeListener( new HideKeyboardFocusChangedListener( getActivity() ) );
 
+		m_chatListLayoutManager = new LinearLayoutManager( getActivity() );
+		m_lobbyChatAdapter = new LobbyChatAdapter( getActivity() );
+		m_lobbyChatAdapter.setReachBeginAction(
+			new Action()
+			{
+				@Override
+				public void call( final Object value )
+				{
+					loadChatHistoryRequire();
+				}
+			}
+		);
+
+		m_chatList.setAdapter( m_lobbyChatAdapter );
+		m_chatList.setLayoutManager( m_chatListLayoutManager );
+		m_chatList.addItemDecoration(
+			new DividerItemDecoration(
+				getActivity(), DividerItemDecoration.VERTICAL_LIST
+			)
+		);
+
 		//Tap to Hide SoftKeyboard
 		m_chatList.setOnTouchListener(
 			new View.OnTouchListener()
@@ -292,26 +313,8 @@ public class LobbyFragment extends BaseFragment
 	private void initChatRoom()
 	{
 		m_first = true;
-		m_chatListLayoutManager = new LinearLayoutManager( getActivity() );
-		m_lobbyChatAdapter = new LobbyChatAdapter( getActivity(), m_lobby );
-		m_lobbyChatAdapter.setReachBeginAction(
-			new Action()
-			{
-				@Override
-				public void call( final Object value )
-				{
-					loadChatHistoryRequire();
-				}
-			}
-		);
 
-		m_chatList.setAdapter( m_lobbyChatAdapter );
-		m_chatList.setLayoutManager( m_chatListLayoutManager );
-		m_chatList.addItemDecoration(
-			new DividerItemDecoration(
-				getActivity(), DividerItemDecoration.VERTICAL_LIST
-			)
-		);
+		m_lobbyChatAdapter.setLobby(m_lobby);
 
 		if ( m_lobby.isAliveUser( User.current.getId() ) )
 		{
@@ -389,20 +392,24 @@ public class LobbyFragment extends BaseFragment
 	{
 		if ( User.isLoggedIn() )
 		{
-			DialogHelper.showProgressDialog( getActivity(), R.string.message_processing );
-			m_lobbyService.join(
-				m_lobby.getId(), new ServiceCallback()
-				{
-					@Override
-					public void success( final Object value )
+			if ( m_lobby.isAliveUser( User.current.getId() ) ){
+				initChatRoom();
+			} else {
+				DialogHelper.showProgressDialog( getActivity(), R.string.message_processing );
+				m_lobbyService.join(
+					m_lobby.getId(), new ServiceCallback()
 					{
-						addUserIntoLobby( User.current );
-						EventBus.getBus().post( new LobbyUserChangeEvent() );
-						initChatRoom();
-						DialogHelper.hide();
+						@Override
+						public void success( final Object value )
+						{
+							addUserIntoLobby( User.current );
+							EventBus.getBus().post( new LobbyUserChangeEvent() );
+							initChatRoom();
+							DialogHelper.hide();
+						}
 					}
-				}
-			);
+				);
+			}
 		}
 		else
 		{

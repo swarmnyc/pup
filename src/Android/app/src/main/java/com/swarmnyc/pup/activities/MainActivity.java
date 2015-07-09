@@ -34,80 +34,81 @@ import com.swarmnyc.pup.fragments.SettingsFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    private        boolean      launchDefault;
+public class MainActivity extends AppCompatActivity
+{
+	@InjectView( R.id.toolbar )   Toolbar      m_toolbar;
+	@InjectView( R.id.viewpager ) ViewPager    m_viewPager;
+	@InjectView( R.id.tabs )      TabLayout    m_tabLayout;
+	@InjectView( R.id.appbar )    AppBarLayout m_appBarLayout;
 
-    @InjectView( R.id.toolbar )   Toolbar      m_toolbar;
-    @InjectView( R.id.viewpager ) ViewPager    m_viewPager;
-    @InjectView( R.id.tabs )      TabLayout    m_tabLayout;
-    @InjectView( R.id.appbar )    AppBarLayout m_appBarLayout;
+	@InjectView( R.id.layout_coordinator ) CoordinatorLayout m_coordinatorLayout;
+	private                                TabPagerAdapter   m_tabPagerAdapter;
+	private                                Boolean           isLoggedIn = null;
 
-    @InjectView( R.id.layout_coordinator ) CoordinatorLayout m_coordinatorLayout;
-    private                                TabPagerAdapter   m_tabPagerAdapter;
+	@Override
+	protected void onCreate( Bundle savedInstanceState )
+	{
+		super.onCreate( savedInstanceState );
+		setContentView( R.layout.activity_main );
 
-    @Override
-    protected void onCreate( Bundle savedInstanceState )
-    {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_main );
+		ButterKnife.inject( this );
+		PuPApplication.getInstance().getComponent().inject( this );
+		m_toolbar.setSubtitleTextColor( getResources().getColor( R.color.pup_grey ) );
+		setSupportActionBar( m_toolbar );
 
-        ButterKnife.inject( this );
-        PuPApplication.getInstance().getComponent().inject( this );
-        m_toolbar.setSubtitleTextColor( getResources().getColor( R.color.pup_grey ) );
-        setSupportActionBar( m_toolbar );
+		Display display = getWindowManager().getDefaultDisplay();
+		Point windowSize = new Point();
+		display.getSize( windowSize );
+		Consts.windowWidth = windowSize.x;
+		Consts.windowHeight = windowSize.y;
+		ViewConfiguration vc = ViewConfiguration.get( this );
+		Consts.TOUCH_SLOP = vc.getScaledTouchSlop();
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point windowSize = new Point();
-        display.getSize( windowSize );
-        Consts.windowWidth = windowSize.x;
-        Consts.windowHeight = windowSize.y;
-        ViewConfiguration vc = ViewConfiguration.get( this );
-        Consts.TOUCH_SLOP = vc.getScaledTouchSlop();
+		//Show Splash or not
+		if ( !Config.getBool( "ShowedSplash" ) )
+		{
+			Config.setBool( "ShowedSplash", true );
+			startActivity( new Intent( this, SplashActivity.class ) );
+		}
 
-        //Show Splash or not
-        if ( !Config.getBool( "ShowedSplash")) {
-            Config.setBool("ShowedSplash", true);
-            startActivity(new Intent(this, SplashActivity.class));
-        }
+		//Redirect to Lobby
+		Intent intent = getIntent();
+		Uri data = intent.getData();
 
-        //Redirect to Lobby
-        Intent intent = getIntent();
-        Uri data = intent.getData();
-        launchDefault = true;
-        if (data != null) {
-            List<String> p = data.getPathSegments();
-            if (p.size() == 2 && p.get(0).equals("lobby")) {
-                launchDefault = false;
-                Navigator.ToLobby( this, p.get(1), "From Intent" );
-            }
-        }
+		if ( data != null )
+		{
+			List<String> p = data.getPathSegments();
+			if ( p.size() == 2 && p.get( 0 ).equals( "lobby" ) )
+			{
+				Navigator.ToLobby( this, p.get( 1 ), "From Intent" );
+			}
+		}
 
-        if ( m_viewPager != null) {
-            setupViewPager( m_viewPager );
-        }
-
-        showTabsByUser(null);
-    }
+		showTabsByUser( null );
+	}
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        EventBus.getBus().register(this);
-        PuPApplication.getInstance().startMessageService();
-    }
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		EventBus.getBus().register( this );
+		PuPApplication.getInstance().startMessageService();
+		showTabsByUser( null );
+	}
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        EventBus.getBus().unregister(this);
-    }
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+		EventBus.getBus().unregister( this );
+	}
 
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-    }
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+	}
 
 	private void setupViewPager( ViewPager viewPager )
 	{
@@ -136,9 +137,9 @@ public class MainActivity extends AppCompatActivity {
 					final Fragment fragment = m_tabPagerAdapter.getItem( position );
 					if ( fragment instanceof BaseFragment )
 					{
-                        BaseFragment bf = (BaseFragment) fragment ;
-                        bf.updateTitle();
-                        PuPApplication.getInstance().sendScreenToTracker( bf.getScreenName() );
+						BaseFragment bf = (BaseFragment) fragment;
+						bf.updateTitle();
+						PuPApplication.getInstance().sendScreenToTracker( bf.getScreenName() );
 					}
 				}
 
@@ -151,96 +152,91 @@ public class MainActivity extends AppCompatActivity {
 		);
 	}
 
-    @OnClick( R.id.fab_create_lobby )
-    public void onCreateLobbyButtonClicked()
-    {
-        Navigator.ToCreateLobby( this );
-    }
+	@OnClick( R.id.fab_create_lobby )
+	public void onCreateLobbyButtonClicked()
+	{
+		Navigator.ToCreateLobby( this );
+	}
 
-    public Toolbar getToolbar() {
-        return m_toolbar;
-    }
+	@Override
+	protected void onActivityResult( final int requestCode, final int resultCode, final Intent data )
+	{
+		super.onActivityResult( requestCode, resultCode, data );
+		FacebookHelper.handleActivityResult( requestCode, resultCode, data );
+	}
 
-    public boolean isLaunchDefaultFragment() {
-        return launchDefault;
-    }
+	@Subscribe
+	public void runtimeError( final RuntimeException exception )
+	{
+		this.runOnUiThread(
+			new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					// TODO: Better Message content
+					DialogHelper.showError( MainActivity.this, exception.getMessage() );
+				}
+			}
+		);
+	}
 
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        FacebookHelper.handleActivityResult(requestCode, resultCode, data);
-    }
+	@Subscribe
+	public void showTabsByUser( UserChangedEvent event )
+	{
+		if ( isLoggedIn==null || isLoggedIn != User.isLoggedIn() )
+		{
+			isLoggedIn = User.isLoggedIn();
 
-    @Subscribe
-    public void runtimeError(final RuntimeException exception) {
-        this.runOnUiThread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        // TODO: Better Message content
-                        DialogHelper.showError(MainActivity.this, exception.getMessage());
-                    }
-                }
-        );
-    }
+			setupViewPager( m_viewPager );
 
-    @Subscribe
-    public void showTabsByUser( UserChangedEvent event )
-    {
-        if (User.isLoggedIn())
-        {
-            m_tabLayout.setupWithViewPager( m_viewPager );
-            m_tabLayout.setVisibility( View.VISIBLE );
-        }
-        else
-        {
-            m_tabLayout.setVisibility( View.GONE );
+			m_tabLayout.setupWithViewPager( m_viewPager );
 
-            final ViewGroup.LayoutParams layoutParams = m_toolbar.getLayoutParams();
-
-            if (layoutParams instanceof AppBarLayout.LayoutParams)
-            {
-                ((AppBarLayout.LayoutParams) layoutParams).setScrollFlags(
-                    AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
-                );
-            }
-        }
-    }
+			if ( User.isLoggedIn() )
+			{
+				m_tabLayout.setVisibility( View.VISIBLE );
+			}
+			else
+			{
+				m_tabLayout.setVisibility( View.GONE );
+			}
+		}
+	}
 
 
-    static class TabPagerAdapter extends FragmentPagerAdapter
-    {
-        private final List<Fragment> mFragments      = new ArrayList<>();
-        private final List<String>   mFragmentTitles = new ArrayList<>();
+	static class TabPagerAdapter extends FragmentPagerAdapter
+	{
+		private final List<Fragment> mFragments      = new ArrayList<>();
+		private final List<String>   mFragmentTitles = new ArrayList<>();
 
-        public TabPagerAdapter( FragmentManager fm )
-        {
-            super( fm );
-        }
+		public TabPagerAdapter( FragmentManager fm )
+		{
+			super( fm );
+		}
 
-        public void addFragment( Fragment fragment, String title )
-        {
-            mFragments.add( fragment );
-            mFragmentTitles.add( title );
-        }
+		public void addFragment( Fragment fragment, String title )
+		{
+			mFragments.add( fragment );
+			mFragmentTitles.add( title );
+		}
 
-        @Override
-        public Fragment getItem( int position )
-        {
-            return mFragments.get( position );
-        }
+		@Override
+		public Fragment getItem( int position )
+		{
+			return mFragments.get( position );
+		}
 
-        @Override
-        public int getCount()
-        {
-            return mFragments.size();
-        }
+		@Override
+		public int getCount()
+		{
+			return mFragments.size();
+		}
 
-        @Override
-        public CharSequence getPageTitle( int position )
-        {
-            return mFragmentTitles.get( position );
-        }
-    }
+		@Override
+		public CharSequence getPageTitle( int position )
+		{
+			return mFragmentTitles.get( position );
+		}
+	}
 
 }

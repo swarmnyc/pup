@@ -1,5 +1,6 @@
 package com.swarmnyc.pup.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +20,7 @@ import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
+import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.events.AfterLeaveLobbyEvent;
 import com.swarmnyc.pup.fragments.LobbyFragment;
 import com.swarmnyc.pup.fragments.MemberFragment;
@@ -55,7 +57,6 @@ public class LobbyActivity extends AppCompatActivity
 		m_lobbyId = getIntent().getStringExtra( Consts.KEY_LOBBY_ID );
 
 		m_drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END );
-
 	}
 
 	@Override
@@ -119,6 +120,13 @@ public class LobbyActivity extends AppCompatActivity
 		}
 
 		return super.onOptionsItemSelected( item );
+	}
+
+	@Override
+	protected void onActivityResult( final int requestCode, final int resultCode, final Intent data )
+	{
+		super.onActivityResult( requestCode, resultCode, data );
+		FacebookHelper.handleActivityResult( requestCode, resultCode, data );
 	}
 
 	@Subscribe

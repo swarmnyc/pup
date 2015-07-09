@@ -51,7 +51,6 @@ public class MemberFragment extends Fragment
 		PuPApplication.getInstance().getComponent().inject( this );
 		ButterKnife.inject( this, view );
 
-
 		m_memberAdapter = new MemberAdapter( this.getActivity(), new ArrayList<LobbyUserInfo>() );
 		m_memberList.setAdapter( m_memberAdapter );
 		m_memberList.setLayoutManager( new LinearLayoutManager( this.getActivity() ) );
