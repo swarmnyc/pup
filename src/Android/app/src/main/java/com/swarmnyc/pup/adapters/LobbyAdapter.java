@@ -23,9 +23,9 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 	private Context        m_context;
 	private LayoutInflater m_layoutInflater;
 	private Action         m_reachEndAction;
-	private final long m_tomorrowTime;
-	private final long m_thisWeekTime;
-	private final long m_nextWeekTime;
+	private long m_tomorrowTime;
+	private long m_thisWeekTime;
+	private long m_nextWeekTime;
 
 
 	private static class ItemViewType
@@ -46,15 +46,7 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 		addSection( context.getString( R.string.text_later_this_week ) );
 		addSection( context.getString( R.string.text_next_week ) );
 
-		Calendar c = new GregorianCalendar();
-		c.set( Calendar.HOUR_OF_DAY, 0 );
-		c.set( Calendar.MINUTE, 0 );
-		c.set( Calendar.SECOND, 0 );
-		c.set( Calendar.MILLISECOND, 0 );
-
-		m_tomorrowTime = c.getTimeInMillis() + TimeUtils.day_in_millis;
-		m_thisWeekTime = c.getTimeInMillis() + (TimeUtils.day_in_millis * 2);
-		m_nextWeekTime = c.getTimeInMillis() + (TimeUtils.day_in_millis * 7);
+		calcuateSectionTime();
 	}
 
 	public void endLoading()
@@ -162,10 +154,24 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 
 	public void setCount( final int[] counts )
 	{
+		calcuateSectionTime();
+
 		for ( int i = 0; i < counts.length; i++ )
 		{
 			getSections().get( i ).setStaticCount(counts[i]);
 		}
+	}
+
+	private void calcuateSectionTime()
+	{Calendar c = new GregorianCalendar();
+		c.set( Calendar.HOUR_OF_DAY, 0 );
+		c.set( Calendar.MINUTE, 0 );
+		c.set( Calendar.SECOND, 0 );
+		c.set( Calendar.MILLISECOND, 0 );
+
+		m_tomorrowTime = c.getTimeInMillis() + TimeUtils.day_in_millis;
+		m_thisWeekTime = c.getTimeInMillis() + (TimeUtils.day_in_millis * 2);
+		m_nextWeekTime = c.getTimeInMillis() + (TimeUtils.day_in_millis * 7);
 	}
 
 	@Override

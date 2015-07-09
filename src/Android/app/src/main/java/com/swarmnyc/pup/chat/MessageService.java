@@ -166,6 +166,12 @@ public class MessageService extends Service
 	public void processEnsureRequests()
 	{
 		EnsureChatConnectRequest request;
+		if ( QBChatService.getInstance().getGroupChatManager() == null )
+		{
+			Log.e(TAG, "GroupChatManager is null");
+			return;
+		}
+
 		while ( ( request = m_ensureRequests.poll() ) != null )
 		{
 			String jid = generateJId( request.getRoomId() );
@@ -179,7 +185,7 @@ public class MessageService extends Service
 
 			startListener( chat );
 
-			m_handler.post(request.getCallback());
+			m_handler.post( request.getCallback() );
 		}
 	}
 
