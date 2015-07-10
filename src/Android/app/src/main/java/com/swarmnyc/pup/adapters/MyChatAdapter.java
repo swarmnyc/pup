@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.StringUtils;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.GamePlatformUtils;
@@ -149,7 +150,10 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
 		{
 			m_lobby = lobby;
 
-			Picasso.with( m_activity ).load( lobby.getPictureUrl() ).into( m_gameImage );
+			if ( StringUtils.isNotEmpty( lobby.getPictureUrl() ) )
+			{
+				Picasso.with( m_activity ).load( lobby.getPictureUrl() ).into( m_gameImage );
+			}
 
 			m_gameName.setText( lobby.getName() );
 

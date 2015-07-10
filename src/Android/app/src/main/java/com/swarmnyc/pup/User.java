@@ -37,9 +37,9 @@ public class User
 	public static void login( final CurrentUserInfo userInfo, final boolean goHome )
 	{
 		User.current = userInfo;
-
+		current.getSocialMedia().remove( Consts.KEY_FACEBOOK ); //Facebook has to reconnect;
 		Config.setLong( KEY_USER_EXPIRES, System.currentTimeMillis() + (int) current.getExpiresIn() );
-		Config.setString( KEY_USER, new Gson().toJson( current ) );
+		update();
 
 		PuPApplication.getInstance().startMessageService();
 

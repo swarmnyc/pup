@@ -14,10 +14,7 @@ import android.widget.ImageView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.otto.Subscribe;
-import com.swarmnyc.pup.Consts;
-import com.swarmnyc.pup.EventBus;
-import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.components.FacebookHelper;
@@ -52,11 +49,14 @@ public class LobbyActivity extends AppCompatActivity
 		PuPApplication.getInstance().getComponent().inject( this );
 
 		setSupportActionBar( m_toolbar );
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled( true );
 
 		m_lobbyId = getIntent().getStringExtra( Consts.KEY_LOBBY_ID );
 
 		m_drawerLayout.setDrawerLockMode( DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END );
+
+		// once go into lobby, fresh my chat when go back.
+		Config.setBool( Consts.KEY_NEED_UPDATE_MY, true );
 	}
 
 	@Override

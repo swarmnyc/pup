@@ -146,12 +146,14 @@ public class SettingsFragment extends BaseFragment
 						path = cursor.getString( idx );
 					}
 
+					Toast.makeText( getActivity(), "Updating", Toast.LENGTH_LONG ).show();
 					m_userService.updatePortrait(
 						path, new ServiceCallback<String>()
 						{
 							@Override
 							public void success( final String value )
 							{
+								Toast.makeText( getActivity(), "Updated", Toast.LENGTH_LONG ).show();
 								User.current.setPortraitUrl( value );
 								User.update();
 							}
