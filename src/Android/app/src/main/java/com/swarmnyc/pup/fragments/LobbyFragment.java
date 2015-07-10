@@ -228,7 +228,6 @@ public class LobbyFragment extends BaseFragment
 				}
 			}
 		);
-
 	}
 
 	@Override
