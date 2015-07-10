@@ -139,6 +139,8 @@ public class CreateLobbyFragment extends Fragment
 				public void success( final Lobby value )
 				{
 					DialogHelper.hide();
+					Config.setBool( Consts.KEY_NEED_UPDATE_LIST, true );
+					Config.setBool( Consts.KEY_NEED_UPDATE_MY, true );
 					Navigator.ToLobby( getActivity(), value );
 
 					getActivity().finish(); // Finish this activity.

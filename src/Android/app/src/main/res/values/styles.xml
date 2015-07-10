@@ -61,7 +61,8 @@
     </style>
 
     <style name="ExpandedTitleText">
-        <item name="android:textColor">@android:color/transparent</item>
+        <item name="android:textColor">@color/pup_white</item>
+        <item name="android:textSize">@dimen/text20</item>
     </style>
 
     <style name="SelectButton">

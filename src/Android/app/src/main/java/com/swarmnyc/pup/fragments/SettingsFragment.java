@@ -92,10 +92,6 @@ public class SettingsFragment extends BaseFragment
 		m_tumblrSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_TUMBLR) );
 	}
 
-
-
-
-
 	@Override
 	public void onResume()
 	{
@@ -129,7 +125,11 @@ public class SettingsFragment extends BaseFragment
 					String path;
 
 					m_portrait.setImageURI( uri );
-					Picasso.with( getActivity() ).invalidate( uri );
+
+					if ( StringUtils.isNotEmpty( User.current.getPortraitUrl() ) )
+					{
+						Picasso.with( getActivity() ).invalidate( User.current.getPortraitUrl() );
+					}
 
 					Cursor cursor = getActivity().getContentResolver().query(
 						uri, null, null, null, null

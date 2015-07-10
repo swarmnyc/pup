@@ -56,8 +56,6 @@ public class LobbyFragment extends BaseFragment
 
 	@Inject LobbyService m_lobbyService;
 
-	ChatRoomService m_chatRoomService;
-
 	@InjectView( R.id.backdrop )           ImageView               m_headerImage;
 	@InjectView( R.id.collapsing_toolbar ) CollapsingToolbarLayout m_collapsingToolbarLayout;
 	@InjectView( R.id.toolbar )            Toolbar                 m_toolbar;
@@ -77,12 +75,11 @@ public class LobbyFragment extends BaseFragment
 
 	@InjectView( R.id.share_panel ) ShareView m_sharePanel;
 
+	ChatRoomService m_chatRoomService;
 	private String m_lobbyImage;
-
 	private Lobby  m_lobby;
 	private String m_lobbyName;
 	private String m_lobbyId;
-
 	private LobbyChatAdapter    m_lobbyChatAdapter;
 	private LinearLayoutManager m_chatListLayoutManager;
 	private boolean m_first = true;
@@ -133,7 +130,6 @@ public class LobbyFragment extends BaseFragment
 					@Override
 					public void onError()
 					{
-
 					}
 				}
 			);

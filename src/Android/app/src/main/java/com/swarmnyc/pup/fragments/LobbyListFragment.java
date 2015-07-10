@@ -20,6 +20,7 @@ import android.widget.AutoCompleteTextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.swarmnyc.pup.Config;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
@@ -340,7 +341,6 @@ public class LobbyListFragment extends BaseFragment
 	public void onStart()
 	{
 		super.onStart();
-		//		MainDrawerFragment.getInstance().highLight( Consts.KEY_LOBBIES );
 	}
 
 
@@ -348,6 +348,11 @@ public class LobbyListFragment extends BaseFragment
 	public void onResume()
 	{
 		super.onResume();
+
+		if ( Config.getBool( Consts.KEY_NEED_UPDATE_LIST ) ){
+			Config.setBool( Consts.KEY_NEED_UPDATE_LIST, false );
+			reloadData( true );
+		}
 	}
 
 	@Override

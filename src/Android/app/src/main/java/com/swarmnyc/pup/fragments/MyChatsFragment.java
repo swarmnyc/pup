@@ -11,10 +11,7 @@ import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.squareup.otto.Subscribe;
-import com.swarmnyc.pup.Consts;
-import com.swarmnyc.pup.EventBus;
-import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
@@ -85,28 +82,27 @@ public class MyChatsFragment extends BaseFragment
 				@Override
 				public void onRefresh()
 				{
-					pageIndex = 0;
-					m_myChatAdapter.removeLobbies();
-					fetchMoreData();
+					reloadData();
 				}
 			}
 		);
+
+		if ( savedInstanceState == null )
+		{
+			fetchMoreData();
+		}
 	}
-
-	@Override
-	public void onStart()
-	{
-		super.onStart();
-
-		fetchMoreData();
-	}
-
 
 	@Override
 	public void onResume()
 	{
 		super.onResume();
 		EventBus.getBus().register( this );
+
+		if ( Config.getBool( Consts.KEY_NEED_UPDATE_MY ) ){
+			Config.setBool( Consts.KEY_NEED_UPDATE_MY, false );
+			reloadData();
+		}
 	}
 
 	@Override
@@ -120,6 +116,13 @@ public class MyChatsFragment extends BaseFragment
 	{
 		setTitle( getString( R.string.text_lobbies ) + " (" + UnreadCounter.total() + ")" );
 		setSubtitle( null );
+	}
+
+	private void reloadData()
+	{
+		pageIndex = 0;
+		m_myChatAdapter.removeLobbies();
+		fetchMoreData();
 	}
 
 	private void fetchMoreData()
@@ -160,7 +163,7 @@ public class MyChatsFragment extends BaseFragment
 		if ( !event.isNewMessage() && isDetached() )
 		{ return; }
 
-		updateTitle();
+		//updateTitle();
 		m_myChatAdapter.updateLastMessage( event );
 	}
 }

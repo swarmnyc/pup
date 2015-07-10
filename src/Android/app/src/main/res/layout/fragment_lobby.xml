@@ -27,7 +27,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    
                     app:layout_collapseMode="parallax"/>
 
             <android.support.v7.widget.Toolbar
@@ -45,7 +44,6 @@
     <android.support.v7.widget.RecyclerView
             android:id="@+id/list_chat"
             android:visibility="gone"
-            android:scrollbars="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -55,13 +53,6 @@
                     xmlns:tools="http://schemas.android.com/tools"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
-        <ImageView
-                android:id="@+id/img_loading"
-                android:layout_width="240dp"
-                android:layout_height="240dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"/>
 
         <com.swarmnyc.pup.view.ShareView
                 android:id="@+id/share_panel"

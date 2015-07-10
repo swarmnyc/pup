@@ -102,6 +102,8 @@ public class MainActivity extends AppCompatActivity
 	{
 		super.onPause();
 		EventBus.getBus().unregister( this );
+
+
 	}
 
 	@Override
@@ -120,6 +122,7 @@ public class MainActivity extends AppCompatActivity
 			m_tabPagerAdapter.addFragment( new SettingsFragment(), "PROFILE" );
 		}
 		viewPager.setAdapter( m_tabPagerAdapter );
+
 		m_viewPager.addOnPageChangeListener(
 			new ViewPager.OnPageChangeListener()
 			{
@@ -139,6 +142,7 @@ public class MainActivity extends AppCompatActivity
 					{
 						BaseFragment bf = (BaseFragment) fragment;
 						bf.updateTitle();
+
 						PuPApplication.getInstance().sendScreenToTracker( bf.getScreenName() );
 					}
 				}
