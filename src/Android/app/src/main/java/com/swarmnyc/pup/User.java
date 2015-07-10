@@ -80,12 +80,12 @@ public class User
 
 	public static void addSocialMedium(final String type) {
 		current.getSocialMedia().add( type );
-		Config.setString( KEY_USER, new Gson().toJson( current ) );
+		update();
 	}
 
 	public static void removeSocialMedium(final String type) {
 		current.getSocialMedia().remove( type );
-		Config.setString( KEY_USER, new Gson().toJson( current ) );
+		update();
 	}
 
 	public static void update()

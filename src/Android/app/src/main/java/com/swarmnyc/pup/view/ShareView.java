@@ -96,6 +96,9 @@ public class ShareView extends LinearLayout
 						@Override
 						public void success()
 						{
+							Toast.makeText( m_activity , R.string.message_connect_success, Toast.LENGTH_LONG )
+							     .show();
+
 							setButtonState( true, m_facebookButton );
 						}
 					}

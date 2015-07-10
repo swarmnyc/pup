@@ -13,10 +13,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
 
 	@InjectView( R.id.layout_coordinator ) CoordinatorLayout m_coordinatorLayout;
 	private                                TabPagerAdapter   m_tabPagerAdapter;
-	private                                Boolean           isLoggedIn = null;
+	private Boolean isLoggedIn = null;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -85,6 +85,14 @@ public class MainActivity extends AppCompatActivity
 		}
 
 		showTabsByUser( null );
+
+		//Update Facebook token;
+		long fbExpiredAt = Config.getLong( Consts.KEY_FACEBOOK_EXPIRED_DATE );
+		if ( fbExpiredAt != 0 && System.currentTimeMillis() > fbExpiredAt )
+		{
+			Log.d("PuP","Refresh Facebook token");
+			FacebookHelper.startLoginRequire( this, null );
+		}
 	}
 
 
@@ -188,7 +196,7 @@ public class MainActivity extends AppCompatActivity
 	@Subscribe
 	public void showTabsByUser( UserChangedEvent event )
 	{
-		if ( isLoggedIn==null || isLoggedIn != User.isLoggedIn() )
+		if ( isLoggedIn == null || isLoggedIn != User.isLoggedIn() )
 		{
 			isLoggedIn = User.isLoggedIn();
 

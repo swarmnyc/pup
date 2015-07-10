@@ -171,6 +171,13 @@ public class SettingsFragment extends BaseFragment
 				new AsyncCallback()
 				{
 					@Override
+					public void success()
+					{
+						Toast.makeText( getActivity(), R.string.message_connect_success, Toast.LENGTH_LONG )
+						     .show();
+					}
+
+					@Override
 					public void failure()
 					{
 						m_fbSwitch.setChecked( false );
