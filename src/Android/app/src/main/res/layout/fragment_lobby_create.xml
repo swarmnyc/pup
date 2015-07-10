@@ -17,7 +17,8 @@
                 android:layout_height="@dimen/height_header_img"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"/>
+                android:layout_alignParentStart="true"
+                android:src="@drawable/pup_sm"/>
 
         <View
                 android:layout_width="match_parent"
