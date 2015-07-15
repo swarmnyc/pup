@@ -24,8 +24,9 @@
         <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"
                 app:tabTextColor="@color/pup_light"
-                app:tabSelectedTextColor="@color/pup_teal"
-                app:tabIndicatorColor="@android:color/transparent"
+                app:tabTextAppearance="@style/tabTextAppearance"
+                app:tabSelectedTextColor="@color/pup_orange"
+                app:tabIndicatorColor="@color/pup_orange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

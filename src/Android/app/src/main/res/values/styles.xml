@@ -127,6 +127,11 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="tabTextAppearance">
+        <item name="android:textSize">@dimen/text12</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="HorizontalSpinnerStyleForLobbyCreate">
         <item name="itemColor">@color/pup_light</item>
         <item name="itemTextSize">@dimen/text11</item>

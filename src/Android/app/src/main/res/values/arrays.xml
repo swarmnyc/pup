@@ -12,30 +12,4 @@
         <item>NORMAL</item>
         <item>HARDCORE</item>
     </string-array>
-
-    <string-array name="menu_items">
-        <item>Find a Game</item>
-        <item>Feedback</item>
-        <!--<item>Settings</item>-->
-    </string-array>
-
-    <string-array name="menu_item_code">
-        <item>lobbies</item>
-        <item>feedback</item>
-        <!--<item>settings</item>-->
-    </string-array>
-
-    <string-array name="menu_items_for_user">
-        <item>My Chats</item>
-        <item>Find a Game</item>
-        <item>Feedback</item>
-        <item>Settings</item>
-    </string-array>
-
-    <string-array name="menu_item_code_for_user">
-        <item>my_lobbies</item>
-        <item>lobbies</item>
-        <item>feedback</item>
-        <item>settings</item>
-    </string-array>
 </resources>

@@ -45,7 +45,7 @@
             android:label="@string/app_name"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
+            android:windowSoftInputMode="adjustNothing|stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

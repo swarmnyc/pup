@@ -202,7 +202,7 @@ public class MessageService extends Service
 	{
 		boolean live = m_expiredAt > System.currentTimeMillis();
 
-		if ( m_trying.get() || ( QBChatService.getInstance().isLoggedIn() && live ) )
+		if ( m_trying.get() && live  )
 		{
 			Log.d( TAG, "Still connected so skip" );
 			processEnsureRequests();

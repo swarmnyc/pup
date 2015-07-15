@@ -123,10 +123,10 @@ public class MainActivity extends AppCompatActivity
 	private void setupViewPager( ViewPager viewPager )
 	{
 		m_tabPagerAdapter = new TabPagerAdapter( getSupportFragmentManager() );
-		m_tabPagerAdapter.addFragment( new LobbyListFragment(), "FIND A GAME" );
+		m_tabPagerAdapter.addFragment( new LobbyListFragment(), "ALL GAMES" );
 		if ( User.isLoggedIn() )
 		{
-			m_tabPagerAdapter.addFragment( new MyChatsFragment(), "MY GAMES" );
+			m_tabPagerAdapter.addFragment( new MyChatsFragment(), "JOINED GAMES" );
 			m_tabPagerAdapter.addFragment( new SettingsFragment(), "PROFILE" );
 		}
 		viewPager.setAdapter( m_tabPagerAdapter );
