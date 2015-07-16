@@ -4,51 +4,47 @@ import android.app.Application;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import com.swarmnyc.pup.PuPApplication;
+import android.view.View;
+import android.widget.TextView;
 
-/**
- * Created by somya on 6/27/15.
- */
-public abstract class BaseFragment extends Fragment
-{
-	public ActionBar getSupportAcitonBar()
-	{
-		return getAppCompatActivity().getSupportActionBar();
-	}
+import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.StringUtils;
 
-	public AppCompatActivity getAppCompatActivity() {return (AppCompatActivity) getActivity();}
+public abstract class BaseFragment extends Fragment {
+    public ActionBar getSupportAcitonBar() {
+        return getAppCompatActivity().getSupportActionBar();
+    }
 
-	public void updateTitle()
-	{
+    public AppCompatActivity getAppCompatActivity() {
+        return (AppCompatActivity) getActivity();
+    }
 
-	}
+    public void updateTitle() {
 
-	public void setTitle(CharSequence title)
-	{
-		if (! isDetached() ){
-			getAppCompatActivity().setTitle( title );
-		}
-	}
+    }
 
-	public void setTitle( final int title )
-	{
-		if (! isDetached() ){
-			getAppCompatActivity().setTitle( title );
-		}
-	}
+    public void setTitle(CharSequence title) {
+        ((TextView) this.getActivity().findViewById(R.id.toolbar_title)).setText(title);
+    }
 
-	public void setSubtitle(CharSequence title)
-	{
-		if (! isDetached() ){
-			getAppCompatActivity().getSupportActionBar().setSubtitle( title );
-		}
-	}
+    public void setTitle(final int title) {
+        ((TextView) this.getActivity().findViewById(R.id.toolbar_title)).setText(title);
+    }
 
-	@Override
-	public void onStart()
-	{
-		super.onStart();
-	}
+    public void setSubtitle(CharSequence title) {
+        TextView view = ((TextView) this.getActivity().findViewById(R.id.toolbar_subtitle));
+        view.setText(title);
+        if (StringUtils.isEmpty(title)){
+            view.setVisibility(View.GONE);
+        }else {
+            view.setVisibility(view.VISIBLE);
+        }
+    }
 
-	public abstract String getScreenName();
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    public abstract String getScreenName();
 }

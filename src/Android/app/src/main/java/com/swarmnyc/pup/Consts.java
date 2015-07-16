@@ -35,5 +35,5 @@ public class Consts
 	public static int TOUCH_SLOP;
 	public static int windowWidth;
 	public static int windowHeight;
-
+	public static int currentPage = 0;
 }

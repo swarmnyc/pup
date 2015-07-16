@@ -72,8 +72,8 @@ public class LobbyListFragment extends BaseFragment {
     GameService gameService;
     @Inject
     LobbyService lobbyService;
-    float m_panelSize = 0.0f;
-    LayoutInflater inflater;
+
+    private LayoutInflater inflater;
     private MainActivity activity;
     private LobbyAdapter m_lobbyAdapter;
     private LinearLayoutManager mLayoutManager;
@@ -208,29 +208,14 @@ public class LobbyListFragment extends BaseFragment {
                 new SlidingUpPanelLayout.PanelSlideListener() {
                     @Override
                     public void onPanelSlide(final View view, final float v) {
-                        //if ( m_panelSize == 0 && v > 0 )
-                        //{
-                        //						com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(
-                        //							getActivity(), m_createLobbyButton
-                        //						);
-                        //}
-                        //else if ( m_panelSize == 1.0 && v < 1.0f )
-                        //{
-                        //						com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(
-                        //							getActivity(), m_createLobbyButton
-                        //						);
-
-                        //}
-                        m_panelSize = v;
-
                         // Hide Keyboard
                         SoftKeyboardHelper.hideSoftKeyboard(getActivity());
 
                         // show the overlay programmingly, the package's overlay cannot block touch event so I add a Layout to do this thing.
-                        if (v>0.95){
+                        if (v > 0.95) {
                             m_slidePanel.setBackgroundResource(android.R.drawable.screen_background_dark_transparent);
 
-                        }else {
+                        } else {
                             m_slidePanel.setBackgroundColor(0);
                         }
                     }
@@ -258,9 +243,6 @@ public class LobbyListFragment extends BaseFragment {
         setHasOptionsMenu(true);
 
         this.inflater = inflater;
-
-        // m_createLobbyButton.setVisibility( User.isLoggedIn() ? View.VISIBLE : View.GONE ); Button should be
-        // visile aciton should be different.
 
         m_lobbyAdapter = new LobbyAdapter(getActivity());
         m_lobbyRecyclerView.setAdapter(m_lobbyAdapter);
@@ -293,7 +275,6 @@ public class LobbyListFragment extends BaseFragment {
                 }
         );
 
-
         if (null != savedInstanceState) {
             m_lobbyFilter = Utility.fromJson(savedInstanceState.getString("filter"), LobbyFilter.class);
             m_gamePlatformSelectView.setSelectedGamePlatforms(m_lobbyFilter.getPlatforms());
@@ -308,15 +289,13 @@ public class LobbyListFragment extends BaseFragment {
             @Nullable
             final Bundle savedInstanceState
     ) {
-        Log.d(
-                "LobbyListFragment", String.format(
-                        "onViewCreated (%s, savedInstanceState = %s)", view, savedInstanceState
-                )
+        super.onViewCreated(view, savedInstanceState);
+
+        Log.d("LobbyListFragment", String.format("onViewCreated (%s, savedInstanceState = %s)", view, savedInstanceState)
         );
         if (null == savedInstanceState) {
             reloadData(true);
         }
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -390,6 +369,8 @@ public class LobbyListFragment extends BaseFragment {
                 m_lobbyFilter, new ServiceCallback<LobbySearchResult>() {
                     @Override
                     public void success(LobbySearchResult result) {
+                        if (isDetached()) return;
+
                         m_refreshLayout.setRefreshing(false);
                         m_isLoading.set(false);
                         m_lobbyAdapter.endLoading();
@@ -411,12 +392,13 @@ public class LobbyListFragment extends BaseFragment {
                 }
         );
 
-        updateTitle();
+        if (Consts.currentPage == 0)
+            updateTitle();
     }
 
     @Override
     public void updateTitle() {
-        final String title = null == m_lobbyFilter.getGame() ? "All Games" : m_lobbyFilter.getGame().getName();
+        String title = null == m_lobbyFilter.getGame() ? "All Games" : m_lobbyFilter.getGame().getName();
         setTitle(title);
         setSubtitle(null);
 
@@ -435,9 +417,7 @@ public class LobbyListFragment extends BaseFragment {
 
             }
 
-            Spanned subtitle = Html.fromHtml(String.format("<small>%s</small>", stringBuilder.toString()));
-
-            setSubtitle(subtitle);
+            setSubtitle(stringBuilder.toString());
         }
     }
 

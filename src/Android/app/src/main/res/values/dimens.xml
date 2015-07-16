@@ -10,12 +10,12 @@
     <dimen name="padding_small">4dp</dimen>
 
     <dimen name="height_header_img">171dp</dimen>
-    <dimen name="height_game_dropdown">180dp</dimen>
 
     <dimen name="text11">11sp</dimen>
     <dimen name="text12">12sp</dimen>
     <dimen name="text13">13sp</dimen>
     <dimen name="text16">16sp</dimen>
+    <dimen name="text18">18sp</dimen>
     <dimen name="text20">20sp</dimen>
     <dimen name="text25">25sp</dimen>
     <dimen name="text36">36sp</dimen>

@@ -72,7 +72,7 @@
     <string name="text_later_this_week">Later this week</string>
     <string name="text_next_week">Next week</string>
     <string name="text_right_now">Right Now</string>
-    
+
     <string name="message_create_lobby_wrong_chose_time">Hey! it is better to choose future time.</string>
     <string name="message_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
     <string name="message_lobby_creating">Creating</string>

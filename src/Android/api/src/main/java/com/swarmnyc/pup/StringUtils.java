@@ -11,12 +11,12 @@ public class StringUtils
 {
 	public static final DateFormat iso8601Format = initDateFormat();
 
-	public static boolean isNotEmpty( final String s )
+	public static boolean isNotEmpty( final CharSequence s )
 	{
 		return null != s && s.length() > 0;
 	}
 
-	public static boolean isEmpty( final String s )
+	public static boolean isEmpty( final CharSequence s )
 	{
 		return null == s || s.length() == 0;
 	}

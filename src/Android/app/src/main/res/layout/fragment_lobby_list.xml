@@ -98,9 +98,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_normal"
                     android:hint="@string/hint_search_games"
-                    android:lines="1"
-                    android:dropDownHeight="@dimen/height_game_dropdown"
-                    android:maxLines="1" />
+                    android:singleLine="true"
+                    android:imeOptions="actionDone"/>
 
                 <com.swarmnyc.pup.view.GamePlatformSelectView
                     android:id="@+id/platform_select"
