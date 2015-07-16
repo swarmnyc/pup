@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:cardPreventCornerOverlap="false"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/margin_half"
     android:layout_marginRight="@dimen/margin_half"
     android:layout_marginTop="@dimen/margin_half"
-    app:cardElevation="@dimen/margin_small">
+    app:cardElevation="@dimen/margin_small"
+    app:cardPreventCornerOverlap="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -48,10 +46,10 @@
                 android:id="@+id/txt_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:textSize="@dimen/text13"
                 android:layout_marginTop="@dimen/margin_quarter"
+                android:ellipsize="end"
                 android:maxLines="3"
+                android:textSize="@dimen/text13"
                 tools:text="This is some random text that is about the game that is about to be played and I love so so so so much" />
 
         </LinearLayout>
@@ -87,13 +85,13 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_normal"
-                android:layout_weight="5"
+                android:layout_weight="3"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:textColor="@color/pup_orange"
-                android:textSize="@dimen/text13"
-                android:textStyle="bold"
                 android:maxLines="1"
+                android:textColor="@color/pup_orange"
+                android:textSize="@dimen/text11"
+                android:textStyle="bold"
                 tools:text="HARDCORE | CASUAL" />
 
             <TextView
@@ -102,11 +100,12 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="2"
-                android:gravity="center"
                 android:textColor="@color/pup_teal"
-                android:textSize="@dimen/text12"
+                android:textSize="@dimen/text11"
                 android:textStyle="bold"
-                tools:text="17 mins" />
+                tools:text="Happening Soon"
+                android:gravity="center_vertical|right"
+                android:paddingRight="4dp" />
         </LinearLayout>
     </RelativeLayout>
 

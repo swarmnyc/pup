@@ -1,114 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
-
-
-    <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btn_pc"
+            style="@style/SelectButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-        <Button
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_pc"
-                android:text="@string/label_pc"
-
-                style="@style/SelectButton"/>
+            android:layout_weight="1"
+            android:text="@string/label_pc" />
 
         <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/darker_gray"/>
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray" />
 
 
         <Button
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_xbox_360"
-                android:text="@string/label_xbox_360"
-                style="@style/SelectButton"
-                />
+            android:id="@+id/btn_xbox_360"
+            style="@style/SelectButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_xbox_360" />
 
         <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/darker_gray"/>
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray" />
 
 
         <Button
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_xbox_one"
-                android:text="@string/label_xbox_one"
-                style="@style/SelectButton"
-                />
+            android:id="@+id/btn_xbox_one"
+            style="@style/SelectButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_xbox_one" />
 
 
     </LinearLayout>
 
 
     <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
 
     <LinearLayout
-            android:layout_width="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_ps3"
+            style="@style/SelectButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-        <Button
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_ps3"
-                android:text="@string/label_ps3"
-                style="@style/SelectButton"/>
+            android:layout_weight="1"
+            android:text="@string/label_ps3" />
 
         <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/darker_gray"/>
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray" />
 
         <Button
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_ps4"
-                android:text="@string/label_ps4"
-                style="@style/SelectButton"/>
+            android:id="@+id/btn_ps4"
+            style="@style/SelectButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_ps4" />
 
         <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/darker_gray"/>
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray" />
 
         <Button
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_steam"
-                android:text="@string/label_steam"
-                android:visibility="invisible"
-                style="@style/SelectButton"/>
+            android:id="@+id/btn_steam"
+            style="@style/SelectButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_steam"
+            android:visibility="invisible" />
     </LinearLayout>
 
     <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
 
 
 </merge>

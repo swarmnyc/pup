@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="top"
-    app:umanoOverlay="true"
     app:umanoFadeColor="@android:color/transparent"
+    app:umanoOverlay="true"
     app:umanoPanelHeight="0dp"
     app:umanoShadowHeight="0dp">
 
@@ -79,6 +79,7 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="false">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -98,16 +99,8 @@
                     android:layout_margin="@dimen/margin_normal"
                     android:hint="@string/hint_search_games"
                     android:lines="1"
+                    android:dropDownHeight="@dimen/height_game_dropdown"
                     android:maxLines="1" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_normal"
-                    android:layout_marginStart="@dimen/margin_normal"
-                    android:text="@string/label_select_preferred_system"
-                    android:textColor="@color/pup_orange"
-                    android:textSize="@dimen/text12" />
 
                 <com.swarmnyc.pup.view.GamePlatformSelectView
                     android:id="@+id/platform_select"

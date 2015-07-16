@@ -18,6 +18,7 @@ import butterknife.InjectView;
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.StringUtils;
+import com.swarmnyc.pup.TimeUtils;
 import com.swarmnyc.pup.components.GamePlatformUtils;
 import com.swarmnyc.pup.models.Lobby;
 
@@ -77,7 +78,6 @@ public class LobbyListItemView extends FrameLayout {
         }
 
         m_gameName.setText(lobby.getName());
-        m_gameTime.setText(DateUtils.getRelativeTimeSpanString(getContext(), lobby.getStartTime().getTime()));
         m_description.setText(lobby.getDescription());
         m_platform.setText(GamePlatformUtils.labelResIdForPlatform(lobby.getPlatform()));
         m_gamerStyle.setText(lobby.getPlayStyle().name() + " | " + lobby.getSkillLevel().name());
@@ -99,6 +99,16 @@ public class LobbyListItemView extends FrameLayout {
             case PS3:
                 m_platform.setBackgroundResource(R.color.game_ps3);
                 break;
+        }
+
+        long time = lobby.getStartTime().getTime();
+
+        if (time > System.currentTimeMillis() + (30 * TimeUtils.minute_in_millis)){
+            m_gameTime.setText(DateUtils.getRelativeTimeSpanString(getContext(), time));
+        }else if (time > System.currentTimeMillis() + (10 * TimeUtils.minute_in_millis)) {
+            m_gameTime.setText(getContext().getString(R.string.text_happening_soon));
+        }else  {
+            m_gameTime.setText(getContext().getString(R.string.text_right_now));
         }
     }
 }

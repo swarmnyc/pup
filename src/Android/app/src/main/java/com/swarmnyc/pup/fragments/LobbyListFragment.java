@@ -233,7 +233,6 @@ public class LobbyListFragment extends BaseFragment {
                         }else {
                             m_slidePanel.setBackgroundColor(0);
                         }
-                        Log.e("TEST","onPanelSlide:" + v);
                     }
 
                     @Override

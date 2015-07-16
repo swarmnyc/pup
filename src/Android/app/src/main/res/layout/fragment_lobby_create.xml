@@ -40,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text20"
                 android:hint="@string/hint_game_name"
+                android:dropDownHeight="@dimen/height_game_dropdown"
                 android:textColorHint="@color/pup_white"/>
 
         <!--platform-->

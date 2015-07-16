@@ -28,6 +28,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:dropDownListViewStyle">@style/ListViewStyle</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -60,12 +61,19 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="ListViewStyle" parent="@android:style/Widget.ListView">
+        <item name="android:background">@color/pup_grey_bg</item>
+        <item name="android:divider">@color/pup_grey_border</item>
+        <item name="android:dividerHeight">1px</item>
+    </style>
+
     <style name="ExpandedTitleText">
         <item name="android:textColor">@color/pup_white</item>
         <item name="android:textSize">@dimen/text20</item>
     </style>
 
     <style name="SelectButton">
+        <item name="android:textSize">@dimen/text11</item>
         <item name="android:background">@drawable/bg_select_button</item>
         <item name="android:textColor">@color/text_select_button</item>
     </style>

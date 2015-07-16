@@ -41,7 +41,7 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 
 		m_layoutInflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 
-		addSection( context.getString( R.string.text_happening_soon ) );
+		addSection( context.getString( R.string.text_today ) );
 		addSection( context.getString( R.string.text_tomorrow ) );
 		addSection( context.getString( R.string.text_later_this_week ) );
 		addSection( context.getString( R.string.text_next_week ) );
