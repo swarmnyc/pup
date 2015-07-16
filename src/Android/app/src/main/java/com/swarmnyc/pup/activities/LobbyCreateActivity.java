@@ -4,8 +4,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.squareup.otto.Subscribe;
+import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.SoftKeyboardHelper;
 
 public class LobbyCreateActivity extends AppCompatActivity
@@ -21,10 +25,22 @@ public class LobbyCreateActivity extends AppCompatActivity
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		EventBus.getBus().register(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		EventBus.getBus().unregister(this);
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu( Menu menu )
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate( R.menu.menu_lobby_create, menu );
+		getMenuInflater().inflate(R.menu.menu_lobby_create, menu);
 		return true;
 	}
 
@@ -43,5 +59,18 @@ public class LobbyCreateActivity extends AppCompatActivity
 //		}
 
 		return super.onOptionsItemSelected( item );
+	}
+
+	@Subscribe
+	public void runtimeError(final RuntimeException exception) {
+		this.runOnUiThread(
+				new Runnable() {
+					@Override
+					public void run() {
+						// TODO: Better Message content
+						DialogHelper.showError(LobbyCreateActivity.this, exception.getMessage());
+					}
+				}
+		);
 	}
 }

@@ -17,6 +17,7 @@ import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
+import com.swarmnyc.pup.components.DialogHelper;
 import com.swarmnyc.pup.components.FacebookHelper;
 import com.swarmnyc.pup.events.AfterLeaveLobbyEvent;
 import com.swarmnyc.pup.fragments.LobbyFragment;
@@ -64,15 +65,13 @@ public class LobbyActivity extends AppCompatActivity
 	{
 		super.onStart();
 		m_lobbyService.getLobby(
-			m_lobbyId, new ServiceCallback<Lobby>()
-			{
-				@Override
-				public void success( final Lobby value )
-				{
-					m_lobby = value;
-					init();
+				m_lobbyId, new ServiceCallback<Lobby>() {
+					@Override
+					public void success(final Lobby value) {
+						m_lobby = value;
+						init();
+					}
 				}
-			}
 		);
 	}
 
@@ -81,21 +80,21 @@ public class LobbyActivity extends AppCompatActivity
 	{
 		super.onResume();
 		PuPApplication.getInstance().startMessageService();
-		EventBus.getBus().register( this );
+		EventBus.getBus().register(this);
 	}
 
 	@Override
 	protected void onPause()
 	{
 		super.onPause();
-		EventBus.getBus().unregister( this );
+		EventBus.getBus().unregister(this);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu )
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate( R.menu.menu_lobby, menu );
+		getMenuInflater().inflate(R.menu.menu_lobby, menu);
 		return true;
 	}
 
@@ -134,6 +133,19 @@ public class LobbyActivity extends AppCompatActivity
 	{
 		m_drawerLayout.closeDrawers();
 		init();
+	}
+
+	@Subscribe
+	public void runtimeError(final RuntimeException exception) {
+		this.runOnUiThread(
+				new Runnable() {
+					@Override
+					public void run() {
+						// TODO: Better Message content
+						DialogHelper.showError(LobbyActivity.this, exception.getMessage());
+					}
+				}
+		);
 	}
 
 	private void init()
