@@ -11,8 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.StringUtils;
@@ -29,157 +31,141 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatViewHolder>
-{
-	private final LayoutInflater m_inflater;
-	private final Activity       m_activity;
-	private final List<Lobby>    m_lobbies;
+public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatViewHolder> {
+    private final LayoutInflater m_inflater;
+    private final Activity m_activity;
+    private final List<Lobby> m_lobbies;
 
-	private Action m_reachEndAction;
+    private Action m_reachEndAction;
 
-	public MyChatAdapter( final Activity activity )
-	{
-		m_activity = activity;
-		m_inflater = m_activity.getLayoutInflater();
-		m_lobbies = new ArrayList<>();
-	}
+    public MyChatAdapter(final Activity activity) {
+        m_activity = activity;
+        m_inflater = m_activity.getLayoutInflater();
+        m_lobbies = new ArrayList<>();
+    }
 
-	public void AddLobbies( List<Lobby> newLobbies )
-	{
-		int start = m_lobbies.size();
-		for ( Lobby newLobby : newLobbies )
-		{
-			UnreadCounter.reset( newLobby.getRoomId(), newLobby.getUnreadMessageCount() );
-		}
+    public void AddLobbies(List<Lobby> newLobbies) {
+        int start = m_lobbies.size();
+        for (Lobby newLobby : newLobbies) {
+            UnreadCounter.reset(newLobby.getRoomId(), newLobby.getUnreadMessageCount());
+        }
 
-		m_lobbies.addAll( newLobbies );
-		notifyItemRangeInserted( start, newLobbies.size() );
-	}
+        m_lobbies.addAll(newLobbies);
+        notifyItemRangeInserted(start, newLobbies.size());
+    }
 
-	public void AddLobby( Lobby newLobby )
-	{
-		int start = m_lobbies.size();
-		m_lobbies.add( newLobby );
-		notifyItemInserted( start + 1 );
-	}
+    public void AddLobby(Lobby newLobby) {
+        int start = m_lobbies.size();
+        m_lobbies.add(newLobby);
+        notifyItemInserted(start + 1);
+    }
 
-	public void removeLobbies( )
-	{
-		m_lobbies.clear();
-		notifyDataSetChanged();
-	}
+    public void removeLobbies() {
+        m_lobbies.clear();
+        notifyDataSetChanged();
+    }
 
-	public void setReachEndAction( Action action )
-	{
-		m_reachEndAction = action;
-	}
+    public void setReachEndAction(Action action) {
+        m_reachEndAction = action;
+    }
 
-	@Override
-	public MyChatViewHolder onCreateViewHolder( final ViewGroup parent, final int viewType )
-	{
-		return new MyChatViewHolder( m_inflater.inflate( R.layout.item_my_lobby, null ) );
-	}
+    @Override
+    public MyChatViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        return new MyChatViewHolder(m_inflater.inflate(R.layout.item_my_lobby, null));
+    }
 
-	@Override
-	public void onBindViewHolder( final MyChatViewHolder holder, final int position )
-	{
-		holder.setLobby( m_lobbies.get( position ) );
-		if ( m_reachEndAction != null && position == m_lobbies.size() - 1 )
-		{
-			m_reachEndAction.call( null );
-		}
-	}
+    @Override
+    public void onBindViewHolder(final MyChatViewHolder holder, final int position) {
+        holder.setLobby(m_lobbies.get(position));
+        if (m_reachEndAction != null && position == m_lobbies.size() - 1) {
+            m_reachEndAction.call(null);
+        }
+    }
 
-	@Override
-	public int getItemCount()
-	{
-		return m_lobbies.size();
-	}
+    @Override
+    public int getItemCount() {
+        return m_lobbies.size();
+    }
 
-	public void updateLastMessage( final ChatMessageReceiveEvent event )
-	{
-		for ( int i = 0; i < m_lobbies.size(); i++ )
-		{
-			Lobby lobby = m_lobbies.get( i );
-			if ( event.getRoomId().equals( lobby.getRoomId() ) )
-			{
-				ChatMessage message = event.getMessages().get( event.getMessages().size() - 1 );
-				lobby.setLastMessage( message.getBody() );
-				lobby.setLastMessageAt( new Date( message.getSentAt() * 1000 ) );
+    public void updateLastMessage(final ChatMessageReceiveEvent event) {
+        for (int i = 0; i < m_lobbies.size(); i++) {
+            Lobby lobby = m_lobbies.get(i);
+            if (event.getRoomId().equals(lobby.getRoomId())) {
+                ChatMessage message = event.getMessages().get(event.getMessages().size() - 1);
+                lobby.setLastMessage(message.getBody());
+                lobby.setLastMessageAt(new Date(message.getSentAt() * 1000));
 
-				lobby.getTags().add( new PuPTag( "SHINE", "1" ) );
-				notifyItemChanged( i );
-				break;
-			}
-		}
-	}
+                lobby.getTags().add(new PuPTag("SHINE", "1"));
+                notifyItemChanged(i);
+                break;
+            }
+        }
+    }
 
-	public class MyChatViewHolder extends RecyclerView.ViewHolder
-	{
-		@InjectView( R.id.contentPanel )    RelativeLayout m_contentPanel;
-		@InjectView( R.id.img_game )        ImageView      m_gameImage;
-		@InjectView( R.id.img_game_border ) View           m_gameImageBorder;
-		@InjectView( R.id.img_delete )      ImageView      m_deleteImage;
-		@InjectView( R.id.txt_game_name )   TextView       m_gameName;
-		@InjectView( R.id.txt_game_time )   TextView       m_gameTime;
-		@InjectView( R.id.txt_lastMessage ) TextView       m_lastMessage;
-		@InjectView( R.id.txt_platform )    TextView       m_platform;
+    public class MyChatViewHolder extends RecyclerView.ViewHolder {
+        @InjectView(R.id.img_game)
+        ImageView m_gameImage;
+        @InjectView(R.id.img_game_border)
+        View m_gameImageBorder;
+        @InjectView(R.id.txt_game_name)
+        TextView m_gameName;
+        @InjectView(R.id.txt_game_time)
+        TextView m_gameTime;
+        @InjectView(R.id.txt_lastMessage)
+        TextView m_lastMessage;
+        @InjectView(R.id.txt_platform)
+        TextView m_platform;
 
-		private Lobby m_lobby;
+        private Lobby m_lobby;
 
-		public MyChatViewHolder( final View itemView )
-		{
-			super( itemView );
+        public MyChatViewHolder(final View itemView) {
+            super(itemView);
 
-			itemView.setTag( this );
-			ButterKnife.inject( this, itemView );
+            itemView.setTag(this);
+            ButterKnife.inject(this, itemView);
 
-			itemView.setOnClickListener(
-				new View.OnClickListener()
-				{
-					@Override
-					public void onClick( final View v )
-					{
-						Navigator.ToLobby( m_activity, m_lobby );
-					}
-				}
-			);
-		}
+            itemView.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View v) {
+                            Navigator.ToLobby(m_activity, m_lobby);
+                        }
+                    }
+            );
+        }
 
-		public void setLobby( final Lobby lobby )
-		{
-			m_lobby = lobby;
+        public void setLobby(final Lobby lobby) {
+            m_lobby = lobby;
 
-			if ( StringUtils.isNotEmpty( lobby.getPictureUrl() ) )
-			{
-				Picasso.with( m_activity ).load( lobby.getPictureUrl() ).into( m_gameImage );
-			}
+            if (StringUtils.isNotEmpty(lobby.getPictureUrl())) {
+                Picasso.with(m_activity).load(lobby.getPictureUrl()).into(m_gameImage);
+            }
 
-			m_gameName.setText( lobby.getName() );
+            m_gameName.setText(lobby.getName());
 
-			m_lastMessage.setText( lobby.getLastMessage() );
+            m_lastMessage.setText(lobby.getLastMessage());
 
-			m_platform.setText( GamePlatformUtils.labelResIdForPlatform( lobby.getPlatform() ) );
+            m_platform.setText(GamePlatformUtils.labelResIdForPlatform(lobby.getPlatform()));
 
-			m_gameTime.setText(
-				DateUtils.getRelativeTimeSpanString( lobby.getStartTime().getTime() )
-			);
+            //TODO a better time indication
+            long time = lobby.getStartTime().getTime();
+            if (time > System.currentTimeMillis()) {
+                m_gameTime.setText(DateUtils.getRelativeTimeSpanString(time));
+            } else {
+                m_gameTime.setText("Game Expired");
+            }
 
-			if ( UnreadCounter.get( m_lobby.getRoomId() ) == 0 )
-			{
-				m_gameImageBorder.setVisibility( View.GONE );
-			}
-			else
-			{
-				m_gameImageBorder.setVisibility( View.VISIBLE );
-			}
+            if (UnreadCounter.get(m_lobby.getRoomId()) == 0) {
+                m_gameImageBorder.setVisibility(View.GONE);
+            } else {
+                m_gameImageBorder.setVisibility(View.VISIBLE);
+            }
 
-			if ( lobby.getTagValueAndRemove( "SHINE" ) != null )
-			{
-				final Animator animator = AnimatorInflater.loadAnimator( m_activity, R.animator.blinking );
-				animator.setTarget( m_gameImageBorder );
-				animator.start();
-			}
-		}
-	}
+            if (lobby.getTagValueAndRemove("SHINE") != null) {
+                final Animator animator = AnimatorInflater.loadAnimator(m_activity, R.animator.blinking);
+                animator.setTarget(m_gameImageBorder);
+                animator.start();
+            }
+        }
+    }
 }

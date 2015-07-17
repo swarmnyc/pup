@@ -22,7 +22,7 @@
     <string name="hint_login"><b>Already registered? <a href="login">Login here.</a></b></string>
     <string name="hint_singup">We \'re still in alpha and would love to hear you feedback,\nso chat with us up when you get the chance.</string>
     <string name="hint_search_games">Search games</string>
-    <string name="hint_description">Let people know what you\'re looking for the region (or dungeon) name of the particular game you want to get through, you play style and whether this is a pvp or friendly server, etc.</string>
+    <string name="hint_description">Hey guys, I\'ll be heading out and over to checkout the area :) exited!</string>
     <string name="hint_game_name">The Secret World</string>
     <string name="hint_require_email">And an email, so you can access your account.</string>
     <string name="hint_username">unique username</string>
@@ -55,7 +55,7 @@
     <string name="text_register">Register for PUP</string>
     <string name="text_register_and_join"><![CDATA[Register & Join]]></string>
     <string name="text_members">Members</string>
-    <string name="text_lobbies">My Games</string>
+    <string name="text_lobbies">Joined Games</string>
     <string name="text_send">Send</string>
     <string name="text_undo">Undo</string>
     <string name="text_user_name_info">We\'ll be adding integrations for additional systems</string>
@@ -90,4 +90,5 @@
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
     <string name="msg_loading_more_lobbies">Loading more games...</string>
+    <string name="text_tos"><a href="http://partyupplayer.com/tos.php">TOS Document</a></string>
 </resources>

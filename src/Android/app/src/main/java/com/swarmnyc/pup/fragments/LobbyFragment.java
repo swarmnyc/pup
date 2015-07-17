@@ -373,7 +373,7 @@ public class LobbyFragment extends BaseFragment {
 
     @Subscribe
     public void receiveMessage(final ChatMessageReceiveEvent event) {
-        if (event.getRoomId().equals(m_lobby.getRoomId())) {
+        if (event.getRoomId().equals(m_lobby.getRoomId()) && !this.isDetached()) {
             //After receive history
             if (m_first) {
                 switchButton();

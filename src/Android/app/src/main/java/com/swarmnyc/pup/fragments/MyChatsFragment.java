@@ -114,7 +114,7 @@ public class MyChatsFragment extends BaseFragment
 
 	public void updateTitle()
 	{
-		setTitle( getString( R.string.text_lobbies ) + " (" + UnreadCounter.total() + ")" );
+		setTitle( R.string.text_lobbies );
 		setSubtitle( null );
 	}
 

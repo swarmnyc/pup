@@ -145,6 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_normal"
                 android:textSize="@dimen/text13"
+                android:background="@drawable/bg_edit_text"
                 android:textColorHint="@color/pup_light"
                 android:gravity="top"
                 android:lines="5"/>

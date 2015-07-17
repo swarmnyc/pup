@@ -29,6 +29,7 @@
         <item name="windowActionBarOverlay">true</item>
         <item name="windowNoTitle">true</item>
         <item name="android:dropDownListViewStyle">@style/ListViewStyle</item>
+        <item name="android:editTextBackground">@drawable/bg_edit_text</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -74,6 +75,7 @@
 
     <style name="SelectButton">
         <item name="android:textSize">@dimen/text11</item>
+        <item name="android:layout_height">68dp</item>
         <item name="android:background">@drawable/bg_select_button</item>
         <item name="android:textColor">@color/text_select_button</item>
     </style>
