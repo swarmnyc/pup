@@ -24,14 +24,23 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public void setTitle(CharSequence title) {
+        if (this.getActivity()==null)
+            return;
+
         ((TextView) this.getActivity().findViewById(R.id.toolbar_title)).setText(title);
     }
 
     public void setTitle(final int title) {
+        if (this.getActivity()==null)
+            return;
+
         ((TextView) this.getActivity().findViewById(R.id.toolbar_title)).setText(title);
     }
 
     public void setSubtitle(CharSequence title) {
+        if (this.getActivity()==null)
+            return;
+
         TextView view = ((TextView) this.getActivity().findViewById(R.id.toolbar_subtitle));
         view.setText(title);
         if (StringUtils.isEmpty(title)){

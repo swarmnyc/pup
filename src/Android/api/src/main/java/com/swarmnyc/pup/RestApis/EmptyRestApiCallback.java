@@ -1,13 +1,17 @@
 package com.swarmnyc.pup.RestApis;
 
+import com.swarmnyc.pup.Services.ServiceCallback;
+
 import retrofit.client.Response;
 
-public abstract class EmptyRestApiCallback extends RestApiCallback<String> {
+public class EmptyRestApiCallback extends RestApiCallback<String> {
 
-    public abstract void success(Response response);
+    public EmptyRestApiCallback(ServiceCallback callback) {
+        super(callback);
+    }
 
     @Override
     public void success(String s, Response response) {
-        success(response);
+        super.success(null, response);
     }
 }

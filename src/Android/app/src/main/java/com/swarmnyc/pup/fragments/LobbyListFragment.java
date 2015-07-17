@@ -379,6 +379,19 @@ public class LobbyListFragment extends BaseFragment {
                         m_lobbyAdapter.setReachEndAction(Consts.PAGE_SIZE == result.getResult().size() ? m_loadMore : null);
 
                         if (restart && result.getResult().size() == 0) {
+                            com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(getActivity(), m_emptyResults);
+                        } else {
+                            com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(getActivity(), m_emptyResults);
+                        }
+                    }
+
+                    @Override
+                    public void failure(String message) {
+                        m_refreshLayout.setRefreshing(false);
+                        m_isLoading.set(false);
+                        m_lobbyAdapter.endLoading();
+
+                        if (m_lobbyAdapter.getItemCount() == 0) {
                             com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(
                                     getActivity(), m_emptyResults
                             );
@@ -415,7 +428,6 @@ public class LobbyListFragment extends BaseFragment {
             setSubtitle(stringBuilder.toString());
         }
     }
-
 
     @Override
     public String getScreenName() {

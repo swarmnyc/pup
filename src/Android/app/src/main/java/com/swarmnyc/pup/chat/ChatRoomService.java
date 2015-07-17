@@ -3,6 +3,8 @@ package com.swarmnyc.pup.chat;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialog;
@@ -10,6 +12,7 @@ import com.quickblox.core.QBEntityCallbackImpl;
 import com.quickblox.core.request.QBRequestGetBuilder;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.EventBus;
+import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.helpers.DialogHelper;
 import com.swarmnyc.pup.events.ChatMessageReceiveEvent;
@@ -48,9 +51,10 @@ public class ChatRoomService
 			chatMessage.setSaveToHistory( true );
 			QBChatService.getInstance().getGroupChatManager().getGroupChat( m_jid ).sendMessage( chatMessage );
 		}
-		catch ( XMPPException | SmackException.NotConnectedException e )
+		catch ( Exception e )
 		{
 			Log.e( "QuickbloxChat", "SendMessage Failed", e );
+			Toast.makeText(m_activity, m_activity.getString(R.string.message_operation_failed), Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -118,7 +122,7 @@ public class ChatRoomService
 										public void run()
 										{
 											DialogHelper.showError(
-												m_activity, "load chat history errors: " + errors
+												m_activity, m_activity.getString(R.string.message_operation_failed)
 											);
 
 										}

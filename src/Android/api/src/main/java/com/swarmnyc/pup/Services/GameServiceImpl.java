@@ -24,7 +24,7 @@ public class GameServiceImpl implements GameService
 		assert callback != null;
 
 		gameRestApi.get(
-			gameId, new RestApiCallback<Game>()
+			gameId, new RestApiCallback<Game>(callback)
 			{
 				@Override
 				public void success( Game game, Response response )
@@ -43,7 +43,7 @@ public class GameServiceImpl implements GameService
 		{ filter = new GameFilter(); }
 
 		this.gameRestApi.getGames(
-			filter.toMap(), filter.getPlatforms(), new RestApiCallback<List<Game>>()
+			filter.toMap(), filter.getPlatforms(), new RestApiCallback<List<Game>>(callback)
 			{
 				@Override
 				public void success( List<Game> games, Response response )

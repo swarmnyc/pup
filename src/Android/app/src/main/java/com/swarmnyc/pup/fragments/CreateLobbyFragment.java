@@ -121,6 +121,7 @@ public class CreateLobbyFragment extends Fragment
     @OnClick(R.id.btn_submit)
     public void createLobby() {
         if (!valid()) {
+            Toast.makeText(getActivity(), "Please select the game and platform.", Toast.LENGTH_LONG).show();
             return;
         }
 

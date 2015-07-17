@@ -1,19 +1,18 @@
-<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_sliding_panel"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="top"
-    app:umanoFadeColor="@android:color/transparent"
-    app:umanoOverlay="true"
-    app:umanoPanelHeight="0dp"
-    app:umanoShadowHeight="0dp">
+<com.sothree.slidinguppanel.SlidingUpPanelLayout android:id="@+id/layout_sliding_panel"
+                                                 xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:gravity="top"
+                                                 app:umanoFadeColor="@android:color/transparent"
+                                                 app:umanoOverlay="true"
+                                                 app:umanoPanelHeight="0dp"
+                                                 app:umanoShadowHeight="0dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.swarmnyc.pup.ui.fragment.FragmentLobbyList">
+        android:layout_height="match_parent">
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/layout_refresh"
@@ -25,52 +24,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/pup_grey_bg"
-                android:scrollbars="vertical" />
+                android:scrollbars="vertical"/>
         </android.support.v4.widget.SwipeRefreshLayout>
 
-
-        <RelativeLayout
-            android:id="@+id/layout_empty_results"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/margin_2x"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/img_pup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/pup_lg" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/img_pup"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/margin_2x"
-                android:layout_marginLeft="104dp"
-                android:layout_marginRight="104dp"
-                android:layout_marginTop="@dimen/margin_2x"
-                android:gravity="center"
-                android:text="@string/message_no_lobbies" />
-
-        </RelativeLayout>
-
-        <!--<ImageButton-->
-        <!--android:id="@+id/btn_create_lobby"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:src="@drawable/ico_float_orange_add"-->
-        <!--android:background="@android:color/transparent"-->
-        <!--android:gravity="center"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_margin="@dimen/margin_2x"/>-->
-
-
+        <include layout="@layout/view_no_lobby"/>
     </RelativeLayout>
 
     <FrameLayout
@@ -98,8 +55,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_normal"
                     android:hint="@string/hint_search_games"
-                    android:singleLine="true"
-                    android:imeOptions="actionDone"/>
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"/>
 
                 <com.swarmnyc.pup.view.GamePlatformSelectView
                     android:id="@+id/platform_select"
@@ -116,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:scaleType="fitXY"
-                android:src="@drawable/bar_full_pull" />
+                android:src="@drawable/bar_full_pull"/>
         </LinearLayout>
     </FrameLayout>
 

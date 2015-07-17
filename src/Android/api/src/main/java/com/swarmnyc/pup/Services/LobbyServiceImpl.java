@@ -7,169 +7,88 @@ import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.QBChatMessage2;
 import com.swarmnyc.pup.viewmodels.LobbySearchResult;
+
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class LobbyServiceImpl implements LobbyService
-{
-	private LobbyRestApi lobbyRestApi;
+public class LobbyServiceImpl implements LobbyService {
+    private LobbyRestApi lobbyRestApi;
 
-	public LobbyServiceImpl( LobbyRestApi lobbyRestApi )
-	{
-		this.lobbyRestApi = lobbyRestApi;
-	}
+    public LobbyServiceImpl(LobbyRestApi lobbyRestApi) {
+        this.lobbyRestApi = lobbyRestApi;
+    }
 
-	@Override
-	public void getLobby( String lobbyId, final ServiceCallback<Lobby> callback )
-	{
-		assert lobbyId != null;
-		assert callback != null;
+    @Override
+    public void getLobby(String lobbyId, final ServiceCallback<Lobby> callback) {
+        assert lobbyId != null;
+        assert callback != null;
 
-		lobbyRestApi.get(
-			lobbyId, new RestApiCallback<Lobby>()
-			{
-				@Override
-				public void success( Lobby lobby, Response response )
-				{
-					if ( callback != null )
-					{ callback.success( lobby ); }
-				}
-			}
-		);
-	}
+        lobbyRestApi.get(lobbyId, new RestApiCallback<Lobby>(callback));
+    }
 
-	@Override
-	public void getLobbies( LobbyFilter filter, final ServiceCallback<LobbySearchResult> callback )
-	{
-		if ( filter == null ) { filter = new LobbyFilter(); }
+    @Override
+    public void getLobbies(LobbyFilter filter, final ServiceCallback<LobbySearchResult> callback) {
+        if (filter == null) {
+            filter = new LobbyFilter();
+        }
 
-		this.lobbyRestApi.getLobbies(
-			filter.toMap(),
-			filter.getPlatforms(),
-			filter.getLevels(),
-			filter.getStyles(),
-			new RestApiCallback<LobbySearchResult>()
-			{
-				@Override
-				public void success( LobbySearchResult result, Response response )
-				{
-					if ( callback != null )
-					{ callback.success( result ); }
-				}
-			}
-		);
-	}
+        this.lobbyRestApi.getLobbies(
+                filter.toMap(),
+                filter.getPlatforms(),
+                filter.getLevels(),
+                filter.getStyles(),
+                new RestApiCallback<LobbySearchResult>(callback)
+        );
+    }
 
-	@Override
-	public void getMyLobbies(
-		LobbyFilter filter, final ServiceCallback<List<Lobby>> callback
-	)
-	{
-		if ( filter == null ) { filter = new LobbyFilter(); }
+    @Override
+    public void getMyLobbies(
+            LobbyFilter filter, final ServiceCallback<List<Lobby>> callback
+    ) {
+        if (filter == null) {
+            filter = new LobbyFilter();
+        }
 
-		this.lobbyRestApi.getMyLobbies(
-			filter.toMap(),
-			filter.getPlatforms(),
-			filter.getLevels(),
-			filter.getStyles(),
-			new RestApiCallback<List<Lobby>>()
-			{
-				@Override
-				public void success( List<Lobby> list, Response response )
-				{
-					if ( callback != null )
-					{ callback.success( list ); }
-				}
-			}
-		);
-	}
+        this.lobbyRestApi.getMyLobbies(
+                filter.toMap(),
+                filter.getPlatforms(),
+                filter.getLevels(),
+                filter.getStyles(),
+                new RestApiCallback<List<Lobby>>(callback)
+        );
+    }
 
-	@Override
-	public void getMessages(
-		final String id, final ServiceCallback<List<QBChatMessage2>> callback
-	)
-	{
-		this.lobbyRestApi.message(
-			id, new RestApiCallback<List<QBChatMessage2>>() {
-				@Override
-				public void success( final List<QBChatMessage2> qbChatMessage2s, final Response response )
-				{
-					if ( callback != null )
-					{ callback.success( qbChatMessage2s ); }
-				}
-			}
-		);
-	}
+    @Override
+    public void getMessages(
+            final String id, final ServiceCallback<List<QBChatMessage2>> callback
+    ) {
+        this.lobbyRestApi.message(id, new RestApiCallback<List<QBChatMessage2>>(callback));
+    }
 
-	@Override
-	public void create(
-		final Lobby lobby, final ServiceCallback<Lobby> callback
-	)
-	{
-		this.lobbyRestApi.create(
-			lobby, new RestApiCallback<Lobby>()
-			{
-				@Override
-				public void success( final Lobby lobby, final Response response )
-				{
-					if ( callback != null )
-					{ callback.success( lobby ); }
-				}
-			}
-		);
-	}
+    @Override
+    public void create(
+            final Lobby lobby, final ServiceCallback<Lobby> callback
+    ) {
+        this.lobbyRestApi.create(lobby, new RestApiCallback<Lobby>(callback));
+    }
 
-	@Override
-	public void join( String id, final ServiceCallback callback )
-	{
-		this.lobbyRestApi.join(
-			id, new EmptyRestApiCallback()
-			{
-				@Override
-				public void success( Response response )
-				{
-					if ( callback != null )
-					{ callback.success( null ); }
-				}
-			}
-		);
-	}
+    @Override
+    public void join(String id, final ServiceCallback callback) {
+        this.lobbyRestApi.join(id, new EmptyRestApiCallback(callback));
+    }
 
-	@Override
-	public void leave( String id, final ServiceCallback callback )
-	{
-		this.lobbyRestApi.leave(
-			id, new EmptyRestApiCallback()
-			{
-				@Override
-				public void success( Response response )
-				{
-					if ( callback != null )
-					{ callback.success( null ); }
-				}
-			}
-		);
-	}
+    @Override
+    public void leave(String id, final ServiceCallback callback) {
+        this.lobbyRestApi.leave(id, new EmptyRestApiCallback(callback));
+    }
 
-	@Override
-	public void invite( final Lobby lobby, final List<String> types, final ServiceCallback callback )
-	{
-		String localTime = new SimpleDateFormat( "MMM dd h:mm a '('zzz')'" ).format( lobby.getStartTime() );
+    @Override
+    public void invite(final Lobby lobby, final List<String> types, final ServiceCallback callback) {
+        String localTime = new SimpleDateFormat("MMM dd h:mm a '('zzz')'").format(lobby.getStartTime());
 
-		this.lobbyRestApi.invite(
-			lobby.getId(), localTime , types, new EmptyRestApiCallback()
-			{
-				@Override
-				public void success( Response response )
-				{
-					if ( callback != null )
-					{ callback.success( null ); }
-				}
-			}
-		);
-	}
-
-
+        this.lobbyRestApi.invite(lobby.getId(), localTime, types, new EmptyRestApiCallback(callback));
+    }
 }

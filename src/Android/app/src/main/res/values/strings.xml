@@ -72,6 +72,7 @@
     <string name="text_later_this_week">Later this week</string>
     <string name="text_next_week">Next week</string>
     <string name="text_right_now">Right Now</string>
+    <string name="text_tos"><a href="http://partyupplayer.com/tos.php">TOS Document</a></string>
 
     <string name="message_create_lobby_wrong_chose_time">Hey! it is better to choose future time.</string>
     <string name="message_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
@@ -85,10 +86,13 @@
     <string name="message_connect_failure">Connection Failure</string>
     <string name="message_disconnect_success">Disconnected</string>
     <string name="message_disconnect_failure">Disconnection Failure</string>
+    <string name="message_operation_failed">Operation Failed!</string>
+    <string name="message_no_connection">No Connection!</string>
+    <string name="message_user_being_token">The email or user name is taken.</string>
+    <string name="message_invalid_email_and_name">Invalid Email or User Name</string>
 
     <string name="time_in_minutes">in %d minutes</string>
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
-    <string name="msg_loading_more_lobbies">Loading more games...</string>
-    <string name="text_tos"><a href="http://partyupplayer.com/tos.php">TOS Document</a></string>
+
 </resources>

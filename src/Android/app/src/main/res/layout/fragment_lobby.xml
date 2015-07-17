@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout android:id="@+id/layout_coordinator"
-                                                 xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/layout_coordinator"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     >
 
     <android.support.design.widget.AppBarLayout
@@ -82,10 +83,10 @@
                 android:id="@+id/edit_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_quarter"
                 android:layout_marginLeft="@dimen/margin_half"
                 android:layout_toLeftOf="@+id/btn_send"
                 android:background="@drawable/bg_edit_text"
-                android:layout_marginBottom="@dimen/margin_quarter"
                 android:gravity="bottom"
                 android:maxLines="3"
                 android:minHeight="55dp"

@@ -8,7 +8,7 @@
             android:layout_height="wrap_content" android:layout_gravity="center"/>
 
     <TextView
-            android:text="@string/msg_loading_more_lobbies"
+            android:text="@string/message_loading"
             android:gravity="center"
 
             android:layout_width="match_parent"

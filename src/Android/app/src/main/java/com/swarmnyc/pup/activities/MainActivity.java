@@ -164,13 +164,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Subscribe
-    public void runtimeError(final RuntimeException exception) {
+    public void runtimeError(final Exception exception) {
         this.runOnUiThread(
                 new Runnable() {
                     @Override
                     public void run() {
-                        // TODO: Better Message content
-                        DialogHelper.showError(MainActivity.this, exception.getMessage());
+                        DialogHelper.showError(MainActivity.this, exception);
                     }
                 }
         );
