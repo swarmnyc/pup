@@ -6,12 +6,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -49,6 +51,9 @@ public class SettingsFragment extends BaseFragment
 	@InjectView( R.id.switch_tumblr )
 	Switch m_tumblrSwitch;
 
+	@InjectView(R.id.txt_tos)
+	TextView m_tosText;
+
 	@Override
 	public String getScreenName()
 	{
@@ -77,8 +82,6 @@ public class SettingsFragment extends BaseFragment
 		ButterKnife.inject( this, view );
 		PuPApplication.getInstance().getComponent().inject( this );
 
-
-
 		if ( StringUtils.isNotEmpty( User.current.getPortraitUrl() ) )
 		{
 			Picasso.with( this.getActivity() ).load( User.current.getPortraitUrl() ).into( m_portrait );
@@ -90,6 +93,8 @@ public class SettingsFragment extends BaseFragment
 		m_twitterSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_TWITTER) );
 		m_redditSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_REDDIT) );
 		m_tumblrSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_TUMBLR) );
+
+		m_tosText.setMovementMethod(LinkMovementMethod.getInstance());
 	}
 
 	@Override

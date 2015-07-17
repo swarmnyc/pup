@@ -1,134 +1,139 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_normal"
+        android:paddingTop="@dimen/margin_normal">
+
+        <ImageView
+            android:id="@+id/img_portrait"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_portrait"/>
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignLeft="@id/img_portrait"
+            android:layout_alignTop="@+id/img_portrait"
+            android:background="@drawable/border">
+        </View>
+
+
+        <ImageView
+            android:id="@+id/img_camera"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignBottom="@+id/img_portrait"
+            android:layout_alignLeft="@+id/img_portrait"
+            android:layout_alignStart="@+id/img_portrait"
+            android:layout_margin="@dimen/margin_half"
+            android:src="@drawable/ico_camera_teal"
+            />
+
+        <EditText
+            android:id="@+id/text_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/img_portrait"
+            android:layout_margin="12dp"
+            android:layout_toEndOf="@+id/img_portrait"
+            android:layout_toRightOf="@+id/img_portrait"
+            android:enabled="false"
+            android:hint="@string/hint_username"/>
+
+        <TextView
+            android:id="@+id/text_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/img_camera"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_toEndOf="@+id/img_portrait"
+            android:layout_toRightOf="@+id/img_portrait"
+            android:text="@string/text_user_name_info"
+            android:textColor="@color/pup_light"/>
+
+        <View
+            style="@style/horizontal_line_light"
+            android:layout_below="@+id/img_portrait"
+            android:layout_marginTop="@dimen/margin_normal"/>
+
+        <LinearLayout
+            android:id="@+id/social_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/img_portrait"
+            android:layout_margin="@dimen/margin_normal"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/text_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-    android:paddingTop="@dimen/margin_normal"
-    android:paddingBottom="@dimen/margin_normal">
+                android:gravity="left"
+                android:text="@string/label_social_connection"/>
 
-    <ImageView
-        android:id="@+id/img_portrait"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginLeft="@dimen/margin_normal"
-        android:scaleType="centerCrop"
-        android:src="@drawable/default_portrait"/>
+            <Switch
+                android:id="@+id/switch_facebook"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_half"
+                android:text="@string/text_facebook"/>
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignTop="@+id/img_portrait"
-        android:layout_alignLeft="@id/img_portrait"
-        android:background="@drawable/border">
-    </View>
+            <Switch
+                android:id="@+id/switch_twitter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_half"
+                android:text="@string/text_twitter"/>
 
+            <Switch
+                android:id="@+id/switch_reddit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_half"
+                android:text="@string/text_reddit"/>
 
-    <ImageView
-        android:id="@+id/img_camera"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignBottom="@+id/img_portrait"
-        android:layout_alignLeft="@+id/img_portrait"
-        android:layout_alignStart="@+id/img_portrait"
-        android:layout_margin="@dimen/margin_half"
-        android:src="@drawable/ico_camera_teal"
-        />
+            <Switch
+                android:id="@+id/switch_tumblr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_half"
+                android:text="@string/text_tumblr"/>
+        </LinearLayout>
 
-    <EditText
-        android:id="@+id/text_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/img_portrait"
-        android:layout_margin="12dp"
-        android:layout_toEndOf="@+id/img_portrait"
-        android:layout_toRightOf="@+id/img_portrait"
-        android:enabled="false"
-        android:hint="@string/hint_username"/>
+        <View
+            style="@style/horizontal_line_light"
+            android:layout_below="@+id/social_panel"
+            android:layout_marginTop="@dimen/margin_normal"/>
 
-    <TextView
-        android:id="@+id/text_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/img_camera"
-        android:layout_marginRight="@dimen/margin_normal"
-        android:layout_marginLeft="@dimen/margin_normal"
-        android:layout_toEndOf="@+id/img_portrait"
-        android:layout_toRightOf="@+id/img_portrait"
-        android:text="@string/text_user_name_info"
-        android:textColor="@color/pup_light"/>
-
-    <View
-        style="@style/horizontal_line_light"
-        android:layout_below="@+id/img_portrait"
-        android:layout_marginTop="@dimen/margin_normal"/>
-
-    <LinearLayout
-        android:id="@+id/social_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/img_portrait"
-        android:layout_margin="@dimen/margin_normal"
-        android:orientation="vertical">
-
-        <TextView
-            style="@style/text_label"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left"
-            android:text="@string/label_social_connection"/>
+            android:layout_below="@+id/social_panel"
+            android:layout_margin="@dimen/margin_normal"
+            android:orientation="vertical">
 
-        <Switch
-            android:id="@+id/switch_facebook"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_half"
-            android:text="@string/text_facebook"/>
+            <TextView
+                style="@style/text_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="Legal"/>
 
-        <Switch
-            android:id="@+id/switch_twitter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_half"
-            android:text="@string/text_twitter"/>
-
-        <Switch
-            android:id="@+id/switch_reddit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_half"
-            android:text="@string/text_reddit"/>
-
-        <Switch
-            android:id="@+id/switch_tumblr"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_half"
-            android:text="@string/text_tumblr"/>
-    </LinearLayout>
-
-    <View
-        style="@style/horizontal_line_light"
-        android:layout_below="@+id/social_panel"
-        android:layout_marginTop="@dimen/margin_normal"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/social_panel"
-        android:layout_margin="@dimen/margin_normal"
-        android:orientation="vertical">
-
-        <TextView
-            style="@style/text_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:text="Legal"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_half"
-            android:autoLink="all"
-            android:text="@string/text_tos"/>
-    </LinearLayout>
-</RelativeLayout>
+            <TextView
+                android:id="@+id/txt_tos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_half"
+                android:text="@string/text_tos"/>
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>

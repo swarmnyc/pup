@@ -41,7 +41,7 @@
     <string name="label_date">When?</string>
     <string name="label_time">What Time?</string>
     <string name="label_description">DESCRIPTION</string>
-    <string name="label_settings"><![CDATA[Accounts & Settings]]></string>
+    <string name="label_settings"><![CDATA[Profile & Settings]]></string>
     <string name="label_your_pup_name">Your PUP username</string>
     <string name="label_social_connection">Social Connection</string>
     <string name="label_invite">No one\'s here yet.\nWhy not invite some friends?</string>
