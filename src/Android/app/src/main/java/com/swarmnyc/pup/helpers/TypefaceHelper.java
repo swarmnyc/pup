@@ -1,11 +1,11 @@
-package com.swarmnyc.pup.components;
+package com.swarmnyc.pup.helpers;
 
 import android.graphics.Typeface;
 import com.swarmnyc.pup.PuPApplication;
 
 import java.util.HashMap;
 
-public class Typefaces
+public class TypefaceHelper
 {
 	private static HashMap<String, Typeface> typefaces = new HashMap<>();
 

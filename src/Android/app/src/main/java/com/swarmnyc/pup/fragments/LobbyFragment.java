@@ -9,8 +9,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -37,6 +35,9 @@ import com.swarmnyc.pup.components.*;
 import com.swarmnyc.pup.events.ChatMessageReceiveEvent;
 import com.swarmnyc.pup.events.LobbyUserChangeEvent;
 import com.swarmnyc.pup.events.UserChangedEvent;
+import com.swarmnyc.pup.helpers.DialogHelper;
+import com.swarmnyc.pup.helpers.SoftKeyboardHelper;
+import com.swarmnyc.pup.listeners.HideKeyboardFocusChangedListener;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 import com.swarmnyc.pup.models.QBChatMessage2;
@@ -46,11 +47,9 @@ import com.swarmnyc.pup.view.ShareView;
 
 import javax.inject.Inject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 
 public class LobbyFragment extends BaseFragment {

@@ -24,8 +24,8 @@ import butterknife.OnClick;
 
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.*;
-import com.swarmnyc.pup.components.DialogHelper;
-import com.swarmnyc.pup.components.FacebookHelper;
+import com.swarmnyc.pup.helpers.DialogHelper;
+import com.swarmnyc.pup.helpers.FacebookHelper;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.fragments.BaseFragment;

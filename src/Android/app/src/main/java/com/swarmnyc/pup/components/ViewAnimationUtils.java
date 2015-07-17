@@ -4,13 +4,13 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.listeners.AnimationEndListener;
+import com.swarmnyc.pup.listeners.AnimationStartListener;
 
 /**
  * Created by somya on 4/24/15.

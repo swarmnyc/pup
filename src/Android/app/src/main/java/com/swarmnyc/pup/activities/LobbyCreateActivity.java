@@ -9,8 +9,7 @@ import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.components.DialogHelper;
-import com.swarmnyc.pup.components.SoftKeyboardHelper;
+import com.swarmnyc.pup.helpers.DialogHelper;
 
 public class LobbyCreateActivity extends AppCompatActivity
 {

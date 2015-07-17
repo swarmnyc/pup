@@ -11,7 +11,7 @@ import com.quickblox.core.request.QBRequestGetBuilder;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.User;
-import com.swarmnyc.pup.components.DialogHelper;
+import com.swarmnyc.pup.helpers.DialogHelper;
 import com.swarmnyc.pup.events.ChatMessageReceiveEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;

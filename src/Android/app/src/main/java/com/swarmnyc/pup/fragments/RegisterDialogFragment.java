@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.TempFragmentDialog;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -17,13 +16,12 @@ import android.widget.ImageView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.soundcloud.android.crop.Crop;
+
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.Services.UserService;
-import com.swarmnyc.pup.chat.MessageService;
-import com.swarmnyc.pup.components.DialogHelper;
-import com.swarmnyc.pup.components.PhotoHelper;
+import com.swarmnyc.pup.helpers.DialogHelper;
+import com.swarmnyc.pup.helpers.PhotoHelper;
 import com.swarmnyc.pup.models.CurrentUserInfo;
 
 import javax.inject.Inject;

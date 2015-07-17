@@ -1,11 +1,10 @@
-package com.swarmnyc.pup.components;
+package com.swarmnyc.pup.helpers;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.activities.MainActivity;
 
 public class DialogHelper
 {

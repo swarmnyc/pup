@@ -15,7 +15,7 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.User;
-import com.swarmnyc.pup.components.FacebookHelper;
+import com.swarmnyc.pup.helpers.FacebookHelper;
 import com.swarmnyc.pup.fragments.OAuthFragment;
 import com.swarmnyc.pup.fragments.RedditShareFragment;
 import com.swarmnyc.pup.models.Lobby;

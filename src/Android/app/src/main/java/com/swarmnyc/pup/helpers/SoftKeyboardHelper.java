@@ -1,4 +1,4 @@
-package com.swarmnyc.pup.components;
+package com.swarmnyc.pup.helpers;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.components.Action;
 
 public class SoftKeyboardHelper
 {

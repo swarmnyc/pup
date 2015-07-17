@@ -2,19 +2,15 @@ package com.swarmnyc.pup.fragments;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.Html;
-import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.*;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 
@@ -36,11 +32,10 @@ import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
 import com.swarmnyc.pup.adapters.LobbyAdapter;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.GamePlatformUtils;
-import com.swarmnyc.pup.components.SoftKeyboardHelper;
+import com.swarmnyc.pup.helpers.SoftKeyboardHelper;
 import com.swarmnyc.pup.components.Utility;
 import com.swarmnyc.pup.models.Game;
 import com.swarmnyc.pup.models.GamePlatform;
-import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
 import com.swarmnyc.pup.viewmodels.LobbySearchResult;
 import com.uservoice.uservoicesdk.UserVoice;

@@ -1,4 +1,4 @@
-package com.swarmnyc.pup.components;
+package com.swarmnyc.pup.helpers;
 
 import android.app.Activity;
 import android.content.Intent;

@@ -5,9 +5,9 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
-import com.swarmnyc.pup.Consts;
+
 import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.components.Typefaces;
+import com.swarmnyc.pup.helpers.TypefaceHelper;
 
 public class FontableTextView extends TextView
 {
@@ -28,7 +28,7 @@ public class FontableTextView extends TextView
 
 		if ( font != null )
 		{
-			Typeface typeface = Typefaces.get( font );
+			Typeface typeface = TypefaceHelper.get(font);
 			if ( typeface != null )
 			{
 				this.setTypeface( typeface );

@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +21,8 @@ import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.Services.UserService;
-import com.swarmnyc.pup.activities.MainActivity;
-import com.swarmnyc.pup.components.FacebookHelper;
-import com.swarmnyc.pup.components.PhotoHelper;
+import com.swarmnyc.pup.helpers.FacebookHelper;
+import com.swarmnyc.pup.helpers.PhotoHelper;
 
 import javax.inject.Inject;
 
