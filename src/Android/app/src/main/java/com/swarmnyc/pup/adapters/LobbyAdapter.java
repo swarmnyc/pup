@@ -2,7 +2,6 @@ package com.swarmnyc.pup.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +45,7 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 		addSection( context.getString( R.string.text_later_this_week ) );
 		addSection( context.getString( R.string.text_next_week ) );
 
-		calcuateSectionTime();
+		calculateSectionTime();
 	}
 
 	public void endLoading()
@@ -154,7 +153,7 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 
 	public void setCount( final int[] counts )
 	{
-		calcuateSectionTime();
+		calculateSectionTime();
 
 		for ( int i = 0; i < counts.length; i++ )
 		{
@@ -162,7 +161,7 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 		}
 	}
 
-	private void calcuateSectionTime()
+	private void calculateSectionTime()
 	{Calendar c = new GregorianCalendar();
 		c.set( Calendar.HOUR_OF_DAY, 0 );
 		c.set( Calendar.MINUTE, 0 );

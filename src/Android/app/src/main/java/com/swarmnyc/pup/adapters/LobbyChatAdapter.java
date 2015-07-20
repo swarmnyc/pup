@@ -15,15 +15,18 @@ import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.StringUtils;
+import com.swarmnyc.pup.TimeUtils;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.chat.ChatMessage;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.GamePlatformUtils;
 import com.swarmnyc.pup.models.Lobby;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int SYSTEM = 0;
@@ -168,12 +171,16 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void setLobby(final Lobby lobby) {
         m_lobby = lobby;
         computeOffset();
-        notifyItemInserted(0);
     }
 
     public void isLoading(boolean loading) {
         this.m_isLoading = loading;
         computeOffset();
+    }
+
+    public void clear() {
+        this.m_chatMessages.clear();
+        this.m_chatMessageIds.clear();
     }
 
     private void computeOffset() {
@@ -234,6 +241,9 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @InjectView(R.id.text_lobby_type)
         TextView typeText;
 
+        @InjectView(R.id.text_time)
+        TextView timeText;
+
         public HeaderViewHolder(final View view) {
             super(view);
             ButterKnife.inject(this, view);
@@ -242,6 +252,26 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public void setLobby(final Lobby lobby) {
             descriptionText.setText(lobby.getDescription());
             typeText.setText(lobby.getPlayStyle().name() + " | " + lobby.getSkillLevel().name());
+
+            long offset = m_lobby.getStartTime().getTime() - TimeUtils.todayTimeMillis();
+            String time;
+            if (offset < 0) {
+                SimpleDateFormat format = new SimpleDateFormat("MMM dd @ h:mm a", Locale.getDefault());
+                time = "Started " + format.format(m_lobby.getStartTime());
+            } else if (offset < TimeUtils.day_in_millis) {
+                SimpleDateFormat format = new SimpleDateFormat("@ h:mm a", Locale.getDefault());
+                time = "Today " + format.format(m_lobby.getStartTime());
+            } else if (offset < TimeUtils.week_in_millis) {
+                SimpleDateFormat format = new SimpleDateFormat("EEEE @ h:mm a", Locale.getDefault());
+                time = format.format(m_lobby.getStartTime());
+            } else {
+                SimpleDateFormat format = new SimpleDateFormat("MMM dd @ h:mm a", Locale.getDefault());
+                time = format.format(m_lobby.getStartTime());
+            }
+
+            time = String.format("%s: %s", GamePlatformUtils.labelForPlatform(m_context, m_lobby.getPlatform()), time);
+
+            timeText.setText(time);
         }
     }
 

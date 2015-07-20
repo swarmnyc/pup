@@ -278,9 +278,9 @@ public class LobbyFragment extends BaseFragment {
 
     private void initChatRoom() {
         m_first = true;
-
+        m_lobbyChatAdapter.clear();
         m_lobbyChatAdapter.setLobby(m_lobby);
-
+        m_lobbyChatAdapter.notifyDataSetChanged();
         if (m_lobby.isAliveUser(User.current.getId())) {
             // Get Data
             m_chatRoomService = new ChatRoomService(getActivity(), m_lobby);
