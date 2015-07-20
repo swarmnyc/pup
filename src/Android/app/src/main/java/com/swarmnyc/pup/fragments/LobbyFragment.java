@@ -184,6 +184,7 @@ public class LobbyFragment extends BaseFragment {
                     }
                 }
         );
+        m_lobbyChatAdapter.isLoading(true);
 
         m_chatList.setAdapter(m_lobbyChatAdapter);
         m_chatList.setLayoutManager(m_chatListLayoutManager);
@@ -375,12 +376,13 @@ public class LobbyFragment extends BaseFragment {
         if (event.getRoomId().equals(m_lobby.getRoomId()) && !this.isDetached()) {
             //After receive history
             if (m_first) {
+                m_lobbyChatAdapter.isLoading(false);
                 switchButton();
             }
 
             ArrayList<ChatMessage> messages = processSystemMessages(event);
 
-            boolean scollingToEnd = m_first || (m_lobbyChatAdapter.getItemCount()
+            boolean scrollingToEnd = m_first || (m_lobbyChatAdapter.getItemCount()
                     - m_chatListLayoutManager.findLastVisibleItemPosition() < 3
             );
             m_lastListScrollingTime = System.currentTimeMillis();
@@ -410,11 +412,11 @@ public class LobbyFragment extends BaseFragment {
             }
 
             // Scrolling
-            if (scollingToEnd) {
+            if (scrollingToEnd) {
                 Log.d(TAG, "Scrolling After Receive Message");
 
                 m_chatList.scrollToPosition(size - 1);
-                if (m_chatList.getVisibility() == View.GONE) {
+                if (m_first) {
                     initChatListAndAppBar();
                 }
             }
@@ -428,8 +430,6 @@ public class LobbyFragment extends BaseFragment {
                 new Runnable() {
                     @Override
                     public void run() {
-                        m_chatList.setVisibility(View.VISIBLE);
-
                         int height = Consts.windowHeight - m_appbar.getHeight() - m_textPanel.getHeight();
 
                         for (int i = 0; i < m_chatList.getChildCount(); i++) {
