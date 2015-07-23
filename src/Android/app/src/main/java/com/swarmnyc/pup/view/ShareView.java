@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 import com.swarmnyc.pup.AsyncCallback;
 import com.swarmnyc.pup.Consts;
@@ -25,13 +25,13 @@ import java.util.List;
 
 public class ShareView extends LinearLayout
 {
-	@InjectView( R.id.btn_facebook ) ImageView m_facebookButton;
+	@Bind( R.id.btn_facebook ) ImageView m_facebookButton;
 
-	@InjectView( R.id.btn_twitter ) ImageView m_twitterButton;
+	@Bind( R.id.btn_twitter ) ImageView m_twitterButton;
 
-	@InjectView( R.id.btn_tumblr ) ImageView m_tumblrButton;
+	@Bind( R.id.btn_tumblr ) ImageView m_tumblrButton;
 
-	@InjectView( R.id.btn_reddit ) ImageView m_redditButton;
+	@Bind( R.id.btn_reddit ) ImageView m_redditButton;
 
 	private LobbyService m_lobbyService;
 	private Lobby m_lobby;
@@ -50,7 +50,7 @@ public class ShareView extends LinearLayout
 		inflate( getContext(), R.layout.view_share, this );
 		if ( !isInEditMode() )
 		{
-			ButterKnife.inject( this );
+			ButterKnife.bind( this );
 
 			setButtonState( User.current.hasSocialMedium( Consts.KEY_FACEBOOK ), m_facebookButton );
 			setButtonState( User.current.hasSocialMedium( Consts.KEY_TWITTER ), m_twitterButton );

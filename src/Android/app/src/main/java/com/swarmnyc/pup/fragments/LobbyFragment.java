@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 
 import com.squareup.otto.Subscribe;
@@ -58,34 +58,34 @@ public class LobbyFragment extends BaseFragment {
     @Inject
     LobbyService m_lobbyService;
 
-    @InjectView(R.id.backdrop)
+    @Bind(R.id.backdrop)
     ImageView m_headerImage;
-    @InjectView(R.id.collapsing_toolbar)
+    @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout m_collapsingToolbarLayout;
-    @InjectView(R.id.toolbar)
+    @Bind(R.id.toolbar)
     Toolbar m_toolbar;
-    @InjectView(R.id.appbar)
+    @Bind(R.id.appbar)
     AppBarLayout m_appbar;
-    @InjectView(R.id.layout_coordinator)
+    @Bind(R.id.layout_coordinator)
     CoordinatorLayout m_coordinatorLayout;
 
 
-    @InjectView(R.id.text_panel)
+    @Bind(R.id.text_panel)
     ViewGroup m_textPanel;
 
-    @InjectView(R.id.btn_join)
+    @Bind(R.id.btn_join)
     TextView m_joinButton;
 
-    @InjectView(R.id.edit_message)
+    @Bind(R.id.edit_message)
     EditText m_messageText;
 
-    @InjectView(R.id.btn_send)
+    @Bind(R.id.btn_send)
     View m_sendButton;
 
-    @InjectView(R.id.list_chat)
+    @Bind(R.id.list_chat)
     RecyclerView m_chatList;
 
-    @InjectView(R.id.share_panel)
+    @Bind(R.id.share_panel)
     ShareView m_sharePanel;
 
     ChatRoomService m_chatRoomService;
@@ -123,7 +123,7 @@ public class LobbyFragment extends BaseFragment {
     ) {
         super.onViewCreated(view, savedInstanceState);
         PuPApplication.getInstance().getComponent().inject(this);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
 
         if (StringUtils.isNotEmpty(m_lobbyImage)) {
@@ -235,7 +235,7 @@ public class LobbyFragment extends BaseFragment {
         super.onDestroyView();
 
         SoftKeyboardHelper.removeSoftKeyboardCallback(m_coordinatorLayout);
-        ButterKnife.reset(this);
+        ButterKnife.unbind(this);
     }
 
     public void loadFromBundle(final Bundle args) {

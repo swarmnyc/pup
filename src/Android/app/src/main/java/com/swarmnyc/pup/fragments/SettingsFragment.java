@@ -15,7 +15,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.*;
@@ -31,25 +31,25 @@ public class SettingsFragment extends BaseFragment
 	@Inject
 	UserService m_userService;
 
-	@InjectView( R.id.text_name )
+	@Bind( R.id.text_name )
 	EditText m_nameText;
 
-	@InjectView( R.id.img_portrait )
+	@Bind( R.id.img_portrait )
 	ImageView m_portrait;
 
-	@InjectView( R.id.switch_facebook )
+	@Bind( R.id.switch_facebook )
 	Switch m_fbSwitch;
 
-	@InjectView( R.id.switch_twitter )
+	@Bind( R.id.switch_twitter )
 	Switch m_twitterSwitch;
 
-	@InjectView( R.id.switch_reddit )
+	@Bind( R.id.switch_reddit )
 	Switch m_redditSwitch;
 
-	@InjectView( R.id.switch_tumblr )
+	@Bind( R.id.switch_tumblr )
 	Switch m_tumblrSwitch;
 
-	@InjectView(R.id.txt_tos)
+	@Bind(R.id.txt_tos)
 	TextView m_tosText;
 
 	@Override
@@ -77,7 +77,7 @@ public class SettingsFragment extends BaseFragment
 	public void onViewCreated( View view, Bundle savedInstanceState )
 	{
 		super.onViewCreated( view, savedInstanceState );
-		ButterKnife.inject( this, view );
+		ButterKnife.bind( this, view );
 		PuPApplication.getInstance().getComponent().inject( this );
 
 		if ( StringUtils.isNotEmpty( User.current.getPortraitUrl() ) )

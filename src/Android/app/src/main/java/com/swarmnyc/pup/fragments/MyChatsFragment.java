@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.*;
@@ -32,11 +32,11 @@ public class MyChatsFragment extends BaseFragment {
     @Inject
     LobbyService m_lobbyService;
 
-    @InjectView(R.id.list_chat)
+    @Bind(R.id.list_chat)
     RecyclerView m_chatList;
-    @InjectView(R.id.layout_refresh)
+    @Bind(R.id.layout_refresh)
     SwipeRefreshLayout m_refreshLayout;
-    @InjectView(R.id.layout_empty_results)
+    @Bind(R.id.layout_empty_results)
     ViewGroup m_emptyResults;
 
     private int pageIndex;
@@ -57,7 +57,7 @@ public class MyChatsFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         PuPApplication.getInstance().getComponent().inject(this);
         pageIndex = 0;
         m_myChatAdapter = new MyChatAdapter(this.getActivity());

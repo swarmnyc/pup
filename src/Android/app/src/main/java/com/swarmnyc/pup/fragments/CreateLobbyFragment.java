@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 
 import com.squareup.otto.Subscribe;
@@ -47,34 +47,34 @@ public class CreateLobbyFragment extends Fragment
     @Inject
     LobbyService m_lobbyService;
 
-    @InjectView(R.id.layout_lobby_create)
+    @Bind(R.id.layout_lobby_create)
     ViewGroup m_rootView;
 
-    @InjectView(R.id.img_game)
+    @Bind(R.id.img_game)
     ImageView m_gameImageView;
 
-    @InjectView(R.id.text_name)
+    @Bind(R.id.text_name)
     AutoCompleteTextView m_gameNameTextEdit;
 
-    @InjectView(R.id.platform_select)
+    @Bind(R.id.platform_select)
     GamePlatformSelectView m_gamePlatformSelectView;
 
-    @InjectView(R.id.spinner_play_style)
+    @Bind(R.id.spinner_play_style)
     HorizontalSpinner m_playStyleSpinner;
 
-    @InjectView(R.id.spinner_gamer_skill)
+    @Bind(R.id.spinner_gamer_skill)
     HorizontalSpinner m_gamerSkillSpinner;
 
-    @InjectView(R.id.text_date)
+    @Bind(R.id.text_date)
     TextView m_dateText;
 
-    @InjectView(R.id.text_time)
+    @Bind(R.id.text_time)
     TextView m_timeText;
 
-    @InjectView(R.id.text_description)
+    @Bind(R.id.text_description)
     EditText m_descriptionText;
 
-    @InjectView(R.id.btn_submit)
+    @Bind(R.id.btn_submit)
     Button m_submitButton;
 
     GameFilter m_gameFilter = new GameFilter();
@@ -179,7 +179,7 @@ public class CreateLobbyFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
 
         PuPApplication.getInstance().getComponent().inject(this);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         EventBus.getBus().register(this);
 
         m_gameAdapter = new AutoCompleteForPicturedModelAdapter<>(this.getActivity());

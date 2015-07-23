@@ -13,7 +13,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 import com.swarmnyc.pup.AsyncCallback;
 import com.swarmnyc.pup.R;
@@ -29,7 +29,7 @@ import java.text.SimpleDateFormat;
 
 public class RedditShareFragment extends TempFragmentDialog
 {
-	@InjectView( R.id.webview )
+	@Bind( R.id.webview )
 	WebView m_webview;
 
 	private Lobby         m_lobby;
@@ -44,7 +44,7 @@ public class RedditShareFragment extends TempFragmentDialog
 
 		AlertDialog alertDialog = new AlertDialog.Builder( this.getActivity() ).setView( view ).setCustomTitle( title ).create();
 
-		ButterKnife.inject( this, view );
+		ButterKnife.bind( this, view );
 		String localTime = null;
 		try {
 			localTime = URLEncoder.encode(new SimpleDateFormat( "MMM dd h:mm a '('zzz')'" ).format( m_lobby.getStartTime() ),"UTF-8");
@@ -83,7 +83,7 @@ public class RedditShareFragment extends TempFragmentDialog
 	public void onDestroyView()
 	{
 		super.onDestroyView();
-		ButterKnife.reset( this );
+		ButterKnife.unbind( this );
 	}
 
 	public void initialize( Lobby lobby, AsyncCallback callback )

@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.R;
@@ -27,18 +27,18 @@ import com.swarmnyc.pup.models.Lobby;
  */
 public class LobbyListItemView extends FrameLayout {
 
-    @InjectView(R.id.img_game)
+    @Bind(R.id.img_game)
     ImageView m_gameImage;
-    @InjectView(R.id.txt_game_name)
+    @Bind(R.id.txt_game_name)
     TextView m_gameName;
 
-    @InjectView(R.id.txt_game_time)
+    @Bind(R.id.txt_game_time)
     TextView m_gameTime;
-    @InjectView(R.id.txt_description)
+    @Bind(R.id.txt_description)
     TextView m_description;
-    @InjectView(R.id.txt_platform)
+    @Bind(R.id.txt_platform)
     TextView m_platform;
-    @InjectView(R.id.txt_gamer_style)
+    @Bind(R.id.txt_gamer_style)
     TextView m_gamerStyle;
     private Lobby m_lobby;
 
@@ -53,7 +53,7 @@ public class LobbyListItemView extends FrameLayout {
                 Context.LAYOUT_INFLATER_SERVICE
         );
         final View view = infalter.inflate(R.layout.item_lobby, this, true);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
     }
 
     public LobbyListItemView(Context context, AttributeSet attrs) {

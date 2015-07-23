@@ -19,7 +19,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 
 import com.squareup.otto.Subscribe;
@@ -37,16 +37,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    @InjectView(R.id.toolbar)
+    @Bind(R.id.toolbar)
     Toolbar m_toolbar;
-    @InjectView(R.id.viewpager)
+    @Bind(R.id.viewpager)
     ViewPager m_viewPager;
-    @InjectView(R.id.tabs)
+    @Bind(R.id.tabs)
     TabLayout m_tabLayout;
-    @InjectView(R.id.appbar)
+    @Bind(R.id.appbar)
     AppBarLayout m_appBarLayout;
 
-    @InjectView(R.id.layout_coordinator)
+    @Bind(R.id.layout_coordinator)
     CoordinatorLayout m_coordinatorLayout;
     private TabPagerAdapter m_tabPagerAdapter;
     private Boolean isLoggedIn = null;
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         PuPApplication.getInstance().getComponent().inject(this);
         m_toolbar.setTitle("");
         setSupportActionBar(m_toolbar);

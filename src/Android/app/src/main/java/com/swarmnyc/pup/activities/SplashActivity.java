@@ -7,14 +7,14 @@ import android.os.Message;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.R;
 
 
 public class SplashActivity extends Activity
 {
-	@InjectView( R.id.pup_logo )
+	@Bind( R.id.pup_logo )
 	ImageView logoImage;
 
 	Handler m_handler = new Handler()
@@ -31,7 +31,7 @@ public class SplashActivity extends Activity
 	{
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_splash );
-		ButterKnife.inject( this );
+		ButterKnife.bind( this );
 
 		int size = (int) ( Consts.windowWidth * 0.7 );
 		logoImage.getLayoutParams().width = size;

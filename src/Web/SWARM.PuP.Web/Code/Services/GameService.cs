@@ -29,6 +29,8 @@ namespace SWARM.PuP.Web.Services
                 query = query.Where(x => x.Platforms.ContainsAny(filter.Platforms));
             }
 
+            query = query.Where(x => x.State == ModelState.Active);
+
             query = DoOrderQuery(query, filter);
 
             return query;

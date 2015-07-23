@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.models.GamePlatform;
 
@@ -25,12 +25,12 @@ import java.util.List;
 public class GamePlatformSelectView extends LinearLayout
 {
 
-	@InjectView( R.id.btn_pc )       Button m_pcButton;
-	@InjectView( R.id.btn_steam )    Button m_steamButton;
-	@InjectView( R.id.btn_xbox_360 ) Button m_xbox360Button;
-	@InjectView( R.id.btn_xbox_one ) Button m_xboxOneButton;
-	@InjectView( R.id.btn_ps3 )      Button m_ps3Button;
-	@InjectView( R.id.btn_ps4 )      Button m_ps4Button;
+	@Bind( R.id.btn_pc )       Button m_pcButton;
+	@Bind( R.id.btn_steam )    Button m_steamButton;
+	@Bind( R.id.btn_xbox_360 ) Button m_xbox360Button;
+	@Bind( R.id.btn_xbox_one ) Button m_xboxOneButton;
+	@Bind( R.id.btn_ps3 )      Button m_ps3Button;
+	@Bind( R.id.btn_ps4 )      Button m_ps4Button;
 
 	private boolean m_allowMultiSelect = false;
 
@@ -79,7 +79,7 @@ public class GamePlatformSelectView extends LinearLayout
 			Context.LAYOUT_INFLATER_SERVICE
 		);
 		final View view = infalter.inflate( R.layout.view_system_select, this, true );
-		ButterKnife.inject( this, view );
+		ButterKnife.bind( this, view );
 
 		final OnClickListener onClickListener = m_allowMultiSelect ?  new MultiSelectOnClickListener() : new SingleSelectOnClickListener();
 

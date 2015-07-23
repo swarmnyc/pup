@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.R;
@@ -103,17 +103,17 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
     }
 
     public class MyChatViewHolder extends RecyclerView.ViewHolder {
-        @InjectView(R.id.img_game)
+        @Bind(R.id.img_game)
         ImageView m_gameImage;
-        @InjectView(R.id.img_game_border)
+        @Bind(R.id.img_game_border)
         View m_gameImageBorder;
-        @InjectView(R.id.txt_game_name)
+        @Bind(R.id.txt_game_name)
         TextView m_gameName;
-        @InjectView(R.id.txt_game_time)
+        @Bind(R.id.txt_game_time)
         TextView m_gameTime;
-        @InjectView(R.id.txt_lastMessage)
+        @Bind(R.id.txt_lastMessage)
         TextView m_lastMessage;
-        @InjectView(R.id.txt_platform)
+        @Bind(R.id.txt_platform)
         TextView m_platform;
 
         private Lobby m_lobby;
@@ -122,7 +122,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
             super(itemView);
 
             itemView.setTag(this);
-            ButterKnife.inject(this, itemView);
+            ButterKnife.bind(this, itemView);
 
             itemView.setOnClickListener(
                     new View.OnClickListener() {

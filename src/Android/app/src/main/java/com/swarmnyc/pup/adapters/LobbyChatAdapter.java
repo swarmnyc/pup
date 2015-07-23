@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.EventBus;
@@ -188,22 +188,22 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
-        @InjectView(R.id.contentPanel)
+        @Bind(R.id.contentPanel)
         ViewGroup container;
 
-        @InjectView(R.id.img_portrait)
+        @Bind(R.id.img_portrait)
         ImageView portrait;
 
-        @InjectView(R.id.text_name)
+        @Bind(R.id.text_name)
         TextView nameText;
 
-        @InjectView(R.id.text_message)
+        @Bind(R.id.text_message)
         TextView messageText;
 
         public ItemViewHolder(final View view) {
             super(view);
 
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
 
         public void setCharMessage(final ChatMessage chatMessage) {
@@ -235,18 +235,18 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     class HeaderViewHolder extends RecyclerView.ViewHolder {
-        @InjectView(R.id.text_description)
+        @Bind(R.id.text_description)
         TextView descriptionText;
 
-        @InjectView(R.id.text_lobby_type)
+        @Bind(R.id.text_lobby_type)
         TextView typeText;
 
-        @InjectView(R.id.text_time)
+        @Bind(R.id.text_time)
         TextView timeText;
 
         public HeaderViewHolder(final View view) {
             super(view);
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
 
         public void setLobby(final Lobby lobby) {

@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.*;
@@ -34,12 +34,12 @@ public class LobbyActivity extends AppCompatActivity {
     @Inject
     LobbyService m_lobbyService;
 
-    @InjectView(R.id.drawer_layout)
+    @Bind(R.id.drawer_layout)
     DrawerLayout m_drawerLayout;
 
-    @InjectView(R.id.toolbar)
+    @Bind(R.id.toolbar)
     Toolbar m_toolbar;
-    @InjectView(R.id.backdrop)
+    @Bind(R.id.backdrop)
     ImageView m_backdropImage;
     private Lobby m_lobby;
     private String m_lobbyId;
@@ -49,7 +49,7 @@ public class LobbyActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         PuPApplication.getInstance().getComponent().inject(this);
 

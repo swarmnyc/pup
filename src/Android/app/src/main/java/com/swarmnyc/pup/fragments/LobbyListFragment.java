@@ -15,7 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.swarmnyc.pup.Config;
@@ -48,19 +48,19 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LobbyListFragment extends BaseFragment {
-    @InjectView(R.id.txt_game_serach)
+    @Bind(R.id.txt_game_serach)
     public AutoCompleteTextView m_gameSearch;
-    @InjectView(R.id.layout_sliding_panel)
+    @Bind(R.id.layout_sliding_panel)
     public SlidingUpPanelLayout m_slidingPanel;
-    @InjectView(R.id.list_lobby)
+    @Bind(R.id.list_lobby)
     public RecyclerView m_lobbyRecyclerView;
-    @InjectView(R.id.platform_select)
+    @Bind(R.id.platform_select)
     public GamePlatformSelectView m_gamePlatformSelectView;
-    @InjectView(R.id.layout_empty_results)
+    @Bind(R.id.layout_empty_results)
     public ViewGroup m_emptyResults;
-    @InjectView(R.id.layout_refresh)
+    @Bind(R.id.layout_refresh)
     public SwipeRefreshLayout m_refreshLayout;
-    @InjectView(R.id.slidePanel)
+    @Bind(R.id.slidePanel)
     public ViewGroup m_slidePanel;
 
     @Inject
@@ -104,7 +104,7 @@ public class LobbyListFragment extends BaseFragment {
     ) {
         PuPApplication.getInstance().getComponent().inject(this);
         View view = inflater.inflate(R.layout.fragment_lobby_list, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 
         m_gamePlatformSelectView.setPlatformSelectionChangedListener(

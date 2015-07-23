@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 
 import com.swarmnyc.pup.*;
@@ -31,11 +31,11 @@ import javax.inject.Inject;
 public class RegisterDialogFragment extends TempFragmentDialog {
     @Inject
     UserService m_userService;
-    @InjectView(R.id.text_email)
+    @Bind(R.id.text_email)
     EditText m_emailText;
-    @InjectView(R.id.text_name)
+    @Bind(R.id.text_name)
     EditText m_nameText;
-    @InjectView(R.id.img_portrait)
+    @Bind(R.id.img_portrait)
     ImageView m_portrait;
     Uri m_portraitUri;
     private boolean goHome = true;
@@ -50,7 +50,7 @@ public class RegisterDialogFragment extends TempFragmentDialog {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_register, null);
         PuPApplication.getInstance().getComponent().inject(this);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setCustomTitle(inflater.inflate(R.layout.title_join_lobby, null));

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
@@ -31,8 +31,8 @@ public class MemberFragment extends Fragment
 {
 	@Inject LobbyService m_lobbyService;
 
-	@InjectView( R.id.list_members ) RecyclerView  m_memberList;
-	@InjectView( R.id.btn_leave )    View          m_leaveButton;
+	@Bind( R.id.list_members ) RecyclerView  m_memberList;
+	@Bind( R.id.btn_leave )    View          m_leaveButton;
 	private                          Lobby         m_lobby;
 	private                          MemberAdapter m_memberAdapter;
 
@@ -49,7 +49,7 @@ public class MemberFragment extends Fragment
 	{
 		super.onViewCreated( view, savedInstanceState );
 		PuPApplication.getInstance().getComponent().inject( this );
-		ButterKnife.inject( this, view );
+		ButterKnife.bind( this, view );
 
 		m_memberAdapter = new MemberAdapter( this.getActivity(), new ArrayList<LobbyUserInfo>() );
 		m_memberList.setAdapter( m_memberAdapter );
