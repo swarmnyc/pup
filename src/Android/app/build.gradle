@@ -3,8 +3,8 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     Properties properties = new Properties()
-    if (project.rootProject.file('local2.properties').exists()){
-        properties.load(project.rootProject.file('local2.properties').newDataInputStream())
+    if (project.rootProject.file('local.properties').exists()){
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
     }
 
     compileSdkVersion 22
