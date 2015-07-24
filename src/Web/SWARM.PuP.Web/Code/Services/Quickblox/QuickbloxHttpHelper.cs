@@ -12,7 +12,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
 {
     public static class QuickbloxHttpHelper
     {
-        private const int TimeOut = 19;
+        private const int TimeOut = 110;
         private static readonly string ApplicationId;
         private static readonly string AuthKey;
         private static readonly string AuthSecret;
@@ -100,13 +100,14 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     user = new { login = userId,/* email = UserEmail,*/ password = UserPassword }
                 });
 
+                result.session.created_at = DateTime.UtcNow;
                 return result.session;
             }
         }
 
         private static bool IsNoSession()
         {
-            return _defaultSession == null || (_defaultSession.created_at - DateTime.UtcNow).Minutes > TimeOut;
+            return _defaultSession == null || (DateTime.UtcNow - _defaultSession.created_at).Minutes > TimeOut;
         }
 
         private static string GenerateTimeStamp()

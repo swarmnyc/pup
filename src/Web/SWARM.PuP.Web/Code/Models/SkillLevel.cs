@@ -3,8 +3,9 @@
     public enum SkillLevel
     {
         Newbie,
-        Intermediate,
-        L337,
-        Pro
+        Easy,
+        Medium,
+        Hard,
+        Nightmare
     }
 }

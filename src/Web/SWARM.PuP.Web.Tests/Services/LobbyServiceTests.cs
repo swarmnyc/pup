@@ -33,7 +33,7 @@ namespace SWARM.PuP.Web.Tests.Services
                 PlayStyle = PlayStyle.Casual,
                 Platform = GamePlatform.Xbox360,
                 StartTimeUtc = DateTime.UtcNow.AddHours(1),
-                SkillLevel = SkillLevel.Pro,
+                SkillLevel = SkillLevel.Hard,
                 Description = "Test"
             }, userService.Collection.FindOne());
 
@@ -89,7 +89,7 @@ namespace SWARM.PuP.Web.Tests.Services
                 PlayStyle = PlayStyle.Normal,
                 Platform = GamePlatform.Xbox360,
                 StartTimeUtc = DateTime.UtcNow.AddHours(1),
-                SkillLevel = SkillLevel.Pro,
+                SkillLevel = SkillLevel.Hard,
                 Description = "Test"
             }, userService.GetSingle(x => x.UserName == "test"));
 
@@ -120,7 +120,7 @@ namespace SWARM.PuP.Web.Tests.Services
                     PictureUrl = game.PictureUrl,
                     ThumbnailPictureUrl = game.ThumbnailPictureUrl,
                     StartTimeUtc = DateTime.UtcNow.AddMinutes(random.Next(1, 100)),
-                    SkillLevel = SkillLevel.Pro,
+                    SkillLevel = SkillLevel.Hard,
                     Description = "Let's play it"
                 }, userService.Collection.FindOne());
             }

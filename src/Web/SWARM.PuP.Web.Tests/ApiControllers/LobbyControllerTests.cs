@@ -76,7 +76,7 @@ namespace SWARM.PuP.Web.Tests.ApiControllers
                 PlayStyle = PlayStyle.Casual,
                 Platform = GamePlatform.Xbox,
                 StartTimeUtc = DateTime.UtcNow.AddHours(1),
-                SkillLevel = SkillLevel.Pro,
+                SkillLevel = SkillLevel.Hard,
                 Description = "Test"
             });
 
