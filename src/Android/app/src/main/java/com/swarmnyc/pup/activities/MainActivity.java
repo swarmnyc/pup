@@ -1,7 +1,10 @@
 package com.swarmnyc.pup.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -17,24 +20,30 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewConfiguration;
-
-import butterknife.ButterKnife;
-import butterknife.Bind;
-import butterknife.OnClick;
+import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
-import com.swarmnyc.pup.*;
-import com.swarmnyc.pup.helpers.DialogHelper;
-import com.swarmnyc.pup.helpers.FacebookHelper;
+import com.swarmnyc.pup.Config;
+import com.swarmnyc.pup.Consts;
+import com.swarmnyc.pup.EventBus;
+import com.swarmnyc.pup.PuPApplication;
+import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.components.Navigator;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.fragments.BaseFragment;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
 import com.swarmnyc.pup.fragments.MyChatsFragment;
 import com.swarmnyc.pup.fragments.SettingsFragment;
+import com.swarmnyc.pup.helpers.DialogHelper;
+import com.swarmnyc.pup.helpers.FacebookHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
     @Bind(R.id.toolbar)
@@ -50,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     CoordinatorLayout m_coordinatorLayout;
     private TabPagerAdapter m_tabPagerAdapter;
     private Boolean isLoggedIn = null;
+    private Fragment m_currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         m_tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
-        m_tabPagerAdapter.addFragment(new LobbyListFragment(), "ALL GAMES");
+        m_tabPagerAdapter.addFragment(m_currentFragment = new LobbyListFragment(), "ALL GAMES");
         if (User.isLoggedIn()) {
             m_tabPagerAdapter.addFragment(new MyChatsFragment(), "JOINED GAMES");
             m_tabPagerAdapter.addFragment(new SettingsFragment(), "PROFILE");
@@ -134,9 +144,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(final int position) {
                 Consts.currentPage = position;
-                final Fragment fragment = m_tabPagerAdapter.getItem(position);
-                if (fragment instanceof BaseFragment) {
-                    BaseFragment bf = (BaseFragment) fragment;
+                m_currentFragment = m_tabPagerAdapter.getItem(position);
+                if (m_currentFragment instanceof BaseFragment) {
+                    BaseFragment bf = (BaseFragment) m_currentFragment;
                     bf.updateTitle();
 
                     PuPApplication.getInstance().sendScreenToTracker(bf.getScreenName());
@@ -169,6 +179,16 @@ public class MainActivity extends AppCompatActivity {
                 new Runnable() {
                     @Override
                     public void run() {
+                        TextView textView = (TextView) m_currentFragment.getView().findViewById(R.id.text_empty_results);
+                        if (textView != null) {
+                            ConnectivityManager cm =
+                                    (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                            if (activeNetwork == null || !activeNetwork.isConnectedOrConnecting()) {
+                                textView.setText(R.string.message_no_internet);
+                            }
+                        }
+
                         DialogHelper.showError(MainActivity.this, exception);
                     }
                 }

@@ -2,6 +2,9 @@ package com.swarmnyc.pup.fragments;
 
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,6 +16,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
@@ -62,6 +66,9 @@ public class LobbyListFragment extends BaseFragment {
     public SwipeRefreshLayout m_refreshLayout;
     @Bind(R.id.slidePanel)
     public ViewGroup m_slidePanel;
+    @Bind(R.id.text_empty_results)
+    public TextView m_noResultView;
+
 
     @Inject
     GameService gameService;
@@ -379,6 +386,7 @@ public class LobbyListFragment extends BaseFragment {
                         m_lobbyAdapter.setReachEndAction(Consts.PAGE_SIZE == result.getResult().size() ? m_loadMore : null);
 
                         if (restart && result.getResult().size() == 0) {
+                            m_noResultView.setText(R.string.message_no_lobbies);
                             com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(getActivity(), m_emptyResults);
                         } else {
                             com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(getActivity(), m_emptyResults);

@@ -1,7 +1,6 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,6 +45,7 @@
             android:layout_toEndOf="@+id/img_portrait"
             android:layout_toRightOf="@+id/img_portrait"
             android:enabled="false"
+            android:focusable="false"
             android:hint="@string/hint_username"/>
 
         <TextView
@@ -91,21 +91,21 @@
                 android:id="@+id/switch_twitter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_half"
+                android:layout_marginTop="@dimen/margin_2x"
                 android:text="@string/text_twitter"/>
 
             <Switch
                 android:id="@+id/switch_reddit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_half"
+                android:layout_marginTop="@dimen/margin_2x"
                 android:text="@string/text_reddit"/>
 
             <Switch
                 android:id="@+id/switch_tumblr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_half"
+                android:layout_marginTop="@dimen/margin_2x"
                 android:text="@string/text_tumblr"/>
         </LinearLayout>
 
@@ -136,4 +136,4 @@
                 android:text="@string/text_tos"/>
         </LinearLayout>
     </RelativeLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>

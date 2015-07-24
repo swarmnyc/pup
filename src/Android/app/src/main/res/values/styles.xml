@@ -146,9 +146,9 @@
         <item name="itemColor">@color/pup_light</item>
         <item name="itemTextSize">@dimen/text11</item>
         <item name="itemSelectColor">@color/pup_teal</item>
-        <item name="itemSelectTextSize">@dimen/text25</item>
+        <item name="itemSelectTextSize">@dimen/text23</item>
         <item name="itemTextFont">@string/font_roboto_slab</item>
-        <item name="itemWidth">150dp</item>
+        <item name="itemWidth">160dp</item>
         <item name="itemHeight">32dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

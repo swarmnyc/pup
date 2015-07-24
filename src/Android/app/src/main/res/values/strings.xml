@@ -23,7 +23,7 @@
     <string name="hint_singup">We \'re still in alpha and would love to hear you feedback,\nso chat with us up when you get the chance.</string>
     <string name="hint_search_games">Search games</string>
     <string name="hint_description">Hey guys, I\'ll be heading out and over to checkout the area :) exited!</string>
-    <string name="hint_game_name">The Secret World</string>
+    <string name="hint_game_name">Type your game name</string>
     <string name="hint_require_email">And an email, so you can access your account.</string>
     <string name="hint_username">unique username</string>
 
@@ -76,6 +76,7 @@
 
     <string name="message_create_lobby_wrong_chose_time">Hey! it is better to choose future time.</string>
     <string name="message_no_lobbies">We didn\'t find any lobbies, why not start one of your own. --></string>
+    <string name="message_no_internet">Seems like you\'ve travelled back in time. There is no internet! Please return to the modern era to use PUP.</string>
     <string name="message_lobby_creating">Creating</string>
     <string name="message_error_title">Oops! There is something wrong</string>
     <string name="message_loading">Loading</string>
@@ -94,5 +95,6 @@
     <string name="time_in_minutes">in %d minutes</string>
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
+    <string name="text_join">Join</string>
 
 </resources>

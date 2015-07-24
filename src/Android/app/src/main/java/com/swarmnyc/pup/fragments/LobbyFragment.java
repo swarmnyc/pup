@@ -319,10 +319,12 @@ public class LobbyFragment extends BaseFragment {
                 m_textPanel.setVisibility(View.VISIBLE);
             } else {
                 m_joinButton.setVisibility(View.VISIBLE);
+                m_joinButton.setText(R.string.text_join);
                 m_textPanel.setVisibility(View.GONE);
             }
         } else {
             m_joinButton.setVisibility(View.VISIBLE);
+            m_joinButton.setText(R.string.text_register_and_join);
             m_textPanel.setVisibility(View.GONE);
         }
     }

@@ -3,9 +3,10 @@ package com.swarmnyc.pup.models;
 public enum SkillLevel
 {
 	Newbie,
-	Intermediate,
-	L337,
-	Pro;
+	Easy,
+	Medium,
+	Hard,
+	Nightmare;
 
 	public static SkillLevel get( final int value )
 	{
@@ -14,11 +15,13 @@ public enum SkillLevel
 			case 0:
 				return Newbie;
 			case 1:
-				return Intermediate;
+				return Easy;
 			case 2:
-				return L337;
+				return Medium;
 			case 3:
-				return Pro;
+				return Hard;
+			case 4:
+				return Nightmare;
 			default:
 				return Newbie;
 		}

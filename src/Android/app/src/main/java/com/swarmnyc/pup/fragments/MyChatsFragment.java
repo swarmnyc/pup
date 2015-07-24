@@ -8,37 +8,41 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import butterknife.ButterKnife;
-import butterknife.Bind;
+import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
-import com.swarmnyc.pup.*;
+import com.swarmnyc.pup.Config;
+import com.swarmnyc.pup.Consts;
+import com.swarmnyc.pup.EventBus;
+import com.swarmnyc.pup.PuPApplication;
+import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.Filter.LobbyFilter;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.adapters.MyChatAdapter;
 import com.swarmnyc.pup.components.Action;
-import com.swarmnyc.pup.components.UnreadCounter;
 import com.swarmnyc.pup.events.ChatMessageReceiveEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.view.DividerItemDecoration;
 
-import javax.inject.Inject;
-
 import java.util.List;
 
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class MyChatsFragment extends BaseFragment {
+    @Bind(R.id.text_empty_results)
+    public TextView m_noResultView;
     @Inject
     LobbyService m_lobbyService;
-
     @Bind(R.id.list_chat)
     RecyclerView m_chatList;
     @Bind(R.id.layout_refresh)
     SwipeRefreshLayout m_refreshLayout;
     @Bind(R.id.layout_empty_results)
     ViewGroup m_emptyResults;
-
     private int pageIndex;
     private MyChatAdapter m_myChatAdapter;
     private Action m_loadMore;
@@ -143,6 +147,7 @@ public class MyChatsFragment extends BaseFragment {
                         }
 
                         if (value.size() == 0) {
+                            m_noResultView.setText(R.string.message_no_lobbies);
                             com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(getActivity(), m_emptyResults);
                         } else {
                             com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(getActivity(), m_emptyResults);

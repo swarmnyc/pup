@@ -7,37 +7,64 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-
-import butterknife.ButterKnife;
-import butterknife.Bind;
-import butterknife.OnClick;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
-import com.swarmnyc.pup.*;
+import com.swarmnyc.pup.Config;
+import com.swarmnyc.pup.Consts;
+import com.swarmnyc.pup.EventBus;
+import com.swarmnyc.pup.PuPApplication;
+import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.Filter.GameFilter;
 import com.swarmnyc.pup.Services.GameService;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
+import com.swarmnyc.pup.StringUtils;
+import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
-import com.swarmnyc.pup.components.*;
+import com.swarmnyc.pup.components.Action;
+import com.swarmnyc.pup.components.Navigator;
+import com.swarmnyc.pup.components.Utility;
 import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.helpers.DialogHelper;
 import com.swarmnyc.pup.helpers.SoftKeyboardHelper;
 import com.swarmnyc.pup.listeners.HideKeyboardFocusChangedListener;
-import com.swarmnyc.pup.models.*;
+import com.swarmnyc.pup.models.Game;
+import com.swarmnyc.pup.models.GamePlatform;
+import com.swarmnyc.pup.models.Lobby;
+import com.swarmnyc.pup.models.PlayStyle;
+import com.swarmnyc.pup.models.SkillLevel;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
 import com.swarmnyc.pup.view.HorizontalSpinner;
 import com.uservoice.uservoicesdk.UserVoice;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
+
 import javax.inject.Inject;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class CreateLobbyFragment extends Fragment
         implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -48,7 +75,7 @@ public class CreateLobbyFragment extends Fragment
     LobbyService m_lobbyService;
 
     @Bind(R.id.layout_lobby_create)
-    ViewGroup m_rootView;
+    ScrollView m_rootView;
 
     @Bind(R.id.img_game)
     ImageView m_gameImageView;
@@ -213,30 +240,26 @@ public class CreateLobbyFragment extends Fragment
                 }
         );
 
+        m_gameNameTextEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    if (m_gameAdapter.getCount() > 0) {
+                        selectGame(0);
+                    }
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
         m_gameNameTextEdit.setAdapter(m_gameAdapter);
         m_gameNameTextEdit.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        m_selectedGame = m_gameAdapter.getItem(position);
-                        if (m_selectedGame.getId() == null) {
-                            m_gameNameTextEdit.setText("");
-                            UserVoice.launchPostIdea(getActivity());
-                        } else {
-                            SoftKeyboardHelper.hideSoftKeyboard(getActivity());
-                            if (StringUtils.isNotEmpty(m_selectedGame.getPictureUrl())) {
-                                Picasso.with(getActivity())
-                                        .load(m_selectedGame.getPictureUrl())
-                                        .centerCrop()
-                                        .fit()
-                                        .into(
-                                                m_gameImageView
-                                        );
-                            }
-
-                            m_gamePlatformSelectView.setAvailablePlatforms(m_selectedGame.getPlatforms());
-                            valid();
-                        }
+                        selectGame(position);
                     }
                 }
         );
@@ -304,10 +327,45 @@ public class CreateLobbyFragment extends Fragment
                 }
         );
 
+        SoftKeyboardHelper.setSoftKeyboardCallback(m_rootView, new Action<Boolean>() {
+            @Override
+            public void call(Boolean value) {
+                if (value && m_descriptionText.hasFocus()){
+
+                    m_rootView.fullScroll(View.FOCUS_DOWN);
+                }
+            }
+        });
+
         setDate(0);
 
         m_selectedDate = Calendar.getInstance();
         setTime(m_selectedDate.get(Calendar.HOUR_OF_DAY), m_selectedDate.get(Calendar.MINUTE) + 20);
+    }
+
+    private void selectGame(int position) {
+        SoftKeyboardHelper.hideSoftKeyboard(getActivity());
+
+        m_selectedGame = m_gameAdapter.getItem(position);
+        if (m_selectedGame.getId() == null) {
+            m_gameNameTextEdit.setText("");
+            UserVoice.launchPostIdea(getActivity());
+        } else {
+            m_gameNameTextEdit.setText(m_selectedGame.getName());
+            m_gameNameTextEdit.dismissDropDown();
+            if (StringUtils.isNotEmpty(m_selectedGame.getPictureUrl())) {
+                Picasso.with(getActivity())
+                        .load(m_selectedGame.getPictureUrl())
+                        .centerCrop()
+                        .fit()
+                        .into(
+                                m_gameImageView
+                        );
+            }
+
+            m_gamePlatformSelectView.setAvailablePlatforms(m_selectedGame.getPlatforms());
+            valid();
+        }
     }
 
     @Override

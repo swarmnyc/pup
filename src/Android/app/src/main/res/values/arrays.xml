@@ -2,9 +2,10 @@
 <resources>
     <string-array name="gamer_skills">
         <item>NEWBIE</item>
-        <item>CASUAL</item>
-        <item>3L337</item>
-        <item>PRO</item>
+        <item>EASY</item>
+        <item>MEDIUM</item>
+        <item>HARD</item>
+        <item>NIGHTMARE</item>
     </string-array>
 
     <string-array name="play_styles">
