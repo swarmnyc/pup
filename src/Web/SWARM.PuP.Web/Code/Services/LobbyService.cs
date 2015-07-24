@@ -87,7 +87,8 @@ namespace SWARM.PuP.Web.Services
             {
                 // get count
                 // TODO: Better query. it might have performance issue, but maybe better than 4 query commands. 
-                DateTime tomorrow = DateTime.UtcNow.Date.AddDays(1).AddHours(-filter.TimeZone);
+                DateTime local = DateTime.UtcNow.AddHours(filter.TimeZone);
+                DateTime tomorrow = local.AddDays(1).Date.AddHours(-filter.TimeZone); //local to utc
                 DateTime in2Day2 = tomorrow.AddDays(1);
                 DateTime in7Day2 = tomorrow.AddDays(6);
 
