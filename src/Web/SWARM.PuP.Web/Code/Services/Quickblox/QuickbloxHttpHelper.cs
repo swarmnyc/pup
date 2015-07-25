@@ -50,7 +50,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
         internal static WebRequest Create(string api, HttpMethod method, Session session)
         {
             WebRequest request = WebRequest.CreateHttp(new Uri(BaseUri, api));
-            request.Headers.Add("QB-Token", session.token+"Test");
+            request.Headers.Add("QB-Token", session.token);
             request.Headers.Add("QuickBlox-REST-API-Version", "0.1.0");
             request.ContentType = "application/json";
             request.Method = method.Method;
