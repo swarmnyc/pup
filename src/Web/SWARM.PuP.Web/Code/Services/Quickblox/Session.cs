@@ -6,7 +6,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
     {
         public string _id { get; set; }
         public int application_id { get; set; }
-        public DateTime created_at { get; set; }
+        public DateTime ExpiredAt { get; set; }
         public int device_id { get; set; }
         public int nonce { get; set; }
         public string token { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using SWARM.PuP.Web.Services.Quickblox;
 
 namespace System.Web.Http.Filters
 {
@@ -24,6 +25,10 @@ namespace System.Web.Http.Filters
                 context.Response = context.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "000 A error happened: " + exception.Response.ReasonPhrase);
             }
 
+            if (context.Exception is WebException) {
+                //TODO: Only for Quickblox
+                QuickbloxHttpHelper.ClearSession();
+            }
         }
     }
 }
