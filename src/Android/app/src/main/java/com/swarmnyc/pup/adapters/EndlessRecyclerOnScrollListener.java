@@ -45,6 +45,8 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 				onLoadComplete(current_page);
 			}
 		}
+
+		//BUGGY for example totalItemCount = 3, visibleItemCount = 3, firstVisibleItem = 0, visibleThreshold = 5, so 0 <= 5, always loadMore.
 		if ( !loading && ( totalItemCount - visibleItemCount ) <= ( firstVisibleItem + visibleThreshold ) )
 		{
 			// End has been reached

@@ -11,18 +11,18 @@ using System.Web.Http.Filters;
 using System.Web.Http.Results;
 using MongoDB.Bson;
 using MongoDB.Driver.Builders;
+using SWARM.PuP.Web.Code;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
 using SWARM.PuP.Web.Services;
 using SWARM.PuP.Web.Services.Quickblox;
+using SWARM.PuP.Web.ViewModels;
 
 namespace SWARM.PuP.Web.ApiControllers
 {
     [RoutePrefix("api/Lobby")]
     public class LobbyController : ApiController
     {
-        private const int ShowTimeOffset = -15;
-        private static DateTime _javaDateTime = new DateTime(1970, 1, 1, 0, 0, 0);
         private readonly IGameService _gameService;
         private readonly ILobbyService _lobbyService;
 
@@ -32,13 +32,13 @@ namespace SWARM.PuP.Web.ApiControllers
             _gameService = gameService;
         }
 
-        public IEnumerable<Lobby> Get([FromUri] LobbyFilter filter)
+        public LobbySearchResult Get([FromUri] LobbyFilter filter)
         {
             filter = filter ?? new LobbyFilter();
 
             if (!filter.StartTimeUtc.HasValue)
             {
-                filter.StartTimeUtc = DateTime.UtcNow.AddMinutes(ShowTimeOffset);
+                filter.StartTimeUtc = DateTime.UtcNow.AddMinutes(Consts.ShowTimeOffset);
             }
 
             return _lobbyService.Filter(filter);
@@ -94,7 +94,7 @@ namespace SWARM.PuP.Web.ApiControllers
                     if (lobby != null)
                     {
                         lobby.LastMessage = room.last_message;
-                        lobby.LastMessageAt = _javaDateTime.AddSeconds(room.last_message_date_sent).ToUniversalTime();
+                        lobby.LastMessageAt = Consts.JavaDateTime.AddSeconds(room.last_message_date_sent).ToUniversalTime();
                         lobby.UnreadMessageCount = room.unread_messages_count;
 
                         sortedLobbies.Add(lobby);

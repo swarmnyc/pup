@@ -106,7 +106,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     break;
                 case SystemMessageCode.Leave:
                     message = string.Format("{0} left this lobby", string.Join(", ", users.Select(x => x.UserName).ToArray()));
-                    codeBody = users.Select(x => new { x.Id, x.UserName, x.PortraitUrl }).ToJson();
+                    codeBody = users.Select(x =>  new { x.Id }).ToJson();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("code", code, null);

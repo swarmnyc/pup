@@ -37,6 +37,8 @@
 -keep public class com.google.vending.licensing.ILicensingService
 -keep public class com.android.vending.licensing.ILicensingService
 
+-keepclassmembers class android.support.design.widget.FloatingActionButton$Behavior { public <init>(); }
+
 # For native methods, see http://proguard.sourceforge.net/manual/examples.html#native
 -keepclasseswithmembernames class * {
     native <methods>;

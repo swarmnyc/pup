@@ -1,4 +1,4 @@
-package com.swarmnyc.pup.components;
+package com.swarmnyc.pup.helpers;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -9,7 +9,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import com.soundcloud.android.crop.Crop;
 import com.swarmnyc.pup.AsyncCallback;
-import com.swarmnyc.pup.Services.ServiceCallback;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,36 +28,28 @@ public class PhotoHelper
 		m_fragment = fragment;
 		m_callback = callback;
 
-		DialogHelper.showOptions( fragment.getActivity(),
-			new String[]{"Take a new photo", "Choose from gallery"}, new DialogInterface.OnClickListener()
-			{
-				@Override
-				public void onClick( final DialogInterface dialog, final int which )
-				{
-					if ( which == 0 )
-					{
-						try
-						{
-							Intent takePicture = new Intent( MediaStore.ACTION_IMAGE_CAPTURE );
-							m_photo = Uri.fromFile( createImageFile() );
+		DialogHelper.showOptions(fragment.getActivity(),
+				new String[]{"Take a new photo", "Choose from gallery"}, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(final DialogInterface dialog, final int which) {
+						if (which == 0) {
+							try {
+								Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+								m_photo = Uri.fromFile(createImageFile());
 
-							takePicture.putExtra( MediaStore.EXTRA_OUTPUT, m_photo );
-							m_fragment.startActivityForResult( takePicture, CODE_CAMERA );
+								takePicture.putExtra(MediaStore.EXTRA_OUTPUT, m_photo);
+								m_fragment.startActivityForResult(takePicture, CODE_CAMERA);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						} else {
+							Intent pickPhoto = new Intent(
+									Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+							);
+							m_fragment.startActivityForResult(pickPhoto, CODE_PHOTO);
 						}
-						catch ( Exception e )
-						{
-							e.printStackTrace();
-						}
-					}
-					else
-					{
-						Intent pickPhoto = new Intent(
-							Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-						);
-						m_fragment.startActivityForResult( pickPhoto, CODE_PHOTO );
 					}
 				}
-			}
 		);
 	}
 

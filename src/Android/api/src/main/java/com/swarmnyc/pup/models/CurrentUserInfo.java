@@ -1,5 +1,7 @@
 package com.swarmnyc.pup.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -12,13 +14,15 @@ public class CurrentUserInfo extends UserInfo
 	private String       accessToken;
 	private double       expiresIn;
 	private List<PuPTag> tags;
-	private Set<String> socialMedia;
+
+	@SerializedName( "media" )
+	private Set<String>  socialMedia;
 
 	public CurrentUserInfo()
 	{
 		tags = new ArrayList<>();
-        socialMedia = new HashSet<>();
-    }
+		socialMedia = new HashSet<>();
+	}
 
 	public String getEmail()
 	{

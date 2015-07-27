@@ -1,12 +1,13 @@
 using System.Linq;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
+using SWARM.PuP.Web.ViewModels;
 
 namespace SWARM.PuP.Web.Services
 {
     public interface ILobbyService : IBaseService<Lobby>
     {
-        IQueryable<Lobby> Filter(LobbyFilter filter);
+        LobbySearchResult Filter(LobbyFilter filter);
 
         void Join(string lobbyId, PuPUser user);
 

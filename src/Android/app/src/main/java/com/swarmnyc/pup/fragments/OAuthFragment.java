@@ -13,7 +13,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 import com.swarmnyc.pup.AsyncCallback;
 import com.swarmnyc.pup.R;
@@ -22,7 +22,7 @@ import com.swarmnyc.pup.components.Utility;
 
 public class OAuthFragment extends TempFragmentDialog
 {
-	@InjectView( R.id.webview )
+	@Bind( R.id.webview )
 	WebView m_webview;
 
 	private String        m_type;
@@ -37,7 +37,7 @@ public class OAuthFragment extends TempFragmentDialog
 
 		AlertDialog alertDialog = new AlertDialog.Builder( this.getActivity() ).setView( view ).setCustomTitle( title ).create();
 
-		ButterKnife.inject( this, view );
+		ButterKnife.bind( this, view );
 
 		m_webview.loadUrl( Utility.urlContent( "~/oauth/" + m_type + "?user_token=" + User.current.getAccessToken() ));
 
@@ -70,7 +70,7 @@ public class OAuthFragment extends TempFragmentDialog
 	public void onDestroyView()
 	{
 		super.onDestroyView();
-		ButterKnife.reset( this );
+		ButterKnife.unbind( this );
 	}
 
 	public void initialize( String type, AsyncCallback callback )

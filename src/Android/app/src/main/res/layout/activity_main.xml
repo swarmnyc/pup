@@ -19,22 +19,45 @@
                 android:background="?attr/colorPrimary"
                 app:theme="@style/MainActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_scrollFlags="scroll|enterAlways" />
+                app:layout_scrollFlags="scroll|enterAlways">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <com.swarmnyc.pup.view.FontableTextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text18"
+                    app:font="@string/font_roboto_slab"/>
+                <com.swarmnyc.pup.view.FontableTextView
+                    android:id="@+id/toolbar_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text12"
+                    android:visibility="gone"
+                    android:textColor="@color/pup_grey"
+                    app:font="@string/font_roboto_slab"/>
+            </LinearLayout>
+
+        </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"
                 app:tabTextColor="@color/pup_light"
-                app:tabSelectedTextColor="@color/pup_teal"
-                app:tabIndicatorColor="@android:color/transparent"
+                app:tabTextAppearance="@style/tabTextAppearance"
+                app:tabSelectedTextColor="@color/pup_orange"
+                app:tabIndicatorColor="@color/pup_orange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
+        <View style="@style/horizontal_line_light"/>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="fill_vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
@@ -43,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_margin="@dimen/margin_normal"
-            android:src="@android:drawable/ic_input_add" />
+            android:src="@drawable/ic_action_add" />
 
 </android.support.design.widget.CoordinatorLayout>
 

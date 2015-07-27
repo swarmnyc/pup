@@ -1,5 +1,6 @@
 package com.swarmnyc.pup.Services;
-public  interface ServiceCallback<T> {
-    void success(T value);
+public abstract class ServiceCallback<T> {
+    public abstract void success(T value);
+    public void failure(String message){}
 }
 

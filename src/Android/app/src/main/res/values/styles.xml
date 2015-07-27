@@ -10,9 +10,6 @@
 
     <!-- Base application theme. -->
     <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- colorPrimary is used for the default action bar background -->
-        <item name="windowActionModeOverlay">true</item>
-
         <item name="android:windowBackground">@color/pup_white</item>
 
         <!-- colorPrimary is used for the default action bar background -->
@@ -26,6 +23,13 @@
         <item name="colorAccent">@color/pup_orange</item>
 
         <item name="android:textSize">16sp</item>
+
+        <item name="windowActionModeOverlay">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:dropDownListViewStyle">@style/ListViewStyle</item>
+        <item name="android:editTextBackground">@drawable/bg_edit_text</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -58,11 +62,20 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="ListViewStyle" parent="@android:style/Widget.ListView">
+        <item name="android:background">@color/pup_grey_bg</item>
+        <item name="android:divider">@color/pup_grey_border</item>
+        <item name="android:dividerHeight">1px</item>
+    </style>
+
     <style name="ExpandedTitleText">
-        <item name="android:textColor">@android:color/transparent</item>
+        <item name="android:textColor">@color/pup_white</item>
+        <item name="android:textSize">@dimen/text20</item>
     </style>
 
     <style name="SelectButton">
+        <item name="android:textSize">@dimen/text11</item>
+        <item name="android:layout_height">68dp</item>
         <item name="android:background">@drawable/bg_select_button</item>
         <item name="android:textColor">@color/text_select_button</item>
     </style>
@@ -124,13 +137,18 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="tabTextAppearance">
+        <item name="android:textSize">@dimen/text12</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="HorizontalSpinnerStyleForLobbyCreate">
         <item name="itemColor">@color/pup_light</item>
         <item name="itemTextSize">@dimen/text11</item>
         <item name="itemSelectColor">@color/pup_teal</item>
-        <item name="itemSelectTextSize">@dimen/text25</item>
+        <item name="itemSelectTextSize">@dimen/text23</item>
         <item name="itemTextFont">@string/font_roboto_slab</item>
-        <item name="itemWidth">150dp</item>
+        <item name="itemWidth">160dp</item>
         <item name="itemHeight">32dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

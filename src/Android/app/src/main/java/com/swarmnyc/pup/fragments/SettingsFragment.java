@@ -5,53 +5,55 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.Services.UserService;
-import com.swarmnyc.pup.activities.MainActivity;
-import com.swarmnyc.pup.components.FacebookHelper;
-import com.swarmnyc.pup.components.PhotoHelper;
-import com.swarmnyc.pup.components.Screen;
+import com.swarmnyc.pup.helpers.FacebookHelper;
+import com.swarmnyc.pup.helpers.PhotoHelper;
 
 import javax.inject.Inject;
 
-public class SettingsFragment extends BaseFragment implements Screen
+public class SettingsFragment extends BaseFragment
 {
 	@Inject
 	UserService m_userService;
 
-	@InjectView( R.id.text_name )
+	@Bind( R.id.text_name )
 	EditText m_nameText;
 
-	@InjectView( R.id.img_portrait )
+	@Bind( R.id.img_portrait )
 	ImageView m_portrait;
 
-	@InjectView( R.id.switch_facebook )
+	@Bind( R.id.switch_facebook )
 	Switch m_fbSwitch;
 
-	@InjectView( R.id.switch_twitter )
+	@Bind( R.id.switch_twitter )
 	Switch m_twitterSwitch;
 
-	@InjectView( R.id.switch_reddit )
+	@Bind( R.id.switch_reddit )
 	Switch m_redditSwitch;
 
-	@InjectView( R.id.switch_tumblr )
+	@Bind( R.id.switch_tumblr )
 	Switch m_tumblrSwitch;
 
+	@Bind(R.id.txt_tos)
+	TextView m_tosText;
+
 	@Override
-	public String toString()
+	public String getScreenName()
 	{
 		return "Settings";
 	}
@@ -75,10 +77,8 @@ public class SettingsFragment extends BaseFragment implements Screen
 	public void onViewCreated( View view, Bundle savedInstanceState )
 	{
 		super.onViewCreated( view, savedInstanceState );
-		ButterKnife.inject( this, view );
+		ButterKnife.bind( this, view );
 		PuPApplication.getInstance().getComponent().inject( this );
-
-
 
 		if ( StringUtils.isNotEmpty( User.current.getPortraitUrl() ) )
 		{
@@ -91,11 +91,9 @@ public class SettingsFragment extends BaseFragment implements Screen
 		m_twitterSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_TWITTER) );
 		m_redditSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_REDDIT) );
 		m_tumblrSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_TUMBLR) );
+
+		m_tosText.setMovementMethod(LinkMovementMethod.getInstance());
 	}
-
-
-
-
 
 	@Override
 	public void onResume()
@@ -130,7 +128,11 @@ public class SettingsFragment extends BaseFragment implements Screen
 					String path;
 
 					m_portrait.setImageURI( uri );
-					Picasso.with( getActivity() ).invalidate( uri );
+
+					if ( StringUtils.isNotEmpty( User.current.getPortraitUrl() ) )
+					{
+						Picasso.with( getActivity() ).invalidate( User.current.getPortraitUrl() );
+					}
 
 					Cursor cursor = getActivity().getContentResolver().query(
 						uri, null, null, null, null
@@ -147,12 +149,14 @@ public class SettingsFragment extends BaseFragment implements Screen
 						path = cursor.getString( idx );
 					}
 
+					Toast.makeText( getActivity(), "Updating", Toast.LENGTH_LONG ).show();
 					m_userService.updatePortrait(
 						path, new ServiceCallback<String>()
 						{
 							@Override
 							public void success( final String value )
 							{
+								Toast.makeText( getActivity(), "Updated", Toast.LENGTH_LONG ).show();
 								User.current.setPortraitUrl( value );
 								User.update();
 							}
@@ -171,6 +175,13 @@ public class SettingsFragment extends BaseFragment implements Screen
 			FacebookHelper.startLoginRequire(getActivity(),
 				new AsyncCallback()
 				{
+					@Override
+					public void success()
+					{
+						Toast.makeText( getActivity(), R.string.message_connect_success, Toast.LENGTH_LONG )
+						     .show();
+					}
+
 					@Override
 					public void failure()
 					{

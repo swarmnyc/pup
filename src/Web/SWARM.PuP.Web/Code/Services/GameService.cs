@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using MongoDB;
 using MongoDB.Driver.Linq;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.QueryFilters;
@@ -28,6 +29,8 @@ namespace SWARM.PuP.Web.Services
             {
                 query = query.Where(x => x.Platforms.ContainsAny(filter.Platforms));
             }
+
+            query = query.Where(x => x.State == ModelState.Active);
 
             query = DoOrderQuery(query, filter);
 

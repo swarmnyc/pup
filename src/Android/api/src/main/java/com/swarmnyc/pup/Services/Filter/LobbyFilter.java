@@ -12,6 +12,7 @@ public class LobbyFilter extends GameFilter {
 	private Set<SkillLevel> levels;
 	private Set<PlayStyle>  styles;
 	private Date            startTime;
+	private boolean m_needCount;
 
 	public LobbyFilter()
 	{
@@ -21,7 +22,7 @@ public class LobbyFilter extends GameFilter {
 
 	public Game getGame()
 	{
-		return  game;
+		return game;
 	}
 
 	public void setGame( final Game game )
@@ -29,8 +30,9 @@ public class LobbyFilter extends GameFilter {
 		this.game = game;
 	}
 
-	public void addSkillLevel( SkillLevel level) {
-        levels.add(level);
+	public void addSkillLevel( SkillLevel level )
+	{
+		levels.add(level);
     }
 
     public void removeSkillLevel(SkillLevel level) {
@@ -63,6 +65,16 @@ public class LobbyFilter extends GameFilter {
 		this.startTime = startTime;
 	}
 
+	public void setNeedCount( final boolean needCount )
+	{
+		m_needCount = needCount;
+	}
+
+	public boolean isNeedCount()
+	{
+		return m_needCount;
+	}
+
 	@Override
     public Map<String, Object> toMap() {
         Map<String, Object> map = super.toMap();
@@ -73,6 +85,16 @@ public class LobbyFilter extends GameFilter {
 	    if (startTime != null) {
 		    map.put( "startTimeUtc", StringUtils.toDateString( startTime ) );
 	    }
+
+		if (m_needCount) {
+			map.put( "needCount", true );
+			TimeZone  c = new GregorianCalendar(  ).getTimeZone();
+			long time = c.getRawOffset();
+			if ( c.useDaylightTime() ){
+				time += c.getDSTSavings();
+			}
+			map.put( "timeZone", time / 3600000 );
+		}
 
         return map;
     }

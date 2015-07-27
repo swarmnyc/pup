@@ -1,4 +1,4 @@
-package com.swarmnyc.pup;
+package com.swarmnyc.pup.events;
 
 import com.swarmnyc.pup.chat.ChatMessage;
 

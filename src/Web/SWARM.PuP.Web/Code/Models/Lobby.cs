@@ -37,10 +37,11 @@ namespace SWARM.PuP.Web.Models
             set { _users = value; }
         }
 
+        [BsonIgnore]
         public string LastMessage { get; set; }
-
+        [BsonIgnore]
         public DateTime LastMessageAt { get; set; }
-
+        [BsonIgnore]
         public int UnreadMessageCount { get; set; }
 
         public override string ToString()

@@ -1,7 +1,10 @@
 package com.swarmnyc.pup.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -13,81 +16,71 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewGroup;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Tracker;
+import android.widget.TextView;
+
 import com.squareup.otto.Subscribe;
-import com.swarmnyc.pup.*;
-import com.swarmnyc.pup.components.DialogHelper;
-import com.swarmnyc.pup.components.FacebookHelper;
+import com.swarmnyc.pup.Config;
+import com.swarmnyc.pup.Consts;
+import com.swarmnyc.pup.EventBus;
+import com.swarmnyc.pup.PuPApplication;
+import com.swarmnyc.pup.R;
+import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.components.Navigator;
-import com.swarmnyc.pup.components.SoftKeyboardHelper;
+import com.swarmnyc.pup.events.UserChangedEvent;
 import com.swarmnyc.pup.fragments.BaseFragment;
 import com.swarmnyc.pup.fragments.LobbyListFragment;
 import com.swarmnyc.pup.fragments.MyChatsFragment;
 import com.swarmnyc.pup.fragments.SettingsFragment;
-import com.uservoice.uservoicesdk.UserVoice;
+import com.swarmnyc.pup.helpers.DialogHelper;
+import com.swarmnyc.pup.helpers.FacebookHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MainActivity extends AppCompatActivity {
-    private        boolean      launchDefault;
+    @Bind(R.id.toolbar)
+    Toolbar m_toolbar;
+    @Bind(R.id.viewpager)
+    ViewPager m_viewPager;
+    @Bind(R.id.tabs)
+    TabLayout m_tabLayout;
+    @Bind(R.id.appbar)
+    AppBarLayout m_appBarLayout;
 
-    @InjectView( R.id.toolbar )   Toolbar      m_toolbar;
-    @InjectView( R.id.viewpager ) ViewPager    m_viewPager;
-    @InjectView( R.id.tabs )      TabLayout    m_tabLayout;
-    @InjectView( R.id.appbar )    AppBarLayout m_appBarLayout;
-
-    @InjectView( R.id.layout_coordinator ) CoordinatorLayout m_coordinatorLayout;
-    private                                TabPagerAdapter   m_tabPagerAdapter;
+    @Bind(R.id.layout_coordinator)
+    CoordinatorLayout m_coordinatorLayout;
+    private TabPagerAdapter m_tabPagerAdapter;
+    private Boolean isLoggedIn = null;
+    private Fragment m_currentFragment;
 
     @Override
-    protected void onCreate( Bundle savedInstanceState )
-    {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_main );
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        ButterKnife.inject( this );
-        PuPApplication.getInstance().getComponent().inject( this );
-        m_toolbar.setSubtitleTextColor( getResources().getColor( R.color.pup_grey ) );
-        setSupportActionBar( m_toolbar );
+        ButterKnife.bind(this);
+        PuPApplication.getInstance().getComponent().inject(this);
+        m_toolbar.setTitle("");
+        setSupportActionBar(m_toolbar);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point windowSize = new Point();
-        display.getSize( windowSize );
+        display.getSize(windowSize);
         Consts.windowWidth = windowSize.x;
         Consts.windowHeight = windowSize.y;
-        ViewConfiguration vc = ViewConfiguration.get( this );
+        ViewConfiguration vc = ViewConfiguration.get(this);
         Consts.TOUCH_SLOP = vc.getScaledTouchSlop();
 
-        //Google
-        GoogleAnalytics m_googleAnalytics = GoogleAnalytics.getInstance( this );
-        m_googleAnalytics.setLocalDispatchPeriod( 1800 );
-
-        Tracker m_tracker = m_googleAnalytics.newTracker( getString( R.string.google_tracker_key ) );
-        m_tracker.enableExceptionReporting( true );
-
-        //User Voice
-        com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config(
-            getString(
-                R.string.uservoice_id
-            )
-        );
-        config.setForumId( 272754 );
-        UserVoice.init( config, this );
-
-        Navigator.init( this, m_tracker );
-
-
         //Show Splash or not
-        if ( !Config.getBool( "ShowedSplash")) {
+        if (!Config.getBool("ShowedSplash")) {
             Config.setBool("ShowedSplash", true);
             startActivity(new Intent(this, SplashActivity.class));
         }
@@ -95,37 +88,21 @@ public class MainActivity extends AppCompatActivity {
         //Redirect to Lobby
         Intent intent = getIntent();
         Uri data = intent.getData();
-        launchDefault = true;
+
         if (data != null) {
             List<String> p = data.getPathSegments();
             if (p.size() == 2 && p.get(0).equals("lobby")) {
-                launchDefault = false;
-                Navigator.ToLobby(p.get(1), "From Intent", false);
+                Navigator.ToLobby(this, p.get(1), "From Intent");
             }
         }
 
-        if ( m_viewPager != null) {
-            setupViewPager( m_viewPager );
+        showTabsByUser(null);
 
-
-        }
-
-        if (User.isLoggedIn())
-        {
-            m_tabLayout.setupWithViewPager( m_viewPager );
-        }
-        else
-        {
-            m_tabLayout.setVisibility( View.GONE );
-
-            final ViewGroup.LayoutParams layoutParams = m_toolbar.getLayoutParams();
-
-            if (layoutParams instanceof AppBarLayout.LayoutParams)
-            {
-                ((AppBarLayout.LayoutParams) layoutParams).setScrollFlags(
-                   AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
-                );
-            }
+        //Update Facebook token;
+        long fbExpiredAt = Config.getLong(Consts.KEY_FACEBOOK_EXPIRED_DATE);
+        if (fbExpiredAt != 0 && System.currentTimeMillis() > fbExpiredAt) {
+            Log.d("PuP", "Refresh Facebook token");
+            FacebookHelper.startLoginRequire(this, null);
         }
     }
 
@@ -134,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         EventBus.getBus().register(this);
+        PuPApplication.getInstance().startMessageService();
+        showTabsByUser(null);
     }
 
     @Override
@@ -143,66 +122,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop()
-    {
+    protected void onStop() {
         super.onStop();
     }
 
-	private void setupViewPager( ViewPager viewPager )
-	{
-		m_tabPagerAdapter = new TabPagerAdapter( getSupportFragmentManager() );
-		m_tabPagerAdapter.addFragment( new LobbyListFragment(), "FIND A GAME" );
-		if ( User.isLoggedIn() )
-		{
-			m_tabPagerAdapter.addFragment( new MyChatsFragment(), "MY GAMES" );
-			m_tabPagerAdapter.addFragment( new SettingsFragment(), "PROFILE" );
-		}
-		viewPager.setAdapter( m_tabPagerAdapter );
-		m_viewPager.addOnPageChangeListener(
-			new ViewPager.OnPageChangeListener()
-			{
-				@Override
-				public void onPageScrolled(
-					final int position, final float positionOffset, final int positionOffsetPixels
-				)
-				{
+    private void setupViewPager(ViewPager viewPager) {
+        m_tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
+        m_tabPagerAdapter.addFragment(m_currentFragment = new LobbyListFragment(), "ALL GAMES");
+        if (User.isLoggedIn()) {
+            m_tabPagerAdapter.addFragment(new MyChatsFragment(), "JOINED GAMES");
+            m_tabPagerAdapter.addFragment(new SettingsFragment(), "PROFILE");
+        }
 
-				}
+        viewPager.setAdapter(m_tabPagerAdapter);
 
-				@Override
-				public void onPageSelected( final int position )
-				{
-					final Fragment fragment = m_tabPagerAdapter.getItem( position );
-					if ( fragment instanceof BaseFragment )
-					{
-						( (BaseFragment) fragment ).updateTitle();
-					}
-				}
+        ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+            }
 
-				@Override
-				public void onPageScrollStateChanged( final int state )
-				{
+            @Override
+            public void onPageSelected(final int position) {
+                Consts.currentPage = position;
+                m_currentFragment = m_tabPagerAdapter.getItem(position);
+                if (m_currentFragment instanceof BaseFragment) {
+                    BaseFragment bf = (BaseFragment) m_currentFragment;
+                    bf.updateTitle();
 
-				}
-			}
-		);
+                    PuPApplication.getInstance().sendScreenToTracker(bf.getScreenName());
+                }
+            }
 
-	}
+            @Override
+            public void onPageScrollStateChanged(final int state) {
 
-    @OnClick( R.id.fab_create_lobby )
-    public void onCreateLobbyButtonClicked()
-    {
-        Navigator.ToCreateLobby();
+            }
+        };
+
+        m_viewPager.addOnPageChangeListener(listener);
     }
 
-
-
-    public Toolbar getToolbar() {
-        return m_toolbar;
-    }
-
-    public boolean isLaunchDefaultFragment() {
-        return launchDefault;
+    @OnClick(R.id.fab_create_lobby)
+    public void onCreateLobbyButtonClicked() {
+        Navigator.ToCreateLobby(this);
     }
 
     @Override
@@ -211,73 +173,72 @@ public class MainActivity extends AppCompatActivity {
         FacebookHelper.handleActivityResult(requestCode, resultCode, data);
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        if (MainDrawerFragment.getInstance().isDrawOpens()) {
-//            MainDrawerFragment.getInstance().closeDrawers();
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
-
-    public void retrieveMessage(final String message) {
-        //TODO: Push Notification
-    }
-
-    public void hideToolbar() {
-        m_toolbar.setVisibility(View.GONE);
-    }
-
-    public void showToolbar() {
-        m_toolbar.setVisibility(View.VISIBLE);
-    }
-
     @Subscribe
-    public void runtimeError(final RuntimeException exception) {
+    public void runtimeError(final Exception exception) {
         this.runOnUiThread(
                 new Runnable() {
                     @Override
                     public void run() {
-                        // TODO: Better Message content
-                        DialogHelper.showError(MainActivity.this, exception.getMessage());
+                        TextView textView = (TextView) m_currentFragment.getView().findViewById(R.id.text_empty_results);
+                        if (textView != null) {
+                            ConnectivityManager cm =
+                                    (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                            if (activeNetwork == null || !activeNetwork.isConnectedOrConnecting()) {
+                                textView.setText(R.string.message_no_internet);
+                            }
+                        }
+
+                        DialogHelper.showError(MainActivity.this, exception);
                     }
                 }
         );
     }
 
+    @Subscribe
+    public void showTabsByUser(UserChangedEvent event) {
+        if (isLoggedIn == null || isLoggedIn != User.isLoggedIn()) {
+            isLoggedIn = User.isLoggedIn();
 
-    static class TabPagerAdapter extends FragmentPagerAdapter
-    {
-        private final List<Fragment> mFragments      = new ArrayList<>();
-        private final List<String>   mFragmentTitles = new ArrayList<>();
+            setupViewPager(m_viewPager);
 
-        public TabPagerAdapter( FragmentManager fm )
-        {
-            super( fm );
+            m_tabLayout.setupWithViewPager(m_viewPager);
+
+            if (User.isLoggedIn()) {
+                m_tabLayout.setVisibility(View.VISIBLE);
+            } else {
+                m_tabLayout.setVisibility(View.GONE);
+            }
+        }
+    }
+
+
+    static class TabPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mFragmentTitles = new ArrayList<>();
+
+        public TabPagerAdapter(FragmentManager fm) {
+            super(fm);
         }
 
-        public void addFragment( Fragment fragment, String title )
-        {
-            mFragments.add( fragment );
-            mFragmentTitles.add( title );
+        public void addFragment(Fragment fragment, String title) {
+            mFragments.add(fragment);
+            mFragmentTitles.add(title);
         }
 
         @Override
-        public Fragment getItem( int position )
-        {
-            return mFragments.get( position );
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
         }
 
         @Override
-        public int getCount()
-        {
+        public int getCount() {
             return mFragments.size();
         }
 
         @Override
-        public CharSequence getPageTitle( int position )
-        {
-            return mFragmentTitles.get( position );
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitles.get(position);
         }
     }
 

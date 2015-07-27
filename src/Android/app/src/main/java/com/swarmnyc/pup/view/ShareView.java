@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 import com.swarmnyc.pup.AsyncCallback;
 import com.swarmnyc.pup.Consts;
@@ -15,7 +15,7 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.Services.LobbyService;
 import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.User;
-import com.swarmnyc.pup.components.FacebookHelper;
+import com.swarmnyc.pup.helpers.FacebookHelper;
 import com.swarmnyc.pup.fragments.OAuthFragment;
 import com.swarmnyc.pup.fragments.RedditShareFragment;
 import com.swarmnyc.pup.models.Lobby;
@@ -25,13 +25,13 @@ import java.util.List;
 
 public class ShareView extends LinearLayout
 {
-	@InjectView( R.id.btn_facebook ) ImageView m_facebookButton;
+	@Bind( R.id.btn_facebook ) ImageView m_facebookButton;
 
-	@InjectView( R.id.btn_twitter ) ImageView m_twitterButton;
+	@Bind( R.id.btn_twitter ) ImageView m_twitterButton;
 
-	@InjectView( R.id.btn_tumblr ) ImageView m_tumblrButton;
+	@Bind( R.id.btn_tumblr ) ImageView m_tumblrButton;
 
-	@InjectView( R.id.btn_reddit ) ImageView m_redditButton;
+	@Bind( R.id.btn_reddit ) ImageView m_redditButton;
 
 	private LobbyService m_lobbyService;
 	private Lobby m_lobby;
@@ -50,7 +50,7 @@ public class ShareView extends LinearLayout
 		inflate( getContext(), R.layout.view_share, this );
 		if ( !isInEditMode() )
 		{
-			ButterKnife.inject( this );
+			ButterKnife.bind( this );
 
 			setButtonState( User.current.hasSocialMedium( Consts.KEY_FACEBOOK ), m_facebookButton );
 			setButtonState( User.current.hasSocialMedium( Consts.KEY_TWITTER ), m_twitterButton );
@@ -96,6 +96,9 @@ public class ShareView extends LinearLayout
 						@Override
 						public void success()
 						{
+							Toast.makeText( m_activity , R.string.message_connect_success, Toast.LENGTH_LONG )
+							     .show();
+
 							setButtonState( true, m_facebookButton );
 						}
 					}

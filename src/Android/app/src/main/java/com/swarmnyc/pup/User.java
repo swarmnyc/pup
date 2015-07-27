@@ -1,5 +1,7 @@
 package com.swarmnyc.pup;
 
+import android.os.Handler;
+import android.preference.PreferenceActivity;
 import com.google.gson.Gson;
 import com.quickblox.core.helper.StringUtils;
 import com.swarmnyc.pup.events.UserChangedEvent;
@@ -35,11 +37,27 @@ public class User
 	public static void login( final CurrentUserInfo userInfo, final boolean goHome )
 	{
 		User.current = userInfo;
-
+		current.getSocialMedia().remove( Consts.KEY_FACEBOOK ); //Facebook has to reconnect;
 		Config.setLong( KEY_USER_EXPIRES, System.currentTimeMillis() + (int) current.getExpiresIn() );
-		Config.setString( KEY_USER, new Gson().toJson( current ) );
+		update();
 
-		EventBus.getBus().post( new UserChangedEvent( goHome ) );
+		PuPApplication.getInstance().startMessageService();
+
+		// Service need to be up before other things run
+		final Handler handler = new Handler( );
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run()
+			{
+				if ( PuPApplication.getInstance().isMessageServiceUp() ){
+					EventBus.getBus().post( new UserChangedEvent( goHome ) );
+				}else {
+					handler.postDelayed( this, 10 );
+				}
+			}
+		};
+
+		handler.postDelayed( runnable, 10 );
 
 		//Scribe GSM
 		//GcmHelper gcmHelper = new GcmHelper( PuPApplication.getInstance().getApplicationContext() );
@@ -62,12 +80,12 @@ public class User
 
 	public static void addSocialMedium(final String type) {
 		current.getSocialMedia().add( type );
-		Config.setString( KEY_USER, new Gson().toJson( current ) );
+		update();
 	}
 
 	public static void removeSocialMedium(final String type) {
 		current.getSocialMedia().remove( type );
-		Config.setString( KEY_USER, new Gson().toJson( current ) );
+		update();
 	}
 
 	public static void update()

@@ -17,7 +17,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.components.Typefaces;
+import com.swarmnyc.pup.helpers.TypefaceHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +87,7 @@ public class HorizontalSpinner extends HorizontalScrollView
 		if ( !isInEditMode() && typedArray.hasValue( R.styleable.HorizontalSpinner_itemTextFont ) )
 		{
 			String font = typedArray.getString( R.styleable.HorizontalSpinner_itemTextFont );
-			itemTypeface = Typefaces.get( font );
+			itemTypeface = TypefaceHelper.get(font);
 		}
 		init();
 	}
