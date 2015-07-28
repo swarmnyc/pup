@@ -19,6 +19,12 @@ namespace SWARM.PuP.Web
              );
 
             routes.MapRoute(
+                 name: "User",
+                 url: "User/{name}",
+                 defaults: new { controller = "User", action = "Index" }
+             );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new {action = "Index", id = UrlParameter.Optional }
