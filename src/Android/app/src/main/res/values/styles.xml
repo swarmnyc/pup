@@ -56,6 +56,10 @@
         <item name="colorAccent">@color/pup_orange</item>
     </style>
 
+    <style name="FloatingActionButton">
+        <item name="colorAccent">#FF7043</item>
+    </style>
+
     <style name="MainActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColor">@color/pup_teal</item>
         <item name="android:textColorPrimary">@color/pup_teal</item>

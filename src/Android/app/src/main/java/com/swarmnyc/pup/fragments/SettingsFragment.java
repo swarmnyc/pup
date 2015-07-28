@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.swarmnyc.pup.Services.ServiceCallback;
 import com.swarmnyc.pup.Services.UserService;
 import com.swarmnyc.pup.helpers.FacebookHelper;
 import com.swarmnyc.pup.helpers.PhotoHelper;
+import com.uservoice.uservoicesdk.UserVoice;
 
 import javax.inject.Inject;
 
@@ -49,7 +51,7 @@ public class SettingsFragment extends BaseFragment
 	@Bind( R.id.switch_tumblr )
 	Switch m_tumblrSwitch;
 
-	@Bind(R.id.txt_tos)
+	@Bind(R.id.text_tos)
 	TextView m_tosText;
 
 	@Override
@@ -106,7 +108,7 @@ public class SettingsFragment extends BaseFragment
 	public void updateTitle()
 	{
 		setTitle( R.string.label_settings );
-		setSubtitle( null );
+		setSubtitle(null);
 	}
 
 	@Override
@@ -114,6 +116,11 @@ public class SettingsFragment extends BaseFragment
 	{
 		PhotoHelper.close();
 		super.onDestroy();
+	}
+
+	@OnClick(R.id.text_feedback)
+	void feedback(){
+		UserVoice.launchPostIdea(this.getActivity());
 	}
 
 	@OnClick( {R.id.img_camera, R.id.img_portrait} )
