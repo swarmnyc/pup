@@ -5,7 +5,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-resource.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-route.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/0.10.1/angular-moment.min.js"></script>    
     <style type="text/css">
         .section {                        
         }
@@ -69,7 +69,7 @@
     <script type="text/ng-template" id="list.html">
         <table class="section" ng-repeat="section in sections">        
             <caption>{{section.name}}</caption>
-            <tr class="lobby" ng-repeat="lobby in section.lobbies">
+            <tr class="lobby" ng-repeat="lobby in section.lobbies" ng-click="detail(lobby.Id)">
                 <td>
                     <div class="gameUrl" ng-style="{'background-image': 'url(' + lobby.thumbnailPictureUrl + ')'}"></div>
                     <div class="platform" ng-class="lobby.platform">{{lobby.platform}}</div>
@@ -77,15 +77,30 @@
                 <td>
                     <span>{{lobby.name}}</span>
                     <span>{{lobby.description}}</span>
-                    <span>{{lobby.playStyle}} | {{lobby.skillLevel}}</span>
-                    <span>{{lobby.startTimeUtc}}</span>
+                    <span>{{lobby.playStyle}} | {{lobby.skillLevel}}</span>                    
+                    <span>{{lobby.startTime | amCalendar}}</span>
                 </td>
             </tr>
         </table>
     </script>
-    <script type="text/ng-template" id="detail.html">
-        <a href="#" ng-click="back()">back</a>
-        Detail
+    <script type="text/ng-template" id="detail.html">        
+        <div class="headerImage" ng-style="{'background-image': 'url(' + lobby.thumbnailPictureUrl + ')'}">
+            <a href="#" ng-click="back()">back</a>
+            <div>{{lobby.owner.userName}}'s</div>
+            <div>{{lobby.name}}</div>
+            <div>{{lobby.platform}}: {{lobby.startTime | amCalendar}}</div>
+        </div>
+        <div>
+            <div>{{lobby.playStyle}}, {{lobby.skillLevel}}</div>
+            <div>{{lobby.description}}</div>
+        </div>
+        <div ng-repeat="msg in messages">
+            <div>{{msg.portraitUrl}}</div>
+            <div>{{msg.message}}</div>
+        </div>
+        <div>
+            Download
+        </div>
     </script>
     <script type="text/ng-template" id="error.html">
         Error Url
