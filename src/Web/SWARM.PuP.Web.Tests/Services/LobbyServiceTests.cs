@@ -25,7 +25,7 @@ namespace SWARM.PuP.Web.Tests.Services
                     new Action<PuPUser, Lobby>((x, y) => { y.AddTag(QuickbloxHttpHelper.Const_ChatRoomId, "Test"); }));
 
             var userService = new UserService(null);
-            var service = new LobbyService(chatService.Object);
+            var service = new LobbyService(chatService.Object, null);
             var lobby = service.Add(new Lobby
             {
                 GameId = "test",
@@ -46,7 +46,7 @@ namespace SWARM.PuP.Web.Tests.Services
         {
             var chatService = new Mock<IChatService>();
 
-            var service = new LobbyService(chatService.Object);
+            var service = new LobbyService(chatService.Object, null);
             var lobbyId = service.Collection.FindOne().Id;
             var userService = new UserService(null);
             service.Join(lobbyId, userService.GetSingle(x => x.UserName == "test"));
@@ -63,7 +63,7 @@ namespace SWARM.PuP.Web.Tests.Services
         {
             var chatService = new Mock<IChatService>();
 
-            var service = new LobbyService(chatService.Object);
+            var service = new LobbyService(chatService.Object, null);
             var userService = new UserService(null);
             var lobbyId = service.All().First().Id;
             service.Join(lobbyId, userService.GetSingle(x => x.UserName == "test"));
@@ -81,7 +81,7 @@ namespace SWARM.PuP.Web.Tests.Services
         {
             var chatService = new Mock<IChatService>();
             var userService = new UserService(null);
-            var service = new LobbyService(chatService.Object);
+            var service = new LobbyService(chatService.Object, null);
             var lobby = service.Add(new Lobby
             {
                 GameId = "test",
@@ -106,7 +106,7 @@ namespace SWARM.PuP.Web.Tests.Services
         {
             var gameService = new GameService();
             var userService = new UserService(null);
-            var service = new LobbyService(new QuickbloxChatService());
+            var service = new LobbyService(new QuickbloxChatService(), null);
 
             var random = new Random();
             foreach (var game in gameService.All().OrderBy(x => x.Id).Take(30))

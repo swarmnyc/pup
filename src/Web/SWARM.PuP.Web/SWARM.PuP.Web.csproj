@@ -311,6 +311,7 @@
     <Content Include="js\respond.js" />
     <Content Include="js\retina.js" />
     <Content Include="js\script.js" />
+    <Content Include="js\userApp.js" />
     <Content Include="robots.txt" />
     <Content Include="sitemap.xml" />
     <Content Include="style.css" />

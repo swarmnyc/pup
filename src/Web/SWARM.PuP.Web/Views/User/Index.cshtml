@@ -1,25 +1,27 @@
 ﻿<!DOCTYPE html>
-<html ng-app="userApp">
+<html lang="en">
 <head>
     <title>PartyUpPlayer | lfg? Find mmog and co-op gamers to play with</title>
+    <base href="/User/">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-resource.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-route.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/0.10.1/angular-moment.min.js"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/0.10.1/angular-moment.min.js"></script>
+    <script src="~/js/userApp.js"></script>
     <style type="text/css">
-        .section {                        
+        .section {
         }
-    
-        .section caption {            
-            padding: 4px 0px;
-            color: #4d4d4d;
-        }
+
+            .section caption {
+                padding: 4px 0px;
+                color: #4d4d4d;
+                text-align: left;
+            }
 
         .lobby {
             margin: 4px 0px;
-            clear:both;
-            height:82px;
-            overflow:hidden;
+            clear: both;
+            height: 82px;
+            overflow: hidden;
         }
 
         .gameUrl {
@@ -58,16 +60,19 @@
             }
     </style>
 </head>
-<body ng-controller="ListController" ng-show="ready" ng-cloak>
-    <div>
-        <img src="/images/puplogo.png"/> {{userName}}
-    <div/>
-    <div ng-view></div>
-    <div>
-        <img src="/images/puplogo.png"/>
-    </div>   
+<body ng-app="userApp" ng-cloak>
+    <div ng-controller="MainController">
+        <div>
+            <img src="/images/puplogo.png" /> {{$root.userName}}
+        </div>
+        <div ng-view></div>
+        <div>
+            <img src="/images/pup-logo-large.png" style="width: 40px" />
+        </div>
+    </div>
+
     <script type="text/ng-template" id="list.html">
-        <table class="section" ng-repeat="section in sections">        
+        <table class="section" ng-repeat="section in sections">
             <caption>{{section.name}}</caption>
             <tr class="lobby" ng-repeat="lobby in section.lobbies" ng-click="detail(lobby.Id)">
                 <td>
@@ -77,18 +82,18 @@
                 <td>
                     <span>{{lobby.name}}</span>
                     <span>{{lobby.description}}</span>
-                    <span>{{lobby.playStyle}} | {{lobby.skillLevel}}</span>                    
-                    <span>{{lobby.startTime | amCalendar}}</span>
+                    <span>{{lobby.playStyle}} | {{lobby.skillLevel}}</span>
+                    <span>{{lobby.startTime}}</span>
                 </td>
             </tr>
         </table>
     </script>
-    <script type="text/ng-template" id="detail.html">        
+    <script type="text/ng-template" id="detail.html">
         <div class="headerImage" ng-style="{'background-image': 'url(' + lobby.thumbnailPictureUrl + ')'}">
-            <a href="#" ng-click="back()">back</a>
+            <a ng-click="back()">back</a>
             <div>{{lobby.owner.userName}}'s</div>
             <div>{{lobby.name}}</div>
-            <div>{{lobby.platform}}: {{lobby.startTime | amCalendar}}</div>
+            <div>{{lobby.platform}}: {{lobby.startTime}}</div>
         </div>
         <div>
             <div>{{lobby.playStyle}}, {{lobby.skillLevel}}</div>

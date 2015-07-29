@@ -19,6 +19,7 @@ namespace SWARM.PuP.Web.QueryFilters
         public IList<SkillLevel> SkillLevels { get; set; }
         public DateTime? StartTimeUtc { get; set; }
         public string UserId { get; set; }
+        public string UserName { get; set; }
         public bool NeedCount { get; set; }
         public int TimeZone { get; set; }
     }
