@@ -1,11 +1,16 @@
 ﻿<!DOCTYPE html>
-<html ng-app="App">
+<html ng-app="userApp">
 <head>
     <title>PartyUpPlayer | lfg? Find mmog and co-op gamers to play with</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-resource.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-route.min.js"></script>
     <style type="text/css">
-        .section {
+        .section {                        
+        }
+    
+        .section caption {            
             padding: 4px 0px;
             color: #4d4d4d;
         }
@@ -53,95 +58,37 @@
             }
     </style>
 </head>
-<body ng-controller="UserLobbyCtrl" ng-show="ready" ng-cloak>
-    <div ng-repeat="section in sections">
-        <div class="section">{{section.name}}</div>
-        <div class="lobby" ng-repeat="lobby in section.lobbies">
-            <div style="float:left">
-                <div class="gameUrl" ng-style="{'background-image': 'url(' + lobby.thumbnailPictureUrl + ')'}"></div>
-                <div class="platform" ng-class="lobby.platform">{{lobby.platform}}</div>
-            </div>
-            <div>
-                <span>{{lobby.name}}</span>
-                <span>{{lobby.description}}</span>
-                <span>{{lobby.playStyle}} | {{lobby.skillLevel}}</span>
-                <span>{{lobby.startTimeUtc}}</span>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        angular.module("App", ["ngResource"])
-               .controller("UserLobbyCtrl", function ($scope, $resource) {
-                   var root = location.origin;
-                   var $api = $resource(root + "/api/Lobby?userId=@ViewData["UserId"]");
-                   root = "http://pup-dev.azurewebsites.net/"; //TODO: remove
-                   $api.get(function (response) {
-
-                       var result = response.result;
-
-                       var today = new Date();
-                       today = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
-
-                       var tomorrow = new Date(today);
-                       tomorrow.setDate(tomorrow.getDate() + 1);
-
-                       var thisWeek = new Date(today);
-                       thisWeek.setDate(tomorrow.getDate() + 2);
-
-                       var nextWeek = new Date(today);
-                       nextWeek.setDate(tomorrow.getDate() + 7);
-
-                       var s = [[], [], [], []];
-                       for (var i = 0; i < result.length; i++) {
-                           var lobby = result[i];
-                           lobby.startTimeUtc = new Date(lobby.startTimeUtc);
-                           lobby.pictureUrl = lobby.pictureUrl.replace("~", root);
-                           lobby.thumbnailPictureUrl = lobby.thumbnailPictureUrl.replace("~", root);
-                           if (lobby.platform === "PC") {
-                               lobby.platform = "PC/STEAM"
-                           }
-
-                           if (lobby.startTimeUtc >= nextWeek) {
-                               s[3].push(lobby);
-                           } else if (lobby.startTimeUtc >= thisWeek) {
-                               s[2].push(lobby)
-                           } else if (lobby.startTimeUtc >= tomorrow) {
-                               s[1].push(lobby)
-                           } else {
-                               s[0].push(lobby)
-                           }
-                       }
-
-                       $scope.sections = [];
-                       for (var i = 0; i < s.length; i++) {
-                           if (s[i].length != 0) {
-                               var name;
-                               switch (i) {
-                                   case 0:
-                                       name = "Today (" + s[i].length + ")";
-                                       break;
-                                   case 1:
-                                       name = "Tomorrow (" + s[i].length + ")";
-                                       break;
-                                   case 2:
-                                       name = "Later this week (" + s[i].length + ")";
-                                       break;
-                                   case 3:
-                                       name = "Next week (" + s[i].length + ")";
-                                       break;
-                               }
-
-                               $scope.sections.push({
-                                   name: name,
-                                   lobbies: s[i]
-                               });
-                           }
-                       }
-
-                       $scope.ready = true;
-                   });
-               });
+<body ng-controller="ListController" ng-show="ready" ng-cloak>
+    <div>
+        <img src="/images/puplogo.png"/> {{userName}}
+    <div/>
+    <div ng-view></div>
+    <div>
+        <img src="/images/puplogo.png"/>
+    </div>   
+    <script type="text/ng-template" id="list.html">
+        <table class="section" ng-repeat="section in sections">        
+            <caption>{{section.name}}</caption>
+            <tr class="lobby" ng-repeat="lobby in section.lobbies">
+                <td>
+                    <div class="gameUrl" ng-style="{'background-image': 'url(' + lobby.thumbnailPictureUrl + ')'}"></div>
+                    <div class="platform" ng-class="lobby.platform">{{lobby.platform}}</div>
+                </td>
+                <td>
+                    <span>{{lobby.name}}</span>
+                    <span>{{lobby.description}}</span>
+                    <span>{{lobby.playStyle}} | {{lobby.skillLevel}}</span>
+                    <span>{{lobby.startTimeUtc}}</span>
+                </td>
+            </tr>
+        </table>
+    </script>
+    <script type="text/ng-template" id="detail.html">
+        <a href="#" ng-click="back()">back</a>
+        Detail
+    </script>
+    <script type="text/ng-template" id="error.html">
+        Error Url
     </script>
 </body>
 </html>
