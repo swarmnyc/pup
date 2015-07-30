@@ -2,29 +2,35 @@
     "use strict";
     var app = angular.module("userApp", ["ngRoute", "angularMoment"]);
 
-    app.constant("consts", {});
-
-    app.constant('angularMomentConfig', {});
-
     app.config(function ($routeProvider, $locationProvider) {
         $routeProvider
             .when('/:userName', {
                 templateUrl: 'list.html',
                 controller: 'ListController'
             })
-            .when(':userName/:lobbyId', {
+            .when('/:userName/:lobbyId', {
                 templateUrl: 'detail.html',
                 controller: 'DetailController'
             });
 
         $locationProvider.html5Mode(true);
     });
-    app.controller("MainController", function ($scope, $location , $routeParams, consts) {
-        consts.root = "http://" + $location.host();
+    app.controller("MainController", function ($scope, $rootScope, $location, $routeParams) {
+        $rootScope.root = $location.protocol() + "://" + $location.host() + ":" + $location.port();
+
+        $rootScope.$on('$routeChangeStart', function (event, next, current) {
+            current = (current || {});
+            next = (next || {});
+            var currentPath = current.originalPath;
+            var nextPath = next.originalPath;
+
+            console.log('Starting to leave %s to go to %s', currentPath, nextPath);
+        });
     });
-    app.controller("ListController", function ($scope, $http, $location, $routeParams, consts) {
-        $scope.userName = $routeParams.userName;
-        $http.get("/api/Lobby?userName=" + $routeParams.userName).success(function (response) {
+    app.controller("ListController", function ($scope, $rootScope, $http, $location, $routeParams) {
+        $rootScope.userName = $routeParams.userName;
+
+        $http.get("/api/Lobby?userId=" + $rootScope.userId).success(function (response) {
             var result = response.result;
 
             var today = new Date();
@@ -40,29 +46,30 @@
             nextWeek.setDate(tomorrow.getDate() + 7);
 
             var s = [[], [], [], []];
-            for (var i = 0; i < result.length; i++) {
+            var i;
+            for (i = 0; i < result.length; i++) {
                 var lobby = result[i];
                 lobby.startTime = new Date(lobby.startTimeUtc);
-                lobby.pictureUrl = lobby.pictureUrl.replace("~", consts.root);
-                lobby.thumbnailPictureUrl = lobby.thumbnailPictureUrl.replace("~", consts.root);
+                lobby.pictureUrl = lobby.pictureUrl.replace("~", $rootScope.root);
+                lobby.thumbnailPictureUrl = lobby.thumbnailPictureUrl.replace("~", $rootScope.root);
                 if (lobby.platform === "PC") {
                     lobby.platform = "PC/STEAM";
                 }
 
-                if (lobby.startTimeUtc >= nextWeek) {
+                if (lobby.startTime >= nextWeek) {
                     s[3].push(lobby);
-                } else if (lobby.startTimeUtc >= thisWeek) {
-                    s[2].push(lobby)
-                } else if (lobby.startTimeUtc >= tomorrow) {
-                    s[1].push(lobby)
+                } else if (lobby.startTime >= thisWeek) {
+                    s[2].push(lobby);
+                } else if (lobby.startTime >= tomorrow) {
+                    s[1].push(lobby);
                 } else {
-                    s[0].push(lobby)
+                    s[0].push(lobby);
                 }
             }
 
             $scope.sections = [];
-            for (var i = 0; i < s.length; i++) {
-                if (s[i].length != 0) {
+            for (i = 0; i < s.length; i++) {
+                if (s[i].length !== 0) {
                     var name;
                     switch (i) {
                         case 0:
@@ -85,57 +92,58 @@
                     });
                 }
             }
-
-            $scope.ready = true;
         });
 
         $scope.goToDetail = function (lobby) {
-            data.lobby = lobby;
-            $location.path("/User/" + $routeParams.userName + "/" + lobby.Id);
+            $rootScope.lobby = lobby;
+            $location.path("/" + $routeParams.userName + "/" + lobby.id);
         };
     });
 
-    
-    app.controller("DetailController", function ($scope, $http, $routeParams, $location, consts) {
-        if (!consts.lobby) {
+    app.controller("DetailController", function ($scope, $rootScope, $http, $routeParams, $location) {
+        if (!$rootScope.lobby) {
             $location.path("/" + $routeParams.userName);
+            return;
         }
-        var lobby = data.lobby;
+
+        var lobby = $rootScope.lobby;
         $scope.lobby = lobby;
 
-        for (var i = 0; i < data.lobby.users.length; i++) {
-            if (data.lobby.users[i].isOwner) {
-                $scope.lobby.owner = data.lobby.users[i];
+        for (var i = 0; i < lobby.users.length; i++) {
+            if (lobby.users[i].portraitUrl) {
+                lobby.users[i].portraitUrl = lobby.users[i].portraitUrl.replace("~", $rootScope.root);
+            }
+
+            if (lobby.users[i].isOwner) {
+                lobby.owner = lobby.users[i];
             }
         }
 
         $http.get("/api/Lobby/Message/" + $routeParams.lobbyId).success(function (messages) {
+            var precious = {};
+            $scope.messages = [];
             for (var i = 0; i < messages.length; i++) {
                 var msg = messages[i];
 
-                if (lobby.users[j].userId) {
+                if (msg.userId) {
                     msg.isSysMessage = false;
-                    for (var j = 0; j < lobby.users.length; j++) {
-                        if (lobby.users[j].userId === msg.userId) {
-                            msg.user = lobby.users[j];
+                    if (precious.userId === msg.userId) {
+                        precious.message += "\n" + msg.message;
+                    } else {
+                        for (var j = 0; j < lobby.users.length; j++) {
+                            if (lobby.users[j].id === msg.userId) {
+                                msg.portraitUrl = lobby.users[j].portraitUrl;
+                            }
                         }
+
+                        precious = msg;
+                        $scope.messages.splice(0, 0, msg);
                     }
                 } else {
                     msg.isSysMessage = true;
+                    $scope.messages.splice(0, 0, msg);
                 }
             }
-
-            $scope.messages = messages;
         });
-
-        $scope.back = function () {
-            $location.path("/User/" + $routeParams.userName);
-        };
-    });
-
-    app.controller("ErrorController", function ($scope, $http, $routeParams, $location) {
-        $scope.back = function () {
-            $location.path("/User/" + $routeParams.userName);
-        };
     });
 }(window.angular));

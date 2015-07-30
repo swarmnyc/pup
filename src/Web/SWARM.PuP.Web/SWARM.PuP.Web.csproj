@@ -234,6 +234,7 @@
     <Content Include="BingSiteAuth.xml" />
     <Content Include="Content\Game\Cool.txt" />
     <Content Include="Content\pup.png" />
+    <Content Include="Content\User.css" />
     <Content Include="Content\User\Cool.txt" />
     <Content Include="css\css\reset.css" />
     <Content Include="css\css\style.css" />

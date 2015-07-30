@@ -5,110 +5,75 @@
     <base href="/User/">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/0.10.1/angular-moment.min.js"></script>
     <script src="~/js/userApp.js"></script>
-    <style type="text/css">
-        .section {
-        }
-
-            .section caption {
-                padding: 4px 0px;
-                color: #4d4d4d;
-                text-align: left;
-            }
-
-        .lobby {
-            margin: 4px 0px;
-            clear: both;
-            height: 82px;
-            overflow: hidden;
-        }
-
-        .gameUrl {
-            height: 64px;
-            width: 48px;
-            background-position: center center;
-            background-repeat: no-repeat;
-        }
-
-        .platform {
-            height: 18px;
-            width: 48px;
-            color: white;
-            text-align: center;
-            font-size: small;
-        }
-
-            .platform.PC, .platform.Steam {
-                background-color: #1e1e1e;
-            }
-
-            .platform.PS3 {
-                background-color: #9391b4;
-            }
-
-            .platform.PS4 {
-                background-color: #04a4ef;
-            }
-
-            .platform.Xbox360 {
-                background-color: #81b32e;
-            }
-
-            .platform.XboxOne {
-                background-color: #009500;
-            }
-    </style>
+    <link href="~/Content/User.css" rel="stylesheet" />
 </head>
 <body ng-app="userApp" ng-cloak>
-    <div ng-controller="MainController">
-        <div>
-            <img src="/images/puplogo.png" /> {{$root.userName}}
+    <div ng-controller="MainController" ng-init="$root.userId='@ViewData["userId"]'">
+        <div class="pageHeader">
+            <img class="pageImage" src="@Url.Content((string)ViewData["userPortraitUrl"])" alt="logo" /> @ViewData["userName"]
         </div>
-        <div ng-view></div>
-        <div>
-            <img src="/images/pup-logo-large.png" style="width: 40px" />
+        <div class="pageContent" ng-view></div>
+        <div class="pageFooter">
+            <img src="/Content/pup.png" style="width: 40px" />
         </div>
     </div>
 
     <script type="text/ng-template" id="list.html">
-        <table class="section" ng-repeat="section in sections">
-            <caption>{{section.name}}</caption>
-            <tr class="lobby" ng-repeat="lobby in section.lobbies" ng-click="detail(lobby.Id)">
-                <td>
-                    <div class="gameUrl" ng-style="{'background-image': 'url(' + lobby.thumbnailPictureUrl + ')'}"></div>
-                    <div class="platform" ng-class="lobby.platform">{{lobby.platform}}</div>
-                </td>
-                <td>
-                    <span>{{lobby.name}}</span>
-                    <span>{{lobby.description}}</span>
-                    <span>{{lobby.playStyle}} | {{lobby.skillLevel}}</span>
-                    <span>{{lobby.startTime}}</span>
-                </td>
-            </tr>
-        </table>
+        <section class="section" ng-repeat="section in sections">
+            <div class="caption">{{section.name}}</div>
+            <div class="lobby" ng-repeat="lobby in section.lobbies" ng-click="goToDetail(lobby)">
+                <div class="row">
+                    <div class="col1">
+                        <div class="gameImage" ng-style="{'background-image': 'url(' + lobby.thumbnailPictureUrl + ')'}"></div>
+                    </div>
+                    <div class="col2 main">
+                        <div class="name">{{lobby.name}}</div>
+                        <div class="description text-gray">{{lobby.description}}</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col1 platform">
+                        <div class="platform" ng-class="lobby.platform">{{lobby.platform}}</div>
+                    </div>
+                    <div class="col2 detail">
+                        <span class="text-orange">{{lobby.playStyle}} | {{lobby.skillLevel}}</span>
+                        <span class="time text-teal">{{lobby.startTime | amCalendar}}</span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </script>
     <script type="text/ng-template" id="detail.html">
-        <div class="headerImage" ng-style="{'background-image': 'url(' + lobby.thumbnailPictureUrl + ')'}">
-            <a ng-click="back()">back</a>
-            <div>{{lobby.owner.userName}}'s</div>
-            <div>{{lobby.name}}</div>
-            <div>{{lobby.platform}}: {{lobby.startTime}}</div>
+        <div class="headerImage" ng-style="{'background-image': 'url(' + lobby.pictureUrl + ')'}">
+            <div class="headerImageCover"></div>
+            <a class="backButton" ng-href="/User/{{$root.userName}}">< Back</a>
+            <div class="headerContent">
+                <div class="title">{{lobby.owner.userName}}'s</div>
+                <div class="title">{{lobby.name}}</div>
+                <div>{{lobby.platform}}: {{lobby.startTime | amCalendar}}</div>
+            </div>
         </div>
-        <div>
-            <div>{{lobby.playStyle}}, {{lobby.skillLevel}}</div>
-            <div>{{lobby.description}}</div>
+        <div class="lobbyContent">
+            <div class="lobbyHeader">
+                <div class="description text-orange">{{lobby.playStyle}}, {{lobby.skillLevel}}</div>
+                <div class="description">{{lobby.description}}</div>
+            </div>
+            <div ng-repeat="msg in messages">
+                <div ng-if="msg.isSysMessage" class="sysMessage">
+                    {{msg.message}}
+                </div>
+                <div ng-if="!msg.isSysMessage" class="message">
+                    <img class="portraitImage" ng-src="{{msg.portraitUrl}}" />
+                    <pre class="messageContent">{{msg.message}}</pre>
+                </div>
+            </div>
         </div>
-        <div ng-repeat="msg in messages">
-            <div>{{msg.portraitUrl}}</div>
-            <div>{{msg.message}}</div>
+        <div class="download">
+            <a href="http://partyupplayer.com/" target="_parent">Download App</a>
         </div>
-        <div>
-            Download
-        </div>
-    </script>
-    <script type="text/ng-template" id="error.html">
-        Error Url
     </script>
 </body>
 </html>
