@@ -16,10 +16,12 @@ namespace SWARM.PuP.Web.Services
     public class LobbyService : BaseService<Lobby>, ILobbyService
     {
         private readonly IChatService _chatService;
+        private readonly IUserService _userService;
 
-        public LobbyService(IChatService chatService) : base("Lobbies")
+        public LobbyService(IChatService chatService, IUserService userService) : base("Lobbies")
         {
             _chatService = chatService;
+            _userService = userService;
         }
 
         public Lobby Add(Lobby lobby, PuPUser owner)
@@ -49,6 +51,11 @@ namespace SWARM.PuP.Web.Services
             if (!string.IsNullOrWhiteSpace(filter.GameId))
             {
                 query = query.Where(x => x.GameId == filter.GameId);
+            }
+
+            if (filter.UserName.IsNotNullOrWhiteSpace())
+            {
+                filter.UserId = _userService.GetSingle(x => x.UserName.ToLower() == filter.UserName.ToLower()).Id;
             }
 
             if (!string.IsNullOrWhiteSpace(filter.UserId))

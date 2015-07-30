@@ -52,7 +52,7 @@ namespace SWARM.PuP.Web.Tests.Services
             try
             {
                 var userService = new UserService(null);
-                var lobbyService = new LobbyService(null);
+                var lobbyService = new LobbyService(null, null);
                 QuickbloxChatService s = new QuickbloxChatService();
                 s.CreateRoomForLobby(userService.FindByEmail("Wade@swarmnyc.com") , lobbyService.Collection.FindOne());
             }

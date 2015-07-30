@@ -153,6 +153,7 @@
   <ItemGroup>
     <Compile Include="Code\ApiControllers\ErrorCode.cs" />
     <Compile Include="Code\Consts.cs" />
+    <Compile Include="Code\Controllers\UserController.cs" />
     <Compile Include="Code\ViewModels\LobbySearchResult.cs" />
     <Compile Include="Code\Components\ShareHelper.cs" />
     <Compile Include="Code\Components\QueryString.cs" />
@@ -233,6 +234,7 @@
     <Content Include="BingSiteAuth.xml" />
     <Content Include="Content\Game\Cool.txt" />
     <Content Include="Content\pup.png" />
+    <Content Include="Content\User.css" />
     <Content Include="Content\User\Cool.txt" />
     <Content Include="css\css\reset.css" />
     <Content Include="css\css\style.css" />
@@ -310,6 +312,7 @@
     <Content Include="js\respond.js" />
     <Content Include="js\retina.js" />
     <Content Include="js\script.js" />
+    <Content Include="js\userApp.js" />
     <Content Include="robots.txt" />
     <Content Include="sitemap.xml" />
     <Content Include="style.css" />
@@ -375,6 +378,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images\assets\" />

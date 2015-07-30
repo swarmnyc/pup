@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>PartyUpPlayer | lfg? Find mmog and co-op gamers to play with</title>
+    <base href="/User/">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/0.10.1/angular-moment.min.js"></script>
+    <script src="~/js/userApp.js"></script>
+    <link href="~/Content/User.css" rel="stylesheet" />
+</head>
+<body ng-app="userApp" ng-cloak>
+    <div ng-controller="MainController" ng-init="$root.userId='@ViewData["userId"]'">
+        <div class="pageHeader">
+            <img class="pageImage" src="@Url.Content((string)ViewData["userPortraitUrl"])" alt="logo" /> @ViewData["userName"]
+        </div>
+        <div class="pageContent" ng-view></div>
+        <div class="pageFooter">
+            <img src="/Content/pup.png" style="width: 40px" />
+        </div>
+    </div>
+
+    <script type="text/ng-template" id="list.html">
+        <section class="section" ng-repeat="section in sections">
+            <div class="caption">{{section.name}}</div>
+            <div class="lobby" ng-repeat="lobby in section.lobbies" ng-click="goToDetail(lobby)">
+                <div class="row">
+                    <div class="col1">
+                        <div class="gameImage" ng-style="{'background-image': 'url(' + lobby.thumbnailPictureUrl + ')'}"></div>
+                    </div>
+                    <div class="col2 main">
+                        <div class="name">{{lobby.name}}</div>
+                        <div class="description text-gray">{{lobby.description}}</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col1 platform">
+                        <div class="platform" ng-class="lobby.platform">{{lobby.platform}}</div>
+                    </div>
+                    <div class="col2 detail">
+                        <span class="text-orange">{{lobby.playStyle}} | {{lobby.skillLevel}}</span>
+                        <span class="time text-teal">{{lobby.startTime | amCalendar}}</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </script>
+    <script type="text/ng-template" id="detail.html">
+        <div class="headerImage" ng-style="{'background-image': 'url(' + lobby.pictureUrl + ')'}">
+            <div class="headerImageCover"></div>
+            <a class="backButton" ng-href="/User/{{$root.userName}}">< Back</a>
+            <div class="headerContent">
+                <div class="title">{{lobby.owner.userName}}'s</div>
+                <div class="title">{{lobby.name}}</div>
+                <div>{{lobby.platform}}: {{lobby.startTime | amCalendar}}</div>
+            </div>
+        </div>
+        <div class="lobbyContent">
+            <div class="lobbyHeader">
+                <div class="description text-orange">{{lobby.playStyle}}, {{lobby.skillLevel}}</div>
+                <div class="description">{{lobby.description}}</div>
+            </div>
+            <div ng-repeat="msg in messages">
+                <div ng-if="msg.isSysMessage" class="sysMessage">
+                    {{msg.message}}
+                </div>
+                <div ng-if="!msg.isSysMessage" class="message">
+                    <img class="portraitImage" ng-src="{{msg.portraitUrl}}" />
+                    <pre class="messageContent">{{msg.message}}</pre>
+                </div>
+            </div>
+        </div>
+        <div class="download">
+            <a href="http://partyupplayer.com/" target="_parent">Download App</a>
+        </div>
+    </script>
+</body>
+</html>
