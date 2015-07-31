@@ -153,6 +153,7 @@
   <ItemGroup>
     <Compile Include="Code\ApiControllers\ErrorCode.cs" />
     <Compile Include="Code\Consts.cs" />
+    <Compile Include="Code\Controllers\PluginController.cs" />
     <Compile Include="Code\Controllers\UserController.cs" />
     <Compile Include="Code\ViewModels\LobbySearchResult.cs" />
     <Compile Include="Code\Components\ShareHelper.cs" />
@@ -379,6 +380,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\Plugin\JoinedGames.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images\assets\" />

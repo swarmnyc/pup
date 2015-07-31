@@ -21,7 +21,7 @@ namespace SWARM.PuP.Web.Code.Controllers
             var user = _userService.GetSingle(x => x.UserName.ToLower() == name.ToLower());
             if (user == null)
             {
-                return Redirect("~/404.shtml");
+                return Content("There isn't a existing user");
             }
 
             ViewData["userId"] = user.Id;

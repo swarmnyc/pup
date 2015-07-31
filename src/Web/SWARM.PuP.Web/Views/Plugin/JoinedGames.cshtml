@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Joined Games</title>
+</head>
+<body>
+    <div>
+        <form>
+            <input id="userName" type="text" placeholder="Enter your user name" required="" />
+            <button id="generateButton">Generate</button>    
+        </form>
+    </div>
+    <div>
+        <textarea id="generatedCode" style="width: 400px"></textarea>
+    </div>
+    <div>
+        <iframe id="output" width="310" height="400"></iframe>
+    </div>
+    <script src="~/js/jquery.js"></script>
+    <script>
+        $(function() {
+            $("form").submit(function () {
+                var src = location.origin + "/User/" + $("#userName").val();
+                var code = '<iframe src="'+ src +'" width="300" height="400"></iframe>';
+
+                $("#generatedCode").val(code);
+
+                $("#output").attr("src",src);
+                
+
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>
