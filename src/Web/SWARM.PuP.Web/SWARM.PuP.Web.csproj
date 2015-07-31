@@ -285,6 +285,7 @@
     <Content Include="img\Flag.png" />
     <Content Include="img\flag0.png" />
     <Content Include="img\flag1.png" />
+    <Content Include="img\googleplay-1.png" />
     <Content Include="img\hot.png" />
     <Content Include="img\hotCall.png" />
     <Content Include="img\hotCall_.png" />
