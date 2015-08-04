@@ -50,6 +50,7 @@ code_sign() {
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Alamofire.framework'
   install_framework 'Bolts.framework'
+  install_framework 'DZNPhotoPickerController.framework'
   install_framework 'ENSwiftSideMenu.framework'
   install_framework 'FBSDKCoreKit.framework'
   install_framework 'FBSDKLoginKit.framework'
@@ -63,6 +64,7 @@ fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Alamofire.framework'
   install_framework 'Bolts.framework'
+  install_framework 'DZNPhotoPickerController.framework'
   install_framework 'ENSwiftSideMenu.framework'
   install_framework 'FBSDKCoreKit.framework'
   install_framework 'FBSDKLoginKit.framework'

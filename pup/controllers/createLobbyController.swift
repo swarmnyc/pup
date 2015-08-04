@@ -22,7 +22,6 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
 
 
     var dateDisplay: DateDisplayView = DateDisplayView();
-    var timeDisplay: TimeDisplayView = TimeDisplayView();
 
     required init(coder aDecoder: NSCoder)
     {
@@ -36,11 +35,15 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
     }
 
     override func loadView() {
-        createView.setUpView(self, dateDisplay: dateDisplay, timeDisplay: timeDisplay);
+        self.navigationController?.navigationBar.translucent = false;
+
+        createView.setUpView(self, dateDisplay: dateDisplay);
        self.view = self.createView
     }
 
     override func viewDidLoad() {
+        self.navigationController?.navigationBar.translucent = false;
+
         super.viewDidLoad()
         currentUser.setPage("Create Lobby")
 
@@ -63,38 +66,42 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
         data.delegate = self;
 
         if (currentUser.loggedIn() == false) {
-            logInButton = JoinPupButton(parentController: self)
+            if (logInButton == nil) {
+                logInButton = JoinPupButton(aboveTabBar: true)
+            }
             logInButton?.onSuccessJoin = createLobby;
+            logInButton?.setUpView(self.createView.scrollView)
         }
 
 
-        registerForKeyboardNotifications()
+
     }
 
     func scrollViewDidScroll(scrollView: UIScrollView!) {
-        logInButton?.bounceView(scrollView.contentSize.height - (scrollView.contentOffset.y+scrollView.frame.height))
+        println(scrollView.contentOffset.y);
+        var yOffset = scrollView.contentOffset.y;
+        if (yOffset <= 0) {
+            self.createView.offsetImage(yOffset);
+        }
+        //logInButton?.bounceView(scrollView.contentSize.height - (scrollView.contentOffset.y+scrollView.frame.height))
     }
 
 
-    func updateTimeText(newDate: NSDate) {
-        timeDisplay.setNewText(newDate)
-    }
+
 
     func updateDates(newDate: NSDate) {
-        timeDisplay.currentDate = newDate;
         dateDisplay.currentDate = newDate;
     }
 
 
     func setUpDateCallbacks(newDate: (newDate: NSDate) -> NSDate, newTime: (newDate: NSDate) -> NSDate) {
         dateDisplay.successfulChange = newDate;
-        timeDisplay.successfulChange = newTime;
     }
 
     func updateDate(newDate: NSDate) -> NSDate {
         println(newDate)
         newLobbyModel.changeDateDay(newDate)
-        updateTimeText(newLobbyModel.startTime)
+        //updateTimeText(newLobbyModel.startTime) time display was removed, no need to update it's text
         updateDates(newLobbyModel.startTime)
         return newLobbyModel.startTime
     }
@@ -141,9 +148,29 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
         println("view will appear")
         if (currentUser.loggedIn() == false) {
             println("add to view")
-            logInButton?.addToAppView()
+
+                if (currentUser.loggedIn() == false) {
+                    if (logInButton == nil) {
+                        logInButton = JoinPupButton(aboveTabBar: true)
+                    }
+                    logInButton?.onSuccessJoin = createLobby;
+                    logInButton?.setUpView(self.createView.scrollView)
+
+
+            }
+            //logInButton?.addToAppView()
         }
 
+        self.createView.checkViewHeightAndCorrect();
+
+        registerForKeyboardNotifications();
+
+        self.createView.setTextSize();
+
+        self.title = "Create A Game"
+
+
+        //clear create lobby data
 
     }
 
@@ -151,6 +178,8 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
         let lobbyView = SingleLobbyController(info: newLobby)
 
         SwiftLoader.hide()
+        lobbyView.hidesBottomBarWhenPushed = true;
+
         nav!.viewControllers?[1].pushViewController(lobbyView, animated: true);
         nav!.selectedIndex = 1;
         nav!.selectedViewController!.viewDidAppear(true)
@@ -205,10 +234,8 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
 
     func keyboardWillBeHidden(notification: NSNotification)
     {
-      createView.restoreView();
-        if (logInButton != nil) {
-            logInButton?.restoreView()
-        }
+      createView.restoreView(0.5);
+
     }
 
     func registerForKeyboardNotifications() {
@@ -234,7 +261,7 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
                 name: UIKeyboardWillHideNotification,
                 object: nil)
         if (logInButton != nil) {
-            logInButton?.removeRegistrationView();
+            //logInButton?.removeRegistrationView();
         }
 
 

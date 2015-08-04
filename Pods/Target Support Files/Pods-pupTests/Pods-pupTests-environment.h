@@ -30,6 +30,12 @@
 #define COCOAPODS_VERSION_MINOR_Bolts_Tasks 2
 #define COCOAPODS_VERSION_PATCH_Bolts_Tasks 0
 
+// DZNPhotoPickerController/Editor
+#define COCOAPODS_POD_AVAILABLE_DZNPhotoPickerController_Editor
+#define COCOAPODS_VERSION_MAJOR_DZNPhotoPickerController_Editor 1
+#define COCOAPODS_VERSION_MINOR_DZNPhotoPickerController_Editor 6
+#define COCOAPODS_VERSION_PATCH_DZNPhotoPickerController_Editor 1
+
 // ENSwiftSideMenu
 #define COCOAPODS_POD_AVAILABLE_ENSwiftSideMenu
 #define COCOAPODS_VERSION_MAJOR_ENSwiftSideMenu 0
@@ -90,3 +96,13 @@
 #define COCOAPODS_VERSION_MINOR_uservoice_iphone_sdk 2
 #define COCOAPODS_VERSION_PATCH_uservoice_iphone_sdk 3
 
+// Debug build configuration
+#ifdef DEBUG
+
+  // Reveal-iOS-SDK
+  #define COCOAPODS_POD_AVAILABLE_Reveal_iOS_SDK
+  #define COCOAPODS_VERSION_MAJOR_Reveal_iOS_SDK 1
+  #define COCOAPODS_VERSION_MINOR_Reveal_iOS_SDK 5
+  #define COCOAPODS_VERSION_PATCH_Reveal_iOS_SDK 1
+
+#endif

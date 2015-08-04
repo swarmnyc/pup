@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "07B6C65B5E18C3114B7B8DBB"
+               BlueprintIdentifier = "5B888733B6F7CF0B2BDD63ED"
                BuildableName = "SwiftLoader.framework"
                BlueprintName = "Pods-pupTests2-SwiftLoader"
                ReferencedContainer = "container:Pods.xcodeproj">

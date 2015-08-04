@@ -7,13 +7,17 @@ import Foundation
 import UIKit
 import Haneke
 
+
+
 class MessageCell: UITableViewCell {
 
 
     var profilePicture: UIImageView = UIImageView();
     var userName: UILabel = UILabel();
     var message:UITextView = UITextView();
-
+    var whiteBackground: UIView = UIView();
+    var firstTime = true;
+    var delay: Double = 0;
     var isSystemMessage = false;
 
     required init(coder aDecoder: NSCoder) {
@@ -30,6 +34,21 @@ class MessageCell: UITableViewCell {
         // Initialization code
     }
 
+
+    func isCurrentUser() -> Bool {
+        if let theUserName = self.userName.text {
+            if (theUserName == currentUser.data.name) {
+                return true;
+        }
+    }
+
+        return false;
+
+        }
+
+    func setTheAnimationDelay(delay: Double) {
+        self.delay = delay;
+    }
 
     func setUpCell(item: Message) {
 
@@ -49,9 +68,11 @@ class MessageCell: UITableViewCell {
         }
 
 
+        whiteBackground.backgroundColor = UIColor.whiteColor();
+
 
         message.text = item.message;
-        message.font = message.font.fontWithSize(13);
+        message.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
         message.userInteractionEnabled = false;
         message.textContainerInset = UIEdgeInsetsZero
         message.textContainer.lineFragmentPadding = 0;
@@ -71,7 +92,7 @@ class MessageCell: UITableViewCell {
             self.userName.layer.opacity = 1;
 
             userName.text = item.username;
-            userName.font = userName.font.fontWithSize(12)
+            userName.font = UIFont(name: "AvenirNext-Regular", size: 12.0)
             userName.backgroundColor = UIColor.clearColor();
             userName.textColor = UIColor(rgba: colors.mainGrey);
             if (item.username == currentUser.data.name) {
@@ -87,11 +108,30 @@ class MessageCell: UITableViewCell {
         addConstraints();
 
 
+        if (delay != 0) {
+            if (firstTime) {
+                var trans = CGAffineTransformMakeTranslation(UIScreen.mainScreen().bounds.width, 0);
+                self.transform = trans;
+
+                firstTime = false;
+
+            }
+
+            UIView.animateWithDuration(delay, animations: {
+                var trans = CGAffineTransformMakeTranslation(0, 0);
+                self.transform = trans;
+            })
+        } else {
+
+        }
+
+
     }
 
 
 
     func addViews() {
+        addSubview(whiteBackground)
         addSubview(profilePicture)
         addSubview(userName)
         addSubview(message)
@@ -101,25 +141,34 @@ class MessageCell: UITableViewCell {
     func addConstraints() {
         profilePicture.snp_makeConstraints {
             (make) -> Void in
-            make.left.equalTo(self).offset(UIConstants.horizontalPadding * 2)
-            make.top.equalTo(self).offset(UIConstants.halfVerticalPadding)
-            make.height.equalTo(40)
-            make.width.equalTo(40);
+            make.left.equalTo(self).offset(UIConstants.horizontalPadding)
+            make.top.equalTo(self).offset(UIConstants.horizontalPadding)
+            make.height.equalTo(38)
+            make.width.equalTo(38);
 
         }
+
+        whiteBackground.snp_remakeConstraints {
+            (make) -> Void in
+            make.right.equalTo(self.snp_left).offset(0);
+            make.top.equalTo(self);
+            make.bottom.equalTo(self);
+            make.width.equalTo(UIScreen.mainScreen().bounds.width);
+        }
+
         if (isSystemMessage == false) {
             userName.snp_remakeConstraints {
                 (make) -> Void in
-                make.left.equalTo(self.profilePicture.snp_right).offset(UIConstants.horizontalPadding * 2)
-                make.top.equalTo(self).offset(UIConstants.halfVerticalPadding)
+                make.left.equalTo(self.profilePicture.snp_right).offset(UIConstants.horizontalPadding)
+                make.top.equalTo(self).offset(UIConstants.horizontalPadding)
                 make.right.equalTo(self).offset(-UIConstants.horizontalPadding * 2);
                 make.height.equalTo(20)
             }
 
             message.snp_remakeConstraints {
                 (make) -> Void in
-                make.left.equalTo(self.profilePicture.snp_right).offset(UIConstants.horizontalPadding * 2)
-                make.bottom.equalTo(self).offset(-UIConstants.halfVerticalPadding * 2)
+                make.left.equalTo(self.profilePicture.snp_right).offset(UIConstants.horizontalPadding)
+                make.bottom.equalTo(self).offset(-UIConstants.horizontalPadding)
                 make.right.equalTo(self).offset(-UIConstants.horizontalPadding);
                 make.top.equalTo(self.userName.snp_bottom).offset(-UIConstants.halfVerticalPadding * 0.5)
             }
@@ -127,12 +176,18 @@ class MessageCell: UITableViewCell {
             message.snp_remakeConstraints {
                 (make) -> Void in
                 make.left.equalTo(self).offset(UIConstants.horizontalPadding * 2.0)
-                make.top.equalTo(self).offset(UIConstants.verticalPadding)
+                make.top.equalTo(self).offset(0.5 * self.frame.height - 8);
                 make.right.equalTo(self).offset(-UIConstants.horizontalPadding * 2.0);
-                make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)
+                make.bottom.equalTo(self).offset(0)
             }
         }
+
+
+        self.layoutIfNeeded();
+
     }
+
+
 
 
     override var layoutMargins: UIEdgeInsets {  //make cell dividers extend full width

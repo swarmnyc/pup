@@ -31,6 +31,12 @@ class SearchResultsModel {
 
     }
 
+
+    func clearData() {
+        searchTerm = "";
+        platforms = [];
+    }
+
     func removePlatformFromSearch(removedPlatform: String) {
         println(platforms);
 

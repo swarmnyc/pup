@@ -83,6 +83,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
+      customArchiveName = "pup2"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

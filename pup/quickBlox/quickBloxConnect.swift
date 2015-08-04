@@ -10,23 +10,15 @@ class QuickBlox: NSObject, QBChatDelegate {
 
 
     var delegates: Array<QuickBloxDelegate> = [];
-
-
-
-    var messageToSend: String?
-
     var roomIDs: Array<String> = [];
     var rooms: Array<QBChatRoom> = [];
-
     var messageLimit = 20;
-    var messageSkip = 0;
 
-    var newMessages = 0;
 
     override init() {
         super.init()
 
-
+        //set up the application keys and data
         QBApplication.sharedApplication().applicationId = 24285;
         QBConnection.registerServiceKey("BeUfd9nMYp6OV8-");
         QBConnection.registerServiceSecret("QUBVCLgUjFY97cV");
@@ -34,7 +26,7 @@ class QuickBlox: NSObject, QBChatDelegate {
 
         //createSessionWithDefaultUser()
         if (currentUser.loggedIn()) {
-            createSession(true)
+            createSession()
         }
 
 
@@ -42,15 +34,11 @@ class QuickBlox: NSObject, QBChatDelegate {
     }
 
 
-    func createSessionWithCurrentUser() {
+    func createSession() {
 
        // println("create session with current user!!!")
-        if (QBChat.instance().isLoggedIn()) {
-            self.sessionCreationSuccess()
+        if (!QBChat.instance().isLoggedIn()) {
 
-
-
-        } else {
             var parameters = QBSessionParameters();
             parameters.userLogin = currentUser.data.userId
             parameters.userPassword = "swarmnyc"
@@ -70,7 +58,6 @@ class QuickBlox: NSObject, QBChatDelegate {
                 QBChat.instance().streamManagementEnabled = true;
                 QBConnection.setAutoCreateSessionEnabled(true);
                 println(QBChat.instance().delegates);
-                self.sessionCreationSuccess()
 
             }, errorBlock: {
                 response in
@@ -81,51 +68,9 @@ class QuickBlox: NSObject, QBChatDelegate {
 
     }
 
-    func createSession(isMember: Bool) {
-       //logoutOfChat();
-        if (isMember) {
-            createSessionWithCurrentUser();
-        } else {
-            createSessionWithDefaultUser();
-        }
-    }
-
-    func createSessionWithDefaultUser() {
-//        var parameters = QBSessionParameters();
-//        parameters.userLogin = appData.QBDefaultUser
-//        parameters.userPassword = appData.QBDefaultPassword
-//
-//        println("creating session with default user")
-//
-//        QBRequest.createSessionWithExtendedParameters(parameters, successBlock: {
-//            response, session in
-//
-//            var currentUser = QBUUser()
-//            currentUser.ID = session.userID;
-//            currentUser.password = appData.QBDefaultPassword
-//
-//            self.addQBDelegates()
-//            QBChat.instance().loginWithUser(currentUser)
-//            QBChat.instance().autoReconnectEnabled = true;
-//            QBChat.instance().streamManagementEnabled = true;
-//            println(QBChat.instance().delegates);
-//            self.sessionCreationSuccess();
-//        }, errorBlock: {
-//            response in
-//            println("errrrooooorrrrr")
-//        }
-//        )
 
 
-        //call and get chat data from our api
 
-    }
-
-
-    func sessionCreationSuccess() {
-
-
-    }
 
 
 
@@ -134,82 +79,74 @@ class QuickBlox: NSObject, QBChatDelegate {
 
     func getMessages(chatRoom: QBChatRoom) {
 
-        dispatch_async(dispatch_get_global_queue(priority, 0)) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) { //lets get em in the background
 
-            if (QBChat.instance().isLoggedIn()) {
-                //println("logged in.....")
-            }
-            println("getting messages")
 
             var extendedRequest = ["sort_desc": "date_sent"];
-            var resPage: QBResponsePage = QBResponsePage(limit: self.messageLimit, skip: self.messageSkip);
+            var resPage: QBResponsePage = QBResponsePage(limit: self.messageLimit, skip: 0);
             QBRequest.messagesWithDialogID(self.roomIDFromJID(chatRoom.JID as! String), extendedRequest: extendedRequest, forPage: resPage, successBlock: {
                 response, messages, responcePage in
-                println("got messages")
-                println(self.delegates.count)
-                dispatch_async(dispatch_get_main_queue()) {
 
-                    for (var i = 0; i < self.delegates.count; i++) {
+                    for (var i = 0; i < self.delegates.count; i++) {  //search through the delegates
 //                    println(i)
 
-                        if (self.roomIDToJID(self.delegates[i].QBChatRoomId) == chatRoom.JID) {
+                        if (self.roomIDToJID(self.delegates[i].QBChatRoomId) == chatRoom.JID) {  //make sure the messages match the delegates id
                             self.delegates[i].handOffMessages(response, messages: messages, responcePage: responcePage);
                         }
                     }
-                }
+
             }, errorBlock: {
                 response in
-                println("got messages error")
+                println("got messages error") //there were errors of some kind
                 println(response.error);
             });
 
         }
     }
 
-    func loadMoreHistory(success: ((messages: NSArray) -> Void), failure: (() -> Void)) {
-//        self.messageSkip += self.messageLimit;
-//
-//        var extendedRequest = ["sort_desc": "date_sent"];
-//
-//        var resPage: QBResponsePage = QBResponsePage(limit: messageLimit, skip: messageSkip);
-//        QBRequest.messagesWithDialogID(roomID!, extendedRequest: extendedRequest, forPage: resPage, successBlock: {
-//            response, messages, responcePage in
-//            println("got messages")
-//            success(messages: messages);
-//        }, errorBlock: {
-//            response in
-//            println(response.error);
-//            failure();
-//        });
+    func loadMoreHistory(messageSkip: Int, lobbyID: String, success: ((messages: NSArray) -> Void), failure: (() -> Void)) { //load messages with a skip amount
 
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
 
+            var extendedRequest = ["sort_desc": "date_sent"];
+            var resPage: QBResponsePage = QBResponsePage(limit: self.messageLimit, skip: messageSkip);
+
+            QBRequest.messagesWithDialogID(lobbyID, extendedRequest: extendedRequest, forPage: resPage, successBlock: {
+                response, messages, responcePage in
+                success(messages: messages);
+            }, errorBlock: {
+                response in
+                failure();
+            });
+
+        }
     }
 
-    func addQBDelegates() {
+    func addQBDelegates() { //set the QuickBlox Delegate to this object
         QBChat.instance().removeAllDelegates();
         QBChat.instance().addDelegate(self as! QBChatDelegate)
     }
 
 
-    func getChats() {
+//    func getChats() { //get
+//
+//        var page: QBResponsePage = QBResponsePage(limit: 40, skip: 0);
+//
+//        QBRequest.dialogsForPage(page, extendedRequest: nil, successBlock: {
+//            (response, dialogObject, dialogsUsersIDs, page) -> Void in
+//
+//
+//        }, errorBlock: {
+//            (response) -> Void in
+//                println(response);
+//
+//        })
+//
+//
+//    }
 
-        var page: QBResponsePage = QBResponsePage(limit: 40, skip: 0);
 
-        QBRequest.dialogsForPage(page, extendedRequest: nil, successBlock: {
-            (response, dialogObject, dialogsUsersIDs, page) -> Void in
-//                println(dialogObject)
-//                println(dialogsUsersIDs)
-//                println(page)
-
-        }, errorBlock: {
-            (response) -> Void in
-                println(response);
-
-        })
-
-
-    }
-
+    //a few conversion functions to match room ids and jids
 
     func roomIDToJID(roomid: String) -> String {
         return appData.QBAppId + "_" + roomid + "@muc.chat.quickblox.com";
@@ -221,6 +158,7 @@ class QuickBlox: NSObject, QBChatDelegate {
     }
 
 
+    //join all of the rooms in the room id list
     func joinAllRooms() {
 
         for (var i = 0; i < self.roomIDs.count; i++) {
@@ -229,25 +167,22 @@ class QuickBlox: NSObject, QBChatDelegate {
 
     }
 
-    func joinRoom(roomid: String) {
+    func joinRoom(roomid: String) { //join the room so we can get its information
 
-
-        if (QBChat.instance().isLoggedIn()) {
-                 //  println("is logged in")
+        if (QBChat.instance().isLoggedIn()) { //you can only join a room if we are logged in
             var dialog = QBChatDialog(dialogID: roomid)
             dialog.roomJID = appData.QBAppId + "_" + roomid + "@muc.chat.quickblox.com"
             dialog.userID = UInt(currentUser.data.QBChatId.toInt()!)
             var room = dialog.chatRoom;
             room.joinRoomWithHistoryAttribute(["maxstanzas": "0"])
 
-//            println("joinging room!!!");
-            var chatroom: QBChatRoom? = self.getRoomFromId(roomid); //if this isn't the first time you've entered one of these rooms the message's
+            var chatroom: QBChatRoom? = self.getQBChatRoomFromId(roomid); //if this isn't the first time you've entered one of these rooms the message's
                                                                     //won't load so lets check to see if we are in it and reload the messages
             if (chatroom != nil) {
                 self.getMessages(chatroom!);
             }
 
-        } else {
+        } else {  //if you aren't logged in call a timer to recall this function
 
             NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "joinRoomTimer:", userInfo: roomid, repeats: false);
 
@@ -255,29 +190,29 @@ class QuickBlox: NSObject, QBChatDelegate {
 
     }
 
-
+    //room join looper
     func joinRoomTimer(timer: NSTimer) {
         var roomid = timer.userInfo as! String;
         joinRoom(roomid);
     }
 
     func sendMessage(message: String, roomid: String) {
-//     roomID =  self.data.data.QBChatRoomId
 
-        dispatch_async(dispatch_get_global_queue(priority, 0)) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             var theRoom: QBChatRoom?
-            for (var i = 0; i < self.rooms.count; i++) {
+
+            for (var i = 0; i < self.rooms.count; i++) { //get the room object so you can send a message
                 if (self.rooms[i].JID == self.roomIDToJID(roomid)) {
                     theRoom = self.rooms[i];
                 }
             }
 
-            if (theRoom != nil) {
+            if (theRoom != nil) { //if the room exists
+
                 var qbmessage = QBChatMessage();
                 qbmessage.text = message;
                 var params: NSMutableDictionary = ["userId": currentUser.data.userId, "save_to_history": true, "userName": currentUser.data.name]
                 qbmessage.customParameters = params;
-                println("sending message!!!!!!")
 
                 var didSend = QBChat.instance().sendChatMessage(qbmessage, toRoom: theRoom)
 
@@ -285,7 +220,7 @@ class QuickBlox: NSObject, QBChatDelegate {
                     SwiftLoader.show(title: "Sending Message", animated: false);
                 }
                 if (didSend) {
-                    println("whooo")
+
                     dispatch_async(dispatch_get_main_queue()) {
                         SwiftLoader.hide();
                         for (var i = 0; i < self.delegates.count; i++) {
@@ -300,7 +235,7 @@ class QuickBlox: NSObject, QBChatDelegate {
                         Error(alertTitle: "Couldn't Send Message", alertText: "Please, try again!")
                     }
                 }
-            } else {
+            } else {  //if the room doesn't exist
                 dispatch_async(dispatch_get_main_queue()) {
                     Error(alertTitle: "Couldn't Send Message", alertText: "Please, try again!")
                 }
@@ -314,12 +249,8 @@ class QuickBlox: NSObject, QBChatDelegate {
 
 
 
-//- (void)chatRoomDidEnter:(QBChatRoom *)room{
-//    // joined here, now you can send and receive chat messages within this group dialog
-//}
 
-
-    func getRoomFromId(roomid: String) -> QBChatRoom? {
+    func getQBChatRoomFromId(roomid: String) -> QBChatRoom? {
         var JID = roomIDToJID(roomid);
         for (var i = 0; i<self.rooms.count; i++) {
             if (self.rooms[i].JID == JID) {
@@ -331,8 +262,7 @@ class QuickBlox: NSObject, QBChatDelegate {
 
     }
 
-    func chatRoomDidEnter(room: QBChatRoom) {
-        println("chatRoom did enter");
+    func chatRoomDidEnter(room: QBChatRoom) { //we entered the room, so let's save it and get its messages
         self.rooms.append(room)
         self.getMessages(room);
 
@@ -341,7 +271,6 @@ class QuickBlox: NSObject, QBChatDelegate {
 
     //QBChatDelegate
     func chatDidLogin() {
-        println("logged in!")
         joinAllRooms()
         //this object will only have a roomID if we are in a room
 
@@ -349,11 +278,7 @@ class QuickBlox: NSObject, QBChatDelegate {
 
     }
 
-//    func chatDidReceiveMessage(message: QBChatMessage) {
-//        println("room recieved message!!!!")
-//        println(message);
-//
-//    }
+
 
 
     func getLobbyID(roomJID: String) -> String {
@@ -368,15 +293,14 @@ class QuickBlox: NSObject, QBChatDelegate {
     }
 
     func chatRoomDidReceiveMessage(message: QBChatMessage!, fromRoomJID roomJID: String) {
-        println("room recieved message, with JID!")
-        println(message);
+
 
         for (var i = 0; i<delegates.count; i++) {
             if (self.roomIDToJID(self.delegates[i].QBChatRoomId) == roomJID) {
                 self.delegates[i].addNewMessage(message);
             }
         }
-        messageSkip++;
+
 
 
     }
@@ -384,7 +308,7 @@ class QuickBlox: NSObject, QBChatDelegate {
 
 
     func chatDidNotLogin() {
-
+        //neeeded for delegate subclass
     }
 
 

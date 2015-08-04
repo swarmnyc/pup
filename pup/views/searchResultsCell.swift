@@ -34,7 +34,7 @@ class SearchResultsViewCell: UICollectionViewCell {
         gameName.text = data.Name
         gameName.textColor = UIColor(rgba: colors.mainGrey);
         println(data.Name)
-        gameName.font = gameName.font.fontWithSize(12)
+        gameName.font = UIFont(name: "AvenirNext-Regular", size: 12.0)
 
         var url = NSURL(string: data.ThumbnailPictureUrl.getPUPUrl())
         gameImg.backgroundColor = UIColor.blackColor();

@@ -70,7 +70,22 @@ class gameCell: UITableViewCell {
     }
 
 
+    func moveLeft(speed: Double, success: (() -> Void)?) {
+        UIView.animateWithDuration(speed, animations: {
+            var trans = CGAffineTransformMakeTranslation(-UIScreen.mainScreen().bounds.width, 0.0);
+            self.contentView.transform = trans;
+        }, completion: {
+            finished in
+            success?();
 
+        });
+    }
+
+
+    func removeOffset() {
+        var trans = CGAffineTransformMakeTranslation(0.0, 0.0);
+        self.contentView.transform = trans;
+    }
 
     func setUpConstraints() {
 
@@ -82,6 +97,15 @@ class gameCell: UITableViewCell {
         viewsDict["imageAndPlatform"] = imageAndPlatform
         viewsDict["imgView"] = imgView
         viewsDict["platform"] = platform
+
+        self.contentView.snp_remakeConstraints { (make) -> Void in
+            make.left.equalTo(self).offset(UIConstants.halfHorizontalPadding)
+            make.right.equalTo(self).offset(-UIConstants.halfHorizontalPadding)
+            make.top.equalTo(self).offset(UIConstants.halfHorizontalPadding / 2)
+            make.bottom.equalTo(self).offset(-UIConstants.halfHorizontalPadding / 2)
+        }
+
+
         imageAndPlatform.snp_remakeConstraints { (make) -> Void in
             make.width.equalTo(topSectionHeight)
             make.top.equalTo(self.contentView).offset(0)
@@ -96,7 +120,7 @@ class gameCell: UITableViewCell {
             make.left.equalTo(imageAndPlatform.snp_right).offset(0);
             make.right.equalTo(self.contentView).offset(0)
             make.top.equalTo(self.textRightTagsAndDate.snp_bottom).offset(0)
-            make.bottom.equalTo(self.contentView).offset(26)
+            make.bottom.equalTo(self.contentView).offset(0)
         }
         textRightTagsAndDate.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(imageAndPlatform.snp_right).offset(0);
@@ -131,29 +155,29 @@ class gameCell: UITableViewCell {
         }
 
         title.snp_remakeConstraints { (make) -> Void in
-            make.left.equalTo(textRightTitleAndDesc).offset(UIConstants.horizontalPadding)
-            make.right.equalTo(textRightTitleAndDesc).offset(-UIConstants.horizontalPadding)
-            make.top.equalTo(textRightTitleAndDesc).offset(UIConstants.verticalPadding)
+            make.left.equalTo(textRightTitleAndDesc).offset(UIConstants.halfHorizontalPadding)
+            make.right.equalTo(textRightTitleAndDesc).offset(-UIConstants.halfHorizontalPadding)
+            make.top.equalTo(textRightTitleAndDesc).offset(UIConstants.halfHorizontalPadding)
             make.height.equalTo(18)
 
         }
         desc.snp_remakeConstraints { (make) -> Void in
-            make.left.equalTo(textRightTitleAndDesc).offset(UIConstants.horizontalPadding)
-            make.right.equalTo(textRightTitleAndDesc).offset(-UIConstants.horizontalPadding)
-            make.top.equalTo(title.snp_bottom).offset(UIConstants.halfHorizontalPadding)
+            make.left.equalTo(textRightTitleAndDesc).offset(UIConstants.halfHorizontalPadding)
+            make.right.equalTo(textRightTitleAndDesc).offset(-UIConstants.halfHorizontalPadding)
+            make.top.equalTo(title.snp_bottom).offset(UIConstants.halfHorizontalPadding - 3)
             make.bottom.equalTo(textRightTitleAndDesc).offset(-UIConstants.verticalPadding)
 
         }
 
         tags.snp_remakeConstraints { (make) -> Void in
-            make.left.equalTo(textRightTagsAndDate).offset(UIConstants.horizontalPadding);
+            make.left.equalTo(textRightTagsAndDate).offset(UIConstants.halfHorizontalPadding);
             make.top.equalTo(textRightTagsAndDate).offset(0)
             make.bottom.equalTo(textRightTagsAndDate).offset(0)
             make.width.greaterThanOrEqualTo(100)
         }
 
         time.snp_remakeConstraints { (make) -> Void in
-            make.right.equalTo(textRightTagsAndDate).offset(-UIConstants.horizontalPadding)
+            make.right.equalTo(textRightTagsAndDate).offset(-UIConstants.halfHorizontalPadding)
             make.top.equalTo(textRightTagsAndDate).offset(0)
             make.bottom.equalTo(textRightTagsAndDate).offset(0)
         }
@@ -164,6 +188,7 @@ class gameCell: UITableViewCell {
             make.right.equalTo(textRightTagsAndDate).offset(0)
             make.height.equalTo(UIConstants.dividerWidth)
         }
+
 
         self.setNeedsDisplay()
 
@@ -185,6 +210,20 @@ class gameCell: UITableViewCell {
     }
 
     func setUpViews(data: LobbyData) {
+
+        self.contentView.clipsToBounds = true;
+        self.contentView.layer.masksToBounds = true;
+        self.contentView.layer.shadowRadius = 0;
+        self.contentView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).CGColor
+        self.contentView.layer.shadowOpacity = 1;
+        self.contentView.layer.shadowOffset = CGSizeMake(1.5, 1.5);
+        
+        
+//        self.contentView.layer.borderWidth = 0.5;
+//        self.contentView.layer.borderColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).CGColor;
+
+
+        self.backgroundColor = UIColor(rgba: colors.lightGray);
 
         selectionStyle = UITableViewCellSelectionStyle.None
 
@@ -211,20 +250,20 @@ class gameCell: UITableViewCell {
         })
 
 
-        platform.text = data.platform;
+        platform.text = data.platform.replacePCWithSteam();
         platform.textAlignment = NSTextAlignment.Center
-        platform.font = platform.font.fontWithSize(9)
+        platform.font = UIFont(name: "AvenirNext-Medium", size: 9.0)
         platform.textColor = UIColor.whiteColor();
         platform.backgroundColor = UIColor(rgba: colorFromSystem(data.platform))
 
 
         title.text = data.name
-        title.font = title.font.fontWithSize(16)
+        title.font = UIFont(name: "AvenirNext-Regular", size: 16.0)
         title.layoutMargins = UIEdgeInsetsZero
 
 
-        desc.text = data.description.shorten(220)
-        self.desc.font = UIFont.systemFontOfSize(11.0)
+        desc.text = data.description.shorten(138)
+        self.desc.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
         desc.editable = false
         desc.userInteractionEnabled = false
         desc.scrollEnabled = false
@@ -233,15 +272,14 @@ class gameCell: UITableViewCell {
         desc.backgroundColor = UIColor.clearColor()
 
         tags.text = data.getTagText
-        tags.font = tags.font.fontWithSize(9)
-
+        tags.font = UIFont(name: "AvenirNext-Medium", size: 9.0)
         time.text = data.timeInHuman
-        time.font = time.font.fontWithSize(9)
+        time.font = UIFont(name: "AvenirNext-Medium", size: 9.0)
 
         time.textColor = UIColor(rgba: colors.tealMain)
 
 
-        divider.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+        divider.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.35)
 
     }
 
@@ -290,12 +328,16 @@ class headerCell: UITableViewCell {
         setUpViews(item)
 
 
+
+
         self.contentView.addSubview(title)
 
 
         setUpConstraints();
 
-
+        self.backgroundColor = UIColor(rgba: colors.lightGray)
+        self.contentView.backgroundColor = UIColor(rgba: colors.lightGray)
+        self.title.backgroundColor = UIColor(rgba: colors.lightGray);
 
 
     }
@@ -309,7 +351,7 @@ class headerCell: UITableViewCell {
         viewsDict["title"] = title
         title.snp_remakeConstraints { (make) -> Void in
             make.top.equalTo(self.contentView).offset(0)
-            make.left.equalTo(self.contentView).offset(16)
+            make.left.equalTo(self.contentView).offset(UIConstants.halfHorizontalPadding)
             make.bottom.equalTo(self.contentView).offset(0)
             make.right.equalTo(self.contentView).offset(0)
 

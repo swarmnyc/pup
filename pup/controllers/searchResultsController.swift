@@ -58,10 +58,22 @@ class SearchResultsController: UIViewController, UICollectionViewDataSource, UIC
 
             println(data.count)
             self.data = data;
-            dispatch_async(dispatch_get_main_queue(),{
-                self.resultsView?.results?.reloadData();
 
-            })
+        dispatch_async(dispatch_get_main_queue()) {
+                            self.resultsView?.results?.reloadData();
+//            self.resultsView?.results?.star
+//                    var indexPath = NSIndexPath(indexes: [self.data!.count], length: 1);
+//                    self.resultsView?.results?.insertItemsAtIndexPaths(indexPath)
+
+//                            self.resultsView?.results?.beginUpdate();
+//                            for
+//            self.resultsView?.results?.reloadSections(NSIndexSet(indexesInRange: NSMakeRange(0, self.resultsView!.results!.numberOfSections())));
+//            self.resultsView?.results?.endEditing(true)
+            //                self.resultsView?.results?.reloadData();
+            return
+
+        }
+
 
 
     }

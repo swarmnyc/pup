@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C0F6AA81B6FDF3400F8CA4D /* tutorialController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F6AA71B6FDF3400F8CA4D /* tutorialController.swift */; };
 		2C424F811B25FE6B00724FF0 /* formDataLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD221A5EDDBA6CD05235E0 /* formDataLibrary.swift */; };
 		2C44E2461B2605FB00A93816 /* appData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2AE22FE9B22725C77289 /* appData.swift */; };
 		2C44E2471B26090E00A93816 /* formDataLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD221A5EDDBA6CD05235E0 /* formDataLibrary.swift */; };
@@ -16,6 +17,10 @@
 		2CCC7F561B0A451400C16A85 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CCC7F551B0A451400C16A85 /* Images.xcassets */; };
 		2CCC7F651B0A451400C16A85 /* pupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC7F641B0A451400C16A85 /* pupTests.swift */; };
 		2CE137741B2604360016A5D5 /* pupTests2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE137731B2604360016A5D5 /* pupTests2.swift */; };
+		2CEF45321B5E8C70000C2DBC /* Animations in Resources */ = {isa = PBXBuildFile; fileRef = 2CEF452F1B5E8C70000C2DBC /* Animations */; };
+		2CEF45331B5E8C70000C2DBC /* RAMAnimatedTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEF45301B5E8C70000C2DBC /* RAMAnimatedTabBarController.swift */; };
+		2CEF45341B5E8C70000C2DBC /* RAMItemAnimationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEF45311B5E8C70000C2DBC /* RAMItemAnimationProtocol.swift */; };
+		2CEF45361B5E9235000C2DBC /* RAMBounceAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEF45351B5E9235000C2DBC /* RAMBounceAnimation.swift */; };
 		2CF4E1791B0F97F80023BA72 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 2CF4E1781B0F97F80023BA72 /* images */; };
 		2CF4E17B1B0F984E0023BA72 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CF4E17A1B0F984E0023BA72 /* Default-568h@2x.png */; };
 		4B7097ED887F30A2A82C3588 /* Pods_pupTests2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00CCF211B0941FA1D18D3B65 /* Pods_pupTests2.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -92,6 +97,7 @@
 		85DD2DE7316FFFD64D16FCA8 /* Debugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2DAA0AAFEB5C200FA1F3 /* Debugging.swift */; };
 		85DD2E066EEA6EB05975778A /* joinButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2F60BC55361AC5C0222B /* joinButtonView.swift */; };
 		85DD2E395F3969B7FEBEC45F /* ENSideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD21C1F8F541AB88061756 /* ENSideMenu.swift */; };
+		85DD2E404E6B44CBE5EF96FC /* defaultFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2714A6C9E0D4649FC199 /* defaultFonts.swift */; };
 		85DD2E61DAE461B715AC31E9 /* sideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2328062435C1732D2BF1 /* sideMenuController.swift */; };
 		85DD2E7A191936F70E69E916 /* createLobbyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD27C4B75AE527CF4ECB8A /* createLobbyView.swift */; };
 		85DD2EB3E80C0BEF68EC17EE /* messageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD25A4CD6BEC9F1F2C7AB9 /* messageView.swift */; };
@@ -124,6 +130,7 @@
 
 /* Begin PBXFileReference section */
 		00CCF211B0941FA1D18D3B65 /* Pods_pupTests2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pupTests2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C0F6AA71B6FDF3400F8CA4D /* tutorialController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tutorialController.swift; sourceTree = "<group>"; };
 		2C83686F1B35EB8B0092A0B0 /* pupanimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = pupanimation.gif; sourceTree = "<group>"; };
 		2CCC7F491B0A451400C16A85 /* pup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pup.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CCC7F4D1B0A451400C16A85 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -136,6 +143,10 @@
 		2CE1376F1B2604360016A5D5 /* pupTests2.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = pupTests2.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE137721B2604360016A5D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CE137731B2604360016A5D5 /* pupTests2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pupTests2.swift; sourceTree = "<group>"; };
+		2CEF452F1B5E8C70000C2DBC /* Animations */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Animations; sourceTree = "<group>"; };
+		2CEF45301B5E8C70000C2DBC /* RAMAnimatedTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RAMAnimatedTabBarController.swift; sourceTree = "<group>"; };
+		2CEF45311B5E8C70000C2DBC /* RAMItemAnimationProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RAMItemAnimationProtocol.swift; sourceTree = "<group>"; };
+		2CEF45351B5E9235000C2DBC /* RAMBounceAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RAMBounceAnimation.swift; path = pup/Animations/BounceAnimation/RAMBounceAnimation.swift; sourceTree = "<group>"; };
 		2CF4E1781B0F97F80023BA72 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		2CF4E17A1B0F984E0023BA72 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		758F5A90B3CD4C71DA5A9163 /* Pods_pupTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_pupTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -166,7 +177,7 @@
 		85DD243B4DE3F1C308B040E9 /* Constraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constraint.swift; sourceTree = "<group>"; };
 		85DD247410FFEEC9AB25B772 /* lobbyListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = lobbyListView.swift; path = views/lobbyListView.swift; sourceTree = "<group>"; };
 		85DD24F35095C5DB21147BE2 /* quickBloxDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = quickBloxDelegate.swift; path = protocols/quickBloxDelegate.swift; sourceTree = "<group>"; };
-		85DD24FE962F075571314E81 /* pup-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pup-Bridging-Header.h"; sourceTree = "<group>"; };
+		85DD24FE962F075571314E81 /* pup-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "pup-Bridging-Header.h"; path = "../pup-Bridging-Header.h"; sourceTree = "<group>"; };
 		85DD250C500EFF5FF2F84027 /* searchResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = searchResultsController.swift; path = controllers/searchResultsController.swift; sourceTree = "<group>"; };
 		85DD25183E6F36BA0979FFEB /* socialButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = socialButtonView.swift; path = views/socialButtonView.swift; sourceTree = "<group>"; };
 		85DD25421C406DE9FE85197F /* arrayContains.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = arrayContains.swift; sourceTree = "<group>"; };
@@ -177,6 +188,7 @@
 		85DD266A19EF82C8CFB1C963 /* overlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = overlay.swift; path = views/overlay.swift; sourceTree = "<group>"; };
 		85DD266BBA90DA07583C2BB8 /* filter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = filter.swift; path = controllers/filter.swift; sourceTree = "<group>"; };
 		85DD26BEDFEE5AE7971B5273 /* SingleLobbyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SingleLobbyView.swift; path = views/SingleLobbyView.swift; sourceTree = "<group>"; };
+		85DD2714A6C9E0D4649FC199 /* defaultFonts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = defaultFonts.swift; sourceTree = "<group>"; };
 		85DD2758B62E2D8DB885C137 /* SnapKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapKit.swift; sourceTree = "<group>"; };
 		85DD27868059972BED2B656E /* platformButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = platformButtonView.swift; path = views/platformButtonView.swift; sourceTree = "<group>"; };
 		85DD27C4B75AE527CF4ECB8A /* createLobbyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = createLobbyView.swift; path = views/createLobbyView.swift; sourceTree = "<group>"; };
@@ -261,6 +273,7 @@
 		2CCC7F401B0A451400C16A85 = {
 			isa = PBXGroup;
 			children = (
+				2CEF45351B5E9235000C2DBC /* RAMBounceAnimation.swift */,
 				2CF4E17A1B0F984E0023BA72 /* Default-568h@2x.png */,
 				2CCC7F4B1B0A451400C16A85 /* pup */,
 				2CCC7F611B0A451400C16A85 /* pupTests */,
@@ -284,6 +297,7 @@
 		2CCC7F4B1B0A451400C16A85 /* pup */ = {
 			isa = PBXGroup;
 			children = (
+				2CEF452E1B5E8C5D000C2DBC /* RAMAnimatedTabBar */,
 				85DD24FE962F075571314E81 /* pup-Bridging-Header.h */,
 				2CF4E1781B0F97F80023BA72 /* images */,
 				2CCC7F4E1B0A451400C16A85 /* AppDelegate.swift */,
@@ -353,6 +367,7 @@
 				85DD20E97B0D361643D348E9 /* swipeBetweenTabs.swift */,
 				85DD2CE0C2DE2C126E995A32 /* tabBarController.swift */,
 				85DD24F35095C5DB21147BE2 /* quickBloxDelegate.swift */,
+				2C0F6AA71B6FDF3400F8CA4D /* tutorialController.swift */,
 			);
 			path = pup;
 			sourceTree = "<group>";
@@ -400,6 +415,16 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		2CEF452E1B5E8C5D000C2DBC /* RAMAnimatedTabBar */ = {
+			isa = PBXGroup;
+			children = (
+				2CEF452F1B5E8C70000C2DBC /* Animations */,
+				2CEF45301B5E8C70000C2DBC /* RAMAnimatedTabBarController.swift */,
+				2CEF45311B5E8C70000C2DBC /* RAMItemAnimationProtocol.swift */,
+			);
+			name = RAMAnimatedTabBar;
+			sourceTree = "<group>";
+		};
 		4739BB928A5BC208D58F1ED0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -434,6 +459,7 @@
 				85DD25421C406DE9FE85197F /* arrayContains.swift */,
 				85DD236D465031166756C8F2 /* gif.swift */,
 				85DD2C101B43889F6E228EB6 /* coloredImage.swift */,
+				85DD2714A6C9E0D4649FC199 /* defaultFonts.swift */,
 			);
 			path = helperFunctions;
 			sourceTree = "<group>";
@@ -589,6 +615,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CEF45321B5E8C70000C2DBC /* Animations in Resources */,
 				2CF4E1791B0F97F80023BA72 /* images in Resources */,
 				2C8368701B35EB8B0092A0B0 /* pupanimation.gif in Resources */,
 				2CF4E17B1B0F984E0023BA72 /* Default-568h@2x.png in Resources */,
@@ -779,6 +806,7 @@
 				85DD22B004638E2F3BBA70DA /* swipeDelegate.swift in Sources */,
 				85DD2B6A57C65B1EA20AA823 /* MenuItemDelegate.swift in Sources */,
 				85DD254871AF38D1690B8FED /* searchResultsController.swift in Sources */,
+				2CEF45341B5E8C70000C2DBC /* RAMItemAnimationProtocol.swift in Sources */,
 				85DD212A388B07ED33707E59 /* searchResultsView.swift in Sources */,
 				85DD2A2F042797025AA7CABC /* searchResultsCell.swift in Sources */,
 				85DD2944DE289F845493C9DB /* searcherDelegate.swift in Sources */,
@@ -788,6 +816,7 @@
 				85DD2BE8383D6A52A712A7B4 /* transitionManager.swift in Sources */,
 				85DD2D46FD764FFB08807954 /* createLobbyController.swift in Sources */,
 				85DD2E7A191936F70E69E916 /* createLobbyView.swift in Sources */,
+				2C0F6AA81B6FDF3400F8CA4D /* tutorialController.swift in Sources */,
 				85DD283AFDA2697E1053E7C2 /* lobbyCreation.swift in Sources */,
 				85DD2D0549CB0795A4CB448B /* horizontalScrollView.swift in Sources */,
 				85DD28BE1047C703D1F36BFE /* horizontalSelectController.swift in Sources */,
@@ -816,6 +845,7 @@
 				85DD23D7C203480A62EE475D /* LayoutConstraint.swift in Sources */,
 				85DD231553EA1EC47E04A232 /* ConstraintRelation.swift in Sources */,
 				85DD29027BEC6654E16D4564 /* ConstraintAttributes.swift in Sources */,
+				2CEF45331B5E8C70000C2DBC /* RAMAnimatedTabBarController.swift in Sources */,
 				85DD2BCFC71CA91D3B81C7F8 /* ConstraintDescription.swift in Sources */,
 				85DD2DB10A669B3888DDF73A /* SwiftLoader.swift in Sources */,
 				85DD2A7095ED4A91C3087DB5 /* quickBloxConnect.swift in Sources */,
@@ -837,6 +867,8 @@
 				85DD2A25D0FDDAF9A004FF8C /* swipeBetweenTabs.swift in Sources */,
 				85DD2D4A619021AB8E2F9949 /* tabBarController.swift in Sources */,
 				85DD278D837C0977D096AAC0 /* quickBloxDelegate.swift in Sources */,
+				85DD2E404E6B44CBE5EF96FC /* defaultFonts.swift in Sources */,
+				2CEF45361B5E9235000C2DBC /* RAMBounceAnimation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -916,6 +948,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -953,6 +986,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -963,9 +997,11 @@
 			baseConfigurationReference = EA0401F85555E1D9628C94D0 /* Pods-pup.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = pup/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -980,9 +1016,11 @@
 			baseConfigurationReference = 8361C645BF26B1B51B7F8F15 /* Pods-pup.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = pup/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

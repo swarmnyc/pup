@@ -21,6 +21,81 @@ enum useFacebookAPI {
     case No, Yes;
 }
 
+
+
+class SocialViewController: UIViewController {
+
+    var OAuthWebView: UIWebView = UIWebView()
+    var onCancel: (() -> Void)?
+    var didHitBackButton = true;
+    var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+    required init(coder aDecoder: NSCoder)
+    {
+        super.init(coder: aDecoder)
+    }
+
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        // Here you can init your properties
+
+    }
+
+
+    func startLoader() {
+        activityIndicator.startAnimating();
+    }
+
+    func stopLoader() {
+        activityIndicator.stopAnimating();
+    }
+
+
+    func setDelegate(delegate: UIWebViewDelegate) {
+        OAuthWebView.delegate = delegate;
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        var barButton = UIBarButtonItem(customView: activityIndicator);
+        self.navigationItem.rightBarButtonItem = barButton;
+        self.view.addSubview(OAuthWebView)
+
+        self.OAuthWebView.snp_makeConstraints {
+            (make) -> Void in
+            make.left.equalTo(self.view)
+            make.top.equalTo(self.view)
+            make.bottom.equalTo(self.view)
+            make.right.equalTo(self.view)
+        }
+
+    }
+
+    func setTheTitle(service: String) {
+        title = "Login to " + service.capitalizeIt
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+
+        didHitBackButton = true;
+
+        self.navigationController?.navigationBar.translucent = false;
+//        self.navigationController?.navigationBar.setBackgroundImage(nil, forBarMetrics: UIBarMetrics.Default)
+//        self.navigationController?.navigationBar.shadowImage = nil
+
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        self.navigationController?.navigationBar.translucent = false;
+
+        if (didHitBackButton) {
+            onCancel?();
+        }
+    }
+
+}
+
 class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
 
     var type = SocialConnect.Facebook;
@@ -31,11 +106,20 @@ class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
     var progressBar: UIView = UIView();
     var label = UILabel();
     var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+    var parentViewController: UIViewController?
+    var socialController = SocialViewController();
 
-    override init() {
-        super.init()
+    convenience init(viewController: UIViewController?) {
+        self.init()
         OAuthWebView.delegate = self;
         OAuthWebView.scrollView.delegate = self;
+
+        if (viewController != nil) {
+            parentViewController = viewController!;
+        }
+
+        socialController.setDelegate(self as! UIWebViewDelegate);
+        socialController.onCancel =  self.cancelTheAuthentication;
 
         progressBar.backgroundColor = UIColor.whiteColor();
         label.textAlignment = NSTextAlignment.Center
@@ -59,38 +143,36 @@ class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
   }
 
 
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+func cancelTheAuthentication() {
+    self.cancelOauth?(self.service);
 
-     //   println(scrollView.contentOffset)
-        if (scrollView.contentOffset.y < -25) {
-            self.cancelOauth?(self.service);
+}
 
-            hideView(false)
-        }
 
-    }
 
     func hideView(removeAfter: Bool) {
+        self.socialController.didHitBackButton = false;
+        parentViewController?.navigationController?.popViewControllerAnimated(true)
 
-        UIView.animateWithDuration(0.4, animations: {
-            var trans = CGAffineTransformMakeTranslation(0, UIScreen.mainScreen().bounds.size.height)
-            self.OAuthWebView.transform = trans;
-
-            var trans2 = CGAffineTransformMakeTranslation(0,-80);
-            self.progressBar.transform = trans2;
-        }, completion: {
-            (completed) -> Void in
-            if (removeAfter) {
-                self.OAuthWebView.removeFromSuperview();
-                self.progressBar.removeFromSuperview();
-            }
-        });
+//        UIView.animateWithDuration(0.4, animations: {
+//            var trans = CGAffineTransformMakeTranslation(0, UIScreen.mainScreen().bounds.size.height)
+//            self.OAuthWebView.transform = trans;
+//
+//            var trans2 = CGAffineTransformMakeTranslation(0,-80);
+//            self.progressBar.transform = trans2;
+//        }, completion: {
+//            (completed) -> Void in
+//            if (removeAfter) {
+//                self.OAuthWebView.removeFromSuperview();
+//                self.progressBar.removeFromSuperview();
+//            }
+//        });
     }
 
     func setTypeAndAuthenticate(service: String) {
-        self.service = service;
-        self.label.text = "Add your " + self.service + " account";
-        switch (service) {
+        self.service = service.lowercaseString;
+        self.label.text = "Add your " + self.service.capitalizeIt + " account";
+        switch (self.service) {
             case "twitter":
                 self.type = .Twitter
             case "reddit":
@@ -153,6 +235,9 @@ class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
         var AccessToken = fbData.0;
         var userID = fbData.1;
 
+        currentUser.data.fbAccessToken = AccessToken;
+        currentUser.data.fbUserId = userID;
+        currentUser.setLocalStorage();
 
         SRWebClient.POST(urls.User + "SocialMedia")
         .headers(["Authorization":"Bearer " + currentUser.data.accessToken, "Content-Type":"application/x-www-form-urlencoded"])
@@ -209,59 +294,64 @@ class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
 
 
     func showOAuthScreen(OAuthUrl: String) {
-        if (OAuthWebView.superview == nil) {
-            UIApplication.sharedApplication().windows.first!.addSubview(OAuthWebView)
-            UIApplication.sharedApplication().windows.first!.addSubview(progressBar)
+        println("show oauth screen")
+        self.socialController.hidesBottomBarWhenPushed = true;
+        parentViewController?.navigationController?.pushViewController(self.socialController, animated: true);
+        self.socialController.setTheTitle(self.service);
+//        if (OAuthWebView.superview == nil) {
+//            println(self.parentView!);
+////            self.parentView?.addSubview(OAuthWebView)
+////            self.parentView?.addSubview(progressBar)
+//
+//            self.OAuthWebView.snp_remakeConstraints {
+//                (make) -> Void in
+//                make.top.equalTo(self.OAuthWebView.superview!).offset(80)
+//                make.left.equalTo(self.OAuthWebView.superview!).offset(0)
+//                make.right.equalTo(self.OAuthWebView.superview!).offset(0)
+//                make.bottom.equalTo(self.OAuthWebView.superview!).offset(0)
+//            }
+//
+//
+//            self.progressBar.snp_remakeConstraints {
+//                (make) -> Void in
+//                make.top.equalTo(self.OAuthWebView.superview!).offset(0)
+//                make.left.equalTo(self.OAuthWebView.superview!).offset(0)
+//                make.right.equalTo(self.OAuthWebView.superview!).offset(0)
+//                make.height.equalTo(80)
+//            }
+//
+//            self.label.snp_remakeConstraints {
+//                (make) -> Void in
+//                make.centerX.equalTo(self.progressBar.snp_centerX).offset(0)
+//                make.centerY.equalTo(self.progressBar.snp_centerY).offset(20)
+//                make.width.equalTo(UIScreen.mainScreen().bounds.size.width - 80)
+//
+//            }
+//
+//            self.activityIndicator.snp_remakeConstraints {
+//                (make) -> Void in
+//                make.right.equalTo(self.progressBar).offset(0)
+//                make.centerY.equalTo(self.progressBar.snp_centerY).offset(20)
+//                //make.bottom.equalTo(self.progressBar).offset(0)
+//                make.left.equalTo(self.progressBar.snp_right).offset(-40)
+//
+//            }
+//
+//            var trans = CGAffineTransformMakeTranslation(0, UIScreen.mainScreen().bounds.size.height)
+//            self.OAuthWebView.transform = trans;
+//
+//            var trans2 = CGAffineTransformMakeTranslation(0,-80);
+//            self.progressBar.transform = trans2;
+//        }
+//
+//        UIView.animateWithDuration(0.4, animations: {
+//            var trans = CGAffineTransformMakeTranslation(0,0)
+//            self.OAuthWebView.transform = trans;
+//            self.progressBar.transform = trans;
+//        });
 
-            self.OAuthWebView.snp_remakeConstraints {
-                (make) -> Void in
-                make.top.equalTo(self.OAuthWebView.superview!).offset(80)
-                make.left.equalTo(self.OAuthWebView.superview!).offset(0)
-                make.right.equalTo(self.OAuthWebView.superview!).offset(0)
-                make.bottom.equalTo(self.OAuthWebView.superview!).offset(0)
-            }
 
-
-            self.progressBar.snp_remakeConstraints {
-                (make) -> Void in
-                make.top.equalTo(self.OAuthWebView.superview!).offset(0)
-                make.left.equalTo(self.OAuthWebView.superview!).offset(0)
-                make.right.equalTo(self.OAuthWebView.superview!).offset(0)
-                make.height.equalTo(80)
-            }
-
-            self.label.snp_remakeConstraints {
-                (make) -> Void in
-                make.centerX.equalTo(self.progressBar.snp_centerX).offset(0)
-                make.centerY.equalTo(self.progressBar.snp_centerY).offset(20)
-                make.width.equalTo(UIScreen.mainScreen().bounds.size.width - 80)
-
-            }
-
-            self.activityIndicator.snp_remakeConstraints {
-                (make) -> Void in
-                make.right.equalTo(self.progressBar).offset(0)
-                make.centerY.equalTo(self.progressBar.snp_centerY).offset(20)
-                //make.bottom.equalTo(self.progressBar).offset(0)
-                make.left.equalTo(self.progressBar.snp_right).offset(-40)
-
-            }
-
-            var trans = CGAffineTransformMakeTranslation(0, UIScreen.mainScreen().bounds.size.height)
-            self.OAuthWebView.transform = trans;
-
-            var trans2 = CGAffineTransformMakeTranslation(0,-80);
-            self.progressBar.transform = trans2;
-        }
-
-        UIView.animateWithDuration(0.4, animations: {
-            var trans = CGAffineTransformMakeTranslation(0,0)
-            self.OAuthWebView.transform = trans;
-            self.progressBar.transform = trans;
-        });
-
-
-        OAuthWebView.loadRequest(NSURLRequest(URL: NSURL(string: OAuthUrl)!))
+        self.socialController.OAuthWebView.loadRequest(NSURLRequest(URL: NSURL(string: OAuthUrl)!))
 
     }
 
@@ -288,14 +378,14 @@ class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
     func webViewDidStartLoad(webView: UIWebView) {
         println("Webview started Loading")
 
-        activityIndicator.startAnimating();
+        self.socialController.startLoader();
 
         println(webView.request!.URL!.absoluteString)
     }
 
     func webViewDidFinishLoad(webView: UIWebView) {
         println("Webview did finish load")
-        activityIndicator.stopAnimating();
+        self.socialController.stopLoader();
         println(webView.request!.URL!.absoluteString)
 
         var currentURL = webView.request!.URL!.absoluteString;
@@ -313,7 +403,7 @@ class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
 
 
 
-    func sendInvites(sites: Array<SocialToggle>, lobbyData: LobbyData) {
+    func sendInvites(sites: Array<SocialToggle>, lobbyData: LobbyData, success: (() -> Void)) {
 
 
 
@@ -358,7 +448,8 @@ class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
             if (error == nil) {
 
                 SwiftLoader.hide()
-                JLToast.makeText("Game has been shared!", duration: JLToastDelay.LongDelay).show()
+                JLToast.makeText("Job's Done. Game has been shared", duration: JLToastDelay.LongDelay).show()
+                success();
                 println("success")
             } else {
                 SwiftLoader.hide()

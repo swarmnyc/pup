@@ -9,19 +9,18 @@ import UIKit
 
 class JoinPupButton: UIViewController, SimpleButtonDelegate {
 
-    var parent: UIViewController?
     var joinButtonView: JoinPupButtonView = JoinPupButtonView();
     var registrationController: RegistrationController?;
     var onSuccessJoin: (() -> Void)?
-
-    convenience init(parentController: UIViewController) {
+    var aboveTabBar: Bool = false;
+    convenience init(aboveTabBar: Bool) {
         self.init()
-        parent = parentController;
+        self.aboveTabBar = aboveTabBar;
         registrationController = RegistrationController(parentController: self)
         registrationController?.setUpView()
         self.view = joinButtonView
 
-        joinButtonView.setUpView(self);
+        joinButtonView.setUpView(self, aboveTabBar: aboveTabBar);
 
 
     }
@@ -33,34 +32,33 @@ class JoinPupButton: UIViewController, SimpleButtonDelegate {
         }
     }
 
+    func setUpView(parentView: UIView) {
+        self.joinButtonView.addAndConstrain(parentView);
+    }
+
     func addToAppView() {
         joinButtonView.addToAppView()
-        joinButtonView.setUpConstraints();
+        joinButtonView.setUpConstraints(aboveTabBar);
     }
 
     func shortenView(notification: NSNotification) {
 
         var keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
         var keyboardHeight = keyboardSize!.height;
-        joinButtonView.shortenView(keyboardHeight)
 
     }
 
-    func restoreView() {
-        joinButtonView.restoreView();
-    }
 
 
 
     func touchUp(button: NSObject, type: String) {
         println("touched")
        // parent?.view.addSubview(registrationController.view)
-        println(parent!.view)
 
 
 
 
-        registrationController?.addParentConstraints(parent!.view);
+        registrationController?.addParentConstraints();
         registrationController?.onSuccessJoin = onSuccessJoin;
 
 
@@ -80,7 +78,7 @@ class JoinPupButton: UIViewController, SimpleButtonDelegate {
     }
 
     func setUpConstraints() {
-        self.joinButtonView.setUpConstraints()
+        self.joinButtonView.setUpConstraints(self.aboveTabBar)
     }
 
 

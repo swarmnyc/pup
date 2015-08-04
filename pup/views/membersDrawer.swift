@@ -10,8 +10,8 @@ import Haneke
 
 class MembersDrawerView: UIView {
 
-    var transX = UIScreen.mainScreen().bounds.width * 0.95
-    var transMax = UIScreen.mainScreen().bounds.width * 0.95
+    var transX = UIScreen.mainScreen().bounds.width * 0.98
+    var transMax = UIScreen.mainScreen().bounds.width * 0.9
     var transMin = 0;
     var headerBackground: UIView = UIView();
     var header: UILabel = UILabel();
@@ -47,10 +47,11 @@ class MembersDrawerView: UIView {
         membersList!.registerClass(MembersListCell.self, forCellWithReuseIdentifier: "MemberCell")
         membersList!.backgroundColor = UIColor(rgba: colors.lightGray)
 
-        headerBackground.backgroundColor = UIColor(rgba: colors.lightGray);
+        headerBackground.backgroundColor = UIColor(rgba: colors.orange);
 
         header.text = "MEMBERS"
-        header.font = header.font.fontWithSize(12)
+        header.font = UIFont(name: "AvenirNext-Regular", size: 12.0)
+        header.textColor = UIColor.whiteColor();
         header.textAlignment = NSTextAlignment.Left
 
         shadow.backgroundColor = UIColor.clearColor();
@@ -187,7 +188,7 @@ class MembersDrawerView: UIView {
         }
         header.snp_makeConstraints {
             (make) -> Void in
-            make.top.equalTo(self).offset(0)
+            make.centerY.equalTo(self.headerBackground.snp_centerY).offset(10)
             make.left.equalTo(self).offset(Double(UIScreen.mainScreen().bounds.width * 0.1) + UIConstants.horizontalPadding)
             make.bottom.equalTo(membersList!.snp_top).offset(0)
             make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
@@ -231,7 +232,7 @@ class MembersListCell: UICollectionViewCell {
         self.contentView.layer.borderWidth = 4.0;
 
         memberName.text = data.name;
-        memberName.font = memberName.font.fontWithSize(13)
+        memberName.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
         memberName.textColor = UIColor(rgba: colors.mainGrey)
 
 
@@ -243,7 +244,7 @@ class MembersListCell: UICollectionViewCell {
             var url = NSURL(string: proPicUrl)
             self.memberPhoto.clipsToBounds = true;
             self.memberPhoto.contentMode = UIViewContentMode.ScaleAspectFill;
-            memberPhoto.frame.size = CGSizeMake(42, 42);
+            memberPhoto.frame.size = CGSizeMake(34, 34);
             memberPhoto.layer.cornerRadius = 17.0;
             self.memberPhoto.hnk_setImageFromURL(url!)
         }

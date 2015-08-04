@@ -15,6 +15,7 @@ class singleLobby {
     var recievedMessages = false;
     var reloadData:(() -> Void)?
     var clearInputText: (() -> Void)?
+
     init() {
 //        quickBloxConnect = QuickBlox();
 //        quickBloxConnect?.handOffMessages = self.recieveMessages;
@@ -30,6 +31,8 @@ class singleLobby {
 
 
     }
+
+
 
 
     func isEmpty() -> Bool {
@@ -63,8 +66,8 @@ class singleLobby {
     }
 
     func showingShare() -> Bool {
-        println("showing sharing")
-        println(data.messages.count);
+//        println("showing sharing")
+//        println(data.messages.count);
         if (data.messages.count <= 0 && recievedMessages) {
             return true
         } else {
@@ -100,6 +103,7 @@ class singleLobby {
                self.data.isMember = true;
             success();
             self.data.addSelfAsMember();
+               //self.data.addQuickBloxConnect();
            } else {
                Error(alertTitle: "Couldn't Join Room", alertText: "We had some trouble getting you in, please try again...")
                failure()
@@ -112,10 +116,14 @@ class singleLobby {
     }
 
 
-    func loadMoreHistory(success: ((messages: NSArray) -> Void), failure: (() -> Void)) {
+    func loadMoreHistory(success: ((messages: NSArray) -> Void), failure: (() -> Void), quickBloxNotConnectedYet: (() -> Void)) {
+        if (self.data.quickBloxConnect != nil) {
+            self.data.messageSkip += self.data.quickBloxConnect!.messageLimit;
+            self.data.quickBloxConnect?.loadMoreHistory(self.data.messageSkip, lobbyID: self.data.QBChatRoomId, success: success, failure: failure);
 
-        self.quickBloxConnect?.loadMoreHistory(success, failure: failure);
-
+        } else {
+            quickBloxNotConnectedYet();
+        }
     }
 
 
@@ -123,7 +131,7 @@ class singleLobby {
            var height: CGFloat = 0.0;
             for (var i = 0; i<messages.count; i++) {
                 self.data.addMessageAtStart(messages[i])
-                height += CGFloat(UIConstants.messageBaseSize) + UIConstants.getMessageAddition(messages[i].valueForKey("text") as! String);
+                height += CGFloat(UIConstants.messageBaseSize) + UIConstants.getMessageHeightAdditionBasedOnTextLength(messages[i].valueForKey("text") as! String);
             }
             return height;
     }
@@ -151,18 +159,14 @@ class singleLobby {
         self.recievedMessages = true;
         println("adding new message")
         var lastMessage = data.addSingleMessage(message);
-        println("last message was sent at - ")
-        println(lastMessage.timesent)
-        println("room time -")
-        println(data.updatedAtUtc);
-        println(data.lastMessageAt);
+
         reloadData?();
 
-
+    }
 
     func handOffChats() {
         println("hand off chats!")
-    }  }
+    }
 
     func lastMessageIsUser() -> Bool {
         //if you are logged in, there are messages, and then if the last message was made by you

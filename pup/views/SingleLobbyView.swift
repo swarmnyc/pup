@@ -55,7 +55,7 @@ class SingleLobbyTopCell: UITableViewCell {
                 "\(data.data.name)";
         lobbyTitle.backgroundColor = UIColor.clearColor()
         lobbyTitle.textColor = UIColor.whiteColor()
-        lobbyTitle.font = lobbyTitle.font.fontWithSize(19)
+        lobbyTitle.font = UIFont(name: "AvenirNext-Regular", size: 19.0)
         lobbyTitle.editable = false;
         lobbyTitle.scrollEnabled = false;
         lobbyTitle.userInteractionEnabled = false;
@@ -64,7 +64,7 @@ class SingleLobbyTopCell: UITableViewCell {
                 "\(data.data.name)";
         lobbyTitleCopy.backgroundColor = UIColor.clearColor()
         lobbyTitleCopy.textColor = UIColor.whiteColor()
-        lobbyTitleCopy.font = lobbyTitleCopy.font.fontWithSize(19)
+        lobbyTitleCopy.font = UIFont(name: "AvenirNext-Regular", size: 19.0)
         lobbyTitleCopy.editable = false;
         lobbyTitleCopy.scrollEnabled = false;
         lobbyTitleCopy.userInteractionEnabled = false;
@@ -80,14 +80,14 @@ class SingleLobbyTopCell: UITableViewCell {
 
         tags.text = data.data.getTagText
         tags.textColor = UIColor(rgba: colors.orange)
-        tags.font = tags.font.fontWithSize(10)
+        tags.font = UIFont(name: "AvenirNext-Regular", size: 10.0)
         tags.userInteractionEnabled = false;
 
 
 
 
         desc.text = data.data.description
-        desc.font = UIFont.systemFontOfSize(13.0)
+        desc.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
         desc.editable = false
         desc.userInteractionEnabled = false;
         desc.scrollEnabled = false
@@ -96,6 +96,12 @@ class SingleLobbyTopCell: UITableViewCell {
         desc.backgroundColor = UIColor.whiteColor()
 
         descBox.backgroundColor = UIColor.whiteColor();
+
+        self.descBox.layer.masksToBounds = true;
+        self.descBox.layer.shadowRadius = 0;
+        self.descBox.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).CGColor
+        self.descBox.layer.shadowOpacity = 1;
+        self.descBox.layer.shadowOffset = CGSizeMake(0, -2.0);
 
         divider.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
         insertViews();
@@ -212,10 +218,12 @@ class SingleLobbyView: UIView {
 
     var joinLobbyButton: UIButton = UIButton();
 
-    var newMessage: UITextField = UITextField();
+    var newMessage: UITextView = UITextView();
     var send: UIButton = UIButton();
+    var newMessageBackground = UIView();
 
     var isMember = false;
+    var isFullHeight = true;
 
     var table: UITableView?
     var lobbyImg: UIImageView = UIImageView();
@@ -230,6 +238,8 @@ class SingleLobbyView: UIView {
 
     var drawer: UIView?
     var imageCover: UIView?;
+
+    var firstLoad = true;
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -319,9 +329,10 @@ class SingleLobbyView: UIView {
         table?.delegate = delegate;
         table?.dataSource = delegate as! UITableViewDataSource
         table?.registerClass(MessageCell.self, forCellReuseIdentifier: "message")
+
         insertTable();
         setUpTableConstraints();
-        newMessage.delegate = delegate as! UITextFieldDelegate;
+        newMessage.delegate = delegate as! UITextViewDelegate;
         reloadTable();
 
     }
@@ -345,34 +356,69 @@ class SingleLobbyView: UIView {
 
      func scaleImage(amount: CGFloat) {
          if (amount >= 1) {
-             var scale = CGAffineTransformMakeScale(amount*1.05, amount*1.05)
+             var scale = CGAffineTransformMakeScale(amount*1.1, amount*1.1)
              //  self.lobbyImg.layer.anchorPoint = CGPointMake(self.lobbyImg.bounds.size.width / 2.0, self.lobbyImg.bounds.size.height / 2.0)
              self.lobbyImg.transform = scale;
          }
      }
 
-    func scrollImage(amount: CGFloat) {
+    func scrollImageAndFadeText(amount: CGFloat) {
+        var opac:CGFloat = 1;
         if (amount >= 1) {
             var trans = CGAffineTransformMakeTranslation(0, -amount / 2)
             //  self.lobbyImg.layer.anchorPoint = CGPointMake(self.lobbyImg.bounds.size.width / 2.0, self.lobbyImg.bounds.size.height / 2.0)
             self.lobbyImg.transform = trans;
+             opac = (1.0 - ((amount*1.08) / CGFloat(UIConstants.lobbyImageHeight)));
+
         }
+
+            var headerCell = self.table?.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as? SingleLobbyTopCell
+            if (headerCell != nil) {
+                headerCell!.lobbyTitle.textColor = UIColor(red: 255, green: 255, blue: 255, alpha: opac);
+            }
+
+    }
+
+
+    func isTyping() -> Bool {
+        if (newMessage.isFirstResponder()) {
+            return true;
+        }
+        return false;
     }
 
     func shortenView(notification: NSNotification) {
         if (newMessage.isFirstResponder()) {
+
+            self.bringSubviewToFront(self.newMessageBackground);
+
             UIView.animateWithDuration(0.5) {
-                var keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue().height
+                var keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue().height
 
-
+//
                 var trans = CGAffineTransformMakeTranslation(0, -1 * (keyboardSize!));
-                self.transform = trans;
+                self.newMessageBackground.transform = trans;
+                self.table!.snp_remakeConstraints { (make) -> Void in
+                    make.height.equalTo(UIScreen.mainScreen().bounds.height - 58 - keyboardSize!)
+                    make.width.equalTo(UIScreen.mainScreen().bounds.width);
+                    make.right.equalTo(self).offset(0);
+                    make.bottom.equalTo(self).offset(-58 - keyboardSize!);
+
+                }
+
+                self.lobbyImg.snp_remakeConstraints { (make) -> Void in
+                    make.top.equalTo(self)
+                    make.left.equalTo(self).offset(0)
+                    make.right.equalTo(self).offset(0)
+                    make.height.equalTo(Double(UIScreen.mainScreen().bounds.height) - Double(keyboardSize!) - 58)
+
+                }
 
 
                 self.layoutIfNeeded()
             }
 
-
+            self.isFullHeight = false;
 
         }
     }
@@ -380,11 +426,28 @@ class SingleLobbyView: UIView {
     func restoreView() {
         UIView.animateWithDuration(0.5) {
             var trans = CGAffineTransformMakeTranslation(0, 0);
-            self.transform = trans;
+            self.newMessageBackground.transform = trans;
+            self.table!.snp_remakeConstraints { (make) -> Void in
+                make.height.equalTo(UIScreen.mainScreen().bounds.height - 58)
+                make.width.equalTo(UIScreen.mainScreen().bounds.width);
+                make.right.equalTo(self).offset(0);
+                make.bottom.equalTo(self).offset(-58);
 
+            }
+
+            self.lobbyImg.snp_remakeConstraints { (make) -> Void in
+                make.top.equalTo(self)
+                make.left.equalTo(self).offset(0)
+                make.right.equalTo(self).offset(0)
+                make.height.equalTo(UIConstants.lobbyImageHeight * 1.1)
+
+            }
 
             self.layoutIfNeeded()
         }
+
+        self.isFullHeight = true;
+        self.newMessage.layer.shadowColor = UIColor.clearColor().CGColor;
     }
 
 
@@ -419,7 +482,9 @@ class SingleLobbyView: UIView {
         }
         println("table constraints!!")
         if (isMember) {
+
            scrollToBottom(0);
+
            println("scrollBottom")
 
         }
@@ -453,6 +518,12 @@ class SingleLobbyView: UIView {
         }
     }
 
+
+    func setCoverImageTimer() {
+        println("set cover image")
+        var timeIt = NSTimer.scheduledTimerWithTimeInterval(0.7, target: self, selector: Selector("moveCoverImage"), userInfo: nil, repeats: false);
+    }
+
     func scrollToBottom(duration: NSTimeInterval) {
         println("scroll to bottom")
 
@@ -461,7 +532,7 @@ class SingleLobbyView: UIView {
                     table?.contentOffset = CGPointMake(0, (table!.contentSize.height - table!.frame.height));
                 })
             }
-            moveCoverImage()
+           // moveCoverImage()
 
     }
 
@@ -472,8 +543,9 @@ class SingleLobbyView: UIView {
        addSubview(lobbyImg)
        addSubview(whiteBottom)
         bringSubviewToFront(table!)
-        addSubview(newMessage)
-        addSubview(send)
+        addSubview(newMessageBackground)
+        newMessageBackground.addSubview(newMessage)
+        newMessageBackground.addSubview(send)
         if (!isMember) {
             addSubview(joinLobbyButton)
         }
@@ -493,6 +565,31 @@ class SingleLobbyView: UIView {
         newMessage.resignFirstResponder()
     }
 
+
+    func resizeMessageBox() {
+        var trans = CGAffineTransformMakeTranslation(0,0);
+
+        self.newMessageBackground.snp_remakeConstraints {
+            (make) -> Void in
+            make.left.equalTo(self).offset(0)
+            make.right.equalTo(self).offset(0)
+            make.bottom.equalTo(self).offset(0)
+            make.height.equalTo(37 + 25)
+
+        }
+
+
+        self.newMessage.snp_remakeConstraints {
+            (make) -> Void in
+            make.left.equalTo(self).offset(UIConstants.horizontalPadding)
+            make.right.equalTo(self).offset(-UIConstants.horizontalPadding * 8.0)
+            make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)
+            make.height.equalTo(37)
+
+        }
+
+        self.newMessage.transform = trans;
+    }
 
     func setUpDelegates(parentController: UIViewController) {
         joinLobbyButton.addTarget(parentController as! SingleLobbyController, action: "joinLobby", forControlEvents: .TouchUpInside)
@@ -535,6 +632,8 @@ class SingleLobbyView: UIView {
                 (image) -> Void in
                 println("fading image");
                 self.lobbyImg.image = image;
+
+
                 UIView.animateWithDuration(0.6, animations: {
                     () -> Void in
                     self.lobbyImg.alpha = 1;
@@ -542,6 +641,7 @@ class SingleLobbyView: UIView {
                 });
 
             })
+
 
         self.lobbyImgCopy.hnk_setImageFromURL(url!, placeholder:nil, format: nil, failure: nil, success: { //fake cover image
                 (image) -> Void in
@@ -557,31 +657,89 @@ class SingleLobbyView: UIView {
 
 
 
-
-
-
         if (!isMember) {
             joinLobbyButton.setTitle("Join Lobby", forState: .Normal)
-            joinLobbyButton.setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
-            joinLobbyButton.backgroundColor = UIColor.whiteColor()
+            joinLobbyButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+            joinLobbyButton.titleLabel?.font = UIFont(name: "AvenirNext-Medium", size: 12.0)
+            joinLobbyButton.backgroundColor = UIColor(rgba: colors.tealMain);
         }
 
+
+        newMessageBackground.backgroundColor = UIColor.whiteColor();
+
+
+        self.newMessageBackground.layer.shadowRadius = 0;
+        self.newMessageBackground.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).CGColor
+        self.newMessageBackground.layer.shadowOpacity = 1;
+        self.newMessageBackground.layer.shadowOffset = CGSizeMake(0, -2.0);
+
         newMessage.layer.masksToBounds = true;
-        newMessage.layer.cornerRadius = 12;
-        newMessage.layer.borderColor = UIColor.blackColor().CGColor;
-        newMessage.layer.borderWidth = 1;
+
+        newMessage.layer.borderColor = UIColor.blackColor().lighterColor(0.35).CGColor;
+        newMessage.layer.borderWidth = 0.5;
+        newMessage.layer.cornerRadius = 5;
+        newMessage.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
 
         send.setTitle("Send", forState: .Normal)
-        send.setTitleColor(UIColor.blackColor(), forState: .Normal);
+        send.setTitleColor(UIColor(rgba: colors.tealDark), forState: .Normal);
         send.addTarget(self, action: "sendMessage", forControlEvents: UIControlEvents.TouchUpInside)
+        send.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: 16.0);
 
         insertViews();
         setUpConstraints();
     }
 
-    func clearText() {
-        println("clear text 2")
+
+    func isMessageBiggerThanTextBar() -> Bool {
+
+
+       if (self.newMessage.contentSize.height + 5 != self.newMessage.frame.height) {
+           return true;
+       } else {
+           return false;
+       }
+
+    }
+
+    func increaseMessageInputSize() {
+
+        var height = self.newMessage.frame.height;
+
+            height = self.newMessage.contentSize.height + 5;
+        if (height>60) {
+            height = 60;
+        }
+
+            UIView.animateWithDuration(0.5, animations: {
+            self.newMessage.snp_remakeConstraints {
+                (make) -> Void in
+                make.left.equalTo(self).offset(UIConstants.horizontalPadding)
+                make.right.equalTo(self).offset(-UIConstants.horizontalPadding * 8.0)
+                make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)
+                make.height.equalTo(height)
+
+            }
+
+            self.newMessageBackground.snp_remakeConstraints {
+                (make) -> Void in
+                make.left.equalTo(self).offset(0)
+                make.right.equalTo(self).offset(0)
+                make.bottom.equalTo(self).offset(0)
+                make.height.equalTo(height + 25)
+
+            }
+            });
+
+        println(height);
+
+
+    }
+
+
+
+func clearText() {
         self.newMessage.text = "";
+        self.resizeMessageBox();
     }
 
 
@@ -598,7 +756,7 @@ class SingleLobbyView: UIView {
             make.top.equalTo(self)
             make.left.equalTo(self).offset(0)
             make.right.equalTo(self).offset(0)
-            make.height.equalTo(UIConstants.lobbyImageHeight * 1.1)
+            make.height.equalTo(UIConstants.lobbyImageHeight * 1.17)
 
         }
         whiteBottom.snp_remakeConstraints { (make) -> Void in
@@ -608,12 +766,23 @@ class SingleLobbyView: UIView {
             make.height.equalTo(UIConstants.lobbyImageHeight * 1.3)
 
         }
+
+        self.newMessageBackground.snp_remakeConstraints {
+            (make) -> Void in
+            make.left.equalTo(self).offset(0)
+            make.right.equalTo(self).offset(0)
+            make.bottom.equalTo(self).offset(0)
+            make.height.equalTo(37 + 25)
+
+        }
+
+
         self.newMessage.snp_remakeConstraints {
             (make) -> Void in
             make.left.equalTo(self).offset(UIConstants.horizontalPadding)
             make.right.equalTo(self).offset(-UIConstants.horizontalPadding * 8.0)
             make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)
-            make.height.equalTo(25)
+            make.height.equalTo(37)
 
         }
 
@@ -621,7 +790,7 @@ class SingleLobbyView: UIView {
             (make) -> Void in
             make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
             make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)
-            make.height.equalTo(25)
+            make.height.equalTo(35)
             make.width.equalTo(UIConstants.horizontalPadding * 7)
         }
 
@@ -635,6 +804,7 @@ class SingleLobbyView: UIView {
 
             }
         }
+
 
 
 

@@ -16,7 +16,6 @@ class RegistrationView: UIView {
     var register: UIButton = UIButton();
     var cancel: UIButton = UIButton();
     var registrationDelegate: RegistrationDelegate?
-    var parentView: UIView?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,9 +31,15 @@ class RegistrationView: UIView {
     func setUpView() {
 
         self.backgroundColor = UIColor.whiteColor();
-        self.layer.shadowOffset = CGSizeMake(2,2)
-        self.layer.shadowRadius = 10
-        self.layer.shadowOpacity = 0.8
+//        self.layer.shadowOffset = CGSizeMake(2,2)
+//        self.layer.shadowRadius = 10
+//        self.layer.shadowOpacity = 0.8
+
+        self.layer.shadowRadius = 0;
+        self.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).CGColor
+        self.layer.shadowOpacity = 1;
+        self.layer.shadowOffset = CGSizeMake(2.0, 2.0);
+
         self.layer.masksToBounds = false;
 
         topLabel.text = "Register for PUP"
@@ -44,32 +49,34 @@ class RegistrationView: UIView {
 
         dogCameraUpload.backgroundColor = UIColor.blackColor();
         dogCameraUpload.userInteractionEnabled = true
-
+        
         registrationDescription.text = "You'll need to create a username, but you'll only have to do this once."
         registrationDescription.font = registrationDescription.font.fontWithSize(11.0)
 
-        username.text = UIConstants.usernamePlaceholder
-        username.font = username.font.fontWithSize(13.0)
+        username.text = UIConstants.usernamePlaceholder;
+        username.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
         username.returnKeyType = .Next
 
-        email.text = UIConstants.emailPlaceholder
-        email.font = email.font.fontWithSize(13.0)
+        email.text = UIConstants.emailPlaceholder;
+        email.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
         email.returnKeyType = .Done
 
         register.setTitle("Register and Join", forState: .Normal)
         register.setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
-        register.titleLabel?.font = register.titleLabel?.font.fontWithSize(13.0)
+        register.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
         register.addTarget(self, action: "registerButton", forControlEvents: UIControlEvents.TouchUpInside)
 
         cancel.setTitle("Cancel", forState: .Normal)
         cancel.setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
-        cancel.titleLabel?.font = cancel.titleLabel?.font.fontWithSize(13.0)
+        cancel.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
         cancel.addTarget(self, action: "cancelButton", forControlEvents: UIControlEvents.TouchUpInside)
 
 
         addViews();
         setConstraints();
 
+        var trans = CGAffineTransformMakeTranslation(0,1000);
+        self.transform = trans;
 
     }
 
@@ -95,8 +102,7 @@ class RegistrationView: UIView {
         registrationDelegate?.closeClicked()
     }
 
-    func addParentConstraints(parentView: UIView, delegate: UITextFieldDelegate) {
-        self.parentView = parentView
+    func addParentConstraints(delegate: UITextFieldDelegate) {
         username.delegate = delegate
         email.delegate = delegate
         dogCameraUpload.delegate = delegate as? ImageButtonDelegate
@@ -109,14 +115,22 @@ class RegistrationView: UIView {
 
         userInteractionEnabled = true;
 
+        UIView.animateWithDuration(0.7, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+            var trans = CGAffineTransformMakeTranslation(0,0);
+            self.transform = trans;
 
+        }, completion: {
+            complete in
+            println("complete")
+
+        })
     }
 
 
     func setParentConstraints() {
         self.snp_remakeConstraints { (make) -> Void in
             make.centerX.equalTo(self.superview!)
-            make.top.equalTo(self.superview!).offset(UIConstants.verticalPadding * 7.0)
+            make.top.equalTo(self.superview!).offset(UIConstants.verticalPadding * 11.0)
             make.left.equalTo(self.superview!).offset(UIConstants.horizontalPadding)
             make.right.equalTo(self.superview!).offset(-UIConstants.horizontalPadding)
             make.height.equalTo(220)
@@ -126,7 +140,15 @@ class RegistrationView: UIView {
     func hide() {
        // self.layer.opacity = 0;
        // self.userInteractionEnabled = false;
-       self.removeFromSuperview()
+
+        UIView.animateWithDuration(1.2, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+            var trans = CGAffineTransformMakeTranslation(0,1000);
+            self.transform = trans;
+
+        }, completion: {
+            (complete) -> Void in
+            self.removeFromSuperview()
+        })
     }
 
 
@@ -158,6 +180,9 @@ class RegistrationView: UIView {
             make.width.equalTo(UIConstants.buttonHeight)
             make.height.equalTo(UIConstants.buttonHeight)
         }
+        
+        dogCameraUpload.layer.cornerRadius = CGFloat(UIConstants.buttonHeight / 2);
+        dogCameraUpload.layer.masksToBounds = true;
 
 
         registrationDescription.snp_makeConstraints { (make) -> Void in
@@ -194,6 +219,8 @@ class RegistrationView: UIView {
             make.right.equalTo(self).offset(0)
             make.height.equalTo(UIConstants.buttonHeight / 2.0)
         }
+
+
 
 
 

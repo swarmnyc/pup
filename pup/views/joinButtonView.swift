@@ -12,6 +12,7 @@ class JoinPupButtonView: PlatformButtonToggle {
     var topLabel: UILabel = UILabel();
     var bottomLabel: UILabel = UILabel()
     var delegate: SimpleButtonDelegate?
+    var aboveTabBar = false;
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,7 +34,9 @@ class JoinPupButtonView: PlatformButtonToggle {
     }
 
     override func touchesEnded( touches: Set<NSObject>, withEvent event: UIEvent) {
-        self.backgroundColor = UIColor(rgba: colors.orange)
+        UIView.animateWithDuration(0.35, animations: {
+            self.backgroundColor = UIColor(rgba: colors.orange)
+        })
         delegate?.touchUp(self, type: "join")
 
 
@@ -51,90 +54,102 @@ class JoinPupButtonView: PlatformButtonToggle {
 
     }
 
-    func setUpView(joinDelegate: SimpleButtonDelegate) {
+    func setUpView(joinDelegate: SimpleButtonDelegate, aboveTabBar: Bool) {
         delegate = joinDelegate
         self.backgroundColor = UIColor(rgba: colors.orange)
 
         topLabel.textColor = UIColor.whiteColor();
         topLabel.text = "Join"
-        topLabel.font = topLabel.font.fontWithSize(16)
+        topLabel.font = UIFont(name: "AvenirNext-Regular", size: 16.0)
         topLabel.textAlignment = NSTextAlignment.Center
 
 
         bottomLabel.textColor = UIColor.whiteColor();
         bottomLabel.text = "You'll be able to chat and stuff"
-        bottomLabel.font = bottomLabel.font.fontWithSize(12)
+        bottomLabel.font = UIFont(name: "AvenirNext-Regular", size: 12.0)
         bottomLabel.textAlignment = .Center
+        self.aboveTabBar = aboveTabBar;
 
-        addViews();
-        setUpConstraints()
 
     }
 
 
-    func addViews() {
+    func addAndConstrain(parentView: UIView) {
+        if (self.superview == nil) {
+            addViews(parentView);
+            setUpConstraints(aboveTabBar)
+        }
+
+    }
+
+    func addViews(parentView: UIView) {
+        println(self.superview);
 
         addSubview(topLabel)
         addSubview(bottomLabel)
 //      parentView.addSubview(self)
 //      parentView.bringSubviewToFront(self)
-        UIApplication.sharedApplication().windows.first!.addSubview(self)
+//        nav!.tabBar.superview?.insertSubview(self, belowSubview: nav!.tabBar)
+       parentView.addSubview(self)
+//        UIApplication.sharedApplication().windows.first!.addSubview(self)
+
     }
 
     func addToAppView() {
-        UIApplication.sharedApplication().windows.first!.addSubview(self)
+        if (self.superview == nil) {
+            println("inserted app view")
+            mainWindow!.insertSubview(self, belowSubview: nav!.tabBar)
+        }
+        //UIApplication.sharedApplication().windows.first!.addSubview(self)
     }
 
     func removeViews() {
         self.removeFromSuperview()
     }
 
-    func setUpConstraints() {
+    func setUpConstraints(aboveTabBar: Bool) {
+
+        var bottomOffset: CGFloat = 0;
+        var height = 62;
+        if (aboveTabBar) {
+            //bottomOffset = nav!.tabBar.frame.height;
+            //might come back in a little bit
+            height = 85;
+        }
+        
+        
 
         self.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.superview!).offset(0)
             make.right.equalTo(self.superview!).offset(0)
-            make.bottom.equalTo(self.superview!).offset(0)
-            make.height.equalTo(58)
+            make.bottom.equalTo(self.superview!).offset(-bottomOffset)
+            make.height.equalTo(height)
 
         }
 
+
+
+
+        topLabel.snp_remakeConstraints { (make) -> Void in
+            make.left.equalTo(self).offset(UIConstants.horizontalPadding)
+            make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
+            make.top.equalTo(self).offset(UIConstants.verticalPadding)
+            make.height.equalTo(17)
+        }
 
 
         bottomLabel.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self).offset(UIConstants.horizontalPadding)
             make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
-            make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)
+            make.top.equalTo(self.topLabel.snp_bottom).offset(UIConstants.halfVerticalPadding)
             make.height.equalTo(12)
         }
 
-        topLabel.snp_remakeConstraints { (make) -> Void in
-            make.left.equalTo(self).offset(UIConstants.horizontalPadding)
-            make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
-            make.bottom.equalTo(self.bottomLabel.snp_top).offset(-UIConstants.halfVerticalPadding)
-            make.height.equalTo(17)
-        }
-
 
     }
 
 
-    func shortenView(keyboardHeight: CGFloat) {
-        UIView.animateWithDuration(0.5, animations: {
-            var trans = CGAffineTransformMakeTranslation(0,-keyboardHeight + nav!.tabBar.frame.height);
-            self.transform = trans;
 
-        })
-
-    }
-
-    func restoreView() {
-        UIView.animateWithDuration(0.5, animations: {
-            var trans = CGAffineTransformMakeTranslation(0,0);
-            self.transform = trans;
-
-        })
-    }
 
 
 }

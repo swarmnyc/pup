@@ -80,39 +80,52 @@ class SocialButtonsView: UIView {
 
 
     func setUpButtons(delegate: SimpleButtonDelegate) {
-        self.alpha = 0;
-
-        buttons.append(SocialToggle())
-        buttons[0].setUpButton(.Facebook, delegate: delegate)
-
-        buttons.append(SocialToggle())
-        buttons[1].setUpButton(.Twitter, delegate: delegate)
-
-        buttons.append(SocialToggle())
-        buttons[2].setUpButton(.Tumblr, delegate: delegate)
-
-        buttons.append(SocialToggle())
-        buttons[3].setUpButton(.Reddit, delegate: delegate)
-
-        submitButton.setTitle("Share", forState: .Normal);
-        submitButton.setTitleColor(UIColor.whiteColor(), forState: .Normal);
-        submitButton.backgroundColor = UIColor(rgba: colors.orange);
-        submitButton.addTarget(self, action: "sendButton", forControlEvents: UIControlEvents.TouchUpInside);
-
-        textView.textAlignment = NSTextAlignment.Center
-        textView.scrollEnabled = false;
-        textView.userInteractionEnabled = false;
-        textView.font = UIFont.systemFontOfSize(11)
-        textView.text = "No one's here yet.\n" +
-                "Why not invite some friends?"
 
 
+            self.alpha = 0;
 
-        addViews();
-        addConstraints()
+            self.buttons.append(SocialToggle())
+            self.buttons[0].setUpButton(.Facebook, delegate: delegate)
 
-        UIView.animateWithDuration(0.6, animations: {
-            self.alpha = 1;
+            self.buttons.append(SocialToggle())
+            self.buttons[1].setUpButton(.Twitter, delegate: delegate)
+
+            self.buttons.append(SocialToggle())
+            self.buttons[2].setUpButton(.Tumblr, delegate: delegate)
+
+            self.buttons.append(SocialToggle())
+            self.buttons[3].setUpButton(.Reddit, delegate: delegate)
+
+            self.submitButton.setTitle("Share", forState: .Normal);
+            self.submitButton.setTitleColor(UIColor.whiteColor(), forState: .Normal);
+            self.submitButton.backgroundColor = UIColor(rgba: colors.orange);
+            self.submitButton.addTarget(self, action: "sendButton", forControlEvents: UIControlEvents.TouchUpInside);
+
+            self.textView.textAlignment = NSTextAlignment.Center
+            self.textView.scrollEnabled = false;
+            self.textView.userInteractionEnabled = false;
+            self.textView.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
+            self.textView.text = "No one's here yet.\n" +
+                    "Why not invite some friends?"
+
+
+
+                self.addViews();
+                self.addConstraints()
+
+
+            UIView.animateWithDuration(0.6, animations: {
+                self.alpha = 1;
+              })
+
+
+    }
+
+    func setSubmitButtonText() {
+        self.submitButton.setTitle("Share Again?", forState: .Normal);
+        UIView.animateWithDuration(1.5, animations: {
+            self.submitButton.backgroundColor = UIColor(rgba: colors.orange).darkerColor(0.2);
+
         })
 
     }

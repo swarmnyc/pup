@@ -16,4 +16,6 @@
 #import <Quickblox/Quickblox.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
-#import <FBSDKShareKit/FBSDKShareKit.h>
+#import <DZNPhotoPickerController/Pods-pup-DZNPhotoPickerController-umbrella.h>
+#import <DZNPhotoPickerController/DZNPhotoEditorViewController.h>
+#import <DZNPhotoPickerController/DZNPhotoPickerControllerConstants.h>

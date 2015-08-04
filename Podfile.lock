@@ -6,6 +6,7 @@ PODS:
   - Bolts/AppLinks (1.2.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.2.0)
+  - DZNPhotoPickerController/Editor (1.6.1)
   - ENSwiftSideMenu (0.0.6)
   - FBSDKCoreKit (4.2.0):
     - Bolts (~> 1.1)
@@ -23,12 +24,14 @@ PODS:
   - HanekeSwift (0.9.1)
   - JLToast (1.2.3)
   - QuickBlox (2.2.5)
+  - Reveal-iOS-SDK (1.5.1)
   - SnapKit (0.10.0)
   - SwiftLoader (0.2.2)
   - uservoice-iphone-sdk (3.2.3)
 
 DEPENDENCIES:
   - Alamofire (~> 1.2)
+  - DZNPhotoPickerController/Editor
   - ENSwiftSideMenu (~> 0.0)
   - FBSDKCoreKit
   - FBSDKLoginKit
@@ -36,6 +39,7 @@ DEPENDENCIES:
   - HanekeSwift
   - JLToast
   - QuickBlox (~> 2.2.3)
+  - Reveal-iOS-SDK
   - SnapKit (~> 0.10.0)
   - SwiftLoader
   - uservoice-iphone-sdk
@@ -43,6 +47,7 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   Alamofire: 5550bf0b575ed1a4bf9be572f9463e1015cc169e
   Bolts: d176cb1e0012175589e389a9db49b85e27787576
+  DZNPhotoPickerController: 1fcd18f2767b9c713865f0c09b32e1ba24f1516c
   ENSwiftSideMenu: c21151418a1d03fdf413fd4921d522f064d29e7a
   FBSDKCoreKit: 84b3616a361801f190e43a9909caead7bb6087c7
   FBSDKLoginKit: 57e37106af12c9e264e473dcb75d7decdbb07fe4
@@ -50,6 +55,7 @@ SPEC CHECKSUMS:
   HanekeSwift: 50d37bfbc4432edc649167e538c259feccb4a2bb
   JLToast: fc26885fae255e31ba9bebc0f82ae2ab1140f503
   QuickBlox: f13fb448a32d3c09efc71a9fd19d7f44092d9dbd
+  Reveal-iOS-SDK: c9c55cad2729c85f6ced415f1b21857c9a2d8ef9
   SnapKit: 53696873f2cf84a15e8d7d0d9729ed4381196b16
   SwiftLoader: 9c5e547ae8e00b1c1079139492d6a273c7f73171
   uservoice-iphone-sdk: 349d9ef36d3c43939d28390b9e86bb32b65fe983

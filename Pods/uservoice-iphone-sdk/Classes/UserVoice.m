@@ -100,7 +100,7 @@ static NSBundle *userVoiceBundle;
 }
 
 + (UIViewController *)getUserVoiceContactUsFormForModalDisplay {
-    return [self getNavigationControllerForUserVoiceControllers:@[[self getUserVoiceContactUsForm]]];
+    return [self getNavigationControllerForUserVoiceControllers:@[[self getUserVoiceInterface]]];
 }
 
 + (void)presentUserVoiceContactUsFormForParentViewController:(UIViewController *)parentViewController {

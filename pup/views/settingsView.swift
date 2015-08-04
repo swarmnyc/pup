@@ -21,23 +21,26 @@ class SettingsView: UIView {
 
     var socialButtons: Array<SocialSharingSwitch> = [];
 
+    var parentViewController: UIViewController?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
 
-        initView();
+
 
     }
 
 
-    func initView() {
+    func initView(parentController: UIViewController) {
+        println("init view");
 
-
+        self.parentViewController = parentController;
 
         backgroundColor=UIColor.whiteColor()
 
         clipsToBounds = true;
-        if (currentUser.loggedIn()) {
+    
             var url = NSURL(string: currentUser.data.picture.getPUPUrl())
 
             profilePicImg.clipsToBounds = true;
@@ -45,17 +48,21 @@ class SettingsView: UIView {
             profilePicImg.frame.size = CGSizeMake(93, 93);
             profilePicImg.userInteractionEnabled = true;
 
+            profilePicImg.layer.cornerRadius = (UIScreen.mainScreen().bounds.size.width / 4) / 2;
+            profilePicImg.layer.masksToBounds = true;
+
             profilePicImg.backgroundColor = UIColor(rgba: colors.orange)
             profilePicImg.alpha = 0;
-            self.profilePicImg.hnk_setImageFromURL(url!, placeholder: nil, format: nil, failure: nil, success: {
-                (image) -> Void in
-                self.profilePicImg.image = image;
+            println("url!")
+        println(url)
+            if (url != nil) {
+//                self.profilePicImg.image = UIImage(data: NSData(contentsOfURL: url!)!);
+                self.profilePicImg.hnk_setImageFromURL(url!)
+            }
                 UIView.animateWithDuration(0.3, animations: {
                     () -> Void in
                     self.profilePicImg.alpha = 1;
                 });
-
-            })
 
             cameraIcon.image = UIImage(named: "camera");
             cameraIcon.userInteractionEnabled = true;
@@ -66,20 +73,30 @@ class SettingsView: UIView {
             integrationDisclaimer.text = "We'll be adding integrations for additional systems..."
             integrationDisclaimer.userInteractionEnabled = false;
 
-            socialButtons.append(SocialSharingSwitch())
-            socialButtons.append(SocialSharingSwitch())
-            socialButtons.append(SocialSharingSwitch())
-            socialButtons.append(SocialSharingSwitch())
-        }
 
-        setUpView();
-        setUpConstraints();
-        if (currentUser.loggedIn()) {
-            socialButtons[0].setUpSwitch(SocialConnect.Facebook)
-            socialButtons[1].setUpSwitch(SocialConnect.Tumblr)
-            socialButtons[2].setUpSwitch(SocialConnect.Twitter)
-            socialButtons[3].setUpSwitch(SocialConnect.Reddit)
-        }
+            self.socialButtons.append(SocialSharingSwitch())
+            self.socialButtons.append(SocialSharingSwitch())
+            self.socialButtons.append(SocialSharingSwitch())
+            self.socialButtons.append(SocialSharingSwitch())
+
+
+
+                self.setUpView();
+                self.setUpConstraints();
+
+            self.socialButtons[0].setUpController(parentController)
+            self.socialButtons[0].setUpSwitch(SocialConnect.Facebook)
+
+            self.socialButtons[1].setUpController(parentController)
+            self.socialButtons[1].setUpSwitch(SocialConnect.Tumblr)
+
+            self.socialButtons[2].setUpController(parentController)
+            self.socialButtons[2].setUpSwitch(SocialConnect.Twitter)
+
+            self.socialButtons[3].setUpController(parentController)
+            self.socialButtons[3].setUpSwitch(SocialConnect.Reddit)
+
+
 
     }
 
@@ -88,15 +105,18 @@ class SettingsView: UIView {
         self.profilePicImg.alpha = 0;
         var url = NSURL(string: currentUser.data.picture.getPUPUrl())
         println(url)
-        self.profilePicImg.hnk_setImageFromURL(url!, placeholder: nil, format: nil, failure: nil, success: {
-            (image) -> Void in
-            self.profilePicImg.image = image;
-            UIView.animateWithDuration(0.3, animations: {
-                () -> Void in
-                self.profilePicImg.alpha = 1;
-            });
-
-        })
+        println("   !!!!!! it should be working")
+        self.profilePicImg.image = UIImage(data: NSData(contentsOfURL: url!)!);
+        self.profilePicImg.alpha = 1;
+//        (hnk_setImageFromURL(url!, placeholder: nil, format: nil, failure: nil, success: {
+//            (image) -> Void in
+//            self.profilePicImg.image = image;
+//            UIView.animateWithDuration(0.3, animations: {
+//                () -> Void in
+//                self.profilePicImg.alpha = 1;
+//            });
+//
+//        })
     }
 
 
@@ -108,11 +128,10 @@ class SettingsView: UIView {
     func setDelegates(delegate: UIViewController) {
         logout.addTarget(delegate as! SettingsController, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
         logout.setTitle("Logout", forState: .Normal);
-        logout.setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
+        logout.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         logout.setTitleColor(UIColor.whiteColor(), forState: .Selected)
-        logout.layer.borderWidth = 0.5
-        logout.layer.borderColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2).CGColor
-
+        logout.backgroundColor = UIColor(rgba: colors.tealMain);
+        logout.titleLabel?.font = UIFont(name: "AvenirNext-Medium", size: 11.0);
         var imageTapper = UITapGestureRecognizer(target: delegate as! SettingsController, action: "imageTapped");
         self.profilePicImg.addGestureRecognizer(imageTapper);
 
@@ -121,8 +140,28 @@ class SettingsView: UIView {
         //logout.titleLabel!.font = titleLabel!.font.fontWithSize(11)
     }
 
+    func removeAllViews() {
+        for (var i = self.subviews.count - 1; i > 0; i--) {
+            var viewToRemove = self.subviews[i] as! UIView;
+            viewToRemove.removeFromSuperview();
+        }
+
+        //self.setUpView();
+    }
+
+
+    func setAlphas(opac: CGFloat) {
+        profilePicImg.alpha = opac
+        cameraIcon.alpha = opac
+        usernameView.alpha = opac
+        integrationDisclaimer.alpha = opac
+        profileView.alpha = opac
+        containerView.alpha = opac
+
+    }
+
     func setUpView() {
-        if (currentUser.loggedIn()) {
+
             self.profileView.addSubview(profilePicImg)
             self.profileView.addSubview(cameraIcon)
             self.profileView.addSubview(usernameView)
@@ -133,7 +172,7 @@ class SettingsView: UIView {
             self.containerView.addSubview(socialButtons[1])
             self.containerView.addSubview(socialButtons[2])
             self.containerView.addSubview(socialButtons[3])
-        }
+
         self.containerView.addSubview(logout)
         self.scrollView.addSubview(containerView)
         self.addSubview(self.scrollView)
@@ -148,7 +187,7 @@ class SettingsView: UIView {
             allViews[i].removeFromSuperview();
         }
 
-        initView();
+        initView(self.parentViewController!);
 
     }
 
@@ -166,18 +205,17 @@ class SettingsView: UIView {
             (make) -> Void in
             make.left.equalTo(self)
             make.right.equalTo(self)
-            make.top.equalTo(self)
+            make.top.equalTo(self).offset(0);
             make.bottom.equalTo(self)
-            make.height.equalTo(1000)
         }
 
-        if (currentUser.loggedIn()) {
+
             logout.snp_makeConstraints {
                 (make) -> Void in
-                make.bottom.equalTo(self.containerView).offset(-nav!.tabBar.frame.height)
+                make.top.equalTo(self.containerView).offset(UIScreen.mainScreen().bounds.height - 58 - self.parentViewController!.navigationController!.navigationBar.bounds.height * 3)
                 make.left.equalTo(self.containerView).offset(0)
                 make.right.equalTo(self.containerView).offset(0)
-                make.height.equalTo(100)
+                make.height.equalTo(80)
             }
 
 
@@ -213,7 +251,7 @@ class SettingsView: UIView {
             profileView.snp_makeConstraints {
                 (make) -> Void in
                 make.left.equalTo(self.containerView).offset(0)
-                make.top.equalTo(self.containerView).offset(90)
+                make.top.equalTo(self.containerView).offset(UIConstants.verticalPadding)
                 make.right.equalTo(self.containerView).offset(0)
                 make.height.equalTo(145)
             }
@@ -239,7 +277,7 @@ class SettingsView: UIView {
                 make.left.equalTo(self.profilePicImg.snp_right).offset(UIConstants.horizontalPadding)
                 make.right.equalTo(self.profileView).offset(0)
                 make.top.equalTo(self.profilePicImg.snp_top).offset(0)
-                make.height.equalTo(20)
+                make.height.equalTo(25)
             }
 
             integrationDisclaimer.snp_makeConstraints {
@@ -250,7 +288,7 @@ class SettingsView: UIView {
                 make.bottom.equalTo(self.profilePicImg.snp_bottom);
             }
 
-        }
+
     }
 
 

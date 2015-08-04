@@ -20,58 +20,51 @@ var currentUser: User = User()
 
 var appData: miscData = miscData()
 
-var nav:UITabBarController?
+var nav: TabBarController?
 let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
 var myGamesController = MyChatsController();
 var myChatsListener = MyChatsListener();
+var settingsController = SettingsController();
+var globalRegister: RegistrationController = RegistrationController(parentController: nil);
+var mainWindow: UIWindow?
 
-
-//let cache = Shared.JSONCache
-//let cache = Haneke.sharedJSONCache
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
-    var window: UIWindow?
 
 
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-//        getUserVoiceContactUsFormForModalDisplay
 
-        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        mainWindow = UIWindow(frame: UIScreen.mainScreen().bounds)
 
-        self.window!.backgroundColor = UIColor.whiteColor()
-        self.window!.makeKeyAndVisible()
+        mainWindow!.backgroundColor = UIColor(rgba: colors.lightGray)
+        mainWindow!.makeKeyAndVisible()
 
+        UINavigationBar.appearance().shadowImage = UIImage();
+        UINavigationBar.appearance().layer.shadowRadius = 0;
+        UINavigationBar.appearance().layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).CGColor
+        UINavigationBar.appearance().layer.shadowOpacity = 1;
+        UINavigationBar.appearance().layer.shadowOffset = CGSizeMake(0, 2.0);
 
        // var menuController: MenuNavigationController? = MenuNavigationController( menuTableViewController: MenuTableController(), contentViewController: LobbyListController())
         nav = TabBarController();
+
 //        nav?.delegate = TabBarController();
 //        self.nav!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(rgba: colors.tealMain)]
 //         self.nav!.navigationBar.tintColor = UIColor(rgba: colors.tealMain)
 
+        UILabel.appearance().font = UIFont(name: "AvenirNext-Medium", size: 11)
+        UINavigationBar.appearance().tintColor = UIColor(rgba: colors.tealMain);
+//        UITextField.appearance().font = UIFont(name: "Avenir Next", size: 11)
+//        UITextView.appearance().font = UIFont(name: "Avenir Next", size: 11)
 
-        let allGames = UINavigationController(rootViewController: LobbyListController());
-        let myGames = UINavigationController(rootViewController: myGamesController);
-        let newGame = UINavigationController(rootViewController: CreateLobbyController());
-        let feedBack = UINavigationController(rootViewController: FeedBackController());
-        let settings = UINavigationController(rootViewController: SettingsController());
 
-        let controllers = [allGames, myGames, newGame, feedBack, settings];
-
-        nav!.viewControllers = controllers;
-        allGames.tabBarItem = UITabBarItem(title: "All Games", image: nil, tag: 0);
-        myGames.tabBarItem = UITabBarItem(title: "My Games", image: nil, tag: 1);
-        newGame.tabBarItem = UITabBarItem(title: "Create Game", image: nil, tag: 2);
-        feedBack.tabBarItem = UITabBarItem(title: "Feedback", image: nil, tag: 3);
-        settings.tabBarItem = UITabBarItem(title: "Settings", image: nil, tag: 4);
-        if (!currentUser.loggedIn()) {
-           myGames.tabBarItem.enabled = false;
-        }
-        self.window!.rootViewController = nav
+        mainWindow!.rootViewController = nav
+        globalRegister.setUpView();
          //self.nav!.setNavigationBarHidden(false, animated: false)
         //self.nav!.title = "All Games"
 
@@ -116,12 +109,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         FBSDKAppEvents.activateApp();
 
+
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         if (currentUser.loggedIn()) {
-            myChatsListener.quickBloxConnect?.createSession(true);
+            myChatsListener.quickBloxConnect?.createSession();
+        }
+
+        if (currentUser.loggedIn()) {
+            println(FBSDKAccessToken)
+            println(FBSDKAccessToken.currentAccessToken())
+            var token = FBSDKAccessToken.currentAccessToken();
+            if (token != nil) {
+            if (token.tokenString != currentUser.data.fbAccessToken) {
+                println("facebook access token updated");
+                currentUser.setNewToken((FBSDKAccessToken.currentAccessToken().tokenString, FBSDKAccessToken.currentAccessToken().userID, FBSDKAccessToken.currentAccessToken().expirationDate))
+            }
+        }
         }
     }
 

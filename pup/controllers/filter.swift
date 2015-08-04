@@ -26,6 +26,7 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
 
         filterView.setUpDelegates(self)
         filterView.setUpViews();
+        filterView.clearFilters = self.clearResults;
         //setUpViews()
         searchController = SearchResultsController(parent: self, searchBar: filterView.search);
         //self.searchController.setUpView(self as UIViewController);
@@ -105,6 +106,12 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
         }
 
 
+    }
+
+    func clearResults() {
+        self.data.clearData()
+        self.numberOfSelections = 0;
+        setDimOfOtherButtons();
     }
 
 

@@ -30,7 +30,23 @@ class LobbyData: QuickBloxDelegate {
     var updatedAtUtc = "";
     var lastMessageAt = "";
     var proPicDict: Dictionary<String, String> = ["": ""];
-    var isMember = false;
+    var isMember: Bool {
+        get {
+           if (currentUser.loggedIn()) {
+               if (currentUser.joinedLobbies[self.id] != nil) {
+                   return currentUser.joinedLobbies[self.id]!;
+               }
+               return false;
+           } else {
+               return false;
+           }
+        }
+        set(value) {
+            if (currentUser.loggedIn()) {
+                currentUser.joinedLobbies[self.id] = value;
+            }
+        }
+    };
     var getTagText: String {
         get {
             return "\(playStyle), \(skillLevel)"
@@ -60,17 +76,17 @@ class LobbyData: QuickBloxDelegate {
         }
     }
 
-
+    weak var quickBloxConnect: QuickBlox?
     var recievedMessages = false;
     var setMessagesRecieved: (() -> Void)?
     var clearTheText: (() -> Void)?
     var reloadData: (() -> Void)?
     var checkUnreadCounter: ((Int) -> Void)?
 
+    var messageSkip = 0;
 
     init(data: NSDictionary) {
-      // println(data)
-
+        println(data)
         gameId = data["gameId"] as! String
         id = data["id"] as! String
         name = data["name"] as! String
@@ -93,13 +109,19 @@ class LobbyData: QuickBloxDelegate {
 
         lastMessageAt = data["lastMessageAt"] as! String;
         updatedAtUtc = data["updatedAtUtc"] as! String;
+        self.isMember = false;
         addOwnerAndUsersToData(data);
 
 
         if (self.isMember) {
-            println("adding delegate")
-            myChatsListener.addDelegate(self as! QuickBloxDelegate)
-            myChatsListener.addRoom(self.QBChatRoomId);
+            var dateString = self.updatedAtUtc.replace("T",replacement: " ").replace("Z",replacement: ""); //figure out when the lobby was last updated
+            var lastPostDate = NSDate(fromString: dateString, format: .Custom("yyyy-MM-dd HH:mm:ss"));
+
+            if (lastPostDate.daysBeforeDate(NSDate()) < 19) { //let's check to see if it was more recently than 19 days
+                 //ok cool, lets listen for new messages all the time
+                self.quickBloxConnect = myChatsListener.addDelegate(self as! QuickBloxDelegate) //let's save a reference to the quickblox object so we can post new messages
+                myChatsListener.addRoom(self.QBChatRoomId);  //we need to add the room to the listener and join it
+            }
 
         }
 
@@ -109,10 +131,18 @@ class LobbyData: QuickBloxDelegate {
 
     }
 
+
+    func addQuickBloxConnect() {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+            self.quickBloxConnect = myChatsListener.addDelegate(self as! QuickBloxDelegate) //let's save a reference to the quickblox object so we can post new messages
+            myChatsListener.addRoom(self.QBChatRoomId); //we need to add the room to the listener and join it
+        }
+    }
+
+
     func addSelfAsMember() {
         self.isMember = true;
-        myChatsListener.addDelegate(self as! QuickBloxDelegate)
-        myChatsListener.addRoom(self.QBChatRoomId);
+        self.addQuickBloxConnect();
     }
 
 
@@ -125,7 +155,9 @@ class LobbyData: QuickBloxDelegate {
 
             //is the current user in this lobby?
             if userName == currentUser.data.name {
-                self.isMember = true;
+                if (user[i]["isLeave"] as! Bool == false) {
+                    self.isMember = true;
+                }
             }
 
             //add profile pictures in dictionary for easy access
@@ -163,43 +195,65 @@ class LobbyData: QuickBloxDelegate {
 
     }
 
-
-    func loadInitialMessages() {
-        var url = urls.lobbies + "/message/" + self.id;
-
-        sendRequest(url, clearData: true, success: {
-            println(self.name)
-            println("setting recieved messages")
-            self.setMessagesRecieved?();
-            self.recievedMessages = true;
-        }, failure: {
-
-        })
+    func updateUsers() {
 
 
     }
 
 
-    func sendRequest(url: String, clearData: Bool, success: () -> Void, failure: () -> Void) {
+    func loadInitialMessages() {
+
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+            var url = urls.lobbies + "/message/" + self.id;
+
+            self.sendRequest(url, reverseMessage: true, clearData: true, success: {
+
+                    self.setMessagesRecieved?();
+                    self.recievedMessages = true;
+                    self.reloadData?();
+
+            }, failure: {
+
+            })
+
+        }
+
+
+    }
+
+
+    func sendRequest(url: String, reverseMessage: Bool, clearData: Bool, success: () -> Void, failure: () -> Void) {
 
             Alamofire.request(.GET, url).responseJSON { (request, response, responseJSON, error) in
-                var resp: NSArray = responseJSON! as! NSArray
-                // println(resp.count);
-                if (self.messages.count == 0) {
-                    for (var i = 0; i < resp.count; i++) {
-                        var message = resp[i] as! NSDictionary
-                        var userId = message["userId"] as? String;
-                        if (userId == nil) {
-                            userId = "";
-                        }
 
-                        var text = message["message"] as! String;
-                        var timeCreated = message["created_at"] as! String;
-//
-                        self.messages.append(Message(userId: userId!, message: text, timeSent: timeCreated, propics: self.proPicDict, users: self.users, owner: self.owner))
+                var respo: NSArray? = responseJSON as? NSArray
+                if (respo != nil) {
+                    // println(resp.count);
+                    var resp = respo!;
+                    if (reverseMessage) {
+                       resp = respo!.reverseObjectEnumerator().allObjects;
                     }
+                    if (self.messages.count == 0) {
+                        for (var i = 0; i < resp.count; i++) {
+                            var message = resp[i] as! NSDictionary
+                            var userId = message["userId"] as? String;
+                            if (userId == nil) {
+                                userId = "";
+                            }
+
+                            
+                            
+                            var text = message["message"] as? String;
+                            var timeCreated = message["created_at"] as! String;
+                            
+                            if (text != nil) {
+//
+                            self.messages.append(Message(userId: userId!, message: text!, timeSent: timeCreated, propics: self.proPicDict, users: self.users, owner: self.owner))
+                            }
+                        }
+                    }
+                    success();
                 }
-                success();
             };
 
     }
@@ -209,7 +263,7 @@ class LobbyData: QuickBloxDelegate {
     func addMessageAtStart(message: AnyObject) {
 
             self.messages.insert(Message(messages: message, propics: proPicDict, users: users, owner: owner), atIndex: 0);
-            reloadData?();
+           // reloadData?();
 
     }
 
@@ -222,47 +276,100 @@ class LobbyData: QuickBloxDelegate {
         self.messages.append(Message(messages: message, propics: proPicDict, users: users, owner: owner));
         self.unreadMessageCount++;
         checkUnreadCounter?(1);
-        reloadData?();
+
+            reloadData?();
+
 
         return self.messages[self.messages.count-1];
     }
 
-    func sendMessage(message: String) {
 
-        println(message);
+
+    func addMember(name: String, id: String, portrait: String?) {
+        var alreadyAMember = false;
+        for (var i = 0; i < self.users.count; i++) {
+            if (self.users[i].id == id) {
+               alreadyAMember = true;
+            }
+
+        }
+
+        if (alreadyAMember == false) {
+            self.proPicDict[name] = "";
+
+            if (portrait != nil) {
+                self.proPicDict[name] = portrait!;
+                var memberData: NSDictionary = ["isLeave": false, "isOwner": false, "id": id, "userName": name, "portraitUrl": portrait!]
+                self.users.append(SingleLobbyUser(data: memberData));
+
+
+            } else {
+                var memberData: NSDictionary = ["isLeave": false, "isOwner": false, "id": id, "userName": name]
+                self.users.append(SingleLobbyUser(data: memberData));
+            }
+
+
+        }
+
+
+    }
+
+
+    //QuickBlox Delegate
+
+    func clearText() {
+        println(clearTheText);
+        clearTheText?();
+    }
+
+    func sendMessage(message: String) {
         myChatsListener.quickBloxConnect?.sendMessage(message, roomid: QBChatRoomId);
     }
 
 
     func handOffMessages(response: QBResponse, messages: NSArray, responcePage: QBResponsePage) {
         self.recievedMessages = true;
-
         setMessagesRecieved?();
-        self.addMessages(messages);
-//        println(self.name)
-//        println(messages);
-
+        self.addMessages(messages.reverseObjectEnumerator().allObjects); //reverse them so that they display the proper way
     }
 
 
 
     func addNewMessage(message: QBChatMessage) {
-//
-//        println("adding new message")
-        var lastMessage = self.addSingleMessage(message);
-        println(lastMessage)
+
+        self.addSingleMessage(message);
+        self.messageSkip++; //make it so that when autoloading older messages there aren't repeats, we know to skip some more
+
+        var codeBody = message.customParameters?["codeBody"] as? String
+        if (codeBody != nil) {
+           var memberData: (String, String, String?)? = prepareMember(codeBody!);
+            if (memberData != nil) {
+                addMember(memberData!.0, id: memberData!.1, portrait: memberData!.2);
+            }
+        }
+
+
     }
 
-    func clearText() {
-//        println("clear text");
-//        println("message just sent")
-        println(clearTheText);
-        clearTheText?();
+    func prepareMember(codeBody: String) -> (String, String, String?)? {
+        var data: NSData = codeBody.dataUsingEncoding(NSUTF8StringEncoding)!
+        var error: NSError?
+
+        var dataAsJson: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.allZeros, error: nil)
+        var userData = dataAsJson as? NSArray;
+        if (userData != nil) {
+            var userName: String? = userData![0]["userName"] as? String;
+            var userId: String? = userData![0]["id"] as? String;
+            var portraitUrl: String? = userData![0]["portraitUrl"] as? String;
+            if (userName != nil) {
+                return (userName!, userId!, portraitUrl)
+
+            }
+        }
+
+        return nil
     }
 
-    func handOffChats() {
-        println("hand off chats")
-    }
 
 
 }
@@ -296,10 +403,20 @@ class Message {
         if ((messages.customParameters! != nil) && (messages.customParameters?["userId"] != nil)) {
             var id = messages.customParameters?["userId"] as! String;
             self.username = getUserName(id, users: users, owner: owner);
-            self.picture = propics[self.username] as! String!
+            var pic = propics[self.username] as? String?;
+            if (pic != nil) {
+
+                self.picture = propics[self.username] as! String!
+            } else {
+            self.picture = "";
+            }
         } else {
             self.username = "system message"
             self.picture = ""
+
+            //var newMemberInfo = messages.customParameters?["codeBody"] as! NSDictionary;
+            //println(newMemberInfo);
+
         }
 
 
@@ -313,8 +430,12 @@ class Message {
 
 
         self.timesent = dateString.stringByReplacingOccurrencesOfString(" ", withString: "T", options: NSStringCompareOptions.LiteralSearch, range: nil) + "Z";
-        self.message = messages.valueForKey("text") as! String;
-
+        var message = messages.valueForKey("text") as? String
+        if (message != nil) {
+            self.message = message!;
+        } else {
+            self.message = "";
+        }
 
 
     }
@@ -405,7 +526,7 @@ class LobbyList {  //collection of all the current games
         let requestUrl = NSURL(string: url)
 
         if (requestUrl != nil) {
-            self.sendRequest(url, clearData: true, success: success, failure: failure)
+            self.sendRequest(url,onlyAddNewData: true, clearData: true, success: success, failure: failure)
         } else {
             failure();
         }
@@ -442,7 +563,7 @@ class LobbyList {  //collection of all the current games
            let requestUrl = NSURL(string: url)
 
            if (requestUrl != nil) {
-               self.sendRequest(url, clearData: false, success: success, failure: {
+               self.sendRequest(url,onlyAddNewData: false, clearData: false, success: success, failure: {
 
                });
            }
@@ -471,8 +592,8 @@ class LobbyList {  //collection of all the current games
 
         if (requestUrl != nil) {
 
-           self.sendRequest(url, clearData: true, success: success, failure: {
-               Error(alertTitle: "Couldn't load games", alertText: "Sorry about that, try again soon.")
+           self.sendRequest(url,onlyAddNewData: false, clearData: true, success: success, failure: {
+               Error(alertTitle: "Oops, no avaliable games.", alertText: "Try Again soon, or create a game")
 
            })
 
@@ -482,14 +603,31 @@ class LobbyList {  //collection of all the current games
 
     }
 
-    func sendRequest(url: String, clearData: Bool, success: () -> Void, failure: () -> Void) {
+
+
+    func sendRequest(url: String, onlyAddNewData: Bool, clearData: Bool, success: () -> Void, failure: () -> Void) {
         Alamofire.request(.GET, url).responseJSON { (request, response, responseJSON, error) in
-            var resp: NSArray = responseJSON! as! NSArray
-           // println(resp.count);
-            if (resp.count>0) {
-                self.updateData(resp, clearData: clearData);
-                success();
-                self.updated = false;
+
+            if (responseJSON != nil) {
+                var respDict = responseJSON! as? NSDictionary;
+
+
+                if let resp: NSArray = respDict!["result"] as? NSArray {
+
+                    // println(resp.count);
+                    if (resp.count > 0) {
+                        if (onlyAddNewData == false) {
+                            self.updateData(resp, clearData: clearData);
+                        } else {
+                            self.addNewLobbies(resp)
+                        }
+                        success();
+                        self.updated = false;
+                    } else {
+                        self.loadMore = false;
+                        failure();
+                    }
+                }
             } else {
                 self.loadMore = false;
                 failure();
@@ -505,7 +643,48 @@ class LobbyList {  //collection of all the current games
         }
 
 
-            //removeDelegate(se
+    }
+
+
+    func addNewLobbies(data: NSArray) {
+        for (var i = 0; i < data.count; i++) {
+            var exists = false;
+            var lobby = data[i] as! NSDictionary;
+            var lobbyObject: LobbyData?
+            var startTimeUtc = lobby["startTimeUtc"] as! String
+            let date = NSDate(fromString: startTimeUtc, format: .ISO8601)
+            var gameKeyIndex = 0;
+            if (date.minutesAfterDate(NSDate()) <= 30) {
+                gameKeyIndex = 0;
+            } else if (date.isToday()) {
+                gameKeyIndex = 1;
+            } else if (date.isTomorrow()) {
+                gameKeyIndex = 2;
+            } else if (date.isThisWeek()) {
+                gameKeyIndex = 3;
+            } else {
+                gameKeyIndex = 4;
+            }
+
+            for (var p = 0; p < gamesOrganized[gamesKey[gameKeyIndex]]!.count; p++) {
+                if (lobby.valueForKey("id") as! String == gamesOrganized[gamesKey[gameKeyIndex]]![p].id) {
+                    exists = true;
+                }
+
+            }
+            if (exists == false) {
+                var lobby = data[i] as! NSDictionary;
+                gamesOrganized[gamesKey[gameKeyIndex]]!.insert(LobbyData(data: lobby), atIndex: 0);
+            }
+
+
+        }
+
+
+
+
+
+
     }
 
 

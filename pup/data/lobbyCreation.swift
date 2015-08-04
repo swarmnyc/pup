@@ -41,6 +41,13 @@ class LobbyCreationModel {
 
 
 
+    func clearData() {
+        selectedPlatform = nil;
+
+
+    }
+
+
 
     func changeDateDay(newDate: NSDate) -> NSDate {
         println(startTime)
@@ -130,6 +137,8 @@ class LobbyCreationModel {
             var urlEnd = encodeRequest()
 
         let URL = NSURL(string: urls.lobbies)!
+
+
         let mutableURLRequest = NSMutableURLRequest(URL: URL)
         mutableURLRequest.HTTPMethod = "POST"
 
@@ -142,7 +151,7 @@ class LobbyCreationModel {
             var newLobby = LobbyData(data: JSON as! NSDictionary)
             success(newLobby: newLobby);
             println(error)
-           println("^error")
+            println("^error")
         }
 
 

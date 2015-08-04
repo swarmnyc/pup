@@ -5,6 +5,8 @@
 
 import Foundation
 import UIKit
+import QuartzCore
+
 
 class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDataSource, FABDelegate {
 
@@ -18,6 +20,7 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
     lazy var model: LobbyList = LobbyList(parentView: self);  //model
 
+    var tutorial: TutorialController?;
    // var transitionManager = TransitionManager()
 
 
@@ -40,7 +43,10 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
 
-
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated);
+        self.bringLobbiesBack();
+    }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -74,20 +80,26 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         self.listView?.table.registerClass(gameCell.self, forCellReuseIdentifier: "gamecell")
         self.listView?.table.registerClass(headerCell.self, forCellReuseIdentifier: "headercell")
 
-        //load the filter and the side menu
-        filter = FilterViewController(parentController: self);
-
         model.getLobbies("", platforms: [], applyChange: true, success: self.updateData, failure: {
             println("failed...")
         })
-
-
 
         self.pullToRefresh.backgroundColor = UIColor(rgba: colors.tealMain);
         self.pullToRefresh.tintColor = UIColor.whiteColor()
         self.pullToRefresh.addTarget(self, action: "refreshTable", forControlEvents: UIControlEvents.ValueChanged);
         self.listView?.table.addSubview(self.pullToRefresh);
         self.listView?.table.setContentOffset(CGPointMake(0, -self.pullToRefresh.frame.size.height), animated: false);
+
+
+        filter = FilterViewController(parentController: self);
+        self.listView?.bringSubviewToFront(filter.filterView);
+
+        if (currentUser.loggedIn() != true) {
+            tutorial = TutorialController(transitionStyle: UIPageViewControllerTransitionStyle.Scroll, navigationOrientation:UIPageViewControllerNavigationOrientation.Horizontal, options:nil);
+            tutorial?.delegate = tutorial;
+            tutorial?.dataSource = tutorial;
+            self.navigationController?.presentViewController(tutorial!, animated: true, completion: nil)
+        }
 
 
     }
@@ -172,13 +184,19 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         var title: UILabel = UILabel()
-        title.backgroundColor = UIColor.whiteColor();
+        title.backgroundColor = UIColor(rgba: colors.lightGray)
 
         title.text = "    " + self.model.gamesKey[section] + " (\(self.model.gamesOrganized[self.model.gamesKey[section]]!.count))";
-        title.font = title.font.fontWithSize(11)
-        title.textColor = UIColor(rgba: colors.midGray)
-        return title
+        title.font = UIFont(name: "AvenirNext-Medium", size: 11.0)
+        title.textColor = UIColor.blackColor().lighterColor(0.6);
+        title.layer.frame.size = CGSizeMake(UIScreen.mainScreen().bounds.width * 1.5, 35);
+        title.layer.bounds.size = CGSizeMake(UIScreen.mainScreen().bounds.width * 1.5, 25);
+        title.layer.bounds.origin = CGPointMake(0.5 * UIScreen.mainScreen().bounds.width, 12.5);
+        title.layer.frame.origin = CGPointMake(0.5 * UIScreen.mainScreen().bounds.width, 12.5)
+        title.layer.borderWidth = 0.5;
+        title.layer.borderColor = UIColor.clearColor().CGColor;
 
+        return title
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -187,17 +205,17 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        //var cell:UITableViewCell = self.tableV.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
-        //cell.textLabel.text = self.items[indexPath.row]
+
 
             let cell = tableView.dequeueReusableCellWithIdentifier("gamecell", forIndexPath:indexPath) as! gameCell
             if (cell.isNew) {
+
                 cell.setCell(self.model.gamesOrganized[self.model.gamesKey[indexPath.section]]![indexPath.item])
                 cell.setUpConstraints()
             }
 
             cell.setUpViews(self.model.gamesOrganized[self.model.gamesKey[indexPath.section]]![indexPath.item])
-
+            cell.removeOffset();
             return cell
 
 
@@ -214,21 +232,68 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
             if (self.model.gamesOrganized[self.model.gamesKey[section]]!.count == 0) {
                 return 0;
             } else {
-                return 25;
+                return 35;
             }
 
     }
 
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        println("You selected cell #\(indexPath.row)!")
-        var selectedCell = tableView.cellForRowAtIndexPath(indexPath) as? gameCell;
 
-        let lobbyView = SingleLobbyController(info: self.model.gamesOrganized[self.model.gamesKey[indexPath.section]]![indexPath.row])
-        self.navigationController?.pushViewController(lobbyView, animated: true)
+    func bringLobbiesBack() {
+        var cells = self.listView?.table.visibleCells();
+
+        var speed  = 0.5;
+        for (var i = 0; i<cells!.count; i++) {
+            if ((cells![i] as? gameCell) != nil) {
+                var theCell = cells![i] as! gameCell;
+                theCell.removeOffset();
+            }
+        }
+    }
+
+    func animateLobbyCellsAway(lobbyView: SingleLobbyController) {
+        var cells = self.listView?.table.visibleCells();
+
+        var speed  = 0.6;
+        for (var i = 0; i<cells!.count; i++) {
+            println(speed);
+            if ((cells![i] as? gameCell) != nil) {
+                var theCell = cells![i] as! gameCell;
+                
+                if (i == 0) {
+                    theCell.moveLeft(speed, success: {
+                        self.navigationController?.pushViewController(lobbyView, animated: true);
+                    });
+                } else {
+                    theCell.moveLeft(speed, success: nil);
+                }
+                speed += 0.1;
+                println(theCell);
+            }
+        }
 
     }
 
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        println("You selected cell #\(indexPath.row)!")
+        var selectedCell = tableView.cellForRowAtIndexPath(indexPath) as? gameCell;
+        //self.hidesBottomBarWhenPushed = true;
+        let lobbyView = SingleLobbyController(info: self.model.gamesOrganized[self.model.gamesKey[indexPath.section]]![indexPath.row])
+
+//        var timer = NSTimer.scheduledTimerWithTimeInterval(0.098, target: self, selector: Selector("pushLobby:"), userInfo: lobbyView, repeats: false);
+
+       // animateLobbyCellsAway(lobbyView)
+        self.navigationController?.pushViewController(lobbyView, animated: true);
+
+//
+        // self.navigationController?.pushViewController(lobbyView, animated: true);
+
+    }
+
+    func pushLobby(timer: NSTimer) {
+        self.navigationController?.pushViewController(timer.userInfo as! SingleLobbyController, animated: true);
+        timer.invalidate();
+    }
 
     func openFilter() {
         println("opening it")

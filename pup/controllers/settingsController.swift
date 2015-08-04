@@ -26,7 +26,9 @@ class SettingsController: UIViewController, UIImagePickerControllerDelegate,UINa
     override func loadView() {
         println("loading lobby list view!")
         settingsView = SettingsView()
+        self.navigationController?.navigationBar.translucent = false;
         self.view = settingsView
+        self.settingsView?.initView(self);
         settingsView?.setDelegates(self)
     }
 
@@ -35,18 +37,45 @@ class SettingsController: UIViewController, UIImagePickerControllerDelegate,UINa
 
        // currentUser.setPage("Find A Game");
         self.title = "Settings";
+        self.settingsView?.initView(self);
 
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+//        self.settingsView?.initView();
+//         self.destroyView();
+
+        if (currentUser.loggedIn()) {
+            self.settingsView?.setAlphas(1)
+        } else {
+            self.settingsView?.setAlphas(0)
+
+        }
+
+
+//        self.settingsView?.initView(self);
 
     }
 
     func buttonAction(sender: PlatformButtonToggle!) {
        println("pressed")
         currentUser.logout();
-
+        self.destroyView();
         JLToast.makeText("You have been logged out").show()
         nav!.selectedIndex = 0;
         nav!.selectedViewController!.viewDidAppear(true)
 
+    }
+
+    func destroyView() {
+        self.settingsView?.removeAllViews();
+
+        println("destroy view");
+
+        self.settingsView?.initView(self);
+
+        settingsView?.setDelegates(self)
     }
 
 
@@ -89,9 +118,8 @@ class SettingsController: UIViewController, UIImagePickerControllerDelegate,UINa
         let picker = UIImagePickerController()
         picker.delegate = self
 
-        picker.allowsEditing = true //2
+        picker.allowsEditing = false //2
         picker.sourceType = .Camera //3
-
         self.view.window?.rootViewController?.presentViewController(picker, animated: true, completion: nil)//4
 
     }
@@ -101,26 +129,57 @@ class SettingsController: UIViewController, UIImagePickerControllerDelegate,UINa
         let picker = UIImagePickerController()
         picker.delegate = self
 
-        picker.allowsEditing = true //2
+        picker.allowsEditing = false //2
         picker.sourceType = .PhotoLibrary //3
 
-
+        println(self.view.window?.rootViewController);
         self.view.window?.rootViewController?.presentViewController(picker, animated: true, completion: nil)//4
 
     }
 
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-        println(picker)
-        println(info)
-        var chosenImage = info[UIImagePickerControllerEditedImage] as! UIImage
-        currentUser.updatePortrait(chosenImage, success: {
-            println("success")
-            self.settingsView?.updateProfilePicture();
-        }, failure: {
-            println("failure")
-        });
 
+
+
+        var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+
+        println(chosenImage);
+
+        var editor = DZNPhotoEditorViewController(image: chosenImage);
+        editor.cropMode = DZNPhotoEditorViewControllerCropMode.Circular;
+        editor.cropSize = CGSizeMake(400,400);
+        var controller = UINavigationController(rootViewController: editor)
+        editor.acceptBlock = {
+            (editor, userInfo) -> Void in
+            nav!.dismissViewControllerAnimated(true, completion: nil)
+            var editedImage = userInfo[UIImagePickerControllerEditedImage] as! UIImage
+
+            SwiftLoader.show(title: "Uploading Profile Picture", animated: false);
+            currentUser.updatePortrait(editedImage, success: {
+                println(self.settingsView)
+                self.settingsView?.updateProfilePicture();
+                SwiftLoader.hide();
+            }, failure: {
+                println("failure")
+                SwiftLoader.hide();
+                Error(alertTitle: "Couldn't Upload Your Photo", alertText: "Please try again...")
+            });
+
+        }
+
+        editor.cancelBlock = {
+            (editor) -> Void in
+            nav!.dismissViewControllerAnimated(true, completion: nil)
+
+//            self.popViewController(animated: true);
+        }
+
+        println(nav!);
+        println(nav!.navigationController);
         picker.dismissViewControllerAnimated(true, completion: nil) //5
+        nav!.presentViewController(controller, animated: true, completion: nil);
+
+
     }
 
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {

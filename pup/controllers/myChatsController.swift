@@ -5,13 +5,15 @@
 
 import Foundation
 import UIKit
-
+import JLToast
 
 class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
 
     var myChatsView: MyChatsView?
     var data = MyChatsData();
     var pullToRefresh = UIRefreshControl();
+
+    var empty = false;
 
     required init(coder aDecoder: NSCoder)
     {
@@ -21,8 +23,8 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         // Here you can init your properties
-
-        data.getMyLobbies({
+        data.removeCellAtIndex = self.removeCellAtIndex;
+        data.getMyLobbies(false, success: {
             println("success!!!!!")
         }, failure: {
             println("couldn't get lobbies")
@@ -36,7 +38,14 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
         myChatsView = MyChatsView()
         self.view = myChatsView!
         myChatsView?.setUpView(self)
-        self.myChatsView?.chatsCollection?.reloadData();
+        self.myChatsView?.chatsCollection!.performBatchUpdates({
+            self.myChatsView?.chatsCollection!.reloadSections(NSIndexSet(index: 0));
+        }, completion: nil);
+
+
+//        self.myChatsView?.chatsCollection?.reloadData();
+
+
 //        data.getMyLobbies({
 //            println("success!!!!!")
 //            self.myChatsView?.chatsCollection?.reloadData();
@@ -49,12 +58,15 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated);
 
-        data.getMyLobbies({
+        data.getMyLobbies(true, success: {
             println("success!!!!!")
+
             self.myChatsView?.chatsCollection?.reloadData();
         }, failure: {
             Error(alertTitle: "Couldn't get your chats", alertText: "Sorry, something went wrong. Try again!!!!!!");
         })
+
+        self.title = "My Games";
 
         self.navigationController?.navigationBar.translucent = false
         self.navigationController?.navigationBar.setBackgroundImage(nil, forBarMetrics: UIBarMetrics.Default)
@@ -85,17 +97,31 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
 
     }
 
+
+    func removeCellAtIndex(ind: Int) {
+        println(ind);
+        var indexPath = NSIndexPath(forItem: ind, inSection: 0);
+
+        self.myChatsView?.chatsCollection?.deleteItemsAtIndexPaths([indexPath]);
+
+    }
+
     func changeTitleUnreadAmount(amount: Int) {
-        println("change title!!!!")
-        self.title = "My Games (" + String(amount) + ")";
+      println("alert about new messages")
+        if (amount == 0) {
+            //nav!.tabBar.items[1].
+        }
     }
 
     func refreshTable() {
         println("refresh tabled!!!!")
 
-        self.data.getMyLobbies({
+        self.data.getMyLobbies(true, success: {
             self.myChatsView?.chatsCollection?.reloadData();
-            self.pullToRefresh.endRefreshing();
+            self.myChatsView?.chatsCollection!.performBatchUpdates({
+                self.myChatsView?.chatsCollection!.reloadSections(NSIndexSet(index: 0));
+            }, completion: nil);
+            //self.pullToRefresh.endRefreshing();
         }, failure: {
             Error(alertTitle: "Couldn't Refresh The List", alertText: "Sorry about that...");
             self.pullToRefresh.endRefreshing();
@@ -111,6 +137,22 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
 
     }
 
+    func leaveLobby(id: String?, name: String?) {
+        if (id != nil) {
+            self.data.removeLobby(id!, success: {
+                () -> Void in
+//                println("left lobby");
+                JLToast.makeText("Left " + name!)
+               // self.myChatsView?.chatsCollection?.reloadData();
+                self.myChatsView?.chatsCollection!.performBatchUpdates({
+                    self.myChatsView?.chatsCollection!.reloadSections(NSIndexSet(index: 0));
+                }, completion: nil);
+            }, failure: {
+                Error(alertTitle: "Couldn't leave game", alertText: "You will never get out!")
+            })
+        }
+    }
+
     func scrollViewDidScroll(scrollView: UIScrollView!) {
 
         if (scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.frame.height - 100)) {
@@ -124,32 +166,86 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
     }
 
 
+
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        println(data.lobbies.count)
-        return data.lobbies.count
+        var numberOfCells = 0;
+        if (data.lobbies.count == 0) {
+            empty = true;
+            numberOfCells = 1;
+        } else {
+            empty = false;
+            numberOfCells = data.lobbies.count;
+        }
+        return numberOfCells;
     }
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("myChatCell", forIndexPath: indexPath) as! MyChatsCell
-        cell.frame.size = CGSize(width: self.myChatsView!.frame.size.width, height: 90)
-        cell.frame.origin.x = 0;
-        cell.setUpCell(data.lobbies[indexPath.row])
-        cell.layer.shouldRasterize = true;
-        cell.layer.rasterizationScale = UIScreen.mainScreen().scale;
+        if (empty) {
 
-        //cell.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 45);
-        return cell
+            //replcae with empty cell;emptyCell
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier("emptyCell", forIndexPath: indexPath) as! EmptyCell
+            cell.frame.size = CGSize(width: self.myChatsView!.frame.size.width, height: 500)
+            cell.frame.origin.x = 0;
+
+            cell.layer.shouldRasterize = true;
+            cell.layer.rasterizationScale = UIScreen.mainScreen().scale;
+            //cell.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 45);
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier("myChatCell", forIndexPath: indexPath) as! MyChatsCell
+            cell.frame.size = CGSize(width: self.myChatsView!.frame.size.width, height: 90)
+            cell.frame.origin.x = 0;
+            cell.setUpCell(data.lobbies[indexPath.row])
+            cell.layer.shouldRasterize = true;
+            cell.layer.rasterizationScale = UIScreen.mainScreen().scale;
+            cell.removeCellAction = self.leaveLobby;
+            //cell.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 45);
+            return cell
+        }
     }
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        if (empty == false) {
+            println(data.lobbies[indexPath.row])
+            var selectedCell = collectionView.cellForItemAtIndexPath(indexPath) as? MyChatsCell;
+            if (selectedCell!.movedLeft == false) {
+                self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
+                let lobbyView = SingleLobbyController(info: self.data.lobbies[indexPath.row])
 
-        println(data.lobbies[indexPath.row])
+                //var timer = NSTimer.scheduledTimerWithTimeInterval(0.077, target: self, selector: Selector("pushLobby:"), userInfo: lobbyView, repeats: false);
+                self.navigationController?.pushViewController(lobbyView, animated: true);
 
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
+              //  animateLobbyCellsAway()
 
-        let lobbyView = SingleLobbyController(info: self.data.lobbies[indexPath.row])
-        self.navigationController?.pushViewController(lobbyView, animated: true)
 
+            }
+        }
 
     }
+
+
+
+    func animateLobbyCellsAway() {
+        var cells = self.myChatsView?.chatsCollection?.visibleCells();
+
+        var speed  = 0.5;
+        for (var i = 0; i<cells!.count; i++) {
+            if ((cells![i] as? MyChatsCell) != nil) {
+                var theCell = cells![i] as! MyChatsCell;
+
+                theCell.moveLeft(speed, success: nil);
+
+                speed += 0.2;
+                println(theCell);
+            }
+        }
+
+    }
+
+
+    func pushLobby(timer: NSTimer) {
+        self.navigationController?.pushViewController(timer.userInfo as! SingleLobbyController, animated: true);
+        timer.invalidate();
+    }
+
 
 }

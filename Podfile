@@ -16,6 +16,8 @@ target 'pup' do
   pod 'FBSDKShareKit'
   pod 'JLToast'
   pod 'uservoice-iphone-sdk'
+  pod 'DZNPhotoPickerController/Editor'
+  pod 'Reveal-iOS-SDK', :configurations => ['Debug']
 end
 
 target 'pupTests' do
@@ -28,6 +30,8 @@ target 'pupTests' do
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
   pod 'uservoice-iphone-sdk'
+  pod 'DZNPhotoPickerController/Editor'
+  pod 'Reveal-iOS-SDK', :configurations => ['Debug']
 
 end
 

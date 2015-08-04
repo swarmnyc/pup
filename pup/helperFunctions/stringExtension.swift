@@ -22,9 +22,26 @@ extension String {
 
         return self;
     }
+    
+    var capitalizeIt:String {
+        var result = Array(self)
+        if !isEmpty { result[0] = Character(String(result.first!).uppercaseString) }
+        return String(result)
+    }
 
     func getPUPUrl() -> String {
         return self.stringByReplacingOccurrencesOfString("~", withString: urls.siteBase, options: NSStringCompareOptions.LiteralSearch, range: nil).replace("\"",replacement: "");
+    }
+
+    func replacePCWithSteam() -> String {
+
+        if (self == "PC" || self == "pc") {
+            return "Steam";
+        }
+
+
+        return self
+
     }
 
 

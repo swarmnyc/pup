@@ -96,6 +96,15 @@ public class SwiftLoader: UIView {
                 loader.start()
 
             }
+
+        var trans = CGAffineTransformMakeTranslation(0,800);
+        loader.transform = trans;
+
+        UIView.animateWithDuration(0.6, animations: {
+            var trans = CGAffineTransformMakeTranslation(0,0);
+            loader.transform = trans;
+        })
+
     }
     
     public class func hide() {

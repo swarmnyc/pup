@@ -9,7 +9,7 @@ import UIKit
 class HorizontalSelectView: UIView {
 
     var options: Array<HorizontalButtons> = []
-    var optionWidth = UIScreen.mainScreen().bounds.size.width * 0.33333;
+    var optionWidth = UIScreen.mainScreen().bounds.size.width * 0.38;
     var swipeDelegate: SwipeGestureDelegate?;
     var title: UILabel = UILabel();
 
@@ -35,7 +35,7 @@ class HorizontalSelectView: UIView {
         self.addGestureRecognizer(swipeLeft)
 
         self.title.text = title;
-        self.title.font = self.title.font.fontWithSize(10);
+        self.title.font = UIFont(name: "AvenirNext-Medium", size: 10.0)
         self.title.textColor = UIColor(rgba: colors.mainGrey)
         self.title.textAlignment = NSTextAlignment.Center
         self.addSubview(self.title)
@@ -60,7 +60,7 @@ class HorizontalSelectView: UIView {
             for (var i = 0; i<self.options.count; i++) {
                 if (i == currentSelect) {
                     self.options[i].snp_remakeConstraints { (make) -> Void in
-                        make.left.equalTo(self.optionWidth)
+                        make.left.equalTo((UIScreen.mainScreen().bounds.width / 2) - (self.optionWidth / 2))
                         make.top.equalTo(self).offset(0)
                         make.width.equalTo(self.optionWidth)
                         make.bottom.equalTo(self)
@@ -211,7 +211,7 @@ class HorizontalButtons: UILabel {
             self.textAlignment = NSTextAlignment.Center
             self.delegate = buttonDelegate;
         self.textColor = UIColor(rgba: colors.midGray)
-        self.font = self.font.fontWithSize(11);
+        self.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
     }
 
 
@@ -230,14 +230,14 @@ class HorizontalButtons: UILabel {
 
     func setSelected() {
             self.textColor = UIColor(rgba: colors.tealMain)
-            self.font = self.font.fontWithSize(19);
+            self.font = UIFont(name: "AvenirNext-Regular", size: 19.0)
            // delegate?.touchUp(self, type: self.text)
 
     }
 
     func unSelected() {
         self.textColor = UIColor(rgba: colors.midGray)
-        self.font = self.font.fontWithSize(9);
+        self.font = UIFont(name: "AvenirNext-Regular", size: 9.0)
     }
 
 

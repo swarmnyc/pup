@@ -41,7 +41,7 @@ class PlatformButtonToggle: UIButton {
         layer.borderColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2).CGColor
 
 
-        titleLabel!.font = titleLabel!.font.fontWithSize(11)
+        titleLabel!.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
         addTarget(self, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
         addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchDown)
     }
@@ -53,7 +53,7 @@ class PlatformButtonToggle: UIButton {
         for (var i = 0; i<possiblePlatforms.count; i++) {
             println(self.currentTitle!)
 
-                if (appData.platformDict[self.currentTitle!] == possiblePlatforms[i]) {
+                if (appData.platformDict[self.currentTitle!] == possiblePlatforms[i].replacePCWithSteam()) {
                     hidden = false;
                     println("it's good")
                     println(self.currentTitle!)

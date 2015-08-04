@@ -20,8 +20,8 @@ class FilterView: UIView {
     var swipeDelegate: PanGestureDelegate?
     var overlay: Overlay = Overlay();
     var overlayDelegate: OverlayDelegate?
-
-
+    var clearAll: UIButton = UIButton();
+    var clearFilters: (() -> Void)?
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -57,6 +57,7 @@ class FilterView: UIView {
     func setUpViews() {
         println("setUpViews")
 //        search.textColor = UIColor.whiteColor()
+        search.searchBarStyle = UISearchBarStyle.Minimal;
 
         self.backgroundColor = UIColor.clearColor()
         self.clipsToBounds = false;
@@ -73,6 +74,14 @@ class FilterView: UIView {
             platforms.append(PlatformButtonToggle())
             platforms[i].setUpButton(appData.platforms[i], delegate: self.buttonDelegate!)
         }
+
+        clearAll.setTitle("Clear All", forState: .Normal);
+        clearAll.setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
+        clearAll.layer.borderWidth = 0.5
+        clearAll.layer.borderColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2).CGColor
+        clearAll.addTarget(self, action: "clearAllFilters", forControlEvents: UIControlEvents.TouchDown)
+        clearAll.titleLabel!.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
+
         self.panDetector.addTarget(self, action: "swiped:");
 
         self.addGestureRecognizer(panDetector);
@@ -80,6 +89,32 @@ class FilterView: UIView {
 
         addViews();
         setUpConstraints()
+
+    }
+
+    func clearAllFilters() {
+        println("clear the filters!");
+        clearAll.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        clearAll.backgroundColor = UIColor(rgba: colors.orange)
+        uncheckAllPlatforms();
+        self.search.text = "";
+        clearFilters?();
+        UIView.animateWithDuration(0.5, animations: {
+            self.clearAll.setTitleColor(UIColor(rgba: colors.mainGrey), forState: .Normal)
+            self.clearAll.backgroundColor = UIColor.whiteColor();
+
+        })
+
+
+    }
+
+    func uncheckAllPlatforms() {
+        for i in 0...appData.platforms.count-1 {
+
+            platforms[i].uncheck()
+
+        }
+
 
     }
 
@@ -143,7 +178,8 @@ class FilterView: UIView {
             make.width.equalTo(fullW)
             make.right.equalTo(self.parentView).offset(0)
             make.top.equalTo(self.parentView).offset(-300)
-            make.height.equalTo(305)
+            make.height.equalTo(340)
+
         }
 
         self.overlay.snp_remakeConstraints { (make) -> Void in
@@ -157,7 +193,7 @@ class FilterView: UIView {
         self.whiteBox.snp_remakeConstraints { (make) -> Void in
             make.width.equalTo(fullW)
             make.right.equalTo(self.parentView).offset(0)
-            make.top.equalTo(self.parentView).offset(-300)
+            make.top.equalTo(self.parentView).offset(-274)
             make.bottom.equalTo(self.platforms[4].snp_bottom).offset(0)
 
         }
@@ -167,7 +203,7 @@ class FilterView: UIView {
         self.search.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.whiteBox).offset(16)
             make.right.equalTo(self.whiteBox).offset(-16)
-            make.top.equalTo(self.whiteBox).offset(UIConstants.justBelowSearchBar)
+            make.top.equalTo(self.whiteBox).offset(UIConstants.justBelowSearchBar + 5)
             make.height.equalTo(UIConstants.buttonHeight / 2)
 
         }
@@ -211,8 +247,17 @@ class FilterView: UIView {
             make.width.equalTo(thirdW)
 
         }
+
+        self.clearAll.snp_remakeConstraints { (make) -> Void in
+            make.left.equalTo(self.platforms[1].snp_right).offset(0)
+            make.top.equalTo(self.platforms[1].snp_bottom).offset(0)
+            make.right.equalTo(self.whiteBox).offset(0)
+            make.height.equalTo(UIConstants.buttonHeight)
+            make.width.equalTo(thirdW)
+
+        }
         self.handle.snp_remakeConstraints { (make) -> Void in
-            make.top.equalTo(self.platforms[4].snp_bottom)
+            make.top.equalTo(self.platforms[4].snp_bottom).offset(0)
             make.left.equalTo(self.whiteBox)
             make.right.equalTo(self.whiteBox)
             make.height.greaterThanOrEqualTo(3)
@@ -234,6 +279,8 @@ class FilterView: UIView {
             whiteBox.addSubview(platforms[i])
             println(platforms[i])
         }
+
+        self.addSubview(self.clearAll);
     }
 
 
@@ -245,8 +292,11 @@ class FilterView: UIView {
         var fullW: CGFloat = UIScreen.mainScreen().bounds.size.width
 
         UIView.animateWithDuration(Double(0.5)) {
-            var trans = CGAffineTransformMakeTranslation(0, 250);
+            var trans = CGAffineTransformMakeTranslation(0, 200);
             self.self.transform = trans;
+
+
+
             self.snp_remakeConstraints { (make) -> Void in
                 make.width.equalTo(fullW)
                 make.right.equalTo(self.parentView).offset(0)
@@ -282,11 +332,12 @@ class FilterView: UIView {
             var trans = CGAffineTransformMakeTranslation(0, 0);
             self.self.transform = trans;
 
+
             self.snp_remakeConstraints { (make) -> Void in
                 make.width.equalTo(fullW)
                 make.right.equalTo(self.parentView).offset(0)
                 make.top.equalTo(self.parentView).offset(-300)
-                make.height.equalTo(390)
+                make.height.equalTo(340)
 
             }
             self.overlay.hideOverlay()

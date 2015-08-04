@@ -17,13 +17,19 @@ struct userInfo {
     var QBChatId = ""
     var picture = ""
     var social: [String: Bool] = ["facebook": false, "twitter": false, "tumblr": false, "reddit": false];
+
+    var fbAccessToken = "";
+    var fbUserId = "";
 }
 
 class User {
-
+//    var joinedLobbies: NSDictionary = ["": false];
+    var joinedLobbies: Dictionary<String, Bool> = Dictionary<String, Bool>();
     let localStorage = NSUserDefaults.standardUserDefaults()
     var data: userInfo = userInfo();
     var currentPage = "Find A Game";
+    var recentLoginChange = false;
+    var socialConnect = SocialConnector(viewController: nil);
     init() {
         checkStoredData()
 
@@ -34,7 +40,6 @@ class User {
     }
 
     func checkStoredData() {
-
         if let loggedIn = localStorage.valueForKey("loggedIn") as? Bool { // if loggedIn exists in localstorage
             data.loggedIn = loggedIn                                      // and is true, let's update the user info with the correct access tokens and values
             if (loggedIn) {
@@ -46,9 +51,12 @@ class User {
                 data.QBChatId = localStorage.valueForKey("QBChatId") as! String
                 data.picture = localStorage.valueForKey("picture") as! String
                 data.social = localStorage.valueForKey("social") as! [String: Bool]
+//                data.fbAccessToken = localStorage.valueForKey("fbAccessToken") as! String
+//                data.fbUserId = localStorage.valueForKey("fbUserId") as! String
             }
 
         }
+
 
 
     }
@@ -63,6 +71,8 @@ class User {
         localStorage.setObject(self.data.picture,forKey: "picture")
              localStorage.setBool(self.data.loggedIn, forKey: "loggedIn")
              localStorage.setObject(self.data.social, forKey: "social")
+             localStorage.setObject(self.data.fbAccessToken, forKey: "fbAccessToken")
+             localStorage.setObject(self.data.fbUserId, forKey: "fbUserId")
 
     }
 
@@ -71,6 +81,10 @@ class User {
         var data: NSDictionary = ["isLeave": false, "isOwner": false, "id": self.data.userId, "userName": self.data.name, "portraitUrl": self.data.picture];
         return SingleLobbyUser(data: data);
 
+    }
+
+    func setNewToken(fbData: (String, String, NSDate)) {
+        socialConnect.sendFacebookDataToPup(fbData)
     }
 
 
@@ -101,12 +115,10 @@ class User {
             self.data.social = ["facebook": false, "twitter": false, "tumblr": false, "reddit": false];
             self.data.QBChatId = "";
            setLocalStorage()
-
+            recentLoginChange = true;
         }
 
-        var myGames = nav!.tabBar.items?[1] as! UITabBarItem
-        myGames.enabled = false;
-
+      
     }
 
     func validData(registrationData: (image: UIImage?, username: String, email: String)) -> Bool {
@@ -135,7 +147,7 @@ class User {
         self.data.loggedIn = true;
         self.data.accessToken = userData["accessToken"]! as! String;
         var name = userData["userName"]! as! NSString;
-        self.data.name = name.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) as String
+        self.data.name = name as String
         println(self.data.name + "the NAME")
         self.data.userId = userData["id"]! as! String;
         if (userData["portraitUrl"] != nil) {
@@ -154,6 +166,12 @@ class User {
     func enableMyGames() {
         var myGames = nav!.tabBar.items?[1] as! UITabBarItem
         myGames.enabled = true;
+
+        var settingsControl = (nav!.viewControllers?[3] as! UINavigationController).viewControllers[0] as! SettingsController;
+        settingsControl.settingsView?.initView(settingsControl)
+        settingsControl.settingsView?.setDelegates(settingsControl)
+
+
     }
 
     func updatePortrait(image: UIImage, success: () -> Void, failure: () -> Void) {
@@ -240,6 +258,8 @@ class User {
 
                     self.saveData(userData)
                     self.enableMyGames()
+                    self.recentLoginChange = true;
+
                     success()
                 }
 

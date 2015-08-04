@@ -11,6 +11,8 @@ import UIKit
 
 
 
+
+
 class LobbyListView: UIView {
 
     var table: UITableView = UITableView()
@@ -23,7 +25,7 @@ class LobbyListView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        backgroundColor=UIColor.blackColor()
+        backgroundColor=UIColor(rgba: colors.lightGray)
 
         clipsToBounds = true;
 
@@ -51,8 +53,10 @@ class LobbyListView: UIView {
     func setUpTable() {
         table.separatorInset = UIEdgeInsetsZero
 
-
-
+        table.separatorColor = UIColor.clearColor();
+        table.layer.masksToBounds = false;
+        table.alwaysBounceVertical = true;
+        table.clipsToBounds = false;
 
 //        let singleTap = UITapGestureRecognizer(target: self, action: Selector("tapDetected"))
 //        singleTap.numberOfTapsRequired = 1
@@ -104,7 +108,7 @@ class LobbyListView: UIView {
             make.right.equalTo(self).offset(0)
             make.left.equalTo(self).offset(0)
             make.top.equalTo(self).offset(0)
-            make.bottom.equalTo(self).offset(0)
+            make.bottom.equalTo(self).offset(-20)
         }
 
 //        floatingActionButton?.snp_makeConstraints{ (make) -> Void in

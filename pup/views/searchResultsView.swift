@@ -31,7 +31,7 @@ class SearchResultsView: UIView {
 
 
         self.clipsToBounds = true;                                  //lets get this table going
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        let layout: animatedFlowLayout = animatedFlowLayout()
         layout.sectionInset = UIEdgeInsetsZero;
         layout.itemSize = CGSize(width: 250, height: 45);
         layout.minimumInteritemSpacing = 0.0;
@@ -182,7 +182,7 @@ class GameMissingView: UIView {
 
         requestText.text = "Not showing up? Request a Game."
         requestText.textColor = UIColor(rgba: colors.midGray);
-        requestText.font = requestText.font.fontWithSize(12);
+        requestText.font = UIFont(name: "AvenirNext-Regular", size: 12.0)
         self.addSubview(plusSign)
         self.addSubview(requestText)
 

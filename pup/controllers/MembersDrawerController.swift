@@ -34,6 +34,8 @@ class MembersDrawerController: UIViewController, UICollectionViewDelegate, UICol
         membersView.membersList!.reloadData();
     }
 
+
+
     func setUpSideBar() {
         membersView.setUpView(self, navBarController: self.navBar!);
 

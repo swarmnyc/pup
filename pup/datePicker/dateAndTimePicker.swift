@@ -55,7 +55,7 @@ class DateAndTimePicker: UIView {
     }
 
     func show() {
-
+        self.alpha = 1;
         UIApplication.sharedApplication().windows.first!.addSubview(self)
         setUpConstraints();
     }
@@ -65,16 +65,16 @@ class DateAndTimePicker: UIView {
     }
 
     func setUpViews() {
-
+        self.alpha = 0;
         self.layer.cornerRadius = 15;
         self.layer.masksToBounds = true;
 
         self.layer.shadowOffset = CGSizeMake(1.0,1.0);
         self.layer.shadowColor = UIColor.blackColor().CGColor;
-        self.layer.shadowRadius = 15.0;
+        self.layer.shadowRadius = 8.0;
         self.layer.shadowOpacity = 0.8;
 
-        self.clipsToBounds = true;
+        self.clipsToBounds = false;
         self.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.99);
 
 
@@ -83,13 +83,13 @@ class DateAndTimePicker: UIView {
 
         cancelButton.setTitle("Cancel", forState: .Normal)
         cancelButton.titleLabel!.font = cancelButton.titleLabel!.font.fontWithSize(11.0)
-        cancelButton.setTitleColor(UIColor(red: 0, green: (122.0/255/0), blue: 1.0, alpha: 1.0), forState: .Normal)
+        cancelButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
         cancelButton.titleLabel!.textAlignment = NSTextAlignment.Center
         cancelButton.addTarget(self, action: "cancelButtonPressed", forControlEvents: UIControlEvents.TouchUpInside);
 
         okButton.setTitle("OK", forState: .Normal)
         okButton.titleLabel!.font = okButton.titleLabel!.font.fontWithSize(11.0)
-        okButton.setTitleColor(UIColor(red: 0, green: (122.0/255/0), blue: 1.0, alpha: 1.0), forState: .Normal)
+        okButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
         okButton.titleLabel!.textAlignment = NSTextAlignment.Center
         okButton.addTarget(self, action: "okButtonPressed", forControlEvents: UIControlEvents.TouchUpInside);
 
@@ -153,7 +153,7 @@ class DateAndTimePicker: UIView {
         }
 
         datePicker.snp_makeConstraints { (make) -> Void in
-            make.top.equalTo(self).offset(UIConstants.halfVerticalPadding)
+            make.top.equalTo(self).offset(UIConstants.verticalPadding + UIConstants.halfVerticalPadding)
             make.left.equalTo(self).offset(UIConstants.horizontalPadding)
             make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
             make.height.equalTo(216)

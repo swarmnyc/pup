@@ -4,6 +4,8 @@
 //
 
 import Foundation
+import UIKit
+
 
 struct appColors {
     var tealMain = "#49c1c3"
@@ -23,7 +25,7 @@ struct appColors {
 
 struct miscData {
     var platforms: Array<String> = ["Steam or PC", "XBOX 360", "XBOX ONE", "PS3", "PS4"]
-    var platformDict = ["Steam or PC": "pc", "XBOX 360": "Xbox360", "XBOX ONE": "XboxOne", "PS3": "PS3", "PS4": "PS4"];
+    var platformDict = ["Steam or PC": "Steam", "XBOX 360": "Xbox360", "XBOX ONE": "XboxOne", "PS3": "PS3", "PS4": "PS4"];
   
     
     var QBDefaultUser = "553be08dcbf5a81a70567b13";
@@ -151,9 +153,35 @@ struct UIValues {
     var descriptionPlaceholder = "Let people know what you're looking for, the region (or dungeon) name of the particular game you want to get through, your play style, and whether this is a PVP or friendly server, etc."
     var usernamePlaceholder = "Unique username"
     var emailPlaceholder = "cats@cats.com"
-    var messageBaseSize = 50.0;
-    func getMessageAddition(message: String) -> CGFloat {
-       return CGFloat(Int(count(message) / 26) * 12)
+    var messageBaseSize: Double {
+        get {
+          return self.horizontalPadding * 2 + 6;
+        }
+    };
+    func getMessageHeightAdditionBasedOnTextLength(message: String) -> CGFloat {
+
+
+        var messagePreview: UITextView = UITextView();
+
+        messagePreview.frame = CGRectMake(0,0,UIScreen.mainScreen().bounds.width, 200);
+        messagePreview.text = message;
+
+        messagePreview.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
+        messagePreview.textContainerInset = UIEdgeInsetsZero
+        messagePreview.textContainer.lineFragmentPadding = 0;
+
+        var size = messagePreview.sizeThatFits(CGSizeMake(UIScreen.mainScreen().bounds.width - CGFloat(UIConstants.horizontalPadding * 5), CGFloat.max))
+        messagePreview.layoutIfNeeded();
+
+
+        var numberOfNewLines = message.componentsSeparatedByString("\n").count;
+        if (numberOfNewLines == 0) {
+            numberOfNewLines+=1;
+        }
+
+
+
+        return CGFloat(size.height + CGFloat(UIConstants.verticalPadding * 1.5));
     }
 }
 

@@ -7,6 +7,22 @@ import Foundation
 import UIKit
 import Haneke
 
+
+class animatedFlowLayout: UICollectionViewFlowLayout {
+
+    override func finalLayoutAttributesForDisappearingItemAtIndexPath(itemIndexPath: NSIndexPath!) -> UICollectionViewLayoutAttributes! {
+        var attr = UICollectionViewLayoutAttributes(forCellWithIndexPath: itemIndexPath);
+
+        attr.transform = CGAffineTransformMakeScale(1.0, 0.0);
+
+        return attr;
+
+    }
+
+
+
+}
+
 class MyChatsView: UIView {
         var chatsCollection: UICollectionView?;
 
@@ -23,7 +39,7 @@ class MyChatsView: UIView {
 
         self.backgroundColor = UIColor.blackColor()
 
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        let layout = animatedFlowLayout()
         layout.sectionInset = UIEdgeInsetsZero;
         layout.itemSize = CGSize(width: UIScreen.mainScreen().bounds.width, height: 90);
         layout.minimumInteritemSpacing = 1.0;
@@ -32,7 +48,9 @@ class MyChatsView: UIView {
         chatsCollection!.dataSource = parent as? UICollectionViewDataSource;
         chatsCollection!.delegate = parent as? UICollectionViewDelegate
         chatsCollection!.registerClass(MyChatsCell.self, forCellWithReuseIdentifier: "myChatCell")
+        chatsCollection!.registerClass(EmptyCell.self, forCellWithReuseIdentifier: "emptyCell")
         chatsCollection!.backgroundColor = UIColor(rgba: colors.lightGray)
+        chatsCollection!.alwaysBounceVertical = true;
 
         addViews();
         setUpConstraints();
@@ -58,30 +76,30 @@ class MyChatsView: UIView {
 
 }
 
-class MyChatsCell: UICollectionViewCell {
 
-    var lobbyName: UILabel = UILabel();
-    var lobbyImage: UIImageView = UIImageView();
-    var time: UILabel = UILabel();
-    var desc: UILabel = UILabel();
-    var platform: UILabel = UILabel();
-    var divider: UIView = UIView();
 
-    var hasBeenSetUp = false;
-    var data: LobbyData?
+class EmptyCell: UICollectionViewCell {
+
+
+    var label = UITextView();
+
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
+        contentView.addSubview(label)
+        label.text = "You Haven't Joined any games yet, and all the cake is gone.";
+        label.textAlignment = NSTextAlignment.Center
+        label.editable = false;
+        label.snp_makeConstraints {
+            (make) -> Void in
+            make.left.equalTo(self)
+            make.top.equalTo(self)
+            make.right.equalTo(self)
+            make.bottom.equalTo(self)
+        }
 
-        contentView.addSubview(lobbyName)
 
-
-        contentView.addSubview(lobbyImage)
-        contentView.addSubview(time)
-        contentView.addSubview(desc)
-        contentView.addSubview(platform)
-        contentView.addSubview(divider)
     }
 
 
@@ -90,8 +108,177 @@ class MyChatsCell: UICollectionViewCell {
     }
 
 
+}
+
+
+class MyChatsCell: UICollectionViewCell, UIGestureRecognizerDelegate {
+
+    var lobbyName: UILabel = UILabel();
+    var lobbyImage: UIImageView = UIImageView();
+    var time: UILabel = UILabel();
+    var desc: UILabel = UILabel();
+    var platform: UILabel = UILabel();
+    var divider: UIView = UIView();
+    var trashView: UIButton = UIButton();
+
+    var hasBeenSetUp = false;
+    var data: LobbyData?
+    var panRecognize: UIPanGestureRecognizer?;
+    var tapRecognize: UITapGestureRecognizer?
+    var movedLeft = false;
+    var transX: CGFloat = 0.0;
+    var startValue: CGFloat = 0.0;
+    var removeCellAction: ((String?, String?) -> Void)?
+    var contentContainer: UIView = UIView();
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        panRecognize = UIPanGestureRecognizer(target: self, action: "detectedPan:");
+        panRecognize!.delegate = self;
+
+
+        self.contentView.addGestureRecognizer(panRecognize!);
+        self.contentContainer.addSubview(lobbyName)
+
+
+        self.contentContainer.addSubview(lobbyImage)
+        self.contentContainer.addSubview(time)
+        self.contentContainer.addSubview(desc)
+        self.contentContainer.addSubview(platform)
+        self.contentContainer.addSubview(divider)
+        self.contentView.addSubview(trashView)
+        self.contentView.addSubview(self.contentContainer)
+
+    }
+
+
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+
+
+
+    func detectedPan(gesture: UIGestureRecognizer) {
+        var pan = gesture as? UIPanGestureRecognizer
+        if (pan != nil) {
+            var translation = pan!.translationInView(self.superview!);
+            println(translation.x);
+
+            if (translation.x < -1 && movedLeft == false) {
+                    if (gesture.state == UIGestureRecognizerState.Ended) { // has ended gesture
+                        if (translation.x < -140) { //has swiped far enough to remove chat
+                            movedLeft = true;
+                            self.startValue = -UIScreen.mainScreen().bounds.width / 2;
+                            UIView.animateWithDuration(0.7, animations: {
+                                var trans = CGAffineTransformMakeTranslation(self.startValue, 0.0);
+                                self.contentContainer.transform = trans;
+                                self.trashView.alpha = 1;
+
+                            })
+
+                        } else {  //didn't quite make it far enough, lets go back to normal
+                            self.startValue = 0;
+                            UIView.animateWithDuration(0.7, animations: {
+                                var trans = CGAffineTransformMakeTranslation(self.startValue, 0.0);
+                                self.contentContainer.transform = trans;
+                            })
+                        }
+                    } else { // has not ended, in the middle of gesture
+
+                        transX = startValue + translation.x;
+                        if (transX >= -UIScreen.mainScreen().bounds.width / 2) { // hasn't gone all the way yet
+                            var trans = CGAffineTransformMakeTranslation(transX, 0.0);
+                            self.contentContainer.transform = trans;
+
+                            self.trashView.alpha = transX / (-UIScreen.mainScreen().bounds.width / 2.0);
+                        }
+                    }
+
+            } else if (translation.x > 1 && movedLeft) {
+
+                if (gesture.state == UIGestureRecognizerState.Ended) {
+                    if (translation.x > 30) {
+                        movedLeft = false;
+                        self.startValue = 0;
+                        UIView.animateWithDuration(0.3, animations: {
+                            var trans = CGAffineTransformMakeTranslation(self.startValue, 0.0);
+                            self.contentContainer.transform = trans;
+                            self.trashView.alpha = 0;
+                        })
+                    } else {
+                        self.startValue = -UIScreen.mainScreen().bounds.width / 3
+                        UIView.animateWithDuration(0.3, animations: {
+                            var trans = CGAffineTransformMakeTranslation(self.startValue, 0.0);
+                            self.contentContainer.transform = trans;
+                        })
+                    }
+
+                } else { // has not ended in the middle of gesture
+                    transX = startValue + translation.x;
+                    var trans = CGAffineTransformMakeTranslation(transX, 0.0);
+                    self.contentContainer.transform = trans;
+                }
+
+
+            }
+
+
+        }
+    }
+
+    func moveLeft(speed: Double, success: (() -> Void)?) {
+        UIView.animateWithDuration(speed, animations: {
+            var trans = CGAffineTransformMakeTranslation(-UIScreen.mainScreen().bounds.width, 0.0);
+            self.contentView.transform = trans;
+        }, completion: {
+            finished in
+            success?();
+
+        });
+    }
+
+    func close() {
+        movedLeft = false;
+        self.startValue = 0;
+        var trans = CGAffineTransformMakeTranslation(self.startValue, 0.0);
+        self.contentContainer.transform = trans;
+        self.trashView.alpha = 0;
+
+    }
+
+    func detectedTap() {
+        println("tap!");
+        println("remove cell")
+        UIView.animateWithDuration(0.3, animations: {
+            self.close();
+        })
+
+        self.removeCellAction?(data?.id, data?.name);
+    }
+
+
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        var pan = gestureRecognizer as? UIPanGestureRecognizer
+        println(pan);
+        if (pan != nil) {
+            var translation = pan!.translationInView(self.superview!);
+            if (abs(translation.x) > abs(translation.y)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     func setUpCell(data: LobbyData) {
+        self.movedLeft = false //let's make sure the cell is in the closed position
+        self.startValue = 0;
+        var trans = CGAffineTransformMakeTranslation(self.startValue, 0.0);
+        self.contentContainer.transform = trans;
+
+
         self.data = data;
+        movedLeft = false;
         self.data?.checkUnreadCounter = self.checkUnread;
         self.backgroundColor = UIColor(rgba: "#f1f1f1")
         if (data.timeInHuman == "Finished") {
@@ -102,8 +289,17 @@ class MyChatsCell: UICollectionViewCell {
         self.contentView.layer.borderColor = UIColor(rgba: colors.lightGray).CGColor
         self.contentView.layer.borderWidth = 4.0;
 
+        self.contentContainer.backgroundColor = UIColor(red: 241, green: 241, blue: 241, alpha: 255);
+
+        self.trashView.titleLabel!.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
+        self.trashView.backgroundColor = UIColor(rgba: colors.orange);
+        self.trashView.setTitleColor(UIColor.whiteColor(), forState: .Normal);
+        self.trashView.setTitle("Tap To Leave Game", forState: .Normal);
+        self.trashView.alpha = 0;
+        self.trashView.addTarget(self, action: "detectedTap", forControlEvents: UIControlEvents.TouchUpInside)
+
         lobbyName.text = data.name;
-        lobbyName.font = lobbyName.font.fontWithSize(13)
+        lobbyName.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
         lobbyName.textColor = UIColor(rgba: colors.mainGrey)
 
         var url = NSURL(string: data.thumbnailPictureUrl.getPUPUrl())
@@ -124,15 +320,15 @@ class MyChatsCell: UICollectionViewCell {
 
 
         time.text = data.timeInHuman
-        time.font = time.font.fontWithSize(11)
+        time.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
         time.textColor = UIColor(rgba: colors.tealMain)
 
         desc.text = data.description;
-        desc.font = desc.font.fontWithSize(13)
+        desc.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
         desc.textColor = UIColor(rgba: colors.midGray)
 
         platform.text = data.platform
-        platform.font = platform.font.fontWithSize(11)
+        platform.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
         platform.textColor = UIColor(rgba: colors.midGray);
         platform.textAlignment = NSTextAlignment.Right
 
@@ -149,18 +345,35 @@ class MyChatsCell: UICollectionViewCell {
 
         if (hasBeenSetUp == false) {
 
+            self.contentContainer.snp_makeConstraints {
+                (make) -> Void in
+                make.left.equalTo(self).offset(0)
+                make.top.equalTo(self).offset(0)
+                make.right.equalTo(self).offset(0)
+                make.bottom.equalTo(self).offset(0)
+            }
+
             lobbyName.snp_makeConstraints {
                 (make) -> Void in
                 make.left.equalTo(self.lobbyImage.snp_right).offset(UIConstants.horizontalPadding);
-                make.top.equalTo(self.contentView).offset(UIConstants.verticalPadding);
+                make.top.equalTo(self.contentContainer).offset(UIConstants.verticalPadding);
                 make.height.equalTo(20);
-                make.right.equalTo(self.contentView).offset(-UIConstants.horizontalPadding*6);
+                make.right.equalTo(self.contentContainer).offset(-UIConstants.horizontalPadding*6);
+
+            }
+
+            trashView.snp_makeConstraints {
+                (make) -> Void in
+                make.right.equalTo(self.contentContainer).offset(0);
+                make.top.equalTo(self.contentContainer).offset(0);
+                make.bottom.equalTo(self.contentContainer).offset(0);
+                make.width.equalTo(UIScreen.mainScreen().bounds.width / 2);
 
             }
 
             time.snp_makeConstraints {
                 (make) -> Void in
-                make.left.equalTo(self.contentView).offset(UIConstants.horizontalPadding)
+                make.left.equalTo(self.contentContainer).offset(UIConstants.horizontalPadding)
                 make.top.equalTo(self.lobbyImage.snp_bottom).offset(UIConstants.verticalPadding)
                 make.width.equalTo(150)
                 make.height.equalTo(14)
@@ -170,23 +383,23 @@ class MyChatsCell: UICollectionViewCell {
                 (make) -> Void in
                  make.left.equalTo(self.lobbyImage.snp_right).offset(UIConstants.horizontalPadding);
                 make.top.equalTo(self.lobbyName.snp_bottom).offset(UIConstants.halfHorizontalPadding / 2.0);
-                make.right.equalTo(self.contentView).offset(-UIConstants.horizontalPadding)
+                make.right.equalTo(self.contentContainer).offset(-UIConstants.horizontalPadding)
                 make.height.equalTo(16)
             }
 
             platform.snp_makeConstraints {
                 (make) -> Void in
-                make.right.equalTo(self.contentView).offset(-UIConstants.horizontalPadding)
-                make.top.equalTo(self.contentView).offset(UIConstants.verticalPadding);
+                make.right.equalTo(self.contentContainer).offset(-UIConstants.horizontalPadding)
+                make.top.equalTo(self.contentContainer).offset(UIConstants.verticalPadding);
                 make.height.equalTo(20);
                 make.left.equalTo(lobbyName.snp_right);
             }
 
             divider.snp_makeConstraints {
                 (make) -> Void in
-                make.bottom.equalTo(self.contentView).offset(0)
-                make.left.equalTo(self.contentView).offset(0)
-                make.right.equalTo(self.contentView).offset(0)
+                make.bottom.equalTo(self.contentContainer).offset(0)
+                make.left.equalTo(self.contentContainer).offset(0)
+                make.right.equalTo(self.contentContainer).offset(0)
                 make.height.equalTo(4.5)
             }
 

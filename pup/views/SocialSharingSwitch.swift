@@ -12,7 +12,7 @@ class SocialSharingSwitch: UIView {
     var toggle: UISwitch = UISwitch();
     var label = UILabel();
     var active = false;
-    var socialController = SocialConnector();
+    var socialController: SocialConnector?;
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
@@ -22,32 +22,39 @@ class SocialSharingSwitch: UIView {
     }
 
 
+    func setUpController(viewController: UIViewController) {
+        socialController = SocialConnector(viewController: viewController);
+    }
+
     func setUpSwitch(socialService: SocialConnect) {
-        whichService = socialService;
-        var text = ""
-        switch(whichService) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+            self.whichService = socialService;
+            var text = ""
+            switch(self.whichService) {
             case .Facebook:
-                 text = "facebook"
+                text = "facebook"
             case .Reddit:
-                 text = "reddit"
+                text = "reddit"
             case .Tumblr:
-                 text = "tumblr"
+                text = "tumblr"
             default:
                 text = "twitter"
-        }
-        self.label.text = text;
-        println(currentUser.data.social[text])
-        println("current user social ^ " + text)
-        if (currentUser.data.social[text]!) {
-            active = true;
-        }
-        toggle.setOn(active, animated: false);
-        socialController.cancelOauth = authenticationCancelled;
+            }
+            self.label.text = text.capitalizeIt;
 
-        self.toggle.addTarget(self, action: "toggleSwitch", forControlEvents: UIControlEvents.ValueChanged);
+            if (currentUser.data.social[text]!) {
+                self.active = true;
+            }
+            self.toggle.setOn(self.active, animated: false);
+            self.socialController?.cancelOauth = self.authenticationCancelled;
 
-        addViews();
-        setUpConstraints();
+            self.toggle.addTarget(self, action: "toggleSwitch", forControlEvents: UIControlEvents.ValueChanged);
+            dispatch_async(dispatch_get_main_queue(), {
+                () -> Void in
+                self.addViews();
+                self.setUpConstraints();
+            });
+        })
 
     }
 
@@ -81,7 +88,6 @@ class SocialSharingSwitch: UIView {
     }
 
     func toggleSwitch() {
-        println("toggling")
         if (self.toggle.on) {
             checkToggle();
         } else {
@@ -91,15 +97,15 @@ class SocialSharingSwitch: UIView {
 
     func uncheckToggle() {
         self.toggle.setOn(false, animated: true);
-        if (currentUser.data.social[self.label.text!]!) {
-            socialController.deleteService(self.label.text!)
+        if (currentUser.data.social[self.label.text!.lowercaseString]!) {
+            socialController?.deleteService(self.label.text!)
         }
 
     }
 
     func checkToggle() {
         self.toggle.setOn(true, animated: true)
-        socialController.setTypeAndAuthenticate(self.label.text!);
+        socialController?.setTypeAndAuthenticate(self.label.text!);
 
 
     }

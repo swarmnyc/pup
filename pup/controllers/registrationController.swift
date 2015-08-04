@@ -13,12 +13,14 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
     var registrationView: RegistrationView = RegistrationView();
     var onSuccessJoin: (() -> (Void))?
     var submitting = false;
+    var parentView: UIView?
 
-
-    convenience init(parentController: JoinPupButton) {
+    convenience init(parentController: JoinPupButton?) {
         self.init()
             self.view = registrationView;
+        if (parentController != nil) {
             self.parentController = parentController
+        }
 
 //        self.view = filterView
 //        parent = parentController
@@ -43,9 +45,14 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
 
     }
 
-    func addParentConstraints(parentView: UIView) {
-            registrationView.addParentConstraints(parentView, delegate: self)
+    func showJoinScreen(onSuccess: (() -> Void)) {
+        self.onSuccessJoin = onSuccess;
+        self.addParentConstraints();
 
+    }
+
+    func addParentConstraints() {
+            registrationView.addParentConstraints(self)
     }
 
 
@@ -82,7 +89,9 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
         self.view.removeFromSuperview()
         parentController?.removeRegistrationView()
 
-
+        if (self.parentController == nil) {
+            SwiftLoader.hide();
+        }
         self.submitting=false;
         onSuccessJoin!();
     }
@@ -113,7 +122,7 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
             alert.addAction(camera)
             alert.addAction(roll)
             alert.addAction(cancel)
-            parentController?.presentViewController(alert, animated: true, completion: nil)//4
+            self.view.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)//4
         } else {
 
             bringOutPhotoLibrary()
@@ -129,7 +138,7 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
         let picker = UIImagePickerController()
         picker.delegate = self
 
-        picker.allowsEditing = true //2
+        picker.allowsEditing = false //2
         picker.sourceType = .Camera //3
         self.registrationView.layer.opacity = 0;
         self.parentController?.joinButtonView.layer.opacity = 0;
@@ -142,7 +151,7 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
         let picker = UIImagePickerController()
         picker.delegate = self
 
-        picker.allowsEditing = true //2
+        picker.allowsEditing = false //2
         picker.sourceType = .PhotoLibrary //3
         self.registrationView.layer.opacity = 0;
         self.parentController?.joinButtonView.layer.opacity = 0;
@@ -154,12 +163,41 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         println(picker)
         println(info)
-        var chosenImage = info[UIImagePickerControllerEditedImage] as! UIImage
+        
+        var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage
 
-        registrationView.setImage(chosenImage)
-        self.registrationView.layer.opacity = 1;
-        self.parentController?.joinButtonView.layer.opacity = 1;
+
         picker.dismissViewControllerAnimated(true, completion: nil) //5
+        
+        var editor = DZNPhotoEditorViewController(image: chosenImage);
+        editor.cropMode = DZNPhotoEditorViewControllerCropMode.Circular;
+        editor.cropSize = CGSizeMake(400,400);
+         var controller = UINavigationController(rootViewController: editor)
+        editor.acceptBlock = {
+            (editor, userInfo) -> Void in
+            self.view.window?.rootViewController?.dismissViewControllerAnimated(true, completion: nil)
+            var editedImage = userInfo[UIImagePickerControllerEditedImage] as! UIImage
+            
+            self.registrationView.setImage(editedImage);
+            self.registrationView.layer.opacity = 1;
+            self.parentController?.joinButtonView.layer.opacity = 1;
+            self.addParentConstraints();
+        }
+        
+        editor.cancelBlock = {
+            (editor) -> Void in
+            self.view.window?.rootViewController?.dismissViewControllerAnimated(true, completion: nil)
+            self.registrationView.layer.opacity = 1;
+            self.parentController?.joinButtonView.layer.opacity = 1;
+            self.addParentConstraints();
+//            self.popViewController(animated: true);
+        }
+        
+       
+        
+        self.view.window?.rootViewController?.presentViewController(controller, animated: true, completion: nil);
+
+
     }
 
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
