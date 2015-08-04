@@ -4,7 +4,7 @@
  *
  * This file has the following configurations: MySQL settings, Table Prefix,
  * Secret Keys, and ABSPATH. You can find more information by visiting
- * {@link http://codex.wordpress.org/Editing_wp-config.php Editing wp-config.php}
+ * {@link https://codex.wordpress.org/Editing_wp-config.php Editing wp-config.php}
  * Codex page. You can get the MySQL settings from your web host.
  *
  * This file is used by the wp-config.php creation script during the
@@ -16,16 +16,16 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'theyarea_pupbog');
+define('DB_NAME', 'hiccup');
 
 /** MySQL database username */
-define('DB_USER', 'theyarea_pup');
+define('DB_USER', 'b3cd8d3425148d');
 
 /** MySQL database password */
-define('DB_PASSWORD', 'kwR^e-{;z+ln');
+define('DB_PASSWORD', '74b3b084');
 
 /** MySQL hostname */
-define('DB_HOST', 'localhost');
+define('DB_HOST', 'us-cdbr-azure-east2-d.cloudapp.net');
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
@@ -42,14 +42,14 @@ define('DB_COLLATE', '');
  *
  * @since 2.6.0
  */
-define('AUTH_KEY',         'L@{U|lt]e21$>q|Mf-m|iNt5Wq/ge>1l4ooHU_NM1}q,;Sx{`<%yo)T5u|-ubB+{');
-define('SECURE_AUTH_KEY',  '~vVWvCNovsFcLxK<s_x]-{NCJC>m+|HPOF#jA% =Y,guJ{YPU5CO~L@KCC*ARIq$');
-define('LOGGED_IN_KEY',    'sQDGLbkGTS-UkFv/1U9_i%K nv- RlpYh)B|qq~-2R)/5/x5cwfL-h_tk=_J=CxG');
-define('NONCE_KEY',        'GD=m:Bd`hm$wke$>#l{-CRu5>?r=^y->3UK~O;{`,QQdE|l~729BvoH0vucT^i8Y');
-define('AUTH_SALT',        'od(-sYqR0z!Mf^`uK-,`c|;C.oIdxK)&94eL7!F6_|kJq43X_(|aiY&2w=NVD[Y`');
-define('SECURE_AUTH_SALT', '|#q&)V.qxR4a]LL,s4p]8vGag+e4u<XkO?:wZ{-|:qdeEQy9[=$tm^7|G.)+@-fx');
-define('LOGGED_IN_SALT',   'gX]3jU5BONXbHqEqW9<yghy+|]d+Jn/)}l#]1#^m]T?Ay+$L`W,BfG{-qb#C)dsv');
-define('NONCE_SALT',       ';H.QC*pm+}#}P5zm(Db- GfB}W@Kx*<xqo{KO#fLh*3vFSbmexTTLdyQm|-J[u-k');
+define('AUTH_KEY',         'swarmnyc');
+define('SECURE_AUTH_KEY',  'swarmnyc');
+define('LOGGED_IN_KEY',    'swarmnyc');
+define('NONCE_KEY',        'swarmnyc');
+define('AUTH_SALT',        'swarmnyc');
+define('SECURE_AUTH_SALT', 'swarmnyc');
+define('LOGGED_IN_SALT',   'swarmnyc');
+define('NONCE_SALT',       'swarmnyc');
 
 /**#@-*/
 
