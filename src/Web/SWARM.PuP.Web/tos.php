@@ -21,7 +21,7 @@
 </script>
 
 <body>
-<div id="body">
+<div id="body" style="padding: 15px;">
 
 
 <!-- BEGIN TOS -->
