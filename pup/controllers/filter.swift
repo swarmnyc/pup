@@ -55,6 +55,8 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
     func handOffResults(newdata: Array<gameData>) {
         println("display results");
         searchController?.giveResults(newdata);
+        parent?.activityIndicator.stopAnimating();
+
         searchController?.displayResults();
 
     }
@@ -161,6 +163,7 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
         searchActive = false;
         println("searchButtonClicked")
         data.setSearchTerm(searchBar.text)
+        parent?.activityIndicator.startAnimating();
         parent?.loadNewLobbies(searchBar.text, platforms: data.platforms);
         toggleState();
     }
@@ -180,6 +183,7 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
         if (searchText == "") {
             searchController?.hideResults();
         } else {
+            parent?.activityIndicator.startAnimating();
             data.search(searchText, success: handOffResults, failure: {
                 println("failure in search")
             });

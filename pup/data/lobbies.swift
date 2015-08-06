@@ -84,6 +84,14 @@ class LobbyData: QuickBloxDelegate {
     var checkUnreadCounter: ((Int) -> Void)?
 
     var messageSkip = 0;
+    var animateIn = false;
+    var index = 0;
+    convenience init(data: NSDictionary, justStarted: Bool, order: Int) {
+            self.init(data: data);
+            animateIn = justStarted;
+            index = order;
+
+    }
 
     init(data: NSDictionary) {
         println(data)
@@ -503,6 +511,8 @@ class LobbyList {  //collection of all the current games
     var loadMore = true;
     var lastSearchSuffix: String = ""
 
+    var justStarted = true;
+
     init(parentView: LobbyListController) {
 
         parent = parentView;
@@ -575,6 +585,18 @@ class LobbyList {  //collection of all the current games
         self.pageIndex = 0;
     }
 
+    func removeAnimate() {
+        for (var i = 0; i < gamesKey.count; i++) {
+            for (var p = 0; p < gamesOrganized[gamesKey[i]]!.count; p++) {
+                gamesOrganized[gamesKey[i]]![p].animateIn = false;
+            }
+        }
+
+    }
+
+
+
+
     func getLobbies(search: String, platforms: Array<String>, applyChange: Bool = true, success: () -> Void, failure: () -> Void) {
         self.resetPageCount();
         var searchTerms = makeNewRequest(search, platforms: platforms);
@@ -591,6 +613,7 @@ class LobbyList {  //collection of all the current games
         let requestUrl = NSURL(string: url)
 
         if (requestUrl != nil) {
+            //self.justStarted = true;
 
            self.sendRequest(url,onlyAddNewData: false, clearData: true, success: success, failure: {
                Error(alertTitle: "Oops, no avaliable games.", alertText: "Try Again soon, or create a game")
@@ -613,7 +636,7 @@ class LobbyList {  //collection of all the current games
 
 
                 if let resp: NSArray = respDict!["result"] as? NSArray {
-
+                    self.justStarted = true;
                     // println(resp.count);
                     if (resp.count > 0) {
                         if (onlyAddNewData == false) {
@@ -674,11 +697,13 @@ class LobbyList {  //collection of all the current games
             }
             if (exists == false) {
                 var lobby = data[i] as! NSDictionary;
-                gamesOrganized[gamesKey[gameKeyIndex]]!.insert(LobbyData(data: lobby), atIndex: 0);
+                gamesOrganized[gamesKey[gameKeyIndex]]!.insert(LobbyData(data: lobby, justStarted: self.justStarted, order: i), atIndex: 0);
             }
 
 
         }
+
+        self.justStarted = false;
 
 
 
@@ -690,6 +715,7 @@ class LobbyList {  //collection of all the current games
 
     func updateData(data: NSArray, clearData: Bool) {  //update data and call a redraw in the UI
         if (clearData) {
+            self.justStarted = true;
             removeAllDelegates();
             games.removeAll();
             gamesOrganized[gamesKey[0]] = []
@@ -710,19 +736,19 @@ class LobbyList {  //collection of all the current games
             var startTimeUtc = lobby["startTimeUtc"] as! String
             let date = NSDate(fromString: startTimeUtc, format: .ISO8601)
             if (date.minutesAfterDate(NSDate()) <= 30) {
-                gamesOrganized[gamesKey[0]]!.append(LobbyData(data: lobby))
+                gamesOrganized[gamesKey[0]]!.append(LobbyData(data: lobby, justStarted: self.justStarted, order: i))
                 gameCount++;
             } else if (date.isToday()) {
-                gamesOrganized[gamesKey[1]]!.append(LobbyData(data: lobby))
+                gamesOrganized[gamesKey[1]]!.append(LobbyData(data: lobby, justStarted: self.justStarted, order: i))
                 gameCount++;
             } else if (date.isTomorrow()) {
-                gamesOrganized[gamesKey[2]]!.append(LobbyData(data: lobby))
+                gamesOrganized[gamesKey[2]]!.append(LobbyData(data: lobby, justStarted: self.justStarted, order: i))
                 gameCount++;
             } else if (date.isThisWeek()) {
-                gamesOrganized[gamesKey[3]]!.append(LobbyData(data: lobby))
+                gamesOrganized[gamesKey[3]]!.append(LobbyData(data: lobby, justStarted: self.justStarted, order: i))
                 gameCount++;
             } else {
-                gamesOrganized[gamesKey[4]]!.append(LobbyData(data: lobby))
+                gamesOrganized[gamesKey[4]]!.append(LobbyData(data: lobby, justStarted: self.justStarted, order: i))
                 gameCount++;
             }
 
@@ -730,7 +756,7 @@ class LobbyList {  //collection of all the current games
 
         }
 
-
+        self.justStarted = false;
 
 
     }

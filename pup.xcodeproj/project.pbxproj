@@ -26,6 +26,7 @@
 		4B7097ED887F30A2A82C3588 /* Pods_pupTests2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00CCF211B0941FA1D18D3B65 /* Pods_pupTests2.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85DD202E8E6B704CDDD54931 /* filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD266BBA90DA07583C2BB8 /* filter.swift */; };
 		85DD205B5EE16EFAB39F0317 /* MembersDrawerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2DC585D64A94D3C49FB0 /* MembersDrawerController.swift */; };
+		85DD2068DF685EED95CFF244 /* animationDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD223D3BC7EAA7A2B2EA45 /* animationDelegates.swift */; };
 		85DD212A388B07ED33707E59 /* searchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2BB2BD40E433740C0E51 /* searchResultsView.swift */; };
 		85DD2167543909B6E24259EA /* emailValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD22DCD70AD4F7485D0CDF /* emailValidation.swift */; };
 		85DD21A292BBF60EF9519721 /* ENSideMenuNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DD2D71C1481CF158D6B22E /* ENSideMenuNavigationController.swift */; };
@@ -160,6 +161,7 @@
 		85DD2201F07EC2EDF4CAD19F /* myChatsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = myChatsView.swift; path = views/myChatsView.swift; sourceTree = "<group>"; };
 		85DD221A5EDDBA6CD05235E0 /* formDataLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = formDataLibrary.swift; sourceTree = "<group>"; };
 		85DD222D009817F36BF19C9D /* dateDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = dateDisplay.swift; path = views/dateDisplay.swift; sourceTree = "<group>"; };
+		85DD223D3BC7EAA7A2B2EA45 /* animationDelegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = animationDelegates.swift; path = protocols/animationDelegates.swift; sourceTree = "<group>"; };
 		85DD228148A69D018E0E6E6D /* transitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = transitionManager.swift; sourceTree = "<group>"; };
 		85DD22C0B0EC0ED29F6251ED /* AFDateHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AFDateHelper.swift; path = AFDateHelper/AFDateHelper.swift; sourceTree = "<group>"; };
 		85DD22D9AC670FFF7A557710 /* View+SnapKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+SnapKit.swift"; sourceTree = "<group>"; };
@@ -368,6 +370,7 @@
 				85DD2CE0C2DE2C126E995A32 /* tabBarController.swift */,
 				85DD24F35095C5DB21147BE2 /* quickBloxDelegate.swift */,
 				2C0F6AA71B6FDF3400F8CA4D /* tutorialController.swift */,
+				85DD223D3BC7EAA7A2B2EA45 /* animationDelegates.swift */,
 			);
 			path = pup;
 			sourceTree = "<group>";
@@ -869,6 +872,7 @@
 				85DD278D837C0977D096AAC0 /* quickBloxDelegate.swift in Sources */,
 				85DD2E404E6B44CBE5EF96FC /* defaultFonts.swift in Sources */,
 				2CEF45361B5E9235000C2DBC /* RAMBounceAnimation.swift in Sources */,
+				85DD2068DF685EED95CFF244 /* animationDelegates.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

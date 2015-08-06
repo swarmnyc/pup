@@ -228,9 +228,24 @@ class MyChatsCell: UICollectionViewCell, UIGestureRecognizerDelegate {
     }
 
     func moveLeft(speed: Double, success: (() -> Void)?) {
+        println("mooooovvviiinng");
+        println(speed);
         UIView.animateWithDuration(speed, animations: {
             var trans = CGAffineTransformMakeTranslation(-UIScreen.mainScreen().bounds.width, 0.0);
-            self.contentView.transform = trans;
+            self.transform = trans;
+        }, completion: {
+            finished in
+            success?();
+
+        });
+    }
+
+    func moveRight(speed: Double, success: (() -> Void)?) {
+        println("mooooovvviiinng");
+        println(speed);
+        UIView.animateWithDuration(speed, animations: {
+            var trans = CGAffineTransformMakeTranslation(0.0, 0.0);
+            self.transform = trans;
         }, completion: {
             finished in
             success?();

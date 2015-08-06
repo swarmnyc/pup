@@ -8,7 +8,7 @@ import UIKit
 import QuartzCore
 
 
-class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDataSource, FABDelegate {
+class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDataSource, FABDelegate, MainScreenAnimationDelegate {
 
     var listView: LobbyListView? //custom view for lobby list
 
@@ -21,6 +21,10 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     lazy var model: LobbyList = LobbyList(parentView: self);  //model
 
     var tutorial: TutorialController?;
+
+    var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+
+
    // var transitionManager = TransitionManager()
 
 
@@ -43,9 +47,15 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
 
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated);
+
+        println("willDisappear!!!!");
+        println(self.navigationController?.viewControllers);
+    }
+
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated);
-        self.bringLobbiesBack();
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -66,7 +76,9 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         currentUser.setPage("Find A Game");
         self.title = "All Games";
 
-
+        var barButton = UIBarButtonItem(customView: activityIndicator);
+        self.navigationItem.leftBarButtonItem = barButton;
+        self.activityIndicator.startAnimating();
 
         let filterImage = UIImage(named: "filter")
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: filterImage, style: UIBarButtonItemStyle.Plain, target: self, action: "openFilter")
@@ -123,12 +135,16 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
     func scrollViewDidScroll(scrollView: UIScrollView!) {
         if (scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.frame.height - 100)) {
-           model.getMoreResults(self.updateData);
+           model.getMoreResults({
+                   self.updateData();
+           });
         }
 
 
 
     }
+
+
 
     func fabTouchDown() {
 
@@ -149,12 +165,18 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
 
 
-
+    //on a filter change/search  //new results
     func loadNewLobbies(search: String, platforms: Array<String>) {
 
 //        println(search)
 //        println(platforms)
-        model.getLobbies(search, platforms: platforms, applyChange: true, success: self.updateData, failure: {
+        model.getLobbies(search, platforms: platforms, applyChange: true, success: {
+
+            self.animateLobbyCellsAway({
+                self.updateData();
+
+            });
+        }, failure: {
             println("failed...")
         })
 
@@ -162,7 +184,7 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
     func updateData() {
         self.pullToRefresh.endRefreshing();
-
+        activityIndicator.stopAnimating();
         model.loadMore = true;
         listView?.table.reloadData()
     }
@@ -215,12 +237,25 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
             }
 
             cell.setUpViews(self.model.gamesOrganized[self.model.gamesKey[indexPath.section]]![indexPath.item])
-            cell.removeOffset();
+            cell.removeOffset(0);
             return cell
 
 
 
     }
+
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        var visibleRowsIndexPath = tableView.indexPathsForVisibleRows()!;
+        var lastIndex = visibleRowsIndexPath[visibleRowsIndexPath.count-1] as! NSIndexPath;
+
+        if (indexPath.row == lastIndex.row) {
+            self.model.removeAnimate();
+            self.activityIndicator.stopAnimating();
+        }
+
+    }
+
+
 
     func tableView(tlableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 
@@ -242,32 +277,33 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     func bringLobbiesBack() {
         var cells = self.listView?.table.visibleCells();
 
-        var speed  = 0.5;
+        var speed  = 1.1;
         for (var i = 0; i<cells!.count; i++) {
             if ((cells![i] as? gameCell) != nil) {
                 var theCell = cells![i] as! gameCell;
-                theCell.removeOffset();
+                theCell.removeOffset(speed - 0.2 * Double(i));
             }
         }
     }
 
-    func animateLobbyCellsAway(lobbyView: SingleLobbyController) {
+    func animateLobbyCellsAway(success: (() -> Void)?) {
         var cells = self.listView?.table.visibleCells();
 
-        var speed  = 0.6;
+        var speed  = 0.45;
         for (var i = 0; i<cells!.count; i++) {
             println(speed);
-            if ((cells![i] as? gameCell) != nil) {
+            if ((cells![i] as? UITableViewCell) != nil) {
                 var theCell = cells![i] as! gameCell;
-                
-                if (i == 0) {
+
+                if (i == cells!.count-1) {
                     theCell.moveLeft(speed, success: {
-                        self.navigationController?.pushViewController(lobbyView, animated: true);
+                        success?();
+                        //self.navigationController?.pushViewController(lobbyView, animated: true);
                     });
                 } else {
                     theCell.moveLeft(speed, success: nil);
                 }
-                speed += 0.1;
+                speed += 0.2;
                 println(theCell);
             }
         }
@@ -279,11 +315,20 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         var selectedCell = tableView.cellForRowAtIndexPath(indexPath) as? gameCell;
         //self.hidesBottomBarWhenPushed = true;
         let lobbyView = SingleLobbyController(info: self.model.gamesOrganized[self.model.gamesKey[indexPath.section]]![indexPath.row])
+        lobbyView.setAnimationDelegate(self as! MainScreenAnimationDelegate);
+//        var timer = NSTimer.scheduledTimerWithTimeInterval(0.02, target: self, selector: Selector("pushLobby:"), userInfo: lobbyView, repeats: false);
 
-//        var timer = NSTimer.scheduledTimerWithTimeInterval(0.098, target: self, selector: Selector("pushLobby:"), userInfo: lobbyView, repeats: false);
 
-       // animateLobbyCellsAway(lobbyView)
-        self.navigationController?.pushViewController(lobbyView, animated: true);
+
+        self.definesPresentationContext = true;
+        self.definesPresentationContext = true;
+        var overlayNav = UINavigationController(rootViewController: lobbyView);
+        overlayNav.modalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
+        dispatch_async(dispatch_get_main_queue()) {
+            self.navigationController?.presentViewController(overlayNav, animated: false, completion: nil);
+
+        };
+        //self.navigationController?.pushViewController(lobbyView, animated: true);
 
 //
         // self.navigationController?.pushViewController(lobbyView, animated: true);
@@ -291,7 +336,13 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
     func pushLobby(timer: NSTimer) {
-        self.navigationController?.pushViewController(timer.userInfo as! SingleLobbyController, animated: true);
+        //self.navigationController?.pushViewController(timer.userInfo as! SingleLobbyController, animated: false);
+//        self.navigationController?.modalPresentationStyle = UIModalPresentationStyle.CurrentContext;
+        self.definesPresentationContext = true;
+        self.definesPresentationContext = true;
+        var overlayNav = UINavigationController(rootViewController: timer.userInfo as! SingleLobbyController);
+        overlayNav.modalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
+        self.navigationController?.presentViewController(overlayNav, animated: false, completion: nil);
         timer.invalidate();
     }
 

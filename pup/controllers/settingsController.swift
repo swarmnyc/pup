@@ -10,7 +10,7 @@ import JLToast
 class SettingsController: UIViewController, UIImagePickerControllerDelegate,UINavigationControllerDelegate {
 
     var settingsView: SettingsView?
-
+    var TOSController: SocialConnector?
 
     required init(coder aDecoder: NSCoder)
     {
@@ -30,6 +30,13 @@ class SettingsController: UIViewController, UIImagePickerControllerDelegate,UINa
         self.view = settingsView
         self.settingsView?.initView(self);
         settingsView?.setDelegates(self)
+        settingsView?.openTOS = openTOS;
+    }
+
+    func openTOS() {
+        TOSController = SocialConnector(viewController: self);
+        TOSController?.showOAuthScreen("http://partyupplayer.com/TOS.php");
+        TOSController?.socialController.title = "Terms of Service"
     }
 
     override func viewDidLoad() {

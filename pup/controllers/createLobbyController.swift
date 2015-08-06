@@ -19,9 +19,13 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
 
     var logInButton: JoinPupButton?
 
+    var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
 
 
-    var dateDisplay: DateDisplayView = DateDisplayView();
+
+
+
+var dateDisplay: DateDisplayView = DateDisplayView();
 
     required init(coder aDecoder: NSCoder)
     {
@@ -73,7 +77,8 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
             logInButton?.setUpView(self.createView.scrollView)
         }
 
-
+        var barButton = UIBarButtonItem(customView: activityIndicator);
+        self.navigationItem.leftBarButtonItem = barButton;
 
     }
 
@@ -301,7 +306,10 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
     //give results to the drop down
     func handOffResults(data: Array<gameData>) {
         println("display results");
+
         searchController?.giveResults(data);
+        self.activityIndicator.stopAnimating();
+
         searchController?.displayResults();
     }
 
@@ -371,6 +379,7 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
         if (searchText == "") {
             searchController?.hideResults();
         } else {
+            self.activityIndicator.startAnimating();
             data.search(searchText, success: handOffResults, failure: {
                 println("failure with search")
             });

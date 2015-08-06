@@ -72,13 +72,14 @@ class MyChatsData {
             var JSONSerializationError: NSError? = nil
             //mutableURLRequest.HTTPBody = urlEnd;
             mutableURLRequest.setValue("Bearer \(currentUser.data.accessToken)", forHTTPHeaderField: "Authorization")
-
+            loadMore = false;
             Alamofire.request(mutableURLRequest).responseJSON {
                 (request, response, JSON, error) in
                 if (error == nil) {
                     println(JSON);
                     self.addLobbies(false, data: JSON as! NSArray)
                     success();
+
                 } else {
                     failure();
                 }
@@ -118,6 +119,8 @@ class MyChatsData {
                 success();
             } else {
                 failure();
+                self.loadMore = true;
+
             }
 
         }
@@ -175,6 +178,7 @@ class MyChatsData {
         if (data.count==0) {
             self.loadMore = false;
         } else {
+            self.loadMore = true;
 
             for (var i = 0; i < data.count; i++) {
                 var lobby = data[i] as! NSDictionary;

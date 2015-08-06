@@ -20,3 +20,5 @@ protocol FABDelegate: class {
 protocol ImageButtonDelegate: class {
     func touched(image: ImageViewButton)
 }
+
+

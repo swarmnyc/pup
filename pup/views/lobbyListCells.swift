@@ -27,6 +27,7 @@ class gameCell: UITableViewCell {
     var platform: UILabel = UILabel()
     var divider = UIView()
     var isNew = true;
+    var justStarted = false;
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -82,9 +83,12 @@ class gameCell: UITableViewCell {
     }
 
 
-    func removeOffset() {
-        var trans = CGAffineTransformMakeTranslation(0.0, 0.0);
-        self.contentView.transform = trans;
+    func removeOffset(delay: Double) {
+        UIView.animateWithDuration(delay, animations: {
+            var trans = CGAffineTransformMakeTranslation(0.0, 0.0);
+            self.contentView.transform = trans;
+        })
+
     }
 
     func setUpConstraints() {
@@ -217,7 +221,20 @@ class gameCell: UITableViewCell {
         self.contentView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).CGColor
         self.contentView.layer.shadowOpacity = 1;
         self.contentView.layer.shadowOffset = CGSizeMake(1.5, 1.5);
-        
+
+        if (data.animateIn) {
+            var trans = CGAffineTransformMakeTranslation(UIScreen.mainScreen().bounds.width, 0.0);
+            self.contentView.transform = trans;
+            println(data.animateIn);
+            UIView.animateWithDuration(0.45 + (Double(data.index) * 0.2), animations: {
+                trans = CGAffineTransformMakeTranslation(0.0, 0.0);
+                self.contentView.transform = trans;
+            });
+
+        } else {
+            var trans = CGAffineTransformMakeTranslation(0.0, 0.0);
+            self.contentView.transform = trans;
+        }
         
 //        self.contentView.layer.borderWidth = 0.5;
 //        self.contentView.layer.borderColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).CGColor;

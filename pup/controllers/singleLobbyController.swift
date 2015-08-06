@@ -35,9 +35,14 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
     var viewWasPopped = false;
 
 
+    var animationDelegate: MainScreenAnimationDelegate?
+
     convenience init(info: LobbyData) {
         //to do add in right side members drawer nav button
         self.init();
+
+//       self.modalPresentationStyle = UIModalPresentationStyle.CurrentContext;
+        self.modalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
         self.hidesBottomBarWhenPushed = true;
 
        
@@ -53,9 +58,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         data.data.reloadData = self.reloadData;
 
         descCell.setUpCell(data)
-        imageCover = descCell.getTopBox();
-        println(imageCover.subviews)
-        println("image cover")
+
         if (currentUser.loggedIn() == false) {
             self.joinPupButton = JoinPupButton(aboveTabBar: false)
             self.joinPupButton?.onSuccessJoin = self.joinLobby
@@ -63,37 +66,55 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
         }
 
-
     }
 
 
 
+    func setAnimationDelegate(delegate: MainScreenAnimationDelegate) {
+        self.animationDelegate = delegate;
+    }
 
     override func loadView() {
         self.lobbyView = SingleLobbyView();
-        lobbyView?.sendTheMessage = self.sendMessage;
-        lobbyView?.setUpDelegates(self)
+
 
         self.view = self.lobbyView;
-
+        self.lobbyView?.createTable();
         self.lobbyView?.addTable(self);
-        scrollViewDidScroll(self.lobbyView?.table!)
+        //scrollViewDidScroll(self.lobbyView?.table!)
 
         membersList.setNavigationBar(self);
-        membersList.setUpSideBar();
-        membersList.populateUserList(data.data.users, owner: data.data.owner)
+
        // self.lobbyView?.addDrawer(membersList.membersView);
         //makes it so that inside of a lobby their is no title on the back button
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
+
+        self.lobbyView?.lobbyImgBack.alpha = 0;
+        self.lobbyView?.lobbyImg.alpha = 0;
+
+        var transform = CGAffineTransformMakeTranslation(UIScreen.mainScreen().bounds.width, 0);
+        self.lobbyView?.transform = transform;
+
+        UIView.animateWithDuration(1.1, animations: {
+            transform = CGAffineTransformMakeTranslation(0,0);
+            self.lobbyView?.transform = transform;
+            transform = CGAffineTransformMakeTranslation(-UIScreen.mainScreen().bounds.width,0);
+
+            nav!.tabBar.transform = transform;
+
+        })
+
+        self.animationDelegate?.animateLobbyCellsAway(nil);
 
 
-        data.clearInputText = self.lobbyView?.clearText;
 
 
     }
 
 
     func showNavBar() {
+
+        self.lobbyView?.lobbyImgBack.alpha = 0;
+        self.lobbyView?.lobbyImg.alpha = 0;
 
         println("show Nav Bar")
         UIView.animateWithDuration(0.3, animations: {
@@ -109,6 +130,8 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
         println("hide Nav Bar")
 
+        self.lobbyView?.lobbyImgBack.alpha = 1;
+        self.lobbyView?.lobbyImg.alpha = 1;
 
         UIView.animateWithDuration(0.3, animations: {
             self.navigationController?.navigationBar.translucent = true
@@ -124,12 +147,12 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
     //scrolling table view
     func scrollViewDidScroll(scrollView: UIScrollView!) {
-        if (justStarted) {
-            if (scrollCount >= 2) {
-                justStarted = false;
-            }
-            scrollCount++;
-        }
+//        if (justStarted) {
+//            if (scrollCount >= 2) {
+//                justStarted = false;
+//            }
+//            scrollCount++;
+//        }
 
         if (scrollView.contentOffset.y > CGFloat(UIConstants.lobbyImageHeight) + CGFloat(140.0) && self.data.data.isMember) {
             self.canLoadMore = true;
@@ -169,9 +192,11 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         }
 
 
-        if (scrollView.contentOffset.y > CGFloat(UIConstants.lobbyImageHeight * 0.675)) {
-           // self.lobbyView?.setTitle();
 
+
+
+        if (scrollView.contentOffset.y > CGFloat(UIConstants.lobbyImageHeight * 0.678)) {
+           // self.lobbyView?.setTitle();
             if (self.navigationController?.navigationBar.translucent == true && navBarVisible == true) {
                 navBarVisible = false
                 self.title = data.data.name;
@@ -207,26 +232,49 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated);
-        if (self.lobbyView?.table?.contentOffset.y < CGFloat(UIConstants.lobbyImageHeight * 0.675)) {
+        if (self.lobbyView?.table?.contentOffset.y < CGFloat(UIConstants.lobbyImageHeight * 0.693)) {
+            navBarVisible = true
+            self.title = "";
             hideNavBar();
 
+        } else {
+            navBarVisible = false
+            self.title = data.data.name;
+            showNavBar();
         }
+        if (self.data.data.isMember) {
+            self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
+        }
+        data.clearInputText = self.lobbyView?.clearText;
+
+        membersList.setUpSideBar();
+        membersList.populateUserList(data.data.users, owner: data.data.owner)
+        lobbyView?.sendTheMessage = self.sendMessage;
+        lobbyView?.setUpDelegates(self)
+        self.data.data.setAllRead()
+
+
+
+        let settingsIcon = UIImage(named: "settingsIcon")
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: settingsIcon, style: UIBarButtonItemStyle.Plain, target: self, action: "toggleMembersDrawer")
+
+
+        //"〈"
+//CUSTOM BACK BUTTON UNCOMMENT TO APPLUY ANIMATION ON BACK
+        var backButton = UIBarButtonItem(title: "‹", style: UIBarButtonItemStyle.Bordered, target: self, action: "backButton");
+        backButton.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(17)], forState: .Normal);
+        self.navigationItem.leftBarButtonItem=backButton;
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         nav!.tabBar.translucent = true;
 
-        view.backgroundColor = UIColor.whiteColor()
         println("view did load single lobby")
-        println(self.data.recievedMessages)
 
         self.lobbyView?.setUpViews(self.data)
 
-       //lobbyView?.setHeaderCover(self.imageCover);
 
-        let settingsIcon = UIImage(named: "settingsIcon")
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: settingsIcon, style: UIBarButtonItemStyle.Plain, target: self, action: "toggleMembersDrawer")
 
         UIApplication.sharedApplication().statusBarStyle = .LightContent
 
@@ -234,7 +282,6 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
 
         println(data.data.messages);
-        self.lobbyView?.reloadTable();
 
         if (currentUser.loggedIn() == false) {
             self.joinPupButton?.setUpView(self.lobbyView!)
@@ -343,13 +390,28 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
 
 
+
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated);
        // nav!.tabBar.alpha = 0;
 
+            if (data.data.isMember == false) {
+                self.lobbyView?.lobbyImgBack.alpha = 1;
+                self.lobbyView?.lobbyImg.alpha = 1;
+            }
 
-        self.data.data.setAllRead()
+
+        self.lobbyView?.reloadTable();
+
+        self.navigationController?.navigationBar.translucent = true
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: UIBarMetrics.Default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
+
+
     }
+
+
 
 
 
@@ -385,6 +447,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         var vcs = navigationController?.viewControllers as! NSArray;
         if (vcs.indexOfObject(self) == NSNotFound) {
             println("popped view");
+
            self.viewWasPopped = true;
 
         }
@@ -392,6 +455,67 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
     }
 
+    func backButton() {
+        animateCellsRight({})
+        self.viewWasPopped = true;
+        popLobby();
+
+    }
+
+
+
+    func popLobby() {
+//       self.navigationController?.popViewControllerAnimated(true);
+    UIView.animateWithDuration(0.68, animations: {
+        var transform = CGAffineTransformMakeTranslation(UIScreen.mainScreen().bounds.width, 0);
+        self.lobbyView?.transform = transform;
+        transform = CGAffineTransformMakeTranslation(0,0);
+        nav!.tabBar.transform = transform;
+
+    }, completion: {
+        finished in
+        self.navigationController?.dismissViewControllerAnimated(false, completion: nil);
+    })
+
+        var presentingController: LobbyListController? = (self.navigationController!.presentingViewController as? UINavigationController)!.topViewController as? LobbyListController;
+
+        if (presentingController != nil) {
+            presentingController?.bringLobbiesBack();
+        } else {
+            var presentController: MyChatsController? = (self.navigationController!.presentingViewController as! UINavigationController).topViewController as? MyChatsController;
+            presentController?.bringLobbiesBack();
+
+        }
+
+
+
+
+    }
+
+
+    func animateCellsRight(success: (() -> Void)) {
+        var cells = self.lobbyView?.table?.visibleCells();
+
+        var speed  = 1.3;
+        for (var i = 0; i<cells!.count; i++) {
+            println(speed);
+            if ((cells![i] as? MessageCell) != nil) {
+                var theCell = cells![i] as! MessageCell;
+
+                if (i == cells!.count-1) {
+                    theCell.moveRight(speed, success: {
+                        success();
+                        //self.navigationController?.pushViewController(lobbyView, animated: true);
+                    });
+                } else {
+                    theCell.moveRight(speed, success: nil);
+                }
+                speed -= 0.2;
+                println(theCell);
+            }
+        }
+
+    }
 
 
 
@@ -399,7 +523,6 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
     func recievedMessages() {
         println("got em!")
-
 
             self.reloadData();
             //self.lobbyView?.clearText();
@@ -532,6 +655,13 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         
         cell.separatorInset = UIEdgeInsetsZero;
         cell.layoutMargins = UIEdgeInsetsZero;
+
+        var visibleRowsIndexPath = tableView.indexPathsForVisibleRows()!;
+        var lastIndex = visibleRowsIndexPath[visibleRowsIndexPath.count-1] as! NSIndexPath;
+
+        if (indexPath.row == lastIndex.row) {
+            self.justStarted = false;
+        }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -569,7 +699,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
                 if (self.justStarted) {
                     println(0.7 + (Double(self.messageCount) * Double(0.1)))
-                    cell.setTheAnimationDelay(0.4 + (Double(self.messageCount) * Double(0.11)));
+                    cell.setTheAnimationDelay(0.45 + (Double(self.messageCount) * Double(0.2)));
                     self.messageCount++;
                 } else {
                     cell.setTheAnimationDelay(0.0)
@@ -591,6 +721,9 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
 
     }
+
+
+
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 2;

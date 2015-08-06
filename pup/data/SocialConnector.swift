@@ -50,6 +50,8 @@ class SocialViewController: UIViewController {
     }
 
 
+
+
     func setDelegate(delegate: UIWebViewDelegate) {
         OAuthWebView.delegate = delegate;
     }
@@ -95,6 +97,9 @@ class SocialViewController: UIViewController {
     }
 
 }
+
+
+
 
 class SocialConnector: NSObject, UIWebViewDelegate, UIScrollViewDelegate {
 
@@ -154,19 +159,7 @@ func cancelTheAuthentication() {
         self.socialController.didHitBackButton = false;
         parentViewController?.navigationController?.popViewControllerAnimated(true)
 
-//        UIView.animateWithDuration(0.4, animations: {
-//            var trans = CGAffineTransformMakeTranslation(0, UIScreen.mainScreen().bounds.size.height)
-//            self.OAuthWebView.transform = trans;
-//
-//            var trans2 = CGAffineTransformMakeTranslation(0,-80);
-//            self.progressBar.transform = trans2;
-//        }, completion: {
-//            (completed) -> Void in
-//            if (removeAfter) {
-//                self.OAuthWebView.removeFromSuperview();
-//                self.progressBar.removeFromSuperview();
-//            }
-//        });
+
     }
 
     func setTypeAndAuthenticate(service: String) {

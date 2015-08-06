@@ -9,6 +9,9 @@ import Haneke
 
 
 
+
+
+
 class MessageCell: UITableViewCell {
 
 
@@ -50,6 +53,18 @@ class MessageCell: UITableViewCell {
         self.delay = delay;
     }
 
+
+    func moveRight(speed: Double, success: (() -> Void)?) {
+        UIView.animateWithDuration(speed, animations: {
+            var trans = CGAffineTransformMakeTranslation(UIScreen.mainScreen().bounds.width, 0.0);
+            self.transform = trans;
+        }, completion: {
+            finished in
+            success?();
+
+        });
+    }
+
     func setUpCell(item: Message) {
 
 
@@ -67,7 +82,7 @@ class MessageCell: UITableViewCell {
 
         }
 
-
+        self.backgroundColor = UIColor.clearColor();
         whiteBackground.backgroundColor = UIColor.whiteColor();
 
 
@@ -150,10 +165,10 @@ class MessageCell: UITableViewCell {
 
         whiteBackground.snp_remakeConstraints {
             (make) -> Void in
-            make.right.equalTo(self.snp_left).offset(0);
+            make.right.equalTo(self).offset(0);
             make.top.equalTo(self);
             make.bottom.equalTo(self);
-            make.width.equalTo(UIScreen.mainScreen().bounds.width);
+            make.left.equalTo(self);
         }
 
         if (isSystemMessage == false) {

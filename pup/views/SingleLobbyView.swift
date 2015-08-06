@@ -21,6 +21,7 @@ class SingleLobbyTopCell: UITableViewCell {
     var gradientCopy: CAGradientLayer = CAGradientLayer()
 
     var tags: UILabel = UILabel();
+    var dateAndTime: UITextView = UITextView()
     var desc: UITextView = UITextView()
     var divider: UIView = UIView()
     var isMember = false;
@@ -48,7 +49,7 @@ class SingleLobbyTopCell: UITableViewCell {
 
 
         self.userInteractionEnabled = false;
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clearColor();
 
 
         lobbyTitle.text = "\(data.data.owner.name)'s \n" +
@@ -88,12 +89,21 @@ class SingleLobbyTopCell: UITableViewCell {
 
         desc.text = data.data.description
         desc.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
-        desc.editable = false
         desc.userInteractionEnabled = false;
         desc.scrollEnabled = false
         desc.textContainerInset = UIEdgeInsetsZero
         desc.textContainer.lineFragmentPadding = 0
         desc.backgroundColor = UIColor.whiteColor()
+
+
+        dateAndTime.text = data.data.platform + ": " + data.data.timeInHuman;
+        dateAndTime.textColor = UIColor(rgba: colors.orange)
+        dateAndTime.font = UIFont(name: "AvenirNext-Regular", size: 10.0)
+        dateAndTime.userInteractionEnabled = false;
+        dateAndTime.scrollEnabled = false
+        dateAndTime.textAlignment = .Right;
+        dateAndTime.textContainerInset = UIEdgeInsetsZero
+        dateAndTime.textContainer.lineFragmentPadding = 0
 
         descBox.backgroundColor = UIColor.whiteColor();
 
@@ -113,22 +123,19 @@ class SingleLobbyTopCell: UITableViewCell {
         topContentBox.addSubview(gradientBox)
         topContentBox.addSubview(lobbyTitle)
 
-        gradientBoxCopy.layer.insertSublayer(gradientCopy, atIndex: 0)
-        topBoxCopy.addSubview(gradientBoxCopy)
-        topBoxCopy.addSubview(lobbyTitleCopy)
+
 
 
         descBox.addSubview(tags)
         descBox.addSubview(desc)
+        descBox.addSubview(dateAndTime)
         descBox.addSubview(divider)
 
         addSubview(topContentBox)
         addSubview(descBox)
     }
 
-    func getTopBox() -> UIView {
-        return topBoxCopy;
-    }
+
 
     func setUpConstraints() {
 
@@ -149,12 +156,7 @@ class SingleLobbyTopCell: UITableViewCell {
             make.height.greaterThanOrEqualTo(UIConstants.halfLobbyImage / 2.0)
         }
 
-        lobbyTitleCopy.snp_remakeConstraints { (make) -> Void in
-            make.bottom.equalTo(self.topBoxCopy).offset(0)
-            make.left.equalTo(self.topBoxCopy).offset(UIConstants.horizontalPadding)
-            make.right.equalTo(self.topBoxCopy).offset(-UIConstants.horizontalPadding)
-            make.height.greaterThanOrEqualTo(UIConstants.halfLobbyImage / 2.0)
-        }
+
 
         gradientBox.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.topContentBox).offset(0)
@@ -165,14 +167,7 @@ class SingleLobbyTopCell: UITableViewCell {
 
         }
 
-        gradientBoxCopy.snp_remakeConstraints { (make) -> Void in
-            make.left.equalTo(self.topBoxCopy).offset(0)
-            make.right.equalTo(self.topBoxCopy).offset(0)
-            make.top.equalTo(self.topBoxCopy).offset(0)
-            make.bottom.equalTo(self.topBoxCopy).offset(0)
 
-
-        }
 
 
         gradient.frame = CGRect(x: 0,y: 0,width: 800,height: UIConstants.lobbyImageHeight) //set an initial value that is wider than needed to stop gradient from animating
@@ -189,6 +184,13 @@ class SingleLobbyTopCell: UITableViewCell {
 
         tags.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.descBox).offset(UIConstants.horizontalPadding)
+            make.top.equalTo(self.descBox).offset(UIConstants.horizontalPadding)
+            make.right.equalTo(self.dateAndTime.snp_left).offset(-UIConstants.horizontalPadding / 4)
+            make.height.equalTo(16)
+        }
+
+        dateAndTime.snp_remakeConstraints { (make) -> Void in
+            make.left.equalTo(self.tags.snp_right).offset(UIConstants.horizontalPadding / 4)
             make.top.equalTo(self.descBox).offset(UIConstants.horizontalPadding)
             make.right.equalTo(self.descBox).offset(-UIConstants.horizontalPadding)
             make.height.equalTo(16)
@@ -229,7 +231,7 @@ class SingleLobbyView: UIView {
     var lobbyImg: UIImageView = UIImageView();
     var lobbyImgBack: UIImageView = UIImageView();
 
-    var lobbyImgCopy: UIImageView = UIImageView();
+
     var gradient: CAGradientLayer = CAGradientLayer()
     var gradientBox = UIView();
 
@@ -246,7 +248,6 @@ class SingleLobbyView: UIView {
         println(frame)
         println(frame.width)
         println(frame.height)
-        backgroundColor=UIColor.blackColor()
 
         clipsToBounds = true;
 
@@ -271,12 +272,10 @@ class SingleLobbyView: UIView {
             gradient.colors = [UIColor.clearColor().CGColor, UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).CGColor]
             gradient.startPoint = CGPoint(x: 0.5,y: 0.5)
 
-            self.imageCover!.addSubview(self.lobbyImgCopy) //add image and gradient/ bring the to the back
 
             self.gradientBox.layer.insertSublayer(gradient, atIndex: 0)
             self.imageCover!.addSubview(self.gradientBox)
             self.imageCover!.sendSubviewToBack(self.gradientBox)
-            self.imageCover!.sendSubviewToBack(self.lobbyImgCopy)
 
             self.addSubview(self.imageCover!)
             self.imageCover!.clipsToBounds = true;
@@ -297,14 +296,7 @@ class SingleLobbyView: UIView {
                 make.bottom.equalTo(UIConstants.lobbyImageHeight)
             }
 
-            self.lobbyImgCopy.snp_remakeConstraints {
-                (make) -> Void in
-                make.top.equalTo(self)
-                make.left.equalTo(self).offset(0)
-                make.right.equalTo(self).offset(0)
-                make.height.equalTo(UIConstants.lobbyImageHeight * 1.1)
 
-            }
             println("preview image created")
             self.bringSubviewToFront(self.imageCover!)
         }
@@ -323,15 +315,22 @@ class SingleLobbyView: UIView {
     }
 
 
-    func addTable(delegate: UITableViewDelegate) {
+    func createTable() {
         table = UITableView();
-        table?.backgroundColor = UIColor.clearColor()
-        table?.delegate = delegate;
-        table?.dataSource = delegate as! UITableViewDataSource
         table?.registerClass(MessageCell.self, forCellReuseIdentifier: "message")
-
         insertTable();
         setUpTableConstraints();
+        reloadTable();
+
+    }
+
+    func addTable(delegate: UITableViewDelegate) {
+
+        table?.backgroundColor = UIColor.clearColor();
+        table?.delegate = delegate;
+        table?.dataSource = delegate as! UITableViewDataSource
+
+
         newMessage.delegate = delegate as! UITextViewDelegate;
         reloadTable();
 
@@ -504,15 +503,7 @@ class SingleLobbyView: UIView {
             UIView.animateWithDuration(1.0, animations: {
                 var trans = CGAffineTransformMakeTranslation(0,yChange)
                 self.imageCover!.transform = trans;
-                var trans2 = CGAffineTransformMakeTranslation(0,-1 * yChange/2)
-                self.lobbyImgCopy.transform = trans2;
-            }, completion: {
-                (completed) -> Void in
-                UIView.animateWithDuration(1.0, animations: {
-                    self.imageCover!.removeFromSuperview();
 
-                });
-                println("remove cover image")
             })
 
         }
@@ -607,12 +598,11 @@ class SingleLobbyView: UIView {
 
 
         self.lobbyImg.frame.size = CGSizeMake(460, 500); //real image
-        self.lobbyImgCopy.frame.size = CGSizeMake(460, 500); //fake cover iamge
 
         self.lobbyImgBack.contentMode = UIViewContentMode.ScaleAspectFill; //real image
         self.lobbyImgBack.clipsToBounds = true;
         self.lobbyImgBack.image = getImageWithColor(UIColor(rgba: colorFromSystem(data.data.platform)), CGSizeMake(460,500))
-
+        self.lobbyImgBack.alpha = 0;
 
         self.lobbyImg.frame.size = CGSizeMake(460, 500);
 
@@ -621,38 +611,16 @@ class SingleLobbyView: UIView {
         self.lobbyImg.alpha = 0;
 
 
-        self.lobbyImgCopy.frame.size = CGSizeMake(460, 500);
-
-        self.lobbyImgCopy.contentMode = UIViewContentMode.ScaleAspectFill;
-        self.lobbyImgCopy.clipsToBounds = true;
-        self.lobbyImgCopy.alpha = 0.4;
-
 
         self.lobbyImg.hnk_setImageFromURL(url!, placeholder:nil, format: nil, failure: nil, success: {
                 (image) -> Void in
                 println("fading image");
                 self.lobbyImg.image = image;
 
-
-                UIView.animateWithDuration(0.6, animations: {
-                    () -> Void in
-                    self.lobbyImg.alpha = 1;
-                    self.lobbyImgBack.alpha = 0;
-                });
-
             })
 
 
-        self.lobbyImgCopy.hnk_setImageFromURL(url!, placeholder:nil, format: nil, failure: nil, success: { //fake cover image
-                (image) -> Void in
-                println("fading image");
-                self.lobbyImgCopy.image = image;
-                UIView.animateWithDuration(0.3, animations: {
-                    () -> Void in
-                    self.lobbyImgCopy.alpha = 1;
-                });
 
-            })
 
 
 
@@ -664,6 +632,8 @@ class SingleLobbyView: UIView {
             joinLobbyButton.backgroundColor = UIColor(rgba: colors.tealMain);
         }
 
+//        self.backgroundColor = UIColor(rgba: colors.lightGray);
+        self.backgroundColor = UIColor.clearColor();
 
         newMessageBackground.backgroundColor = UIColor.whiteColor();
 
@@ -800,7 +770,7 @@ func clearText() {
                 make.left.equalTo(self).offset(0)
                 make.right.equalTo(self).offset(0)
                 make.bottom.equalTo(self).offset(0)
-                make.height.equalTo(58)
+                make.height.equalTo(62)
 
             }
         }

@@ -23,6 +23,9 @@ class SettingsView: UIView {
 
     var parentViewController: UIViewController?
 
+    var TOSLink: UIButton = UIButton();
+    var openTOS: (() -> Void)?;
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -79,10 +82,8 @@ class SettingsView: UIView {
             self.socialButtons.append(SocialSharingSwitch())
             self.socialButtons.append(SocialSharingSwitch())
 
-
-
-                self.setUpView();
-                self.setUpConstraints();
+            self.setUpView();
+            self.setUpConstraints();
 
             self.socialButtons[0].setUpController(parentController)
             self.socialButtons[0].setUpSwitch(SocialConnect.Facebook)
@@ -96,8 +97,18 @@ class SettingsView: UIView {
             self.socialButtons[3].setUpController(parentController)
             self.socialButtons[3].setUpSwitch(SocialConnect.Reddit)
 
+            TOSLink.setTitle("TOS Document", forState: .Normal);
+            TOSLink.setTitleColor(UIColor.blackColor(), forState: .Normal);
+            TOSLink.addTarget(self, action: "viewTOS", forControlEvents: UIControlEvents.TouchUpInside);
+            TOSLink.titleLabel!.font = UIFont(name: "AvenirNext-Medium", size: 16.0);
+            TOSLink.titleLabel!.textAlignment = .Left;
+            TOSLink.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left;
 
+    }
 
+    func viewTOS() {
+        println("open TOS");
+        self.openTOS?();
     }
 
 
@@ -107,16 +118,7 @@ class SettingsView: UIView {
         println(url)
         println("   !!!!!! it should be working")
         self.profilePicImg.image = UIImage(data: NSData(contentsOfURL: url!)!);
-        self.profilePicImg.alpha = 1;
-//        (hnk_setImageFromURL(url!, placeholder: nil, format: nil, failure: nil, success: {
-//            (image) -> Void in
-//            self.profilePicImg.image = image;
-//            UIView.animateWithDuration(0.3, animations: {
-//                () -> Void in
-//                self.profilePicImg.alpha = 1;
-//            });
-//
-//        })
+
     }
 
 
@@ -172,6 +174,7 @@ class SettingsView: UIView {
             self.containerView.addSubview(socialButtons[1])
             self.containerView.addSubview(socialButtons[2])
             self.containerView.addSubview(socialButtons[3])
+            self.containerView.addSubview(TOSLink)
 
         self.containerView.addSubview(logout)
         self.scrollView.addSubview(containerView)
@@ -215,13 +218,13 @@ class SettingsView: UIView {
                 make.top.equalTo(self.containerView).offset(UIScreen.mainScreen().bounds.height - 58 - self.parentViewController!.navigationController!.navigationBar.bounds.height * 3)
                 make.left.equalTo(self.containerView).offset(0)
                 make.right.equalTo(self.containerView).offset(0)
-                make.height.equalTo(80)
+                make.height.equalTo(68)
             }
 
 
             socialButtons[0].snp_makeConstraints {
                 (make) -> Void in
-                make.top.equalTo(self.profileView.snp_bottom).offset(UIConstants.verticalPadding)
+                make.top.equalTo(self.profileView.snp_bottom).offset(-UIConstants.verticalPadding * 1.5)
                 make.left.equalTo(self.containerView)
                 make.right.equalTo(self.containerView)
                 make.height.equalTo(35)
@@ -246,6 +249,14 @@ class SettingsView: UIView {
                 make.left.equalTo(self.containerView)
                 make.right.equalTo(self.containerView)
                 make.height.equalTo(35)
+            }
+
+            TOSLink.snp_makeConstraints {
+                (make) -> Void in
+                make.top.equalTo(self.socialButtons[3].snp_bottom).offset(UIConstants.verticalPadding * 2)
+                make.left.equalTo(self.containerView).offset(UIConstants.horizontalPadding);
+                make.width.greaterThanOrEqualTo(130)
+                make.height.equalTo(60)
             }
 
             profileView.snp_makeConstraints {

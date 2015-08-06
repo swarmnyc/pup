@@ -7,7 +7,7 @@ import Foundation
 import UIKit
 import JLToast
 
-class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, MainScreenAnimationDelegate {
 
     var myChatsView: MyChatsView?
     var data = MyChatsData();
@@ -120,7 +120,10 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
             self.myChatsView?.chatsCollection?.reloadData();
             self.myChatsView?.chatsCollection!.performBatchUpdates({
                 self.myChatsView?.chatsCollection!.reloadSections(NSIndexSet(index: 0));
+
             }, completion: nil);
+            self.pullToRefresh.endRefreshing();
+
             //self.pullToRefresh.endRefreshing();
         }, failure: {
             Error(alertTitle: "Couldn't Refresh The List", alertText: "Sorry about that...");
@@ -210,11 +213,16 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
             if (selectedCell!.movedLeft == false) {
                 self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
                 let lobbyView = SingleLobbyController(info: self.data.lobbies[indexPath.row])
+                lobbyView.setAnimationDelegate(self as MainScreenAnimationDelegate)
+//              var timer = NSTimer.scheduledTimerWithTimeInterval(0.098, target: self, selector: Selector("pushLobby:"), userInfo: lobbyView, repeats: false);
 
-                //var timer = NSTimer.scheduledTimerWithTimeInterval(0.077, target: self, selector: Selector("pushLobby:"), userInfo: lobbyView, repeats: false);
-                self.navigationController?.pushViewController(lobbyView, animated: true);
 
-              //  animateLobbyCellsAway()
+                self.definesPresentationContext = true;
+                var overlayNav = UINavigationController(rootViewController: lobbyView);
+                overlayNav.modalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
+                self.navigationController?.presentViewController(overlayNav, animated: false, completion: nil);
+
+               // animateLobbyCellsAway(nil)
 
 
             }
@@ -224,13 +232,14 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
 
 
 
-    func animateLobbyCellsAway() {
-        var cells = self.myChatsView?.chatsCollection?.visibleCells();
-
-        var speed  = 0.5;
-        for (var i = 0; i<cells!.count; i++) {
-            if ((cells![i] as? MyChatsCell) != nil) {
-                var theCell = cells![i] as! MyChatsCell;
+    func animateLobbyCellsAway(success: (() -> Void)?) {
+        var cells = self.myChatsView!.chatsCollection!.indexPathsForVisibleItems() as! [NSIndexPath];
+        cells = cells.sorted {$0.row < $1.row};
+        var collection = self.myChatsView!.chatsCollection!;
+        var speed  = 0.45;
+        for (var i = 0; i<cells.count; i++) {
+            if ((collection.cellForItemAtIndexPath(cells[i] as! NSIndexPath) as? MyChatsCell) != nil) {
+                var theCell = collection.cellForItemAtIndexPath(cells[i] as! NSIndexPath) as! MyChatsCell;
 
                 theCell.moveLeft(speed, success: nil);
 
@@ -241,10 +250,27 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
 
     }
 
+    func bringLobbiesBack() {
+        var cells = self.myChatsView!.chatsCollection!.indexPathsForVisibleItems() as! [NSIndexPath];
+        cells = cells.sorted {$0.row < $1.row};
+        var collection = self.myChatsView!.chatsCollection!;
+        var speed  = 1.2;
+        for (var i = 0; i<cells.count; i++) {
+            if ((collection.cellForItemAtIndexPath(cells[i] as! NSIndexPath) as? MyChatsCell) != nil) {
+                var theCell = collection.cellForItemAtIndexPath(cells[i] as! NSIndexPath) as! MyChatsCell;
+
+                theCell.moveRight(speed, success: nil);
+
+                speed -= 0.2;
+                println(theCell);
+            }
+        }
+    }
+
 
     func pushLobby(timer: NSTimer) {
         self.navigationController?.pushViewController(timer.userInfo as! SingleLobbyController, animated: true);
-        timer.invalidate();
+
     }
 
 
