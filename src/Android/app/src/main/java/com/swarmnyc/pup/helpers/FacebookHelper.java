@@ -40,10 +40,10 @@ public class FacebookHelper
 							at.getToken(),
 							null,
 							at.getExpires(),
-							new ServiceCallback()
+							new ServiceCallback<String>()
 							{
 								@Override
-								public void success( final Object value )
+								public void success( final String value )
 								{
 									User.addSocialMedium( Consts.KEY_FACEBOOK );
 

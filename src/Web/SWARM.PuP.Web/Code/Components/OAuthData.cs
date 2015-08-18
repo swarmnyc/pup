@@ -17,7 +17,6 @@ namespace SWARM.PuP.Web
             CallBackUrl = "/OAuth/TumblrCallback"
         };
 
-
         public static OAuthData Twitter = new OAuthData()
         {
             Type = SocialMediumType.Twitter,

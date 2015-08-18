@@ -6,7 +6,7 @@ import retrofit.client.Response;
 
 public class EmptyRestApiCallback extends RestApiCallback<String> {
 
-    public EmptyRestApiCallback(ServiceCallback callback) {
+    public EmptyRestApiCallback(ServiceCallback<String> callback) {
         super(callback);
     }
 

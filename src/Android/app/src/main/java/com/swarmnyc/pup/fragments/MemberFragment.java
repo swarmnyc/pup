@@ -67,10 +67,10 @@ public class MemberFragment extends Fragment
 	public void leaveLobby()
 	{
 		m_lobbyService.leave(
-			m_lobby.getId(), new ServiceCallback()
+			m_lobby.getId(), new ServiceCallback<String>()
 			{
 				@Override
-				public void success( final Object value )
+				public void success( final String value )
 				{
 					//showUndo();
 					m_lobby.getUser( User.current.getId() ).setIsLeave( true );

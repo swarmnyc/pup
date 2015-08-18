@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.TempFragmentDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -20,7 +19,7 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.components.Utility;
 
-public class OAuthFragment extends TempFragmentDialog
+public class OAuthFragment extends DialogFragment
 {
 	@Bind( R.id.webview )
 	WebView m_webview;

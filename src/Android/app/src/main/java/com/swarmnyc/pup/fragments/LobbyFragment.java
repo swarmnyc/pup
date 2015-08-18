@@ -347,9 +347,9 @@ public class LobbyFragment extends BaseFragment {
             } else {
                 DialogHelper.showProgressDialog(getActivity(), R.string.message_processing);
                 m_lobbyService.join(
-                        m_lobby.getId(), new ServiceCallback() {
+                        m_lobby.getId(), new ServiceCallback<String>() {
                             @Override
-                            public void success(final Object value) {
+                            public void success(final String value) {
                                 addUserIntoLobby(User.current);
                                 EventBus.getBus().post(new LobbyUserChangeEvent());
                                 initChatRoom();

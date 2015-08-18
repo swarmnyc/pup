@@ -193,10 +193,10 @@ public class SettingsFragment extends BaseFragment
 		else
 		{
 			m_userService.deleteMedium(
-				Consts.KEY_FACEBOOK, new ServiceCallback()
+				Consts.KEY_FACEBOOK, new ServiceCallback<String>()
 				{
 					@Override
-					public void success( final Object value )
+					public void success( final String value )
 					{
 						User.removeSocialMedium(Consts.KEY_FACEBOOK);
 						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
@@ -232,10 +232,10 @@ public class SettingsFragment extends BaseFragment
 		else
 		{
 			m_userService.deleteMedium(
-				Consts.KEY_TWITTER, new ServiceCallback()
+				Consts.KEY_TWITTER, new ServiceCallback<String>()
 				{
 					@Override
-					public void success( final Object value )
+					public void success( final String value )
 					{
 						User.removeSocialMedium(Consts.KEY_TWITTER);
 						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
@@ -271,10 +271,10 @@ public class SettingsFragment extends BaseFragment
 		else
 		{
 			m_userService.deleteMedium(
-				Consts.KEY_TUMBLR, new ServiceCallback()
+				Consts.KEY_TUMBLR, new ServiceCallback<String>()
 				{
 					@Override
-					public void success( final Object value )
+					public void success( final String value )
 					{
 						User.removeSocialMedium(Consts.KEY_TUMBLR);
 						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
@@ -310,10 +310,10 @@ public class SettingsFragment extends BaseFragment
 		else
 		{
 			m_userService.deleteMedium(
-				Consts.KEY_REDDIT, new ServiceCallback()
+				Consts.KEY_REDDIT, new ServiceCallback<String>()
 				{
 					@Override
-					public void success( final Object value )
+					public void success( final String value )
 					{
 						User.removeSocialMedium(Consts.KEY_REDDIT);
 						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();

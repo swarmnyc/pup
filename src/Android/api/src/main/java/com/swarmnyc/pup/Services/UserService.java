@@ -17,9 +17,9 @@ public interface UserService
 
     void updatePortrait(String file , ServiceCallback<String> callback );
 
-    void addMedium(String type, String userId, String token, String secret,Date expiredAt, ServiceCallback callback );
+    void addMedium(String type, String userId, String token, String secret,Date expiredAt, ServiceCallback<String> callback );
 
     void deleteMedium(String type,
-        ServiceCallback callback
+        ServiceCallback<String> callback
     );
 }
