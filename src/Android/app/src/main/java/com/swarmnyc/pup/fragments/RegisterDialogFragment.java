@@ -36,12 +36,7 @@ public class RegisterDialogFragment extends DialogFragment {
     @Bind(R.id.img_portrait)
     ImageView m_portrait;
     Uri m_portraitUri;
-    private boolean goHome = true;
     private AlertDialog m_dialog;
-
-    public void setGoHomeAfterLogin(boolean goHome) {
-        this.goHome = goHome;
-    }
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
@@ -104,7 +99,7 @@ public class RegisterDialogFragment extends DialogFragment {
                     public void success(final CurrentUserInfo value) {
                         m_dialog.dismiss();
                         DialogHelper.hide();
-                        User.login(value, goHome);
+                        User.login(value);
                     }
 
                     @Override

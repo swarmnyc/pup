@@ -340,10 +340,10 @@ public class LobbyFragment extends BaseFragment {
     @OnClick(R.id.btn_join)
     void joinLobby() {
         if (User.isLoggedIn()) {
+            DialogHelper.showProgressDialog(getActivity(), R.string.message_processing);
             if (m_lobby.isAliveUser(User.current.getId())) {
                 initChatRoom();
             } else {
-                DialogHelper.showProgressDialog(getActivity(), R.string.message_processing);
                 m_lobbyService.join(
                         m_lobby.getId(), new ServiceCallback<String>() {
                             @Override
@@ -351,14 +351,12 @@ public class LobbyFragment extends BaseFragment {
                                 addUserIntoLobby(User.current);
                                 EventBus.getBus().post(new LobbyUserChangeEvent());
                                 initChatRoom();
-                                DialogHelper.hide();
                             }
                         }
                 );
             }
         } else {
             RegisterDialogFragment registerDialogFragment = new RegisterDialogFragment();
-            registerDialogFragment.setGoHomeAfterLogin(false);
             registerDialogFragment.show(this.getFragmentManager(), null);
         }
     }
@@ -378,6 +376,7 @@ public class LobbyFragment extends BaseFragment {
             if (m_first) {
                 m_lobbyChatAdapter.isLoading(false);
                 switchButton();
+                DialogHelper.hide();
             }
 
             ArrayList<ChatMessage> messages = processSystemMessages(event);

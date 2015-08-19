@@ -40,7 +40,7 @@ public class MyChatsFragment extends BaseFragment {
     SwipeRefreshLayout m_refreshLayout;
     @Bind(R.id.layout_empty_results)
     ViewGroup m_emptyResults;
-    private int pageIndex;
+    private int pageIndex = -1;
     private LobbyService m_lobbyService;
     private MyChatAdapter m_myChatAdapter;
     private Action<Object> m_loadMore;
@@ -60,8 +60,8 @@ public class MyChatsFragment extends BaseFragment {
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-        m_lobbyService =  PuPApplication.getInstance().getModule().provideLobbyService();
-        pageIndex = 0;
+        m_lobbyService = PuPApplication.getInstance().getModule().provideLobbyService();
+
         m_myChatAdapter = new MyChatAdapter(this.getActivity());
         m_loadMore = new Action<Object>() {
             @Override
@@ -88,10 +88,6 @@ public class MyChatsFragment extends BaseFragment {
                     }
                 }
         );
-
-        if (savedInstanceState == null) {
-            fetchMoreData();
-        }
     }
 
     @Override
@@ -99,7 +95,7 @@ public class MyChatsFragment extends BaseFragment {
         super.onResume();
         EventBus.getBus().register(this);
 
-        if (Config.getBool(Consts.KEY_NEED_UPDATE_MY)) {
+        if (pageIndex == -1 || Config.getBool(Consts.KEY_NEED_UPDATE_MY)) {
             Config.setBool(Consts.KEY_NEED_UPDATE_MY, false);
             reloadData();
         }

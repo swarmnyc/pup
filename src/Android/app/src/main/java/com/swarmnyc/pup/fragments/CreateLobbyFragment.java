@@ -151,7 +151,6 @@ public class CreateLobbyFragment extends Fragment
 
         if (!User.isLoggedIn()) {
             RegisterDialogFragment registerDialogFragment = new RegisterDialogFragment();
-            registerDialogFragment.setGoHomeAfterLogin(false);
             registerDialogFragment.show(this.getFragmentManager(), null);
             return;
         }
