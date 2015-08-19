@@ -1,11 +1,16 @@
-<fragment
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
         android:id="@+id/fragment_lobby_create"
+        android:name="com.swarmnyc.pup.fragments.CreateLobbyFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        android:name="com.swarmnyc.pup.fragments.CreateLobbyFragment"
         android:tag="fragment_tag_lobby_create"
-        tools:layout="@layout/fragment_lobby_create"
-        tools:context="com.swarmnyc.pup.activities.LobbyCreateActivity"/>
+        tools:context="com.swarmnyc.pup.activities.LobbyCreateActivity"
+        tools:layout="@layout/fragment_lobby_create" />
+</android.support.design.widget.CoordinatorLayout>
