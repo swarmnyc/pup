@@ -15,14 +15,14 @@ public class PuPApplication extends Application
 	private static PuPApplication instance;
 	private Tracker m_tracker;
 	private boolean m_messageServiceUp;
-	private PuPApiModule module;
+	private PuPModule module;
 
 	public static PuPApplication getInstance()
 	{
 		return instance;
 	}
 
-	public PuPApiModule getModule()
+	public PuPModule getModule()
 	{
 		return module;
 	}
@@ -35,7 +35,7 @@ public class PuPApplication extends Application
 		Config.init( this );
 		User.init();
 
-		this.module = new PuPApiModule();
+		this.module = new PuPModule();
 
 		ApiSettings.PuPServerPath = Config.getConfigString( R.string.PuP_Url );
 

@@ -14,11 +14,11 @@ import retrofit.converter.GsonConverter;
 import java.util.Date;
 
 
-public class PuPApiModule
+public class PuPModule
 {
 	private final RestAdapter restAdapter;
 
-	public PuPApiModule()
+	public PuPModule()
 	{
 		Gson gson = new GsonBuilder().registerTypeAdapter( Date.class, new IsoDateTypeAdapter() ).create();
 
