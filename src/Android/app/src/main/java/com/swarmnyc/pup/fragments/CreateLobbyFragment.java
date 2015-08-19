@@ -60,18 +60,14 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CreateLobbyFragment extends Fragment
         implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
-    @Inject
     GameService m_gameService;
 
-    @Inject
     LobbyService m_lobbyService;
 
     @Bind(R.id.layout_lobby_create)
@@ -205,7 +201,9 @@ public class CreateLobbyFragment extends Fragment
     ) {
         super.onViewCreated(view, savedInstanceState);
 
-        PuPApplication.getInstance().getComponent().inject(this);
+        m_gameService = PuPApplication.getInstance().getModule().provideGameService();
+        m_lobbyService = PuPApplication.getInstance().getModule().provideLobbyService();
+
         ButterKnife.bind(this, view);
         EventBus.getBus().register(this);
 

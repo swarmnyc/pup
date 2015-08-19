@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     Properties properties = new Properties()
@@ -38,11 +37,8 @@ android {
 }
 
 dependencies {
-    apt 'com.google.dagger:dagger-compiler:2.0.1'
-    provided 'org.glassfish:javax.annotation:3.2-b06'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':api')
-    compile 'com.google.dagger:dagger:2.0.1'
     compile 'com.google.android.gms:play-services:7.8.0'
     compile 'com.android.support:support-v4:22.+'
     compile 'com.android.support:appcompat-v7:22.+'

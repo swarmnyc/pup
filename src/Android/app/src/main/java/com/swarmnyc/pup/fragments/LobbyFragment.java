@@ -45,17 +45,15 @@ import com.swarmnyc.pup.models.UserInfo;
 import com.swarmnyc.pup.view.DividerItemDecoration;
 import com.swarmnyc.pup.view.ShareView;
 
-import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 public class LobbyFragment extends BaseFragment {
     private static final String TAG = LobbyFragment.class.getSimpleName();
 
-    @Inject
     LobbyService m_lobbyService;
 
     @Bind(R.id.backdrop)
@@ -122,7 +120,7 @@ public class LobbyFragment extends BaseFragment {
             final Bundle savedInstanceState
     ) {
         super.onViewCreated(view, savedInstanceState);
-        PuPApplication.getInstance().getComponent().inject(this);
+        m_lobbyService = PuPApplication.getInstance().getModule().provideLobbyService();
         ButterKnife.bind(this, view);
 
 
@@ -177,7 +175,7 @@ public class LobbyFragment extends BaseFragment {
         m_chatListLayoutManager = new LinearLayoutManager(getActivity());
         m_lobbyChatAdapter = new LobbyChatAdapter(getActivity());
         m_lobbyChatAdapter.setReachBeginAction(
-                new Action() {
+                new Action<Object>() {
                     @Override
                     public void call(final Object value) {
                         loadChatHistoryRequire();

@@ -7,15 +7,13 @@ import com.swarmnyc.pup.RestApis.IsoDateTypeAdapter;
 import com.swarmnyc.pup.RestApis.LobbyRestApi;
 import com.swarmnyc.pup.RestApis.UserRestApi;
 import com.swarmnyc.pup.Services.*;
-import dagger.Module;
-import dagger.Provides;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 
 import java.util.Date;
 
-@Module
+
 public class PuPApiModule
 {
 	private final RestAdapter restAdapter;
@@ -51,19 +49,16 @@ public class PuPApiModule
 		                                       .build();
 	}
 
-	@Provides
 	public LobbyService provideLobbyService()
 	{
 		return new LobbyServiceImpl( restAdapter.create( LobbyRestApi.class ) );
 	}
 
-	@Provides
 	public GameService provideGameService()
 	{
 		return new GameServiceImpl( restAdapter.create( GameRestApi.class ) );
 	}
 
-	@Provides
 	public UserService provideUserService()
 	{
 		return new UserServiceImpl( restAdapter.create( UserRestApi.class ) );

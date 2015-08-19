@@ -23,13 +23,12 @@ import com.swarmnyc.pup.events.LobbyUserChangeEvent;
 import com.swarmnyc.pup.models.Lobby;
 import com.swarmnyc.pup.models.LobbyUserInfo;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MemberFragment extends Fragment
 {
-	@Inject LobbyService m_lobbyService;
+	private LobbyService m_lobbyService;
 
 	@Bind( R.id.list_members ) RecyclerView  m_memberList;
 	@Bind( R.id.btn_leave )    View          m_leaveButton;
@@ -48,7 +47,7 @@ public class MemberFragment extends Fragment
 	public void onViewCreated( View view, Bundle savedInstanceState )
 	{
 		super.onViewCreated( view, savedInstanceState );
-		PuPApplication.getInstance().getComponent().inject( this );
+		m_lobbyService = PuPApplication.getInstance().getModule().provideLobbyService();
 		ButterKnife.bind( this, view );
 
 		m_memberAdapter = new MemberAdapter( this.getActivity(), new ArrayList<LobbyUserInfo>() );

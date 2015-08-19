@@ -26,11 +26,9 @@ import com.swarmnyc.pup.helpers.DialogHelper;
 import com.swarmnyc.pup.helpers.PhotoHelper;
 import com.swarmnyc.pup.models.CurrentUserInfo;
 
-import javax.inject.Inject;
 
 public class RegisterDialogFragment extends DialogFragment {
-    @Inject
-    UserService m_userService;
+    private UserService m_userService;
     @Bind(R.id.text_email)
     EditText m_emailText;
     @Bind(R.id.text_name)
@@ -49,7 +47,7 @@ public class RegisterDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_register, null);
-        PuPApplication.getInstance().getComponent().inject(this);
+        m_userService = PuPApplication.getInstance().getModule().provideUserService();
         ButterKnife.bind(this, view);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

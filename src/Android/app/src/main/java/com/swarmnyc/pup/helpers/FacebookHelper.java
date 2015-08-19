@@ -32,7 +32,7 @@ public class FacebookHelper
 					public void onSuccess( final LoginResult loginResult )
 					{
 						AccessToken at = loginResult.getAccessToken();
-						UserService userService = PuPApplication.getInstance().getComponent().getUserService();
+						UserService userService = PuPApplication.getInstance().getModule().provideUserService();
 
 						userService.addMedium(
 							Consts.KEY_FACEBOOK,

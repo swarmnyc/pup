@@ -24,11 +24,9 @@ import com.swarmnyc.pup.Services.UserService;
 import com.swarmnyc.pup.helpers.FacebookHelper;
 import com.swarmnyc.pup.helpers.PhotoHelper;
 
-import javax.inject.Inject;
 
 public class SettingsFragment extends BaseFragment
 {
-	@Inject
 	UserService m_userService;
 
 	@Bind( R.id.text_name )
@@ -78,7 +76,7 @@ public class SettingsFragment extends BaseFragment
 	{
 		super.onViewCreated( view, savedInstanceState );
 		ButterKnife.bind( this, view );
-		PuPApplication.getInstance().getComponent().inject( this );
+		m_userService = PuPApplication.getInstance().getModule().provideUserService();
 
 		if ( StringUtils.isNotEmpty( User.current.getPortraitUrl() ) )
 		{

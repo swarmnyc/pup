@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-        PuPApplication.getInstance().getComponent().inject(this);
         m_toolbar.setTitle("");
         setSupportActionBar(m_toolbar);
 

@@ -27,7 +27,6 @@ import com.swarmnyc.pup.view.DividerItemDecoration;
 
 import java.util.List;
 
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,8 +34,6 @@ import butterknife.ButterKnife;
 public class MyChatsFragment extends BaseFragment {
     @Bind(R.id.text_empty_results)
     public TextView m_noResultView;
-    @Inject
-    LobbyService m_lobbyService;
     @Bind(R.id.list_chat)
     RecyclerView m_chatList;
     @Bind(R.id.layout_refresh)
@@ -44,8 +41,9 @@ public class MyChatsFragment extends BaseFragment {
     @Bind(R.id.layout_empty_results)
     ViewGroup m_emptyResults;
     private int pageIndex;
+    private LobbyService m_lobbyService;
     private MyChatAdapter m_myChatAdapter;
-    private Action m_loadMore;
+    private Action<Object> m_loadMore;
 
     @Override
     public String getScreenName() {
@@ -62,10 +60,10 @@ public class MyChatsFragment extends BaseFragment {
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-        PuPApplication.getInstance().getComponent().inject(this);
+        m_lobbyService =  PuPApplication.getInstance().getModule().provideLobbyService();
         pageIndex = 0;
         m_myChatAdapter = new MyChatAdapter(this.getActivity());
-        m_loadMore = new Action() {
+        m_loadMore = new Action<Object>() {
             @Override
             public void call(Object value) {
                 Log.d("MyChats", "Load More");
