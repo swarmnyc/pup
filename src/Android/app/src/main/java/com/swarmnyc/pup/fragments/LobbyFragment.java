@@ -182,7 +182,6 @@ public class LobbyFragment extends BaseFragment {
                     }
                 }
         );
-        m_lobbyChatAdapter.isLoading(true);
 
         m_chatList.setAdapter(m_lobbyChatAdapter);
         m_chatList.setLayoutManager(m_chatListLayoutManager);
@@ -278,6 +277,7 @@ public class LobbyFragment extends BaseFragment {
         m_first = true;
         m_lobbyChatAdapter.clear();
         m_lobbyChatAdapter.setLobby(m_lobby);
+        m_lobbyChatAdapter.isLoading(true);
         m_lobbyChatAdapter.notifyDataSetChanged();
         if (m_lobby.isAliveUser(User.current.getId())) {
             // Get Data
@@ -388,7 +388,6 @@ public class LobbyFragment extends BaseFragment {
 
             if (event.isNewMessage()) {
                 m_lobbyChatAdapter.addMessages(messages);
-
             } else {
                 Collections.reverse(messages);
                 m_hasMoreMessage = messages.size() == Consts.PAGE_SIZE;
@@ -399,7 +398,7 @@ public class LobbyFragment extends BaseFragment {
 
             // SharePanel
             if (event.isNewMessage() || m_first) {
-                if (size == 0 && m_lobby.isAliveUser(User.current.getId())) {
+                if (m_lobbyChatAdapter.getMessageCount() == 0 && m_lobby.isAliveUser(User.current.getId())) {
                     //no message, show share item
                     m_sharePanel.setVisibility(View.VISIBLE);
                     m_sharePanel.setLobbyService(m_lobbyService);
@@ -420,6 +419,20 @@ public class LobbyFragment extends BaseFragment {
                 }
             }
 
+            if (!m_first && !m_chatListLayoutManager.getStackFromEnd()){
+                m_chatList.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        int height = computeHeight();
+
+                        if (height < 0) {
+                            Log.e(TAG, "Change to StackFromEnd");
+                            m_chatListLayoutManager.setStackFromEnd(true);
+                        }
+                    }
+                }, 500);
+            }
+
             m_first = false;
         }
     }
@@ -429,18 +442,24 @@ public class LobbyFragment extends BaseFragment {
                 new Runnable() {
                     @Override
                     public void run() {
-                        int height = Consts.windowHeight - m_appbar.getHeight() - m_textPanel.getHeight();
-
-                        for (int i = 0; i < m_chatList.getChildCount(); i++) {
-                            height -= m_chatList.getChildAt(i).getHeight();
-                        }
+                        int height = computeHeight();
 
                         if (height < 0) {
                             collapseAppBar();
+                            m_chatListLayoutManager.setStackFromEnd(true);
                         }
                     }
                 }, 500
         );
+    }
+
+    private int computeHeight() {
+        int height = m_chatList.getHeight();
+
+        for (int i = 0; i < m_chatList.getChildCount(); i++) {
+            height -= m_chatList.getChildAt(i).getHeight();
+        }
+        return height;
     }
 
     private void collapseAppBar() {

@@ -129,11 +129,18 @@
                 android:text="Legal"/>
 
             <TextView
-                android:id="@+id/txt_tos"
+                android:id="@+id/text_tos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_half"
+                android:layout_marginTop="@dimen/margin_normal"
                 android:text="@string/text_tos"/>
+
+            <TextView
+                android:id="@+id/text_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_2x"
+                android:text="@string/text_feedback"/>
         </LinearLayout>
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

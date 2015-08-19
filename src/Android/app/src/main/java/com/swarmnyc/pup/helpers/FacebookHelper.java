@@ -79,7 +79,7 @@ public class FacebookHelper
 		}
 
 		LoginManager.getInstance().logInWithPublishPermissions(
-			activity, Arrays.asList( "publish_actions" )
+			activity, Arrays.asList( "publish_actions", "user_posts")
 		);
 	}
 

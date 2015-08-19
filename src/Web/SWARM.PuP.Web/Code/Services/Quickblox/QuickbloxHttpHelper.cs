@@ -12,7 +12,6 @@ namespace SWARM.PuP.Web.Services.Quickblox
 {
     public static class QuickbloxHttpHelper
     {
-        private const int TimeOut = 110;
         private static readonly string ApplicationId;
         private static readonly string AuthKey;
         private static readonly string AuthSecret;
@@ -89,8 +88,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
 
                 var nonce = GenerateNonce();
                 var timestamp = GenerateTimeStamp();
-
-                var result = request.GetJson<SessionResult>(new
+                request.Write(new
                 {
                     application_id = ApplicationId,
                     auth_key = AuthKey,
@@ -99,15 +97,20 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     signature = GenerateAuthMsg(userId, nonce, timestamp),
                     user = new { login = userId,/* email = UserEmail,*/ password = UserPassword }
                 });
-
-                result.session.created_at = DateTime.UtcNow;
+                var response = request.GetResponse();
+                var date = response.Headers["QB-Token-ExpirationDate"];
+                var result = response.Read<SessionResult>();
+                if (date.IsNotNullOrWhiteSpace())
+                {
+                    result.session.ExpiredAt = DateTime.Parse(date.Replace(" UTC", "Z")).ToUniversalTime().AddMinutes(-10);
+                }
                 return result.session;
             }
         }
 
         private static bool IsNoSession()
         {
-            return _defaultSession == null || (DateTime.UtcNow - _defaultSession.created_at).Minutes > TimeOut;
+            return _defaultSession == null || DateTime.UtcNow >= _defaultSession.ExpiredAt;
         }
 
         private static string GenerateTimeStamp()
@@ -152,6 +155,10 @@ namespace SWARM.PuP.Web.Services.Quickblox
             }
 
             return sb.ToString();
+        }
+
+        public static void ClearSession() {
+            _defaultSession = null;
         }
     }
 }

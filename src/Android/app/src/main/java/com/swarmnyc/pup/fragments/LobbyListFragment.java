@@ -345,6 +345,7 @@ public class LobbyListFragment extends BaseFragment {
 
     private void reloadData(final boolean restart) {
         if (m_isLoading.getAndSet(true)) {
+            m_refreshLayout.setRefreshing(false);
             return; //Sometimes different event will trigger at the same time;
         }
 
@@ -361,7 +362,9 @@ public class LobbyListFragment extends BaseFragment {
             com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(getActivity(), m_emptyResults);
         }
 
-        m_lobbyAdapter.startLoading();
+        if (!m_refreshLayout.isRefreshing()) {
+            m_lobbyAdapter.startLoading();
+        }
 
         lobbyService.getLobbies(
                 m_lobbyFilter, new ServiceCallback<LobbySearchResult>() {

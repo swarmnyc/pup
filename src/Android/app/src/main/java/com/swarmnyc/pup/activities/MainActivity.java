@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -54,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
     TabLayout m_tabLayout;
     @Bind(R.id.appbar)
     AppBarLayout m_appBarLayout;
+
+    @Bind(R.id.fab_create_lobby)
+    FloatingActionButton m_floatingActionButton;
 
     @Bind(R.id.layout_coordinator)
     CoordinatorLayout m_coordinatorLayout;

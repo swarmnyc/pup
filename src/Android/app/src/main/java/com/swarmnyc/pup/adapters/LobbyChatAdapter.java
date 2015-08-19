@@ -114,6 +114,10 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return m_chatMessages.size() + m_offset;
     }
 
+    public int getMessageCount() {
+        return m_chatMessages.size();
+    }
+
     public void setReachBeginAction(Action<Object> action) {
         m_reachBeginAction = action;
     }
