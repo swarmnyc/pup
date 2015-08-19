@@ -16,7 +16,8 @@ class SearchResultsModel {
     var delegate: SearchResultsDelegate?
     var platforms: Array<String> = [];
     var searchTerm: String = ""
-
+    var oldPlatforms: Array<String> = [];
+    var oldSearchTerm: String = "";
     var selectedImage = ""
 
     init() {
@@ -31,6 +32,42 @@ class SearchResultsModel {
 
     }
 
+
+    func isSameSearchTerm(searchTerm: String, platforms: Array<String>) -> Bool {
+        var theSame = true;
+        println(searchTerm);
+        println(self.oldSearchTerm);
+        println(platforms);
+        println(self.oldPlatforms);
+        if (searchTerm != self.oldSearchTerm) { //compare the search terms (game name)
+            theSame = false;
+        }
+
+        //compare the number of platforms (this is important if there are none currently selected
+        if (platforms.count != self.oldPlatforms.count) {
+            theSame = false;
+        }
+
+        //compare that the selected games are the same or not
+        var platformCount = self.oldPlatforms.count;
+        var countCompare = 0;
+        for (var i = 0; i<platforms.count; i++) {
+            for (var p = 0; p<self.oldPlatforms.count; p++) {
+                if (platforms[i] == self.oldPlatforms[p]) {
+                    countCompare++;
+                }
+            }
+        }
+
+        if (platformCount != countCompare) {
+            theSame = false;
+        }
+
+        oldPlatforms = platforms;
+        oldSearchTerm = searchTerm;
+
+        return theSame;
+    }
 
     func clearData() {
         searchTerm = "";
@@ -70,11 +107,16 @@ class SearchResultsModel {
 
 
                 Alamofire.request(.GET, requestUrl!).responseJSON { (request, response, responseJSON, error) in
-                    var resp = responseJSON as! NSArray
-                   // println(resp)
-                    self.createGamesArray(resp);
+                   if (responseJSON as? NSArray != nil) {
+                        var resp = responseJSON as! NSArray
+                        // println(resp)
+                        self.createGamesArray(resp);
 
-                    success(newdata: self.data);
+                        success(newdata: self.data);
+                    } else {
+                    println("alamofire games.swift");
+                        SNYError(alertTitle: "Could not find games", alertText: "Please try again", networkRequest: true);
+                    }
 
                 };
 

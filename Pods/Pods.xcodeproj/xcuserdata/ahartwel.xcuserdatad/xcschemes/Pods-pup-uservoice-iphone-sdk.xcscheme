@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8C0F04A772C8E3E629C7CF8D"
+               BlueprintIdentifier = "A5C9D533028B60B0243956AE"
                BuildableName = "uservoice_iphone_sdk.framework"
                BlueprintName = "Pods-pup-uservoice-iphone-sdk"
                ReferencedContainer = "container:Pods.xcodeproj">

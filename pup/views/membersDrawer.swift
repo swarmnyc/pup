@@ -5,13 +5,11 @@
 
 import Foundation
 import UIKit
-import Haneke
-
 
 class MembersDrawerView: UIView {
 
     var transX = UIScreen.mainScreen().bounds.width * 0.98
-    var transMax = UIScreen.mainScreen().bounds.width * 0.9
+    var transMax = UIScreen.mainScreen().bounds.width * 0.98
     var transMin = 0;
     var headerBackground: UIView = UIView();
     var header: UILabel = UILabel();
@@ -50,7 +48,7 @@ class MembersDrawerView: UIView {
         headerBackground.backgroundColor = UIColor(rgba: colors.orange);
 
         header.text = "MEMBERS"
-        header.font = UIFont(name: "AvenirNext-Regular", size: 12.0)
+        header.font = UIConstants.titleFont;
         header.textColor = UIColor.whiteColor();
         header.textAlignment = NSTextAlignment.Left
 
@@ -77,7 +75,7 @@ class MembersDrawerView: UIView {
     func animateDrawer(alpha: CGFloat, userInteractionEnabled: Bool, transX: CGFloat) {
         self.transX = transX;
 
-        UIView.animateWithDuration(0.4, animations: { () -> Void in
+        UIView.animateWithDuration(0.3, animations: { () -> Void in
             self.shadow.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: alpha);
         })
 
@@ -85,7 +83,7 @@ class MembersDrawerView: UIView {
 //        self.touchToClose.userInteractionEnabled = userInteractionEnabled;
 
 
-        UIView.animateWithDuration(0.4, animations: { () -> Void in
+        UIView.animateWithDuration(0.3, animations: { () -> Void in
             var trans = CGAffineTransformMakeTranslation(transX, 0);
             self.transform = trans;
         })
@@ -232,7 +230,7 @@ class MembersListCell: UICollectionViewCell {
         self.contentView.layer.borderWidth = 4.0;
 
         memberName.text = data.name;
-        memberName.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
+        memberName.font = UIConstants.titleFont;
         memberName.textColor = UIColor(rgba: colors.mainGrey)
 
 
@@ -246,7 +244,8 @@ class MembersListCell: UICollectionViewCell {
             self.memberPhoto.contentMode = UIViewContentMode.ScaleAspectFill;
             memberPhoto.frame.size = CGSizeMake(34, 34);
             memberPhoto.layer.cornerRadius = 17.0;
-            self.memberPhoto.hnk_setImageFromURL(url!)
+//            self.memberPhoto.hnk_setImageFromURL(url!)
+            self.memberPhoto.sd_setImageWithURL(url!, placeholderImage: nil, options: SDWebImageOptions.RefreshCached);
         }
 
 

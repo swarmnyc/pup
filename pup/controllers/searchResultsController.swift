@@ -37,7 +37,10 @@ class SearchResultsController: UIViewController, UICollectionViewDataSource, UIC
 
 
     }
-
+    
+    func getSearchText() -> String {
+        return searchBar!.text;
+    }
 
 
     func touchUp(button: NSObject, type: String) {
@@ -60,6 +63,7 @@ class SearchResultsController: UIViewController, UICollectionViewDataSource, UIC
             self.data = data;
 
         dispatch_async(dispatch_get_main_queue()) {
+
                             self.resultsView?.results?.reloadData();
 //            self.resultsView?.results?.star
 //                    var indexPath = NSIndexPath(indexes: [self.data!.count], length: 1);

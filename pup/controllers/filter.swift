@@ -8,14 +8,14 @@ import UIKit
 
 
 class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonDelegate, PanGestureDelegate, SearchResultsDelegate, OverlayDelegate {
-    var isOpen = false;
+    var isOpen: Bool = false;
     var filterView: FilterView = FilterView()
     var parent: LobbyListController?
     var searchActive : Bool = false
     var data: SearchResultsModel = SearchResultsModel();
     var numberOfSelections: Int = 0;
     var searchController: SearchResultsController?;
-    var searchText = "";
+    var searchText: String = "";
 
     convenience init(parentController: LobbyListController) {
         self.init()
@@ -123,9 +123,7 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
 
     func toggleState() {
         if isOpen {
-            isOpen = false
-            filterView.closeFilter()
-            searchController?.hideResults();
+            closeFilter();
 
         } else {
             isOpen = true
@@ -138,6 +136,11 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
     func closeFilter() {
         isOpen = false
         filterView.closeFilter()
+        if (!self.data.isSameSearchTerm(self.searchController!.getSearchText(), platforms: data.platforms)) {
+            parent?.activityIndicator.startAnimating();
+            parent?.loadNewLobbies(self.searchController!.getSearchText(), platforms: data.platforms);
+        }
+
         searchController?.hideResults();
     }
 
@@ -163,8 +166,7 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
         searchActive = false;
         println("searchButtonClicked")
         data.setSearchTerm(searchBar.text)
-        parent?.activityIndicator.startAnimating();
-        parent?.loadNewLobbies(searchBar.text, platforms: data.platforms);
+        
         toggleState();
     }
 

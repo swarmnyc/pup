@@ -37,7 +37,8 @@ class MyChatsData {
 
                 Alamofire.request(mutableURLRequest).responseJSON {
                     (request, response, JSON, error) in
-                    if (error == nil) {
+                    if (error == nil && JSON as? NSArray != nil) {
+                        println("json");
                         println(JSON);
                         if (onlyAddNew == false) {
                             self.addLobbies(true, data: JSON as! NSArray)

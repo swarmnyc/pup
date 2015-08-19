@@ -21,7 +21,9 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
         if (parentController != nil) {
             self.parentController = parentController
         }
-
+        registrationView.hideIt = {
+            self.navigationController?.dismissViewControllerAnimated(false, completion: nil);
+        }
 //        self.view = filterView
 //        parent = parentController
 //        filterView.parentView = parent!.view
@@ -52,47 +54,68 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
     }
 
     func addParentConstraints() {
-            registrationView.addParentConstraints(self)
+
+
+        var overlayNav = UINavigationController(rootViewController: self);
+        overlayNav.modalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
+        overlayNav.navigationBar.hidden = true;
+            nav!.presentViewController(overlayNav, animated: false, completion: nil);
+        
+        // (nav!.viewControllers![nav!.selectedIndex] as! UINavigationController).presentViewController(overlayNav, animated: true, completion: nil);
+    
     }
 
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        registrationView.addParentConstraints(self);
+
+    }
 
     func registerClicked() {
         println("register")
-        var config = SwiftLoader.Config()
-        config.size = 150
-        config.spinnerColor = UIColor(rgba: colors.orange)
-        config.backgroundColor = UIColor.whiteColor()
+//        var config = SwiftLoader.Config()
+//        config.size = 150
+//        config.spinnerColor = UIColor(rgba: colors.orange)
+//        config.backgroundColor = UIColor.whiteColor()
+//
+//        SwiftLoader.setConfig(config);
+//        SwiftLoader.show(title: "Loading...", animated: true)
+        self.registrationView.email.resignFirstResponder()
+        self.registrationView.username.resignFirstResponder()
 
-        SwiftLoader.setConfig(config);
-        SwiftLoader.show(title: "Loading...", animated: true)
+        self.registrationView.activityIndicator.startAnimating();
         if (submitting==false) {
             self.submitting=true;
+            self.registrationView.darkenSubmitButton();
             registerUser();
         }
     }
 
     func closeClicked() {
         println("close")
-        registrationView.hide()
+        registrationView.hide();
 //        var parent: JoinButton? = parentController as? JoinButton
-        println(parentController)
-       // parent.removeRegistrationView()
+        println(parentController);
+        self.registrationView.activityIndicator.stopAnimating();
+
+        // parent.removeRegistrationView()
 
     }
 
     func closeAndContinue() {
         println(parentController)
+        self.navigationController?.dismissViewControllerAnimated(false, completion: nil)
         sideMenuController()?.sideMenu?.reloadData();
 
-        registrationView.hide()
+        registrationView.hide();
         self.view.removeFromSuperview()
         parentController?.removeRegistrationView()
 
-        if (self.parentController == nil) {
-            SwiftLoader.hide();
-        }
+
         self.submitting=false;
+        self.registrationView.activityIndicator.stopAnimating();
+
         onSuccessJoin!();
     }
 
@@ -122,7 +145,9 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
             alert.addAction(camera)
             alert.addAction(roll)
             alert.addAction(cancel)
-            self.view.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)//4
+//            self.parentViewController?.presentViewController(alert, animated: true, completion: nil);
+            println(mainWindow!.rootViewController)
+           self.navigationController?.presentViewController(alert, animated: true, completion: nil)//4
         } else {
 
             bringOutPhotoLibrary()
@@ -140,9 +165,9 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
 
         picker.allowsEditing = false //2
         picker.sourceType = .Camera //3
-        self.registrationView.layer.opacity = 0;
-        self.parentController?.joinButtonView.layer.opacity = 0;
-        self.view.window?.rootViewController?.presentViewController(picker, animated: true, completion: nil)//4
+//        self.registrationView.layer.opacity = 0;
+//        self.parentController?.joinButtonView.layer.opacity = 0;
+        self.navigationController?.presentViewController(picker, animated: true, completion: nil)//4
 
     }
     func bringOutPhotoLibrary() {
@@ -153,10 +178,10 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
 
         picker.allowsEditing = false //2
         picker.sourceType = .PhotoLibrary //3
-        self.registrationView.layer.opacity = 0;
-        self.parentController?.joinButtonView.layer.opacity = 0;
+       // self.registrationView.layer.opacity = 0;
+        //self.parentController?.joinButtonView.layer.opacity = 0;
 
-        self.view.window?.rootViewController?.presentViewController(picker, animated: true, completion: nil)//4
+        self.navigationController?.presentViewController(picker, animated: true, completion: nil)//4
 
     }
 
@@ -168,34 +193,34 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
 
 
         picker.dismissViewControllerAnimated(true, completion: nil) //5
-        
+
         var editor = DZNPhotoEditorViewController(image: chosenImage);
         editor.cropMode = DZNPhotoEditorViewControllerCropMode.Circular;
         editor.cropSize = CGSizeMake(400,400);
          var controller = UINavigationController(rootViewController: editor)
         editor.acceptBlock = {
             (editor, userInfo) -> Void in
-            self.view.window?.rootViewController?.dismissViewControllerAnimated(true, completion: nil)
+            self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
             var editedImage = userInfo[UIImagePickerControllerEditedImage] as! UIImage
             
             self.registrationView.setImage(editedImage);
             self.registrationView.layer.opacity = 1;
             self.parentController?.joinButtonView.layer.opacity = 1;
-            self.addParentConstraints();
+           // self.addParentConstraints();
         }
         
         editor.cancelBlock = {
             (editor) -> Void in
-            self.view.window?.rootViewController?.dismissViewControllerAnimated(true, completion: nil)
+            self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
             self.registrationView.layer.opacity = 1;
             self.parentController?.joinButtonView.layer.opacity = 1;
-            self.addParentConstraints();
+           // self.addParentConstraints();
 //            self.popViewController(animated: true);
         }
         
        
         
-        self.view.window?.rootViewController?.presentViewController(controller, animated: true, completion: nil);
+        self.navigationController?.presentViewController(controller, animated: true, completion: nil);
 
 
     }
@@ -227,11 +252,16 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
         println(registrationData)
 
         if (currentUser.validData(registrationData)) {
-            currentUser.register(registrationData, success: closeAndContinue);
-        } else {
-            SwiftLoader.hide()
-            submitting = false;
+            currentUser.register(registrationData, success: closeAndContinue, failure: {
+                self.submitting = false;
+                self.registrationView.activityIndicator.stopAnimating();
 
+            });
+        } else {
+            submitting = false;
+            self.registrationView.activityIndicator.stopAnimating();
+            self.registrationView.unselectSubmitText();
+            SNYError(alertTitle: "Couldn't Register", alertText: "Please check your email and username");
 
         }
 

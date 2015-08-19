@@ -5,8 +5,6 @@
 
 import Foundation
 import UIKit
-import Haneke
-
 
 class animatedFlowLayout: UICollectionViewFlowLayout {
 
@@ -71,24 +69,21 @@ class MyChatsView: UIView {
         }
     }
 
-
-
-
 }
 
 
 
 class EmptyCell: UICollectionViewCell {
 
-
     var label = UITextView();
-
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
         contentView.addSubview(label)
-        label.text = "You Haven't Joined any games yet, and all the cake is gone.";
+        label.text = "\n \nYou haven't joined any games\nyet, and all the cake is gone.";
+        label.font = UIFont(name: "AvenirNext-Regular", size: 16.0);
+
         label.textAlignment = NSTextAlignment.Center
         label.editable = false;
         label.snp_makeConstraints {
@@ -96,12 +91,17 @@ class EmptyCell: UICollectionViewCell {
             make.left.equalTo(self)
             make.top.equalTo(self)
             make.right.equalTo(self)
-            make.bottom.equalTo(self)
+            make.height.equalTo(UIScreen.mainScreen().bounds.height - 90)
         }
 
+        self.clipsToBounds = false;
+        self.layer.masksToBounds = false;
 
     }
 
+    func updateSize() {
+        frame.size = CGSize(width: UIScreen.mainScreen().bounds.width, height: UIScreen.mainScreen().bounds.height - 80)
+    }
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -241,7 +241,7 @@ class MyChatsCell: UICollectionViewCell, UIGestureRecognizerDelegate {
     }
 
     func moveRight(speed: Double, success: (() -> Void)?) {
-        println("mooooovvviiinng");
+        println("mooooovvviiinng RIiiiiight");
         println(speed);
         UIView.animateWithDuration(speed, animations: {
             var trans = CGAffineTransformMakeTranslation(0.0, 0.0);
@@ -306,7 +306,7 @@ class MyChatsCell: UICollectionViewCell, UIGestureRecognizerDelegate {
 
         self.contentContainer.backgroundColor = UIColor(red: 241, green: 241, blue: 241, alpha: 255);
 
-        self.trashView.titleLabel!.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
+        self.trashView.titleLabel!.font = UIConstants.titleFont;
         self.trashView.backgroundColor = UIColor(rgba: colors.orange);
         self.trashView.setTitleColor(UIColor.whiteColor(), forState: .Normal);
         self.trashView.setTitle("Tap To Leave Game", forState: .Normal);
@@ -314,16 +314,28 @@ class MyChatsCell: UICollectionViewCell, UIGestureRecognizerDelegate {
         self.trashView.addTarget(self, action: "detectedTap", forControlEvents: UIControlEvents.TouchUpInside)
 
         lobbyName.text = data.name;
-        lobbyName.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
+        lobbyName.font = UIConstants.titleFont;
         lobbyName.textColor = UIColor(rgba: colors.mainGrey)
 
         var url = NSURL(string: data.thumbnailPictureUrl.getPUPUrl())
         self.lobbyImage.clipsToBounds = true;
         self.lobbyImage.contentMode = UIViewContentMode.ScaleAspectFill;
         lobbyImage.frame.size = CGSizeMake(42, 42);
-        self.lobbyImage.hnk_setImageFromURL(url!)
         self.lobbyImage.backgroundColor = UIColor(rgba: colors.orange)
-        self.lobbyImage.hnk_setImageFromURL(url!)
+//        self.lobbyImage.hnk_setImageFromURL(url!)
+        self.lobbyImage.sd_setImageWithURL(url!, placeholderImage: nil, options: SDWebImageOptions.RefreshCached, progress: {
+            (recievedSize, exprectedSize) -> Void in
+
+            // println(recievedSize);
+
+        }, completed: {
+            (image, error, cacheType, imageUrl) -> Void in
+            self.lobbyImage.image = image;
+            UIView.animateWithDuration(0.3, animations: {
+                () -> Void in
+                self.lobbyImage.alpha = 1;
+            });
+        });
 
         if (data.unreadMessageCount==0) {
             self.lobbyImage.layer.borderWidth = 0.0;
@@ -335,15 +347,15 @@ class MyChatsCell: UICollectionViewCell, UIGestureRecognizerDelegate {
 
 
         time.text = data.timeInHuman
-        time.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
+        time.font = UIConstants.tagType;
         time.textColor = UIColor(rgba: colors.tealMain)
 
         desc.text = data.description;
-        desc.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
+        desc.font = UIConstants.paragraphType;
         desc.textColor = UIColor(rgba: colors.midGray)
 
         platform.text = data.platform
-        platform.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
+        platform.font = UIConstants.tagType;
         platform.textColor = UIColor(rgba: colors.midGray);
         platform.textAlignment = NSTextAlignment.Right
 

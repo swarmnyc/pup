@@ -5,8 +5,6 @@
 
 import Foundation
 import UIKit
-import Haneke
-
 
 
 
@@ -67,17 +65,16 @@ class MessageCell: UITableViewCell {
 
     func setUpCell(item: Message) {
 
-
-        var image = UIImage(named: "iconWithText");
         self.profilePicture.clipsToBounds = true;
         self.profilePicture.image = nil;
         self.profilePicture.layer.cornerRadius = 20;
         if (item.picture != "") {
             var url = NSURL(string: item.picture.getPUPUrl())
             self.profilePicture.frame = CGRectMake(0,0,50,50);
-            self.profilePicture.hnk_setImageFromURL(url!)
+            self.profilePicture.sd_setImageWithURL(url!, placeholderImage: nil, options: SDWebImageOptions.RefreshCached);
 
         } else {
+            var image = UIImage(named: "iconWithText");
             self.profilePicture.image = image;
 
         }
@@ -87,7 +84,7 @@ class MessageCell: UITableViewCell {
 
 
         message.text = item.message;
-        message.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
+        message.font = UIConstants.paragraphType;
         message.userInteractionEnabled = false;
         message.textContainerInset = UIEdgeInsetsZero
         message.textContainer.lineFragmentPadding = 0;
@@ -107,11 +104,13 @@ class MessageCell: UITableViewCell {
             self.userName.layer.opacity = 1;
 
             userName.text = item.username;
-            userName.font = UIFont(name: "AvenirNext-Regular", size: 12.0)
+            userName.font = UIConstants.titleFont;
             userName.backgroundColor = UIColor.clearColor();
             userName.textColor = UIColor(rgba: colors.mainGrey);
+            self.whiteBackground.backgroundColor = UIColor.whiteColor();
+
             if (item.username == currentUser.data.name) {
-                self.backgroundColor = UIColor(rgba: colors.lightGray)
+                self.whiteBackground.backgroundColor = UIColor(rgba: colors.lightGray)
             }
         }
 

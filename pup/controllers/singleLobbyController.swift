@@ -16,23 +16,22 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
     var descCell = SingleLobbyTopCell()
     var imageCover: UIView = UIView()
     var joinPupButton: JoinPupButton? = nil
-    var hasAnimatedDown = false;
-    var membersList = MembersDrawerController();
-    var navBarVisible = false;
-    var firstTime = true;
+    var hasAnimatedDown: Bool = false;
+    var membersList: MembersDrawerController = MembersDrawerController();
+    var navBarVisible: Bool = false;
 
     var socialController: SocialConnector?
     var socialView: SocialButtonsView?
 
-    var canLoadMore = false;
-    var shouldLoadMore = true;
+    var canLoadMore: Bool = false;
+    var shouldLoadMore: Bool = true;
 
 
-    var messageCount = 0;
-    var scrollCount = 0;
-    var justStarted = true;
+    var messageCount: Int = 0;
+    var scrollCount: Int = 0;
+    var justStarted: Bool = true;
 
-    var viewWasPopped = false;
+    var viewWasPopped: Bool = false;
 
 
     var animationDelegate: MainScreenAnimationDelegate?
@@ -41,24 +40,31 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         //to do add in right side members drawer nav button
         self.init();
 
-//       self.modalPresentationStyle = UIModalPresentationStyle.CurrentContext;
+
+        //lets set those modal styles so that the animation can be smooth (to get rid of the drop shadow on the view)
         self.modalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
         self.hidesBottomBarWhenPushed = true;
 
-       
 
+        //connect the delegate methods from quickblox
         data.passMessagesToController = recievedMessages;
         data.reloadData = reloadData;
 
+
+        //set the data and the messages loaded indicator
         data.data = info;
+        data.data.reloadData = self.reloadData;
         data.recievedMessages = info.recievedMessages;
         data.data.setMessagesRecieved = data.messagesReceived; //let the controller know it has recieved messages
 
+        //connect the methods for clearing text
         data.data.clearTheText = data.clearText;
-        data.data.reloadData = self.reloadData;
 
+        //set up the description cell
         descCell.setUpCell(data)
 
+
+        //if the user isn't logged in, we have to bug them to register
         if (currentUser.loggedIn() == false) {
             self.joinPupButton = JoinPupButton(aboveTabBar: false)
             self.joinPupButton?.onSuccessJoin = self.joinLobby
@@ -77,24 +83,25 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
     override func loadView() {
         self.lobbyView = SingleLobbyView();
 
-
+        //set up the view and pass in delegate
         self.view = self.lobbyView;
         self.lobbyView?.createTable();
         self.lobbyView?.addTable(self);
-        //scrollViewDidScroll(self.lobbyView?.table!)
 
+        //set up sideBar of members
         membersList.setNavigationBar(self);
 
-       // self.lobbyView?.addDrawer(membersList.membersView);
-        //makes it so that inside of a lobby their is no title on the back button
 
+        //set this just incase, it gets overridden to 1 in both cases if the navigation bar gets hidden (if we don't hide the images when the
+        //navigation bar is down when typing in the new message box there is a flicker for some reason)
         self.lobbyView?.lobbyImgBack.alpha = 0;
         self.lobbyView?.lobbyImg.alpha = 0;
 
+        //transform everything off screen and bring it back
         var transform = CGAffineTransformMakeTranslation(UIScreen.mainScreen().bounds.width, 0);
         self.lobbyView?.transform = transform;
 
-        UIView.animateWithDuration(1.1, animations: {
+        UIView.animateWithDuration(0.5, animations: {
             transform = CGAffineTransformMakeTranslation(0,0);
             self.lobbyView?.transform = transform;
             transform = CGAffineTransformMakeTranslation(-UIScreen.mainScreen().bounds.width,0);
@@ -103,7 +110,8 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
         })
 
-        self.animationDelegate?.animateLobbyCellsAway(nil);
+        //send the command back to the previvous screen to start the animation on that end and get rid of those cells
+        self.animationDelegate?.animateLobbyCellsAway(nil, animateNavBar: true);
 
 
 
@@ -112,11 +120,11 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
 
     func showNavBar() {
-
+        //(if we don't hide the images when the
+        //navigation bar is down when typing in the new message box there is a flicker for some reason)
         self.lobbyView?.lobbyImgBack.alpha = 0;
         self.lobbyView?.lobbyImg.alpha = 0;
 
-        println("show Nav Bar")
         UIView.animateWithDuration(0.3, animations: {
             self.navigationController?.navigationBar.translucent = false
             self.navigationController?.navigationBar.setBackgroundImage(nil, forBarMetrics: UIBarMetrics.Default)
@@ -128,8 +136,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
     func hideNavBar() {
 
-        println("hide Nav Bar")
-
+        //the images will be in view so lets make them visible
         self.lobbyView?.lobbyImgBack.alpha = 1;
         self.lobbyView?.lobbyImg.alpha = 1;
 
@@ -147,17 +154,14 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
     //scrolling table view
     func scrollViewDidScroll(scrollView: UIScrollView!) {
-//        if (justStarted) {
-//            if (scrollCount >= 2) {
-//                justStarted = false;
-//            }
-//            scrollCount++;
-//        }
 
+        //if scrolling is right past the description
         if (scrollView.contentOffset.y > CGFloat(UIConstants.lobbyImageHeight) + CGFloat(140.0) && self.data.data.isMember) {
-            self.canLoadMore = true;
+            self.canLoadMore = true; //lets give it the ability to load more
+
+            //if scrolling is a bit more than past the description (you are scrolling up and want to see more messages)
             if (scrollView.contentOffset.y < (CGFloat(UIConstants.lobbyImageHeight) + CGFloat(140.0)) + 20 && self.shouldLoadMore) {
-                self.shouldLoadMore = false;
+                self.shouldLoadMore = false; //take away permission to load more
                 println("loading more!");
 
 
@@ -194,9 +198,10 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
 
 
-
+        //if you have scrolled past the lobby image
         if (scrollView.contentOffset.y > CGFloat(UIConstants.lobbyImageHeight * 0.678)) {
-           // self.lobbyView?.setTitle();
+           
+            //if the nav bar is invisible let's show it
             if (self.navigationController?.navigationBar.translucent == true && navBarVisible == true) {
                 navBarVisible = false
                 self.title = data.data.name;
@@ -204,14 +209,20 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
             }
 
+            
+        //you have scrolled back into the lobby image
         } else {
-            if (self.navigationController?.navigationBar.translucent == false && navBarVisible==false && (!self.lobbyView!.isTyping())) {
+            
+            //if the nav bar is visible we want to get rid of it now
+            if (self.navigationController?.navigationBar.translucent == false && navBarVisible==false) {
+                //&& (!self.lobbyView!.isTyping())
                 navBarVisible = true
                 self.title = "";
                 hideNavBar();
             }
 
-            if (firstTime == false) {
+            
+                //lets scale the image if you are scrolling up above the lobby
                 var amount = 1.0 - (1.0 * (CGFloat(scrollView.contentOffset.y) / CGFloat(UIConstants.lobbyImageHeight)))
                 lobbyView?.scaleImage(amount)
 
@@ -221,9 +232,6 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
                 }
 
 
-            } else {
-                firstTime = false;
-            }
         }
 
 
@@ -260,9 +268,11 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
 
         //"〈"
-//CUSTOM BACK BUTTON UNCOMMENT TO APPLUY ANIMATION ON BACK
-        var backButton = UIBarButtonItem(title: "‹", style: UIBarButtonItemStyle.Bordered, target: self, action: "backButton");
-        backButton.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(17)], forState: .Normal);
+        //CUSTOM BACK BUTTON UNCOMMENT TO APPLY ANIMATION ON BACK
+//        var backButton = UIBarButtonItem(title: "<", style: UIBarButtonItemStyle.Bordered, target: self, action: "backButton");
+        var backButton = UIBarButtonItem(title: " ", style: UIBarButtonItemStyle.Bordered, target: self, action: "backButton");
+//        backButton.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(17)], forState: .Normal);
+        backButton.setTitleTextAttributes([NSFontAttributeName: UIFont(name: "backbutton", size: 20.0)!], forState: UIControlState.Normal);
         self.navigationItem.leftBarButtonItem=backButton;
     }
 
@@ -346,11 +356,17 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
                 //if its false that means it is about to turn true, it turns to checked after this
                 //function runs
                 socialController?.setTypeAndAuthenticate(type);
+                socialView?.makeSubmitBlue();
+            } else {
+                socialView?.makeSubmitOrange();
+
             }
         } else {
+
                 socialController?.service = type;
                 socialController?.cancelOauth?(type);
                 joinPupButton?.touchUp(button, type: type)
+
 
         }
 
@@ -410,6 +426,10 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
 
     }
+    
+    func viewDidApeear() {
+        
+    }
 
 
 
@@ -466,12 +486,12 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
     func popLobby() {
 //       self.navigationController?.popViewControllerAnimated(true);
-    UIView.animateWithDuration(0.68, animations: {
+    UIView.animateWithDuration(0.38, animations: {
         var transform = CGAffineTransformMakeTranslation(UIScreen.mainScreen().bounds.width, 0);
         self.lobbyView?.transform = transform;
         transform = CGAffineTransformMakeTranslation(0,0);
         nav!.tabBar.transform = transform;
-
+        self.lobbyView?.backgroundColor = UIColor.clearColor();
     }, completion: {
         finished in
         self.navigationController?.dismissViewControllerAnimated(false, completion: nil);
@@ -556,7 +576,6 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
             var rowAndSection = NSIndexPath(forRow: self.data.data.messages.count - 1, inSection: 1);
             println("scroll down!!");
             self.lobbyView?.table?.scrollToRowAtIndexPath(rowAndSection, atScrollPosition: UITableViewScrollPosition.Bottom, animated: false);
-            self.lobbyView?.setCoverImageTimer()
             hasAnimatedDown = true;
         }
 
@@ -569,15 +588,11 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
     func joinLobby() {
         println("joining this lobby")
-        var config = SwiftLoader.Config()
-        config.size = 150
-        config.spinnerColor = UIColor(rgba: colors.orange)
-        config.backgroundColor = UIColor.whiteColor()
+               self.lobbyView?.changeJoinButtonBackgroundColor();
 
-        SwiftLoader.setConfig(config);
-        SwiftLoader.show(title: "Loading...", animated: true)
         if (submitting==false) {
             submitting = true;
+            self.lobbyView?.joinLobbyButton.addIndicator();
             data.joinLobby({
                 self.submitting = false;
                 println("successfully joined")
@@ -585,12 +600,11 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
                 self.membersList.populateUserList(self.data.data.users, owner: self.data.data.owner);
 
 
-                self.lobbyView?.joinLobbyButton.removeFromSuperview();
-                SwiftLoader.hide()
+                self.lobbyView?.hideAndRemoveJoin();
                 
             }, failure: {
                 println("failed")
-                SwiftLoader.hide()
+                self.lobbyView?.resetJoinButtonBackgroundColor();
                 self.submitting = false;
             })
 
@@ -691,7 +705,9 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
                 println("no messages, let's share")
                 let cell = UITableViewCell();
                 setUpSharing(cell.contentView);
+
                 cell.selectionStyle = UITableViewCellSelectionStyle.None;
+                cell.backgroundColor = UIColor.whiteColor();
                 return cell;
 
             } else if (self.data.hasMessages()) {
@@ -699,7 +715,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
                 if (self.justStarted) {
                     println(0.7 + (Double(self.messageCount) * Double(0.1)))
-                    cell.setTheAnimationDelay(0.45 + (Double(self.messageCount) * Double(0.2)));
+                    cell.setTheAnimationDelay(0.35 + (Double(self.messageCount) * Double(0.075)));
                     self.messageCount++;
                 } else {
                     cell.setTheAnimationDelay(0.0)
@@ -729,6 +745,16 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         return 2;
     }
 
+//    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+//
+//        return UITableViewAutomaticDimension;
+//
+//    }
+
+//- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//return UITableViewAutomaticDimension;
+//}
 
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -740,7 +766,12 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
                 var height = ((UIScreen.mainScreen().bounds.size.width / 4) / (312 / 165)) * 3;
                 return ((UIScreen.mainScreen().bounds.size.width / 4) / (312 / 165)) * 3;
             } else {
-                return CGFloat(UIConstants.messageBaseSize) + UIConstants.getMessageHeightAdditionBasedOnTextLength(self.data.data.messages[indexPath.row].message);
+
+                var height = CGFloat(UIConstants.messageBaseSize) + UIConstants.getMessageHeightAdditionBasedOnTextLength(self.data.data.messages[indexPath.row].message);
+                if (self.data.data.messages[indexPath.row].username == "system message") {
+                    height = height * 0.7;
+                }
+                return height;
 
             }
         }

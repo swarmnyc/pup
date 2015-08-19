@@ -69,6 +69,9 @@ class SocialButtonsView: UIView {
     //var submitButton = UIButton()
     var submitButton: UIButton = UIButton();
     var textView: UITextView = UITextView();
+    var whiteBackground = UIView();
+
+    var numberOfButtonsPressed = 0;
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -76,6 +79,19 @@ class SocialButtonsView: UIView {
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+
+
+    func makeSubmitBlue() {
+        numberOfButtonsPressed++;
+        self.submitButton.backgroundColor = UIColor(rgba: colors.tealMain);
+    }
+
+    func makeSubmitOrange() {
+        numberOfButtonsPressed--;
+        if (numberOfButtonsPressed == 0) {
+            self.submitButton.backgroundColor = UIColor(rgba: colors.orange);
+        }
     }
 
 
@@ -98,6 +114,7 @@ class SocialButtonsView: UIView {
 
             self.submitButton.setTitle("Share", forState: .Normal);
             self.submitButton.setTitleColor(UIColor.whiteColor(), forState: .Normal);
+            self.submitButton.titleLabel?.font = UIConstants.buttonType;
             self.submitButton.backgroundColor = UIColor(rgba: colors.orange);
             self.submitButton.addTarget(self, action: "sendButton", forControlEvents: UIControlEvents.TouchUpInside);
 
@@ -108,7 +125,7 @@ class SocialButtonsView: UIView {
             self.textView.text = "No one's here yet.\n" +
                     "Why not invite some friends?"
 
-
+            self.whiteBackground.backgroundColor = UIColor.whiteColor();
 
                 self.addViews();
                 self.addConstraints()
@@ -123,8 +140,8 @@ class SocialButtonsView: UIView {
 
     func setSubmitButtonText() {
         self.submitButton.setTitle("Share Again?", forState: .Normal);
-        UIView.animateWithDuration(1.5, animations: {
-            self.submitButton.backgroundColor = UIColor(rgba: colors.orange).darkerColor(0.2);
+        UIView.animateWithDuration(0.3, animations: {
+            self.submitButton.backgroundColor = self.submitButton.backgroundColor!.darkerColor(0.2);
 
         })
 
@@ -136,9 +153,15 @@ class SocialButtonsView: UIView {
 
     func sendButton() {
         self.buttons[0].buttonDelegate?.touchUp(buttons, type: "send")
+        UIView.animateWithDuration(0.3, animations: {
+            self.submitButton.backgroundColor = self.submitButton.backgroundColor!.darkerColor(0.2);
+            
+        })
     }
 
     func addViews() {
+
+        self.addSubview(self.whiteBackground)
 
         for (var i = 0; i<buttons.count; i++) {
             self.addSubview(buttons[i]);
@@ -159,9 +182,17 @@ class SocialButtonsView: UIView {
         }
 
 
+        self.whiteBackground.snp_makeConstraints {
+            (make) -> Void in
+            make.top.equalTo(self).offset(0)
+            make.left.equalTo(self).offset(0)
+            make.right.equalTo(self).offset(0)
+            make.height.equalTo(UIScreen.mainScreen().bounds.size.height)
+        }
+
         self.submitButton.snp_makeConstraints {
             (make) -> Void in
-            make.bottom.equalTo(self).offset(0)
+            make.top.equalTo(self.buttons[0].snp_bottom).offset(0);
             make.left.equalTo(self).offset(0)
             make.right.equalTo(self).offset(0)
             make.height.equalTo((UIScreen.mainScreen().bounds.size.width / 4) / (312 / 165))
@@ -194,6 +225,16 @@ class SocialButtonsView: UIView {
             make.right.equalTo(self).offset(0)
             make.height.equalTo((UIScreen.mainScreen().bounds.size.width / 4) / (312 / 165))
         }
+
+
+        var transform = CGAffineTransformMakeTranslation(UIScreen.mainScreen().bounds.width, 0);
+        self.transform = transform;
+
+        UIView.animateWithDuration(0.45, animations: {
+            transform = CGAffineTransformMakeTranslation(0,0);
+            self.transform = transform;
+        })
+
     }
 
 
@@ -203,6 +244,7 @@ class SocialButtonsView: UIView {
                     self.buttons[i].cancelOauth();
             }
         }
+        makeSubmitOrange();
     }
 
 

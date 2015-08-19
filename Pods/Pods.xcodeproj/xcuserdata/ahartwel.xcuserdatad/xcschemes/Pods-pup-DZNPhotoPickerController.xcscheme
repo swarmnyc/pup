@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B86478447035A69F1188F375"
+               BlueprintIdentifier = "10D8B90B380C2550AF449750"
                BuildableName = "DZNPhotoPickerController.framework"
                BlueprintName = "Pods-pup-DZNPhotoPickerController"
                ReferencedContainer = "container:Pods.xcodeproj">

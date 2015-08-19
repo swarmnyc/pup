@@ -41,7 +41,7 @@ class SocialSharingSwitch: UIView {
                 text = "twitter"
             }
             self.label.text = text.capitalizeIt;
-
+            self.label.font = UIConstants.paragraphType;
             if (currentUser.data.social[text]!) {
                 self.active = true;
             }
@@ -78,7 +78,7 @@ class SocialSharingSwitch: UIView {
             make.left.equalTo(self).offset(UIConstants.horizontalPadding)
             make.top.equalTo(self).offset(0)
             make.bottom.equalTo(self).offset(0)
-            make.right.equalTo(self.toggle.snp_left).offset(-UIConstants.horizontalPadding)
+            make.right.equalTo(self.toggle.snp_left).offset(-UIConstants.halfHorizontalPadding)
         }
 
     }

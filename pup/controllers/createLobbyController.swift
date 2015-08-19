@@ -24,7 +24,6 @@ class CreateLobbyController: UIViewController, SimpleButtonDelegate,UISearchBarD
 
 
 
-
 var dateDisplay: DateDisplayView = DateDisplayView();
 
     required init(coder aDecoder: NSCoder)
@@ -62,8 +61,8 @@ var dateDisplay: DateDisplayView = DateDisplayView();
         createView.containerView.addSubview(gamerSkill!.view)
         setUpDateCallbacks(updateDate, newTime: updateTime)
 
-        playStyle?.setUpView(self.createView.containerView, bottomOffset:  300.0)
-        gamerSkill?.setUpView(self.createView.containerView, bottomOffset: 200.0)
+        playStyle?.setUpView(self.createView.containerView, bottomOffset:  340.0)
+        gamerSkill?.setUpView(self.createView.containerView, bottomOffset: 240.0)
 
         view.addSubview(searchController!.view)
 
@@ -125,24 +124,19 @@ var dateDisplay: DateDisplayView = DateDisplayView();
         newLobbyModel.GamerSkill = gamerSkill?.getCurrentSelection();
         if (newLobbyModel.checkData()) {
 
-            var config = SwiftLoader.Config()
-            config.size = 150
-            config.spinnerColor = UIColor(rgba: colors.orange)
-            config.backgroundColor = UIColor.whiteColor()
-            SwiftLoader.setConfig(config);
+
+            createView.pressIt();
 
             createView.closeKeyboard();
 
-            SwiftLoader.show(title: "Loading...", animated: true)
             newLobbyModel.createRequest(moveToLobby, failure: {
-                SwiftLoader.hide()
-
+                var alert = SNYError(alertTitle: "Could Not Create Lobby", alertText: "Please try again", networkRequest: true)
             })
 
         } else {
-            var alert = Error(alertTitle: "Could Not Create Lobby", alertText: "Make sure to fill out all of the fields")
-            SwiftLoader.show(title: "Loading...", animated: true)
-            SwiftLoader.hide()
+            var alert = SNYError(alertTitle: "Could Not Create Lobby", alertText: "Make sure to fill out all of the fields")
+            createView.releaseIt();
+
 
         }
         println("createLobby")
@@ -165,6 +159,7 @@ var dateDisplay: DateDisplayView = DateDisplayView();
             }
             //logInButton?.addToAppView()
         }
+        self.createView.scrollView.setContentOffset(CGPointMake(0,0), animated: false);
 
         self.createView.checkViewHeightAndCorrect();
 
@@ -180,14 +175,21 @@ var dateDisplay: DateDisplayView = DateDisplayView();
     }
 
     func moveToLobby(newLobby: LobbyData) {
-        let lobbyView = SingleLobbyController(info: newLobby)
+        self.createView.releaseIt()
 
-        SwiftLoader.hide()
-        lobbyView.hidesBottomBarWhenPushed = true;
+        var lobbyController = SingleLobbyController(info: newLobby);
 
-        nav!.viewControllers?[1].pushViewController(lobbyView, animated: true);
+
         nav!.selectedIndex = 1;
-        nav!.selectedViewController!.viewDidAppear(true)
+        //nav!.selectedViewController!.viewDidAppear(true)
+
+       // SwiftLoader.hide()
+
+
+
+
+        ((nav!.viewControllers![1] as! UINavigationController).topViewController as! MyChatsController).pushLobby(lobbyController)
+
 
 //        var viewControllerArray = NSMutableArray();
 //        viewControllerArray.setArray(self.navigationController?.viewControllers as! [AnyObject]!)

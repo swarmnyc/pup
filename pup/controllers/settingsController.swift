@@ -169,7 +169,7 @@ class SettingsController: UIViewController, UIImagePickerControllerDelegate,UINa
             }, failure: {
                 println("failure")
                 SwiftLoader.hide();
-                Error(alertTitle: "Couldn't Upload Your Photo", alertText: "Please try again...")
+                SNYError(alertTitle: "Couldn't Upload Your Photo", alertText: "Please try again...", networkRequest: true)
             });
 
         }
@@ -183,7 +183,7 @@ class SettingsController: UIViewController, UIImagePickerControllerDelegate,UINa
 
         println(nav!);
         println(nav!.navigationController);
-        picker.dismissViewControllerAnimated(true, completion: nil) //5
+        picker.dismissViewControllerAnimated(false, completion: nil) //5
         nav!.presentViewController(controller, animated: true, completion: nil);
 
 

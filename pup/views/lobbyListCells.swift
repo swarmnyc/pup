@@ -6,7 +6,7 @@
 import Foundation
 import UIKit
 import QuartzCore
-import Haneke
+//import WebImage
 
 class gameCell: UITableViewCell {
 
@@ -25,9 +25,9 @@ class gameCell: UITableViewCell {
     var tags: UILabel = UILabel()
     var time: UILabel = UILabel()
     var platform: UILabel = UILabel()
-    var divider = UIView()
-    var isNew = true;
-    var justStarted = false;
+    var divider: UIView = UIView()
+    var isNew: Bool = true;
+    var justStarted: Bool = false;
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -105,7 +105,7 @@ class gameCell: UITableViewCell {
         self.contentView.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self).offset(UIConstants.halfHorizontalPadding)
             make.right.equalTo(self).offset(-UIConstants.halfHorizontalPadding)
-            make.top.equalTo(self).offset(UIConstants.halfHorizontalPadding / 2)
+            make.top.equalTo(self).offset(UIConstants.halfHorizontalPadding)
             make.bottom.equalTo(self).offset(-UIConstants.halfHorizontalPadding / 2)
         }
 
@@ -143,9 +143,9 @@ class gameCell: UITableViewCell {
         }
         imgView.snp_remakeConstraints { (make) -> Void in
             make.right.equalTo(imageAndPlatform).offset(0)
-            make.bottom.equalTo(imageAndPlatform).offset(0)
+            make.top.equalTo(textRightTagsAndDate.snp_bottom).offset(0)
             make.left.equalTo(imageAndPlatform).offset(0)
-            make.height.equalTo(topSectionHeight)
+            make.bottom.equalTo(self.contentView)
 
 
         }
@@ -162,14 +162,14 @@ class gameCell: UITableViewCell {
             make.left.equalTo(textRightTitleAndDesc).offset(UIConstants.halfHorizontalPadding)
             make.right.equalTo(textRightTitleAndDesc).offset(-UIConstants.halfHorizontalPadding)
             make.top.equalTo(textRightTitleAndDesc).offset(UIConstants.halfHorizontalPadding)
-            make.height.equalTo(18)
+            make.height.equalTo(15)
 
         }
         desc.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(textRightTitleAndDesc).offset(UIConstants.halfHorizontalPadding)
             make.right.equalTo(textRightTitleAndDesc).offset(-UIConstants.halfHorizontalPadding)
             make.top.equalTo(title.snp_bottom).offset(UIConstants.halfHorizontalPadding - 3)
-            make.bottom.equalTo(textRightTitleAndDesc).offset(-UIConstants.verticalPadding)
+            make.bottom.equalTo(textRightTitleAndDesc).offset(-UIConstants.halfVerticalPadding)
 
         }
 
@@ -226,7 +226,7 @@ class gameCell: UITableViewCell {
             var trans = CGAffineTransformMakeTranslation(UIScreen.mainScreen().bounds.width, 0.0);
             self.contentView.transform = trans;
             println(data.animateIn);
-            UIView.animateWithDuration(0.45 + (Double(data.index) * 0.2), animations: {
+            UIView.animateWithDuration(0.1 + (Double(data.index) * 0.08), animations: {
                 trans = CGAffineTransformMakeTranslation(0.0, 0.0);
                 self.contentView.transform = trans;
             });
@@ -248,39 +248,51 @@ class gameCell: UITableViewCell {
 
         backImageView.clipsToBounds = true;
         backImageView.contentMode = UIViewContentMode.ScaleAspectFill;
-        backImageView.frame.size = CGSizeMake(93, 93);
-        backImageView.image = getImageWithColor(UIColor(rgba: colorFromSystem(data.platform)), CGSizeMake(93,93))
+        backImageView.image = getImageWithColor(UIColor(rgba: colorFromSystem(data.platform)), CGSizeMake(93,98))
 
         imgView.clipsToBounds = true;
         imgView.contentMode = UIViewContentMode.ScaleAspectFill;
-        imgView.frame.size = CGSizeMake(93, 93);
         imgView.backgroundColor = UIColor(rgba: colors.orange)
         imgView.alpha = 0;
-        self.imgView.hnk_setImageFromURL(url!, placeholder:nil, format: nil, failure: nil, success: {
-            (image) -> Void in
-            self.imgView.image = image;
-            UIView.animateWithDuration(0.3, animations: {
-                () -> Void in
-                self.imgView.alpha = 1;
-            });
-
-        })
-
+        self.imgView.sd_setImageWithURL(url!, placeholderImage: nil, options: SDWebImageOptions.RefreshCached, progress: {
+            (recievedSize, exprectedSize) -> Void in
+            
+           // println(recievedSize);
+            
+            }, completed: {
+                (image, error, cacheType, imageUrl) -> Void in
+                self.imgView.image = image;
+                UIView.animateWithDuration(0.3, animations: {
+                    () -> Void in
+                    self.imgView.alpha = 1;
+                });
+        });
+        
+//        self.imgView.hnk_setImageFromURL(url!, placeholder:nil, format: nil, failure: nil, success: {
+//            (image) -> Void in
+//            self.imgView.image = image;
+//            UIView.animateWithDuration(0.3, animations: {
+//                () -> Void in
+//                self.imgView.alpha = 1;
+//            });
+//
+//        })
+       
 
         platform.text = data.platform.replacePCWithSteam();
         platform.textAlignment = NSTextAlignment.Center
-        platform.font = UIFont(name: "AvenirNext-Medium", size: 9.0)
+        platform.font = UIConstants.tagType;
         platform.textColor = UIColor.whiteColor();
         platform.backgroundColor = UIColor(rgba: colorFromSystem(data.platform))
 
 
         title.text = data.name
-        title.font = UIFont(name: "AvenirNext-Regular", size: 16.0)
+        title.font = UIConstants.titleFont;
         title.layoutMargins = UIEdgeInsetsZero
 
 
         desc.text = data.description.shorten(138)
-        self.desc.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
+        self.desc.font = UIConstants.paragraphType;
         desc.editable = false
         desc.userInteractionEnabled = false
         desc.scrollEnabled = false
@@ -289,9 +301,9 @@ class gameCell: UITableViewCell {
         desc.backgroundColor = UIColor.clearColor()
 
         tags.text = data.getTagText
-        tags.font = UIFont(name: "AvenirNext-Medium", size: 9.0)
+        tags.font = UIConstants.tagType;
         time.text = data.timeInHuman
-        time.font = UIFont(name: "AvenirNext-Medium", size: 9.0)
+        time.font = UIConstants.tagType;
 
         time.textColor = UIColor(rgba: colors.tealMain)
 
@@ -315,46 +327,36 @@ class gameCell: UITableViewCell {
 }
 
 
-class headerCell: UITableViewCell {
+
+
+
+class headerCell: UITableViewHeaderFooterView {
 
     var title:UILabel = UILabel()
 
+    var containerView: UIView = UIView();
 
-    var data = LobbyData()
 
+  
+    
     required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        super.init(coder: aDecoder);
+        self.containerView.addSubview(self.title);
+        self.contentView.addSubview(containerView)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame);
+        self.containerView.addSubview(self.title);
+        self.contentView.addSubview(containerView)
     }
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String!) {
 
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-    }
+    func setCell(title: String) {
+        println("setupCell");
+    
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-
-
-    func setCell(item: LobbyData) {
-
-
-        self.selectionStyle = UITableViewCellSelectionStyle.None
-        setUpViews(item)
-
-
-
-
-        self.contentView.addSubview(title)
-
-
-        setUpConstraints();
-
-        self.backgroundColor = UIColor(rgba: colors.lightGray)
-        self.contentView.backgroundColor = UIColor(rgba: colors.lightGray)
-        self.title.backgroundColor = UIColor(rgba: colors.lightGray);
+        setUpViews(title)
 
 
     }
@@ -362,27 +364,38 @@ class headerCell: UITableViewCell {
 
 
 
-    func setUpConstraints() {
-
-        var viewsDict = Dictionary <String, UIView>()
-        viewsDict["title"] = title
-        title.snp_remakeConstraints { (make) -> Void in
-            make.top.equalTo(self.contentView).offset(0)
-            make.left.equalTo(self.contentView).offset(UIConstants.halfHorizontalPadding)
-            make.bottom.equalTo(self.contentView).offset(0)
-            make.right.equalTo(self.contentView).offset(0)
-
-
-        }
-
-
-    }
 
 
 
-    func setUpViews(data: LobbyData) {
-        title.text = data.breakdownTitle
-        title.font = title.font.fontWithSize(10)
+    func setUpViews(title: String) {
+        
+       
+        //self.frame = CGRectMake(0,0,UIScreen.mainScreen().bounds.width, 35);
+        self.title.backgroundColor = UIColor(rgba: colors.lightGray)
+        self.contentView.backgroundColor = UIColor.clearColor();
+        containerView.backgroundColor = UIColor.clearColor()
+        containerView.clipsToBounds = true;
+        self.backgroundView = UIView();
+        self.backgroundView?.backgroundColor = UIColor.clearColor();
+        
+        self.title.text = title;
+        self.title.font = UIConstants.titleFont;
+        self.title.textColor = UIColor.blackColor().lighterColor(0.6);
+        containerView.layer.frame = CGRectMake(0,0,UIScreen.mainScreen().bounds.width, 35);
+       
+        self.title.layer.borderWidth = 0.5;
+        self.title.layer.borderColor = UIColor.clearColor().CGColor;
+        self.title.layer.masksToBounds = false;
+        self.title.clipsToBounds = false;
+        self.title.layer.shadowRadius = 0;
+        self.title.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).CGColor
+        self.title.layer.shadowOpacity = 1;
+        self.title.layer.shadowOffset = CGSizeMake(0, 2);
+        self.title.frame = CGRectMake(0,0,containerView.frame.width, containerView.frame.height - 2);
+        
+        
+        var trans = CGAffineTransformMakeTranslation(0.0, 0.0);
+        self.title.transform = trans;
 
     }
 
@@ -392,10 +405,28 @@ class headerCell: UITableViewCell {
         set(newVal) {}
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
+ 
+    
+    func moveLeft(speed: Double, success: (() -> Void)?) {
+        println("move left" + self.title.text!);
+        var trans = CGAffineTransformMakeTranslation(-self.contentView.frame.width, 0.0);
+        UIView.animateWithDuration(speed, animations: {
+            self.title.transform = trans;
+            }, completion: {
+                finished in
+                success?();
+                
+        });
 
-        // Configure the view for the selected state
+    }
+    
+    func removeOffset(speed: Double) {
+        println("offset removed!!!! " + self.title.text!);
+        var trans = CGAffineTransformMakeTranslation(0.0, 0.0);
+        UIView.animateWithDuration(speed, animations: {
+            self.title.transform = trans;
+        })
+
     }
 
 }

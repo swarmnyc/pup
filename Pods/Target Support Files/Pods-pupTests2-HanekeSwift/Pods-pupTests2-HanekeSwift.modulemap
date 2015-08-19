@@ -1,6 +1,0 @@
-framework module Haneke {
-  umbrella header "Pods-pupTests2-HanekeSwift-umbrella.h"
-
-  export *
-  module * { export * }
-}

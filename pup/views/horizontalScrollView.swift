@@ -35,7 +35,7 @@ class HorizontalSelectView: UIView {
         self.addGestureRecognizer(swipeLeft)
 
         self.title.text = title;
-        self.title.font = UIFont(name: "AvenirNext-Medium", size: 10.0)
+        self.title.font = UIConstants.titleFont;
         self.title.textColor = UIColor(rgba: colors.mainGrey)
         self.title.textAlignment = NSTextAlignment.Center
         self.addSubview(self.title)
@@ -211,7 +211,7 @@ class HorizontalButtons: UILabel {
             self.textAlignment = NSTextAlignment.Center
             self.delegate = buttonDelegate;
         self.textColor = UIColor(rgba: colors.midGray)
-        self.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
+        self.font = UIConstants.tagType;
     }
 
 
@@ -230,14 +230,14 @@ class HorizontalButtons: UILabel {
 
     func setSelected() {
             self.textColor = UIColor(rgba: colors.tealMain)
-            self.font = UIFont(name: "AvenirNext-Regular", size: 19.0)
+            self.font = UIConstants.buttonType;
            // delegate?.touchUp(self, type: self.text)
 
     }
 
     func unSelected() {
         self.textColor = UIColor(rgba: colors.midGray)
-        self.font = UIFont(name: "AvenirNext-Regular", size: 9.0)
+        self.font = UIConstants.tagType;
     }
 
 

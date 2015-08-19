@@ -7,8 +7,7 @@ use_frameworks!
 target 'pup' do
   pod 'SnapKit', '~> 0.10.0'
   pod 'Alamofire', '~> 1.2'
-  pod 'HanekeSwift'
-  pod 'ENSwiftSideMenu', '~> 0.0'
+  pod 'SDWebImage', '~>3.7'
   pod 'SwiftLoader'
   pod 'QuickBlox', '~> 2.2.3'
   pod 'FBSDKCoreKit'
@@ -17,29 +16,25 @@ target 'pup' do
   pod 'JLToast'
   pod 'uservoice-iphone-sdk'
   pod 'DZNPhotoPickerController/Editor'
-  pod 'Reveal-iOS-SDK', :configurations => ['Debug']
 end
 
 target 'pupTests' do
   pod 'SnapKit', '~> 0.10.0'
   pod 'Alamofire', '~> 1.2'
-  pod 'HanekeSwift'
-  pod 'ENSwiftSideMenu', '~> 0.0'
+  pod 'SDWebImage', '~>3.7'
   pod 'SwiftLoader'
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
   pod 'uservoice-iphone-sdk'
   pod 'DZNPhotoPickerController/Editor'
-  pod 'Reveal-iOS-SDK', :configurations => ['Debug']
 
 end
 
 target 'pupTests2' do
   pod 'SnapKit', '~> 0.10.0'
   pod 'Alamofire', '~> 1.2'
-  pod 'HanekeSwift'
-  pod 'ENSwiftSideMenu', '~> 0.0'
+  pod 'SDWebImage', '~>3.7'
   pod 'SwiftLoader'
   pod 'QuickBlox', '~> 2.2.3'
   pod 'FBSDKCoreKit'

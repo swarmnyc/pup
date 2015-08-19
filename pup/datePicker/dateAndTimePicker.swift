@@ -6,11 +6,11 @@
 import Foundation
 import UIKit
 
-enum datePickerType {
+enum SNYDatePickerType {
     case Date, Time, DateAndTime;
 }
 
-class DateAndTimePicker: UIView {
+class SNYDateAndTimePicker: UIView {
 
     var datePicker: UIDatePicker = UIDatePicker();
     var cancelButton: UIButton = UIButton();
@@ -29,7 +29,7 @@ class DateAndTimePicker: UIView {
     }
 
 
-    func setUp(pickerType: datePickerType, titleText: String, maxDate: NSDate, minimumDate: NSDate, onComplete: (NSDate) -> Void) {
+    func setUp(pickerType: SNYDatePickerType, titleText: String, maxDate: NSDate, minimumDate: NSDate, onComplete: (NSDate) -> Void) {
 
         self.onComplete = onComplete;
 
@@ -81,7 +81,7 @@ class DateAndTimePicker: UIView {
 
 
 
-        cancelButton.setTitle("Cancel", forState: .Normal)
+        cancelButton.setTitle("CANCEL", forState: .Normal)
         cancelButton.titleLabel!.font = cancelButton.titleLabel!.font.fontWithSize(11.0)
         cancelButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
         cancelButton.titleLabel!.textAlignment = NSTextAlignment.Center

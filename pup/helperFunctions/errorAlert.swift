@@ -7,7 +7,7 @@ import Foundation
 import UIKit
 
 
-class Error {
+class SNYError {
 
     init(alertTitle: String, alertText: String) {
         let alert = UIAlertView()
@@ -15,6 +15,27 @@ class Error {
         alert.message = alertText
         alert.addButtonWithTitle("Got It")
         alert.show()
+    }
+
+    init(alertTitle: String, alertText: String, networkRequest: Bool) {
+        println("network request");
+        if (networkRequest && (Reachability.isConnectedToNetwork() == false)) {
+            let alert = UIAlertView()
+            alert.title = "You are not connected to the internet"
+            alert.message = "Please connect to wifi or a cellular network and try again."
+            alert.addButtonWithTitle("Got It")
+            alert.show()
+
+
+        } else {
+            let alert = UIAlertView()
+            alert.title = alertTitle
+            alert.message = alertText
+            alert.addButtonWithTitle("Got It")
+            alert.show()
+        }
+
+
     }
 
 }

@@ -13,8 +13,8 @@ class SearchResultsView: UIView {
     var searchBar: UISearchBar?
     var gameMissing: GameMissingView = GameMissingView()
 
-    var maxHeight = 225.0;
-    var maxHeightResults = 180.0;
+    var maxHeight: Double = 225.0;
+    var maxHeightResults: Double = 180.0;
 
 
     func setUpView(parent: UIViewController, parentView: UIView, searchBar: UISearchBar) {

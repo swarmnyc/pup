@@ -15,7 +15,7 @@ class DateDisplayView: UIView, UITextFieldDelegate {
 
     var currentDate: NSDate = NSDate();
 
-    var dateSelector: DateAndTimePicker = DateAndTimePicker();
+    var dateSelector: SNYDateAndTimePicker = SNYDateAndTimePicker();
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -35,7 +35,7 @@ class DateDisplayView: UIView, UITextFieldDelegate {
 
         self.title.text = "WHEN?"
         self.title.textAlignment = NSTextAlignment.Center
-        self.title.font = UIFont(name: "AvenirNext-Medium", size: 10.0)
+        self.title.font = UIConstants.titleFont;
         self.title.textColor = UIColor(rgba: colors.mainGrey)
 
 

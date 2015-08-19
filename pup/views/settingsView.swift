@@ -14,7 +14,7 @@ class SettingsView: UIView {
     var scrollView: UIScrollView = UIScrollView()
 
     var profileView: UIView = UIView();
-    var profilePicImg: UIImageView = UIImageView();
+    var profilePicImg: LoaderImageView = LoaderImageView();
     var cameraIcon: UIImageView = UIImageView();
     var usernameView: UITextView = UITextView();
     var integrationDisclaimer: UITextView = UITextView();
@@ -25,6 +25,7 @@ class SettingsView: UIView {
 
     var TOSLink: UIButton = UIButton();
     var openTOS: (() -> Void)?;
+    var bounceImage: Bool = true;
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,9 +44,9 @@ class SettingsView: UIView {
         backgroundColor=UIColor.whiteColor()
 
         clipsToBounds = true;
-    
-            var url = NSURL(string: currentUser.data.picture.getPUPUrl())
-
+            
+        
+        
             profilePicImg.clipsToBounds = true;
             profilePicImg.contentMode = UIViewContentMode.ScaleAspectFill;
             profilePicImg.frame.size = CGSizeMake(93, 93);
@@ -54,26 +55,47 @@ class SettingsView: UIView {
             profilePicImg.layer.cornerRadius = (UIScreen.mainScreen().bounds.size.width / 4) / 2;
             profilePicImg.layer.masksToBounds = true;
 
-            profilePicImg.backgroundColor = UIColor(rgba: colors.orange)
+            profilePicImg.backgroundColor = UIColor(rgba: colors.lightGray)
             profilePicImg.alpha = 0;
             println("url!")
-        println(url)
+
+            var url: NSURL? = nil;
+            url = NSURL(string: currentUser.data.picture.getPUPUrl())
+            println(url);
+
             if (url != nil) {
-//                self.profilePicImg.image = UIImage(data: NSData(contentsOfURL: url!)!);
-                self.profilePicImg.hnk_setImageFromURL(url!)
-            }
-                UIView.animateWithDuration(0.3, animations: {
-                    () -> Void in
-                    self.profilePicImg.alpha = 1;
+                self.profilePicImg.sd_setImageWithURL(url!, placeholderImage: nil, options: SDWebImageOptions.RefreshCached, completed: {
+                    (image, error, cacheType, imageUrl) -> Void in
+                    println(image);
+                    println("^^^ the image")
+                    if (image != nil) {
+                        self.bounceImage = false;
+                        self.profilePicImg.image = image;
+                    } else {
+                        self.profilePicImg.image = UIImage(named: "profilePicDefault");
+                    }
+                    UIView.animateWithDuration(0.3, animations: {
+                        () -> Void in
+                        self.profilePicImg.alpha = 1;
+                    });
                 });
+            } else {
+                self.profilePicImg.image = UIImage(named: "profilePicDefault")
+            }
+//                UIView.animateWithDuration(0.3, animations: {
+//                    () -> Void in
+//                    self.profilePicImg.alpha = 1;
+//                });
 
             cameraIcon.image = UIImage(named: "camera");
             cameraIcon.userInteractionEnabled = true;
 
             usernameView.text = currentUser.data.name;
+            usernameView.font = UIConstants.titleFont;
             usernameView.userInteractionEnabled = false;
 
             integrationDisclaimer.text = "We'll be adding integrations for additional systems..."
+            integrationDisclaimer.font = UIConstants.paragraphType;
             integrationDisclaimer.userInteractionEnabled = false;
 
 
@@ -100,7 +122,7 @@ class SettingsView: UIView {
             TOSLink.setTitle("TOS Document", forState: .Normal);
             TOSLink.setTitleColor(UIColor.blackColor(), forState: .Normal);
             TOSLink.addTarget(self, action: "viewTOS", forControlEvents: UIControlEvents.TouchUpInside);
-            TOSLink.titleLabel!.font = UIFont(name: "AvenirNext-Medium", size: 16.0);
+            TOSLink.titleLabel!.font = UIConstants.paragraphType;
             TOSLink.titleLabel!.textAlignment = .Left;
             TOSLink.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left;
 
@@ -118,6 +140,7 @@ class SettingsView: UIView {
         println(url)
         println("   !!!!!! it should be working")
         self.profilePicImg.image = UIImage(data: NSData(contentsOfURL: url!)!);
+        self.profilePicImg.alpha = 1;
 
     }
 
@@ -160,6 +183,15 @@ class SettingsView: UIView {
         profileView.alpha = opac
         containerView.alpha = opac
 
+        if (self.bounceImage) {
+            let bounceAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
+            bounceAnimation.values = [1.0, 1.25, 0.94, 1.15, 0.95, 1.02, 1.0]
+            bounceAnimation.duration = NSTimeInterval(0.5)
+            bounceAnimation.calculationMode = kCAAnimationCubic
+
+            profilePicImg.layer.addAnimation(bounceAnimation, forKey: "bounceAnimation")
+
+        }
     }
 
     func setUpView() {
@@ -295,7 +327,7 @@ class SettingsView: UIView {
                 (make) -> Void in
                 make.left.equalTo(self.profilePicImg.snp_right).offset(UIConstants.horizontalPadding)
                 make.right.equalTo(self.profileView).offset(0)
-                make.top.equalTo(self.usernameView.snp_bottom).offset(UIConstants.verticalPadding)
+                make.top.equalTo(self.usernameView.snp_bottom).offset(0)
                 make.bottom.equalTo(self.profilePicImg.snp_bottom);
             }
 

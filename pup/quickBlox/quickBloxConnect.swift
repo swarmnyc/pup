@@ -232,12 +232,12 @@ class QuickBlox: NSObject, QBChatDelegate {
                 } else {
                     dispatch_async(dispatch_get_main_queue()) {
                         SwiftLoader.hide();
-                        Error(alertTitle: "Couldn't Send Message", alertText: "Please, try again!")
+                        SNYError(alertTitle: "Couldn't Send Message", alertText: "Please, try again!", networkRequest: true)
                     }
                 }
             } else {  //if the room doesn't exist
                 dispatch_async(dispatch_get_main_queue()) {
-                    Error(alertTitle: "Couldn't Send Message", alertText: "Please, try again!")
+                    SNYError(alertTitle: "Couldn't Send Message", alertText: "Please, try again!", networkRequest: true)
                 }
 
             }
@@ -294,10 +294,15 @@ class QuickBlox: NSObject, QBChatDelegate {
 
     func chatRoomDidReceiveMessage(message: QBChatMessage!, fromRoomJID roomJID: String) {
 
-
-        for (var i = 0; i<delegates.count; i++) {
-            if (self.roomIDToJID(self.delegates[i].QBChatRoomId) == roomJID) {
-                self.delegates[i].addNewMessage(message);
+        //Welcome! You created new Multi User Chat Room. Room is locked now. Configure it please!
+        //Room is now unlocked
+        println(message);
+        println("chatRoomDidRecieveMessage")
+        if (message.customParameters != nil) {
+            for (var i = 0; i < delegates.count; i++) {
+                if (self.roomIDToJID(self.delegates[i].QBChatRoomId) == roomJID) {
+                    self.delegates[i].addNewMessage(message);
+                }
             }
         }
 

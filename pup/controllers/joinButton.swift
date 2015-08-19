@@ -55,8 +55,7 @@ class JoinPupButton: UIViewController, SimpleButtonDelegate {
         println("touched")
        // parent?.view.addSubview(registrationController.view)
 
-
-
+        println(self.parentViewController?.navigationController);
 
         registrationController?.addParentConstraints();
         registrationController?.onSuccessJoin = onSuccessJoin;
@@ -75,6 +74,8 @@ class JoinPupButton: UIViewController, SimpleButtonDelegate {
         registrationController?.registrationView.removeFromSuperview()
         self.joinButtonView.removeViews();
         self.view.removeFromSuperview()
+
+
     }
 
     func setUpConstraints() {

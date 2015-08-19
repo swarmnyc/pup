@@ -34,12 +34,13 @@ class SearchResultsViewCell: UICollectionViewCell {
         gameName.text = data.Name
         gameName.textColor = UIColor(rgba: colors.mainGrey);
         println(data.Name)
-        gameName.font = UIFont(name: "AvenirNext-Regular", size: 12.0)
+        gameName.font = UIConstants.titleFont;
 
         var url = NSURL(string: data.ThumbnailPictureUrl.getPUPUrl())
         gameImg.backgroundColor = UIColor.blackColor();
         gameImg.frame.size = CGSizeMake(45, 45);
-        self.gameImg.hnk_setImageFromURL(url!)
+//        self.gameImg.hnk_setImageFromURL(url!)
+        self.gameImg.sd_setImageWithURL(url!, placeholderImage: nil, options: SDWebImageOptions.RefreshCached);
         self.gameImg.clipsToBounds = true;
 
 //        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in

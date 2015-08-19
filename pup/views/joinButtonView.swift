@@ -12,7 +12,7 @@ class JoinPupButtonView: PlatformButtonToggle {
     var topLabel: UILabel = UILabel();
     var bottomLabel: UILabel = UILabel()
     var delegate: SimpleButtonDelegate?
-    var aboveTabBar = false;
+    var aboveTabBar: Bool = false;
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,6 +42,8 @@ class JoinPupButtonView: PlatformButtonToggle {
 
     }
 
+
+
     func bounce(amount: CGFloat) {
             var transAmount = amount
             if (transAmount>0) {
@@ -60,13 +62,13 @@ class JoinPupButtonView: PlatformButtonToggle {
 
         topLabel.textColor = UIColor.whiteColor();
         topLabel.text = "Join"
-        topLabel.font = UIFont(name: "AvenirNext-Regular", size: 16.0)
+        topLabel.font = UIConstants.buttonType;
         topLabel.textAlignment = NSTextAlignment.Center
 
 
         bottomLabel.textColor = UIColor.whiteColor();
         bottomLabel.text = "You'll be able to chat and stuff"
-        bottomLabel.font = UIFont(name: "AvenirNext-Regular", size: 12.0)
+        bottomLabel.font = UIConstants.paragraphType;
         bottomLabel.textAlignment = .Center
         self.aboveTabBar = aboveTabBar;
 

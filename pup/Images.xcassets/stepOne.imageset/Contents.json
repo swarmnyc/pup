@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "stepOne.png"
+      "filename" : "guide1.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "stepOne-1.png"
+      "filename" : "guide1-1.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "stepOne-2.png"
+      "filename" : "guide1-2.png"
     }
   ],
   "info" : {

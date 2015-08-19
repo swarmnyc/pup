@@ -8,11 +8,11 @@ import Alamofire
 
 
 class singleLobby {
-    var data = LobbyData();
-    var empty = false;
+    var data: LobbyData = LobbyData();
+    var empty: Bool = false;
     var quickBloxConnect: QuickBlox?
     var passMessagesToController: (() -> Void)?
-    var recievedMessages = false;
+    var recievedMessages: Bool = false;
     var reloadData:(() -> Void)?
     var clearInputText: (() -> Void)?
 
@@ -105,7 +105,7 @@ class singleLobby {
             self.data.addSelfAsMember();
                //self.data.addQuickBloxConnect();
            } else {
-               Error(alertTitle: "Couldn't Join Room", alertText: "We had some trouble getting you in, please try again...")
+               SNYError(alertTitle: "Couldn't Join Room", alertText: "We had some trouble getting you in, please try again...", networkRequest: true)
                failure()
            }
             println(error)

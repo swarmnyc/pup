@@ -2,6 +2,12 @@
 <module type="CIDR_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
+    <content url="file://$USER_HOME$/Downloads/ImageLoaderIndicator-Final/ImageLoaderIndicator/CircularLoaderView.swift">
+      <sourceFolder url="file://$USER_HOME$/Downloads/ImageLoaderIndicator-Final/ImageLoaderIndicator/CircularLoaderView.swift" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/Downloads/ImageLoaderIndicator-Final/ImageLoaderIndicator/LoaderImageView.swift">
+      <sourceFolder url="file://$USER_HOME$/Downloads/ImageLoaderIndicator-Final/ImageLoaderIndicator/LoaderImageView.swift" isTestSource="false" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

@@ -187,6 +187,7 @@ func cancelTheAuthentication() {
             loginToFacebook()
         } else {
             println("is authenticated")
+
         }
 
     }
@@ -199,11 +200,11 @@ func cancelTheAuthentication() {
             if (error != nil) {
 
                 self.cancelOauth?("facebook")
-                Error(alertTitle: "There was an error", alertText: "Please try logging into facebook again.")
+                SNYError(alertTitle: "There was an error", alertText: "Please try logging into facebook again.", networkRequest: true)
             } else if (result.isCancelled) {
 
                 self.cancelOauth?("facebook");
-                Error(alertTitle: "Decided not to connect facebook?", alertText: "That's ok, you can always connect it later")
+                SNYError(alertTitle: "Decided not to connect facebook?", alertText: "That's ok, you can always connect it later")
             } else {
 
                 self.sendFacebookDataToPup((result.token.tokenString, result.token.userID, result.token.expirationDate));
@@ -240,7 +241,7 @@ func cancelTheAuthentication() {
             //process success response
         },failure:{(error:NSError!) -> Void in
             self.cancelOauth?("facebook")
-            Error(alertTitle: "There was an error", alertText: "Please try logging into facebook again.")
+            SNYError(alertTitle: "There was an error", alertText: "Please try logging into facebook again.", networkRequest: true)
             //process failure response
         })
 

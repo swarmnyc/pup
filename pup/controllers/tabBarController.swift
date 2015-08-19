@@ -34,14 +34,15 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
     var backgroundStrip = UIView();
     var circleView = UIView();
     var createGameView: CustomTabIcon = CustomTabIcon();
-
+    var createcontroller = CreateLobbyController();
     override func viewDidLoad() {
         super.viewDidLoad();
         self.delegate = self;
 
         let allGames = UINavigationController(rootViewController: LobbyListController());
+        myGamesController.view.layoutIfNeeded()
         let myGames = UINavigationController(rootViewController: myGamesController);
-        let newGame = UINavigationController(rootViewController: CreateLobbyController());
+        let newGame = UINavigationController(rootViewController: self.createcontroller);
         let settings = UINavigationController(rootViewController: settingsController);
 
         var config: UVConfig = UVConfig(site: "swarmnyc.uservoice.com")
@@ -131,7 +132,10 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
             
             return false;
         }
-        
+//        else if (viewController == tabBarController.viewControllers![1] as! UIViewController) {
+//            ((tabBarController.viewControllers![1] as! UINavigationController).topViewController as! MyChatsController).getMoreLobbies()
+//        }
+//
         if (viewController == tabBarController.viewControllers![3] as! UIViewController && !currentUser.loggedIn()) {
             self.selectedIndex = 0;
             
@@ -142,9 +146,19 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
             })
             return false;
         }
-        
+
+    
+
         return true;
         
+    }
+    
+    func tabBarController(tabBarController: UITabBarController,
+        didSelectViewController viewController: UIViewController) {
+            
+            if (viewController == tabBarController.viewControllers![1] as! UIViewController) {
+                ((nav!.viewControllers?[1] as! UINavigationController).topViewController as! MyChatsController).GetMyLobbies();
+            }
     }
 
     

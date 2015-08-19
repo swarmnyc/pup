@@ -35,6 +35,7 @@ struct miscData {
 
 
 struct appURLS {
+    
     var siteBase = "http://pup-dev.azurewebsites.net/"
     var apiBase: String {
         get {
@@ -158,30 +159,30 @@ struct UIValues {
           return self.horizontalPadding * 2 + 6;
         }
     };
+
+    var messagePreview = UITextView();
     func getMessageHeightAdditionBasedOnTextLength(message: String) -> CGFloat {
 
 
-        var messagePreview: UITextView = UITextView();
 
-        messagePreview.frame = CGRectMake(0,0,UIScreen.mainScreen().bounds.width, 200);
-        messagePreview.text = message;
+        //self.messagePreview.frame = CGRectMake(0,0,UIScreen.mainScreen().bounds.width, 200);
+        self.messagePreview.text = message;
+        self.messagePreview.font = paragraphType;
+        self.messagePreview.textContainerInset = UIEdgeInsetsZero
+        self.messagePreview.textContainer.lineFragmentPadding = 0;
 
-        messagePreview.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
-        messagePreview.textContainerInset = UIEdgeInsetsZero
-        messagePreview.textContainer.lineFragmentPadding = 0;
+        var size = self.messagePreview.sizeThatFits(CGSizeMake(UIScreen.mainScreen().bounds.width - CGFloat(UIConstants.horizontalPadding * 6), CGFloat.max))
+        //messagePreview.layoutIfNeeded();
 
-        var size = messagePreview.sizeThatFits(CGSizeMake(UIScreen.mainScreen().bounds.width - CGFloat(UIConstants.horizontalPadding * 5), CGFloat.max))
-        messagePreview.layoutIfNeeded();
-
-
-        var numberOfNewLines = message.componentsSeparatedByString("\n").count;
-        if (numberOfNewLines == 0) {
-            numberOfNewLines+=1;
-        }
 
 
 
         return CGFloat(size.height + CGFloat(UIConstants.verticalPadding * 1.5));
     }
+
+    var titleFont = UIFont(name: "AvenirNext-Medium", size: 13.0);
+    var paragraphType = UIFont(name: "AvenirNext-Regular", size: 13.0);
+    var tagType = UIFont(name: "AvenirNext-Medium", size: 9.0);
+    var buttonType = UIFont(name: "AvenirNext-Medium", size: 19.0);
 }
 

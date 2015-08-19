@@ -14,7 +14,7 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
     var filter: FilterViewController! //controller for the filter
 
-    var pullToRefresh = UIRefreshControl();
+    var pullToRefresh: UIRefreshControl = UIRefreshControl();
 
     var parentController: UIViewController?
 
@@ -72,8 +72,7 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.translucent = false
-
-        currentUser.setPage("Find A Game");
+                currentUser.setPage("Find A Game");
         self.title = "All Games";
 
         var barButton = UIBarButtonItem(customView: activityIndicator);
@@ -90,10 +89,11 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
         //register the cell classes so we can reuse them
         self.listView?.table.registerClass(gameCell.self, forCellReuseIdentifier: "gamecell")
-        self.listView?.table.registerClass(headerCell.self, forCellReuseIdentifier: "headercell")
 
         model.getLobbies("", platforms: [], applyChange: true, success: self.updateData, failure: {
             println("failed...")
+            self.activityIndicator.stopAnimating();
+
         })
 
         self.pullToRefresh.backgroundColor = UIColor(rgba: colors.tealMain);
@@ -123,7 +123,7 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
             self.updateData();
             self.pullToRefresh.endRefreshing();
         }, failure: {
-            Error(alertTitle: "Couldn't Refresh The List", alertText: "Sorry about that...");
+            SNYError(alertTitle: "Couldn't Refresh The List", alertText: "Sorry about that...", networkRequest: true);
             self.pullToRefresh.endRefreshing();
         })
     }
@@ -139,8 +139,11 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
                    self.updateData();
            });
         }
-
-
+        if (scrollView.contentOffset.y > 20) {
+        if (self.pullToRefresh.refreshing) {
+            self.pullToRefresh.endRefreshing();
+        }
+        }
 
     }
 
@@ -164,20 +167,67 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
 
+    func setTitleOfPage(search: String, platforms: Array<String>) {
+        var title = "";
+        
+        if (search != "") {
+            title = search;
+            
+            println(title);
+        } else if (platforms.count == 0) {
+            title = "All Games";
+            println(title);
+
+        } else {
+            if (platforms.count == 1) {
+                title = platforms[0];
+            println(title);
+
+            } else {
+                for (var i = 0; i<platforms.count; i++) {
+                    if (i == platforms.count - 1) {
+                        title += platforms[i];
+                    } else {
+                        title += platforms[i] + ", ";
+                    }
+                    println(title);
+
+                }
+                
+                
+            }
+            
+        }
+        self.title = title;
+    }
+    
 
     //on a filter change/search  //new results
     func loadNewLobbies(search: String, platforms: Array<String>) {
-
 //        println(search)
 //        println(platforms)
+        println("LOAD NEW LOBBIES");
         model.getLobbies(search, platforms: platforms, applyChange: true, success: {
 
+            self.setTitleOfPage(search, platforms: platforms);
+            println("^^^ PAGE TITLE ^^^^^");
+
+
             self.animateLobbyCellsAway({
+                var trans = CGAffineTransformMakeTranslation(0, 0);
+                self.navigationController?.navigationBar.transform = trans;
+
+            self.setTitleOfPage(search, platforms: platforms);
+
                 self.updateData();
 
-            });
+            }, animateNavBar: false);
+
+
         }, failure: {
             println("failed...")
+            self.activityIndicator.stopAnimating();
+
         })
 
     }
@@ -199,26 +249,22 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
 
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String {
-        return self.model.gamesKey[section] + " (\(self.model.gamesOrganized[self.model.gamesKey[section]]!.count))";
-
-    }
+   
 
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        var title: UILabel = UILabel()
-        title.backgroundColor = UIColor(rgba: colors.lightGray)
+        
+        let cell = headerCell(frame: CGRectMake(0,0,UIScreen.mainScreen().bounds.width, 0));
 
-        title.text = "    " + self.model.gamesKey[section] + " (\(self.model.gamesOrganized[self.model.gamesKey[section]]!.count))";
-        title.font = UIFont(name: "AvenirNext-Medium", size: 11.0)
-        title.textColor = UIColor.blackColor().lighterColor(0.6);
-        title.layer.frame.size = CGSizeMake(UIScreen.mainScreen().bounds.width * 1.5, 35);
-        title.layer.bounds.size = CGSizeMake(UIScreen.mainScreen().bounds.width * 1.5, 25);
-        title.layer.bounds.origin = CGPointMake(0.5 * UIScreen.mainScreen().bounds.width, 12.5);
-        title.layer.frame.origin = CGPointMake(0.5 * UIScreen.mainScreen().bounds.width, 12.5)
-        title.layer.borderWidth = 0.5;
-        title.layer.borderColor = UIColor.clearColor().CGColor;
 
-        return title
+            cell.setCell("    " + self.model.gamesKey[section] + " (\(self.model.gamesOrganized[self.model.gamesKey[section]]!.count))");
+        
+        return cell
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        
+        return 130.0;
+        
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -257,11 +303,7 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
 
 
-    func tableView(tlableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-
-            return 119.0;
-
-    }
+ 
 
   func tableView(tlableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
             if (self.model.gamesOrganized[self.model.gamesKey[section]]!.count == 0) {
@@ -273,38 +315,86 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
 
+    
+    func getAllCellsAndHeaders() -> [AnyObject] {
+        var visibleRows = self.listView?.table.indexPathsForVisibleRows();
+        var indexCount: Int = 0;
+        var allCells: [AnyObject] = [];
+        for (var i = 0; i<visibleRows!.count; i++) {
+            var row = visibleRows![i] as! NSIndexPath;
+            println(row);
+            println(row.section);
+            println(row.row);
+            if (row.row == 0 || indexCount == 0) {
+                allCells.append(self.listView!.table.headerViewForSection(row.section)!);
+                indexCount++;
+            }
+            
+            allCells.append(self.listView!.table.cellForRowAtIndexPath(row) as! gameCell);
+            indexCount++;
+        }
+        
+        return allCells;
+    }
+    
 
     func bringLobbiesBack() {
+        
+        var trans = CGAffineTransformMakeTranslation(0, 0);
+        UIView.animateWithDuration(0.75, animations: {
+            self.navigationController?.navigationBar.transform = trans;
+            
+        });
         var cells = self.listView?.table.visibleCells();
-
-        var speed  = 1.1;
-        for (var i = 0; i<cells!.count; i++) {
-            if ((cells![i] as? gameCell) != nil) {
-                var theCell = cells![i] as! gameCell;
-                theCell.removeOffset(speed - 0.2 * Double(i));
+        var allCells = getAllCellsAndHeaders();
+        var speed  = 0.7;
+        for (var i = 0; i<allCells.count; i++) {
+            if ((allCells[i] as? gameCell) != nil) {
+                var theCell = allCells[i] as! gameCell;
+                theCell.removeOffset(speed - 0.15 * Double(i));
+            } else {
+                var theCell = allCells[i] as! headerCell;
+                theCell.removeOffset(speed - 0.15*Double(i));
             }
         }
     }
 
-    func animateLobbyCellsAway(success: (() -> Void)?) {
+    func animateLobbyCellsAway(success: (() -> Void)?, animateNavBar: Bool) {
         var cells = self.listView?.table.visibleCells();
 
-        var speed  = 0.45;
-        for (var i = 0; i<cells!.count; i++) {
-            println(speed);
-            if ((cells![i] as? UITableViewCell) != nil) {
-                var theCell = cells![i] as! gameCell;
+        if (animateNavBar) {
+            var trans = CGAffineTransformMakeTranslation(-UIScreen.mainScreen().bounds.width, 0);
+            UIView.animateWithDuration(0.2, animations: {
+                self.navigationController?.navigationBar.transform = trans;
+            });
+        }
+        
+        var allCells = getAllCellsAndHeaders();
+        var speed  = 0.25;
+        for (var i = 0; i<allCells.count; i++) {
+            if ((allCells[i] as? UITableViewCell) != nil) {
+                var theCell = allCells[i] as! gameCell;
 
-                if (i == cells!.count-1) {
+                if (i == allCells.count-1) {
                     theCell.moveLeft(speed, success: {
                         success?();
-                        //self.navigationController?.pushViewController(lobbyView, animated: true);
                     });
                 } else {
                     theCell.moveLeft(speed, success: nil);
                 }
-                speed += 0.2;
+                speed += 0.1;
                 println(theCell);
+            } else {
+                
+                var theCell = allCells[i] as! headerCell;
+
+                if (i == allCells.count-1) {
+                    theCell.moveLeft(speed, success: {
+                        success?();
+                    });
+                } else {
+                    theCell.moveLeft(speed, success: nil);
+                }
             }
         }
 

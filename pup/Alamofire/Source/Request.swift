@@ -49,6 +49,7 @@ public class Request {
     // MARK: - Lifecycle
 
     init(session: NSURLSession, task: NSURLSessionTask) {
+
         self.session = session
         println("starting request")
         switch task {
@@ -61,6 +62,7 @@ public class Request {
         default:
             self.delegate = TaskDelegate(task: task)
         }
+
     }
 
     // MARK: - Authentication

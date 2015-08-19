@@ -22,9 +22,9 @@ var appData: miscData = miscData()
 
 var nav: TabBarController?
 let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
-var myGamesController = MyChatsController();
-var myChatsListener = MyChatsListener();
-var settingsController = SettingsController();
+var myGamesController: MyChatsController = MyChatsController();
+var myChatsListener: MyChatsListener = MyChatsListener();
+var settingsController: SettingsController = SettingsController();
 var globalRegister: RegistrationController = RegistrationController(parentController: nil);
 var mainWindow: UIWindow?
 
@@ -38,38 +38,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-
+        //lets set the mainWindow
         mainWindow = UIWindow(frame: UIScreen.mainScreen().bounds)
 
         mainWindow!.backgroundColor = UIColor(rgba: colors.lightGray)
         mainWindow!.makeKeyAndVisible()
 
+        //set nav bar global appearances
         UINavigationBar.appearance().shadowImage = UIImage();
         UINavigationBar.appearance().layer.shadowRadius = 0;
         UINavigationBar.appearance().layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).CGColor
         UINavigationBar.appearance().layer.shadowOpacity = 1;
         UINavigationBar.appearance().layer.shadowOffset = CGSizeMake(0, 2.0);
-
-       // var menuController: MenuNavigationController? = MenuNavigationController( menuTableViewController: MenuTableController(), contentViewController: LobbyListController())
+        UINavigationBar.appearance().tintColor = UIColor(rgba: colors.tealMain);
+        
+        UINavigationBar.appearance().titleTextAttributes = [
+            NSFontAttributeName: UIFont(name: "Georgia-Bold", size: 18)!,
+            NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 0, alpha: 0.75)
+        ]
+        
+        //create the tab bar
         nav = TabBarController();
 
-//        nav?.delegate = TabBarController();
-//        self.nav!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(rgba: colors.tealMain)]
-//         self.nav!.navigationBar.tintColor = UIColor(rgba: colors.tealMain)
-
+        //set some default fonts
         UILabel.appearance().font = UIFont(name: "AvenirNext-Medium", size: 11)
-        UINavigationBar.appearance().tintColor = UIColor(rgba: colors.tealMain);
-//        UITextField.appearance().font = UIFont(name: "Avenir Next", size: 11)
-//        UITextView.appearance().font = UIFont(name: "Avenir Next", size: 11)
 
 
+        //set the main window root controller and set up the registration views
         mainWindow!.rootViewController = nav
         globalRegister.setUpView();
-         //self.nav!.setNavigationBarHidden(false, animated: false)
-        //self.nav!.title = "All Games"
+ 
 
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
-//        return true
     }
 
     func applicationWillResignActive(application: UIApplication) {
@@ -86,12 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     }
 
-//- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-//return [[FBSDKApplicationDelegate sharedInstance] application:application
-//openURL:url
-//sourceApplication:sourceApplication
-//annotation:annotation];
-//}
+
 
     func application(application: UIApplication,
                      openURL url: NSURL,

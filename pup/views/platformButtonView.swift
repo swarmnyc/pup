@@ -41,7 +41,7 @@ class PlatformButtonToggle: UIButton {
         layer.borderColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2).CGColor
 
 
-        titleLabel!.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
+        titleLabel!.font = UIConstants.paragraphType;
         addTarget(self, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
         addTarget(self, action: "buttonPressed:", forControlEvents: UIControlEvents.TouchDown)
     }

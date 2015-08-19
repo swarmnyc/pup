@@ -36,12 +36,6 @@
 #define COCOAPODS_VERSION_MINOR_DZNPhotoPickerController_Editor 6
 #define COCOAPODS_VERSION_PATCH_DZNPhotoPickerController_Editor 1
 
-// ENSwiftSideMenu
-#define COCOAPODS_POD_AVAILABLE_ENSwiftSideMenu
-#define COCOAPODS_VERSION_MAJOR_ENSwiftSideMenu 0
-#define COCOAPODS_VERSION_MINOR_ENSwiftSideMenu 0
-#define COCOAPODS_VERSION_PATCH_ENSwiftSideMenu 6
-
 // FBSDKCoreKit
 #define COCOAPODS_POD_AVAILABLE_FBSDKCoreKit
 #define COCOAPODS_VERSION_MAJOR_FBSDKCoreKit 4
@@ -72,11 +66,17 @@
 #define COCOAPODS_VERSION_MINOR_FBSDKShareKit 2
 #define COCOAPODS_VERSION_PATCH_FBSDKShareKit 0
 
-// HanekeSwift
-#define COCOAPODS_POD_AVAILABLE_HanekeSwift
-#define COCOAPODS_VERSION_MAJOR_HanekeSwift 0
-#define COCOAPODS_VERSION_MINOR_HanekeSwift 9
-#define COCOAPODS_VERSION_PATCH_HanekeSwift 1
+// SDWebImage
+#define COCOAPODS_POD_AVAILABLE_SDWebImage
+#define COCOAPODS_VERSION_MAJOR_SDWebImage 3
+#define COCOAPODS_VERSION_MINOR_SDWebImage 7
+#define COCOAPODS_VERSION_PATCH_SDWebImage 3
+
+// SDWebImage/Core
+#define COCOAPODS_POD_AVAILABLE_SDWebImage_Core
+#define COCOAPODS_VERSION_MAJOR_SDWebImage_Core 3
+#define COCOAPODS_VERSION_MINOR_SDWebImage_Core 7
+#define COCOAPODS_VERSION_PATCH_SDWebImage_Core 3
 
 // SnapKit
 #define COCOAPODS_POD_AVAILABLE_SnapKit
@@ -96,13 +96,3 @@
 #define COCOAPODS_VERSION_MINOR_uservoice_iphone_sdk 2
 #define COCOAPODS_VERSION_PATCH_uservoice_iphone_sdk 3
 
-// Debug build configuration
-#ifdef DEBUG
-
-  // Reveal-iOS-SDK
-  #define COCOAPODS_POD_AVAILABLE_Reveal_iOS_SDK
-  #define COCOAPODS_VERSION_MAJOR_Reveal_iOS_SDK 1
-  #define COCOAPODS_VERSION_MINOR_Reveal_iOS_SDK 5
-  #define COCOAPODS_VERSION_PATCH_Reveal_iOS_SDK 1
-
-#endif

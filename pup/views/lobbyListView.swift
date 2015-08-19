@@ -52,7 +52,7 @@ class LobbyListView: UIView {
 
     func setUpTable() {
         table.separatorInset = UIEdgeInsetsZero
-
+        table.backgroundColor = UIColor(rgba: colors.lightGray);
         table.separatorColor = UIColor.clearColor();
         table.layer.masksToBounds = false;
         table.alwaysBounceVertical = true;

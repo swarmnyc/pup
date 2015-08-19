@@ -17,7 +17,7 @@ class CreateLobbyView: UIView {
     var containerView: UIView = UIView()
     var dateDisplay: DateDisplayView?
     var descriptionEditor: DescriptionEditor = DescriptionEditor();
-    var createLobbyButton: UIButton = UIButton();
+    var createLobbyButton: UIButtonWithAcivityIndicator = UIButtonWithAcivityIndicator();
     var searchBarBackground = UIView();
     var scrollViewFrame = CGRectMake(0,0,0,0)
     var scrollViewBounds = CGRectMake(0,0,0,0)
@@ -133,12 +133,13 @@ class CreateLobbyView: UIView {
 
 
     func setUpView(parentController: CreateLobbyController, dateDisplay: DateDisplayView) {
-
         var buttonDelegate = parentController as SimpleButtonDelegate;
         var searchDelegate = parentController as UISearchBarDelegate;
         createLobbyButton.addTarget(parentController, action: "createLobby", forControlEvents: .TouchUpInside)
 
         createLobbyButton.setTitle("CREATE LOBBY", forState: .Normal)
+        createLobbyButton.titleLabel?.font = UIConstants.buttonType;
+        createLobbyButton.titleLabel?.textAlignment = NSTextAlignment.Center;
         createLobbyButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         createLobbyButton.backgroundColor = UIColor(rgba: colors.tealMain);
 
@@ -175,8 +176,10 @@ class CreateLobbyView: UIView {
         self.dateDisplay?.setUpView()
 
         pickSystemText.text = "PICK A SYSTEM";
-        pickSystemText.font = UIFont(name: "AvenirNext-Medium", size: 11.0)
+        pickSystemText.font = UIConstants.titleFont;
         pickSystemText.textAlignment = NSTextAlignment.Center
+        pickSystemText.textColor = UIColor(rgba: colors.mainGrey)
+
         pickSystemText.backgroundColor = UIColor.whiteColor();
         addViews()
         layoutViews()
@@ -185,6 +188,20 @@ class CreateLobbyView: UIView {
 
         println("contentSize")
         println(scrollView.contentSize)
+
+    }
+
+    func pressIt() {
+        self.createLobbyButton.addIndicator();
+
+        self.createLobbyButton.activityIndicator.startAnimating();
+        createLobbyButton.backgroundColor = UIColor(rgba: colors.tealMain).darkerColor(0.3);
+
+    }
+
+    func releaseIt() {
+        self.createLobbyButton.activityIndicator.stopAnimating();
+        createLobbyButton.backgroundColor = UIColor(rgba: colors.tealMain);
 
     }
 
@@ -238,7 +255,7 @@ class CreateLobbyView: UIView {
             make.right.equalTo(self.scrollView).offset(0)
             make.top.equalTo(self.scrollView).offset(0)
             make.bottom.equalTo(self.scrollView).offset(0)
-            make.height.equalTo(830 + (UIConstants.lobbyImageHeight * 0.25))
+            make.height.equalTo(830 + (UIConstants.lobbyImageHeight * 0.25) + (UIConstants.verticalPadding*2) + 40)
         }
 
         self.headerImage.snp_remakeConstraints { (make) -> Void in
@@ -260,13 +277,13 @@ class CreateLobbyView: UIView {
             make.left.equalTo(self.containerView).offset(0)
             make.right.equalTo(self.containerView).offset(0)
             make.height.equalTo(UIConstants.buttonHeight / 2.0)
-            make.top.equalTo(self.headerImage.snp_bottom).offset(0)
+            make.top.equalTo(self.headerImage.snp_bottom).offset(UIConstants.verticalPadding * 2 + 10)
         }
         self.searchBar.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.containerView).offset(UIConstants.horizontalPadding)
             make.right.equalTo(self.containerView).offset(-UIConstants.horizontalPadding)
-            make.bottom.equalTo(self.pickSystemText.snp_top).offset(0)
-            make.height.equalTo(20)
+            make.bottom.equalTo(self.pickSystemText.snp_top).offset(-UIConstants.verticalPadding)
+            make.height.equalTo(30)
         }
 
         self.platforms[0].snp_remakeConstraints { (make) -> Void in
@@ -323,7 +340,7 @@ class CreateLobbyView: UIView {
             make.left.equalTo(self.containerView).offset(0)
             make.bottom.equalTo(self.containerView).offset(-105)
             make.right.equalTo(self.containerView).offset(0)
-            make.height.equalTo(90)
+            make.height.equalTo(120)
 
         }
 
@@ -383,14 +400,14 @@ class DescriptionEditor: UIView {
     func setUpView() {
         backgroundColor=UIColor.whiteColor()
         self.title.text = "DESCRIPTION";
-        self.title.font = UIFont(name: "AvenirNext-Regular", size: 10.0)
+        self.title.font = UIConstants.titleFont;
         self.title.textColor = UIColor(rgba: colors.mainGrey)
         self.title.textAlignment = NSTextAlignment.Center
 
         self.descriptionField.text = UIConstants.descriptionPlaceholder
         self.descriptionField.layer.borderColor = UIColor(rgba: colors.lightGray).CGColor
         self.descriptionField.layer.borderWidth = 0.4;
-        self.descriptionField.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
+        self.descriptionField.font = UIConstants.paragraphType;
         self.descriptionField.textColor = UIColor(rgba: colors.lightGray).darkerColor(0.5)
         self.descriptionField.returnKeyType = .Done
         addViews()
@@ -418,7 +435,7 @@ class DescriptionEditor: UIView {
             make.left.equalTo(self).offset(UIConstants.horizontalPadding)
             make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
             make.top.equalTo(self).offset(titleHeight)
-            make.height.equalTo(70)
+            make.height.equalTo(90)
 
         }
 

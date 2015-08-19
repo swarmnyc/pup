@@ -86,6 +86,7 @@ class LobbyData: QuickBloxDelegate {
     var messageSkip = 0;
     var animateIn = false;
     var index = 0;
+    
     convenience init(data: NSDictionary, justStarted: Bool, order: Int) {
             self.init(data: data);
             animateIn = justStarted;
@@ -94,7 +95,6 @@ class LobbyData: QuickBloxDelegate {
     }
 
     init(data: NSDictionary) {
-        println(data)
         gameId = data["gameId"] as! String
         id = data["id"] as! String
         name = data["name"] as! String
@@ -269,7 +269,7 @@ class LobbyData: QuickBloxDelegate {
 
 
     func addMessageAtStart(message: AnyObject) {
-
+        
             self.messages.insert(Message(messages: message, propics: proPicDict, users: users, owner: owner), atIndex: 0);
            // reloadData?();
 
@@ -510,11 +510,14 @@ class LobbyList {  //collection of all the current games
     var pageIndex = 0;
     var loadMore = true;
     var lastSearchSuffix: String = ""
-
+    var headers: [headerCell] = [];
     var justStarted = true;
 
     init(parentView: LobbyListController) {
-
+        
+        for (var i = 0; i<gamesKey.count; i++) {
+            headers.append(headerCell(frame: CGRectMake(0,0,UIScreen.mainScreen().bounds.width, 35)));
+        }
         parent = parentView;
 
         games = Array<LobbyData>();
@@ -522,6 +525,7 @@ class LobbyList {  //collection of all the current games
 
 
     }
+
 
 
     func refreshRequest(success: (() -> Void), failure: (() -> Void)) {
@@ -616,7 +620,8 @@ class LobbyList {  //collection of all the current games
             //self.justStarted = true;
 
            self.sendRequest(url,onlyAddNewData: false, clearData: true, success: success, failure: {
-               Error(alertTitle: "Oops, no avaliable games.", alertText: "Try Again soon, or create a game")
+               failure();
+            SNYError(alertTitle: "Oops, no available games.", alertText: "Try Again soon, or create a game", networkRequest: true)
 
            })
 

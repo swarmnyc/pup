@@ -13,7 +13,7 @@ class TutorialController: UIPageViewController, UIPageViewControllerDelegate, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor(rgba: colors.orange);
+        self.view.backgroundColor = UIColor(rgba: colors.tealMain);
         var controllers: [PageController] = [];
         controllers.append(PageController());
               controllers[0].setImageAndIndex(0);
@@ -40,7 +40,7 @@ class TutorialController: UIPageViewController, UIPageViewControllerDelegate, UI
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
         
         var currentController = viewController as! PageController;
-        if (currentController.index! < 2) {
+        if (currentController.index! < 3) {
             var newController = PageController();
             newController.setImageAndIndex(currentController.index! + 1);
             return newController;
@@ -52,7 +52,7 @@ class TutorialController: UIPageViewController, UIPageViewControllerDelegate, UI
  
     
     func presentationCountForPageViewController(pageViewController: UIPageViewController) -> Int {
-        return 3
+        return 4
     }
     
     func presentationIndexForPageViewController(pageViewController: UIPageViewController) -> Int {
@@ -75,15 +75,32 @@ class PageController: UIViewController {
         pageImage = UIImageView();
         if (self.index == 0) {
             pageImage?.image = UIImage(named: "stepOne");
+            continueButton = UIButton();
+            continueButton?.setTitle("Skip", forState: .Normal);
+            continueButton?.setTitleColor(UIColor(rgba: colors.tealMain), forState: .Normal);
+            continueButton?.backgroundColor = UIColor.whiteColor();
+            continueButton?.addTarget(self, action: "endTut", forControlEvents: UIControlEvents.TouchUpInside);
         } else if (self.index == 1) {
             pageImage?.image = UIImage(named: "stepTwo");
+            continueButton = UIButton();
+            continueButton?.setTitle("Skip", forState: .Normal);
+            continueButton?.setTitleColor(UIColor(rgba: colors.tealMain), forState: .Normal);
+            continueButton?.backgroundColor = UIColor.whiteColor();
+            continueButton?.addTarget(self, action: "endTut", forControlEvents: UIControlEvents.TouchUpInside);
+        } else  if (self.index == 2) {
+            pageImage?.image = UIImage(named: "stepThree");
+            continueButton = UIButton();
+            continueButton?.setTitle("Skip", forState: .Normal);
+            continueButton?.setTitleColor(UIColor(rgba: colors.tealMain), forState: .Normal);
+            continueButton?.backgroundColor = UIColor.whiteColor();
+            continueButton?.addTarget(self, action: "endTut", forControlEvents: UIControlEvents.TouchUpInside);
         } else {
             continueButton = UIButton();
             continueButton?.setTitle("Continue To PUP", forState: .Normal);
-            continueButton?.setTitleColor(UIColor(rgba: colors.orange), forState: .Normal);
+            continueButton?.setTitleColor(UIColor(rgba: colors.tealMain), forState: .Normal);
             continueButton?.backgroundColor = UIColor.whiteColor();
             continueButton?.addTarget(self, action: "endTut", forControlEvents: UIControlEvents.TouchUpInside);
-            pageImage?.image = UIImage(named: "stepThree");
+            pageImage?.image = UIImage(named: "stepFour");
         }
         
         

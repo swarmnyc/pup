@@ -5,7 +5,6 @@
 
 import Foundation
 import UIKit
-import Haneke
 
 class SingleLobbyTopCell: UITableViewCell {
 
@@ -65,7 +64,7 @@ class SingleLobbyTopCell: UITableViewCell {
                 "\(data.data.name)";
         lobbyTitleCopy.backgroundColor = UIColor.clearColor()
         lobbyTitleCopy.textColor = UIColor.whiteColor()
-        lobbyTitleCopy.font = UIFont(name: "AvenirNext-Regular", size: 19.0)
+        lobbyTitleCopy.font = UIConstants.buttonType;
         lobbyTitleCopy.editable = false;
         lobbyTitleCopy.scrollEnabled = false;
         lobbyTitleCopy.userInteractionEnabled = false;
@@ -88,7 +87,7 @@ class SingleLobbyTopCell: UITableViewCell {
 
 
         desc.text = data.data.description
-        desc.font = UIFont(name: "AvenirNext-Regular", size: 13.0)
+        desc.font = UIConstants.paragraphType;
         desc.userInteractionEnabled = false;
         desc.scrollEnabled = false
         desc.textContainerInset = UIEdgeInsetsZero
@@ -211,6 +210,16 @@ class SingleLobbyTopCell: UITableViewCell {
 
         }
 
+        var transform = CGAffineTransformMakeTranslation(UIScreen.mainScreen().bounds.width, 0);
+        self.descBox.transform = transform;
+
+        UIView.animateWithDuration(0.36, animations: {
+            transform = CGAffineTransformMakeTranslation(0,0);
+            self.descBox.transform = transform;
+
+        })
+
+
     }
 
 }
@@ -218,7 +227,7 @@ class SingleLobbyTopCell: UITableViewCell {
 
 class SingleLobbyView: UIView {
 
-    var joinLobbyButton: UIButton = UIButton();
+    var joinLobbyButton: UIButtonWithAcivityIndicator = UIButtonWithAcivityIndicator();
 
     var newMessage: UITextView = UITextView();
     var send: UIButton = UIButton();
@@ -263,10 +272,9 @@ class SingleLobbyView: UIView {
     func setHeaderCover(imgCover: UIView) {
         if (isMember) {
 
-            self.table?.userInteractionEnabled = false; //ignore touches to table until messages are loaded
+            self.table?.userInteractionEnabled = true; //ignore touches to table until messages are loaded
 
             println("header cover functions")
-            self.imageCover = imgCover;
             self.userInteractionEnabled = true;
 
             gradient.colors = [UIColor.clearColor().CGColor, UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).CGColor]
@@ -274,19 +282,7 @@ class SingleLobbyView: UIView {
 
 
             self.gradientBox.layer.insertSublayer(gradient, atIndex: 0)
-            self.imageCover!.addSubview(self.gradientBox)
-            self.imageCover!.sendSubviewToBack(self.gradientBox)
 
-            self.addSubview(self.imageCover!)
-            self.imageCover!.clipsToBounds = true;
-            self.imageCover!.snp_makeConstraints {
-                (make) -> Void in
-                make.bottom.equalTo(self).offset(-(UIScreen.mainScreen().bounds.height - CGFloat(UIConstants.lobbyImageHeight)));
-              //  make.bottom.equalTo(self).offset(0)
-                make.left.equalTo(self).offset(0)
-                make.right.equalTo(self).offset(0)
-                make.height.equalTo(UIScreen.mainScreen().bounds.height)
-            }
 
             self.gradientBox.snp_makeConstraints {
                 (make) -> Void in
@@ -298,10 +294,19 @@ class SingleLobbyView: UIView {
 
 
             println("preview image created")
-            self.bringSubviewToFront(self.imageCover!)
         }
     }
 
+
+    func hideAndRemoveJoin() {
+        UIView.animateWithDuration(0.8, animations: {
+            var transform = CGAffineTransformMakeTranslation(0,self.bounds.height);
+            self.joinLobbyButton.transform = transform;
+        }, completion: {
+            (finished) -> Void in
+            self.joinLobbyButton.removeFromSuperview();
+        })
+    }
     func addDrawer(drawer: UIView) {
         self.drawer = drawer;
         addSubview(self.drawer!)
@@ -340,9 +345,7 @@ class SingleLobbyView: UIView {
     func reloadTable() {
         table?.reloadData()
 
-        if (self.imageCover != nil) {
-            self.bringSubviewToFront(self.imageCover!)
-        }
+
     }
 
     func hasMessages() -> Bool {
@@ -489,31 +492,9 @@ class SingleLobbyView: UIView {
         }
     }
 
-    func moveCoverImage() {
-        println("move cover image")
-        if (isMember && self.imageCover != nil) {
-        self.table?.userInteractionEnabled = true;  //let people use the table now
-
-            var yChange = -table!.contentOffset.y;
-            if (yChange < -CGFloat(UIConstants.lobbyImageHeight)) {
-                yChange = -CGFloat(UIConstants.lobbyImageHeight);
-            }
-            println("ychange ")
-            println(yChange)
-            UIView.animateWithDuration(1.0, animations: {
-                var trans = CGAffineTransformMakeTranslation(0,yChange)
-                self.imageCover!.transform = trans;
-
-            })
-
-        }
-    }
 
 
-    func setCoverImageTimer() {
-        println("set cover image")
-        var timeIt = NSTimer.scheduledTimerWithTimeInterval(0.7, target: self, selector: Selector("moveCoverImage"), userInfo: nil, repeats: false);
-    }
+
 
     func scrollToBottom(duration: NSTimeInterval) {
         println("scroll to bottom")
@@ -586,6 +567,19 @@ class SingleLobbyView: UIView {
         joinLobbyButton.addTarget(parentController as! SingleLobbyController, action: "joinLobby", forControlEvents: .TouchUpInside)
     }
 
+    func changeJoinButtonBackgroundColor() {
+        UIView.animateWithDuration(0.4, animations: {
+            self.joinLobbyButton.backgroundColor = UIColor(rgba: colors.tealMain).darkerColor(0.3);
+
+        })
+    
+    }
+    
+    func resetJoinButtonBackgroundColor() {
+        self.joinLobbyButton.backgroundColor = UIColor(rgba: colors.tealMain);
+        self.joinLobbyButton.activityIndicator.stopAnimating();
+    }
+    
     func setUpViews(data: singleLobby) {
 
         isMember = data.data.isMember
@@ -611,13 +605,15 @@ class SingleLobbyView: UIView {
         self.lobbyImg.alpha = 0;
 
 
+//
+//        self.lobbyImg.hnk_setImageFromURL(url!, placeholder:nil, format: nil, failure: nil, success: {
+//                (image) -> Void in
+//                println("fading image");
+//                self.lobbyImg.image = image;
+//
+//            })
 
-        self.lobbyImg.hnk_setImageFromURL(url!, placeholder:nil, format: nil, failure: nil, success: {
-                (image) -> Void in
-                println("fading image");
-                self.lobbyImg.image = image;
-
-            })
+        self.lobbyImg.sd_setImageWithURL(url!, placeholderImage: nil, options: SDWebImageOptions.RefreshCached);
 
 
 
@@ -628,8 +624,10 @@ class SingleLobbyView: UIView {
         if (!isMember) {
             joinLobbyButton.setTitle("Join Lobby", forState: .Normal)
             joinLobbyButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-            joinLobbyButton.titleLabel?.font = UIFont(name: "AvenirNext-Medium", size: 12.0)
+            joinLobbyButton.titleLabel?.font = UIConstants.buttonType;
             joinLobbyButton.backgroundColor = UIColor(rgba: colors.tealMain);
+        
+            
         }
 
 //        self.backgroundColor = UIColor(rgba: colors.lightGray);
@@ -648,15 +646,23 @@ class SingleLobbyView: UIView {
         newMessage.layer.borderColor = UIColor.blackColor().lighterColor(0.35).CGColor;
         newMessage.layer.borderWidth = 0.5;
         newMessage.layer.cornerRadius = 5;
-        newMessage.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
+        newMessage.font = UIConstants.paragraphType;
 
         send.setTitle("Send", forState: .Normal)
         send.setTitleColor(UIColor(rgba: colors.tealDark), forState: .Normal);
         send.addTarget(self, action: "sendMessage", forControlEvents: UIControlEvents.TouchUpInside)
-        send.titleLabel?.font = UIFont(name: "AvenirNext-Regular", size: 16.0);
+        send.titleLabel?.font = UIConstants.titleFont;
 
         insertViews();
         setUpConstraints();
+
+
+        self.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0);
+        UIView.animateWithDuration(0.6, animations: {
+            self.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1);
+
+
+        })
     }
 
 
@@ -780,6 +786,23 @@ func clearText() {
 
     }
 
+
+
+}
+
+
+class UIButtonWithAcivityIndicator: UIButton {
+
+    var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge);
+
+
+    func addIndicator() {
+        self.addSubview(activityIndicator);
+        self.bringSubviewToFront(activityIndicator);
+        self.activityIndicator.frame = CGRectMake((self.titleLabel!.frame.minX - self.activityIndicator.frame.width - CGFloat(UIConstants.horizontalPadding)), ((self.frame.height - self.activityIndicator.frame.height) / 2) , self.activityIndicator.frame.width, self.activityIndicator.frame.height);
+
+        self.activityIndicator.startAnimating();
+    }
 
 
 }

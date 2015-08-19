@@ -10,13 +10,11 @@ import UIKit
 
 class FilterView: UIView {
 
-    var whiteBox = UIView()
-    var parentView = UIView()
-    var search = UISearchBar()
+    var whiteBox: UIView = UIView()
+    var parentView: UIView = UIView()
+    var search: UISearchBar = UISearchBar()
     var platforms: Array<PlatformButtonToggle> = [];
     var buttonDelegate: SimpleButtonDelegate? = nil
-    var handle: UIImageView = UIImageView();
-    var panDetector = UIPanGestureRecognizer()
     var swipeDelegate: PanGestureDelegate?
     var overlay: Overlay = Overlay();
     var overlayDelegate: OverlayDelegate?
@@ -63,8 +61,7 @@ class FilterView: UIView {
         self.clipsToBounds = false;
 
         let handleImage = UIImage(named: "pullBar")
-        handle.image = handleImage
-        handle.contentMode = UIViewContentMode.ScaleAspectFill;
+
 
         whiteBox.backgroundColor = UIColor.whiteColor();
         whiteBox.clipsToBounds = false;
@@ -80,12 +77,9 @@ class FilterView: UIView {
         clearAll.layer.borderWidth = 0.5
         clearAll.layer.borderColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2).CGColor
         clearAll.addTarget(self, action: "clearAllFilters", forControlEvents: UIControlEvents.TouchDown)
-        clearAll.titleLabel!.font = UIFont(name: "AvenirNext-Regular", size: 11.0)
+        clearAll.titleLabel!.font = UIConstants.paragraphType;
 
-        self.panDetector.addTarget(self, action: "swiped:");
 
-        self.addGestureRecognizer(panDetector);
-        self.userInteractionEnabled = true;
 
         addViews();
         setUpConstraints()
@@ -130,8 +124,8 @@ class FilterView: UIView {
 
     func swiped(sender: UIPanGestureRecognizer) {
 
-        println("swiping");
-        self.swipeDelegate?.swiped(sender);
+//        println("swiping");
+//        self.swipeDelegate?.swiped(sender);
     }
 
 
@@ -256,12 +250,6 @@ class FilterView: UIView {
             make.width.equalTo(thirdW)
 
         }
-        self.handle.snp_remakeConstraints { (make) -> Void in
-            make.top.equalTo(self.platforms[4].snp_bottom).offset(0)
-            make.left.equalTo(self.whiteBox)
-            make.right.equalTo(self.whiteBox)
-            make.height.greaterThanOrEqualTo(3)
-        }
 
 
     }
@@ -273,7 +261,7 @@ class FilterView: UIView {
         self.addSubview(overlay)
         self.addSubview(whiteBox)
         whiteBox.addSubview(search)
-        whiteBox.addSubview(handle)
+
         for i in 0...appData.platforms.count-1 {
 
             whiteBox.addSubview(platforms[i])
@@ -291,7 +279,7 @@ class FilterView: UIView {
 
         var fullW: CGFloat = UIScreen.mainScreen().bounds.size.width
 
-        UIView.animateWithDuration(Double(0.5)) {
+        UIView.animateWithDuration(Double(0.3)) {
             var trans = CGAffineTransformMakeTranslation(0, 200);
             self.self.transform = trans;
 
@@ -328,7 +316,7 @@ class FilterView: UIView {
 
         var fullW: CGFloat = UIScreen.mainScreen().bounds.size.width
 
-        UIView.animateWithDuration(Double(0.5)) {
+        UIView.animateWithDuration(Double(0.3)) {
             var trans = CGAffineTransformMakeTranslation(0, 0);
             self.self.transform = trans;
 
