@@ -13,9 +13,12 @@ import retrofit.client.Response;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
 
 public class LobbyServiceImpl implements LobbyService {
     private LobbyRestApi lobbyRestApi;
+    private AtomicBoolean isRunning = new AtomicBoolean(false);
 
     public LobbyServiceImpl(LobbyRestApi lobbyRestApi) {
         this.lobbyRestApi = lobbyRestApi;
@@ -31,64 +34,79 @@ public class LobbyServiceImpl implements LobbyService {
 
     @Override
     public void getLobbies(LobbyFilter filter, final ServiceCallback<LobbySearchResult> callback) {
-        if (filter == null) {
-            filter = new LobbyFilter();
-        }
+        if (!isRunning.getAndSet(true)) {
+            if (filter == null) {
+                filter = new LobbyFilter();
+            }
 
-        this.lobbyRestApi.getLobbies(
-                filter.toMap(),
-                filter.getPlatforms(),
-                filter.getLevels(),
-                filter.getStyles(),
-                new RestApiCallback<>(callback)
-        );
+            this.lobbyRestApi.getLobbies(
+                    filter.toMap(),
+                    filter.getPlatforms(),
+                    filter.getLevels(),
+                    filter.getStyles(),
+                    new RestApiCallback<>(isRunning, callback)
+            );
+        }
     }
 
     @Override
     public void getMyLobbies(
             LobbyFilter filter, final ServiceCallback<List<Lobby>> callback
     ) {
-        if (filter == null) {
-            filter = new LobbyFilter();
-        }
+        if (!isRunning.getAndSet(true)) {
+            if (filter == null) {
+                filter = new LobbyFilter();
+            }
 
-        this.lobbyRestApi.getMyLobbies(
-                filter.toMap(),
-                filter.getPlatforms(),
-                filter.getLevels(),
-                filter.getStyles(),
-                new RestApiCallback<>(callback)
-        );
+            this.lobbyRestApi.getMyLobbies(
+                    filter.toMap(),
+                    filter.getPlatforms(),
+                    filter.getLevels(),
+                    filter.getStyles(),
+                    new RestApiCallback<>(isRunning, callback)
+            );
+        }
     }
 
     @Override
     public void getMessages(
             final String id, final ServiceCallback<List<QBChatMessage2>> callback
     ) {
-        this.lobbyRestApi.message(id, new RestApiCallback<>(callback));
+        if (!isRunning.getAndSet(true)) {
+            this.lobbyRestApi.message(id, new RestApiCallback<>(isRunning, callback));
+        }
     }
 
     @Override
     public void create(
             final Lobby lobby, final ServiceCallback<Lobby> callback
     ) {
-        this.lobbyRestApi.create(lobby, new RestApiCallback<>(callback));
+        if (!isRunning.getAndSet(true)) {
+            this.lobbyRestApi.create(lobby, new RestApiCallback<>(isRunning, callback));
+        }
     }
 
     @Override
     public void join(String id, final ServiceCallback<String> callback) {
-        this.lobbyRestApi.join(id, new EmptyRestApiCallback(callback));
+        if (!isRunning.getAndSet(true)) {
+            this.lobbyRestApi.join(id, new EmptyRestApiCallback(isRunning, callback));
+        }
     }
 
     @Override
     public void leave(String id, final ServiceCallback<String> callback) {
-        this.lobbyRestApi.leave(id, new EmptyRestApiCallback(callback));
+        if (!isRunning.getAndSet(true)) {
+            this.lobbyRestApi.leave(id, new EmptyRestApiCallback(isRunning, callback));
+        }
     }
 
     @Override
     public void invite(final Lobby lobby, final List<String> types, final ServiceCallback<String> callback) {
-        String localTime = new SimpleDateFormat("MMM dd h:mm a '('zzz')'").format(lobby.getStartTime());
+        if (!isRunning.getAndSet(true)) {
+            String localTime = new SimpleDateFormat("MMM dd h:mm a '('zzz')'").format(lobby.getStartTime());
 
-        this.lobbyRestApi.invite(lobby.getId(), localTime, types, new EmptyRestApiCallback(callback));
+            this.lobbyRestApi.invite(lobby.getId(), localTime, types, new EmptyRestApiCallback(isRunning, callback));
+        }
+
     }
 }

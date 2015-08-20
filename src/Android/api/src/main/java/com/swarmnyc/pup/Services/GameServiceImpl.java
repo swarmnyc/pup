@@ -8,9 +8,11 @@ import com.swarmnyc.pup.models.Game;
 import retrofit.client.Response;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameServiceImpl implements GameService {
     private GameRestApi gameRestApi;
+    private AtomicBoolean isRunning = new AtomicBoolean(false);
 
     public GameServiceImpl(GameRestApi gameRestApi) {
         this.gameRestApi = gameRestApi;
@@ -18,34 +20,38 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void getGame(String gameId, final ServiceCallback<Game> callback) {
-        assert gameId != null;
-        assert callback != null;
+        if (!isRunning.getAndSet(true)) {
+            assert gameId != null;
+            assert callback != null;
 
-        gameRestApi.get(
-                gameId, new RestApiCallback<Game>(callback) {
-                    @Override
-                    public void success(Game game, Response response) {
-                        callback.success(game);
+            gameRestApi.get(
+                    gameId, new RestApiCallback<Game>(isRunning, callback) {
+                        @Override
+                        public void success(Game game, Response response) {
+                            callback.success(game);
+                        }
                     }
-                }
-        );
+            );
+        }
     }
 
     @Override
     public void getGames(GameFilter filter, final ServiceCallback<List<Game>> callback) {
-        if (filter == null) {
-            filter = new GameFilter();
-        }
+        if (!isRunning.getAndSet(true)) {
+            if (filter == null) {
+                filter = new GameFilter();
+            }
 
-        this.gameRestApi.getGames(
-                filter.toMap(), filter.getPlatforms(), new RestApiCallback<List<Game>>(callback) {
-                    @Override
-                    public void success(List<Game> games, Response response) {
-                        if (callback != null) {
-                            callback.success(games);
+            this.gameRestApi.getGames(
+                    filter.toMap(), filter.getPlatforms(), new RestApiCallback<List<Game>>(isRunning, callback) {
+                        @Override
+                        public void success(List<Game> games, Response response) {
+                            if (callback != null) {
+                                callback.success(games);
+                            }
                         }
                     }
-                }
-        );
+            );
+        }
     }
 }
