@@ -343,6 +343,7 @@ public class LobbyFragment extends BaseFragment {
             DialogHelper.showProgressDialog(getActivity(), R.string.message_processing);
             if (m_lobby.isAliveUser(User.current.getId())) {
                 initChatRoom();
+                DialogHelper.hide();
             } else {
                 m_lobbyService.join(
                         m_lobby.getId(), new ServiceCallback<String>() {
@@ -351,6 +352,7 @@ public class LobbyFragment extends BaseFragment {
                                 addUserIntoLobby(User.current);
                                 EventBus.getBus().post(new LobbyUserChangeEvent());
                                 initChatRoom();
+                                DialogHelper.hide();
                             }
                         }
                 );
@@ -376,7 +378,6 @@ public class LobbyFragment extends BaseFragment {
             if (m_first) {
                 m_lobbyChatAdapter.isLoading(false);
                 switchButton();
-                DialogHelper.hide();
             }
 
             ArrayList<ChatMessage> messages = processSystemMessages(event);
