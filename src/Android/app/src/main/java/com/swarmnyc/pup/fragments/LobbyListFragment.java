@@ -43,9 +43,6 @@ import com.swarmnyc.pup.models.GamePlatform;
 import com.swarmnyc.pup.view.GamePlatformSelectView;
 import com.swarmnyc.pup.viewmodels.LobbySearchResult;
 import com.uservoice.uservoicesdk.UserVoice;
-
-import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -69,11 +66,8 @@ public class LobbyListFragment extends BaseFragment {
     @Bind(R.id.text_empty_results)
     public TextView m_noResultView;
 
-
-    @Inject
-    GameService gameService;
-    @Inject
-    LobbyService lobbyService;
+    private GameService gameService;
+    private LobbyService lobbyService;
 
     private LayoutInflater inflater;
     private MainActivity activity;
@@ -83,7 +77,7 @@ public class LobbyListFragment extends BaseFragment {
     private GameFilter m_gameFilter = new GameFilter();
     private AutoCompleteForPicturedModelAdapter<Game> gameAdapter;
     private AtomicBoolean m_isLoading = new AtomicBoolean(false);
-    private Action m_loadMore;
+    private Action<Object> m_loadMore;
 
     public LobbyListFragment() {
     }
@@ -109,7 +103,9 @@ public class LobbyListFragment extends BaseFragment {
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState
     ) {
-        PuPApplication.getInstance().getComponent().inject(this);
+        gameService = PuPApplication.getInstance().getModule().provideGameService();
+        lobbyService = PuPApplication.getInstance().getModule().provideLobbyService();
+
         View view = inflater.inflate(R.layout.fragment_lobby_list, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
@@ -253,7 +249,7 @@ public class LobbyListFragment extends BaseFragment {
 
         m_lobbyRecyclerView.setLayoutManager(mLayoutManager);
 
-        m_loadMore = new Action() {
+        m_loadMore = new Action<Object>() {
             @Override
             public void call(final Object value) {
                 Log.d("LobbyListFragment", "Load More");
@@ -391,7 +387,7 @@ public class LobbyListFragment extends BaseFragment {
                         if (restart && result.getResult().size() == 0) {
                             m_noResultView.setText(R.string.message_no_lobbies);
                             com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(getActivity(), m_emptyResults);
-                        } else {
+                        } else if(m_emptyResults.getVisibility() == View.VISIBLE) {
                             com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(getActivity(), m_emptyResults);
                         }
                     }

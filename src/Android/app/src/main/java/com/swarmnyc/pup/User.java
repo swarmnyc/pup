@@ -5,7 +5,6 @@ import android.preference.PreferenceActivity;
 import com.google.gson.Gson;
 import com.quickblox.core.helper.StringUtils;
 import com.swarmnyc.pup.events.UserChangedEvent;
-import com.swarmnyc.pup.gcm.GcmHelper;
 import com.swarmnyc.pup.models.CurrentUserInfo;
 
 public class User

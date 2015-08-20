@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.TempFragmentDialog;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +26,9 @@ import com.swarmnyc.pup.helpers.DialogHelper;
 import com.swarmnyc.pup.helpers.PhotoHelper;
 import com.swarmnyc.pup.models.CurrentUserInfo;
 
-import javax.inject.Inject;
 
-public class RegisterDialogFragment extends TempFragmentDialog {
-    @Inject
-    UserService m_userService;
+public class RegisterDialogFragment extends DialogFragment {
+    private UserService m_userService;
     @Bind(R.id.text_email)
     EditText m_emailText;
     @Bind(R.id.text_name)
@@ -38,18 +36,13 @@ public class RegisterDialogFragment extends TempFragmentDialog {
     @Bind(R.id.img_portrait)
     ImageView m_portrait;
     Uri m_portraitUri;
-    private boolean goHome = true;
     private AlertDialog m_dialog;
-
-    public void setGoHomeAfterLogin(boolean goHome) {
-        this.goHome = goHome;
-    }
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_register, null);
-        PuPApplication.getInstance().getComponent().inject(this);
+        m_userService = PuPApplication.getInstance().getModule().provideUserService();
         ButterKnife.bind(this, view);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -106,7 +99,7 @@ public class RegisterDialogFragment extends TempFragmentDialog {
                     public void success(final CurrentUserInfo value) {
                         m_dialog.dismiss();
                         DialogHelper.hide();
-                        User.login(value, goHome);
+                        User.login(value);
                     }
 
                     @Override

@@ -8,24 +8,23 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.swarmnyc.pup.chat.MessageService;
-import com.swarmnyc.pup.components.Navigator;
 import com.uservoice.uservoicesdk.UserVoice;
 
 public class PuPApplication extends Application
 {
 	private static PuPApplication instance;
-	private        PuPComponent   component;
 	private Tracker m_tracker;
 	private boolean m_messageServiceUp;
+	private PuPModule module;
 
 	public static PuPApplication getInstance()
 	{
 		return instance;
 	}
 
-	public PuPComponent getComponent()
+	public PuPModule getModule()
 	{
-		return component;
+		return module;
 	}
 
 	@Override
@@ -36,7 +35,7 @@ public class PuPApplication extends Application
 		Config.init( this );
 		User.init();
 
-		this.component = DaggerPuPComponent.builder().build();
+		this.module = new PuPModule();
 
 		ApiSettings.PuPServerPath = Config.getConfigString( R.string.PuP_Url );
 

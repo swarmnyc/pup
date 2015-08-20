@@ -241,10 +241,10 @@ public class ShareView extends LinearLayout
 		else
 		{
 			m_lobbyService.invite(
-				m_lobby, types, new ServiceCallback()
+				m_lobby, types, new ServiceCallback<String>()
 				{
 					@Override
-					public void success( final Object value )
+					public void success( final String value )
 					{
 						if ( m_redditButton.isActivated() )
 						{

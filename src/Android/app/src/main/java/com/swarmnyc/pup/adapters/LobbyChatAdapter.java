@@ -39,7 +39,7 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private Context m_context;
     private Lobby m_lobby;
     private LayoutInflater m_inflater;
-    private Action m_reachBeginAction;
+    private Action<Object> m_reachBeginAction;
     private boolean m_isLoading = false;
     private int m_offset = 0;
 
@@ -118,7 +118,7 @@ public class LobbyChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return m_chatMessages.size();
     }
 
-    public void setReachBeginAction(Action action) {
+    public void setReachBeginAction(Action<Object> action) {
         m_reachBeginAction = action;
     }
 

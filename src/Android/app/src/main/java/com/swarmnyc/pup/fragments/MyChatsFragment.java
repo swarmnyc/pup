@@ -27,7 +27,6 @@ import com.swarmnyc.pup.view.DividerItemDecoration;
 
 import java.util.List;
 
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,17 +34,16 @@ import butterknife.ButterKnife;
 public class MyChatsFragment extends BaseFragment {
     @Bind(R.id.text_empty_results)
     public TextView m_noResultView;
-    @Inject
-    LobbyService m_lobbyService;
     @Bind(R.id.list_chat)
     RecyclerView m_chatList;
     @Bind(R.id.layout_refresh)
     SwipeRefreshLayout m_refreshLayout;
     @Bind(R.id.layout_empty_results)
     ViewGroup m_emptyResults;
-    private int pageIndex;
+    private int pageIndex = -1;
+    private LobbyService m_lobbyService;
     private MyChatAdapter m_myChatAdapter;
-    private Action m_loadMore;
+    private Action<Object> m_loadMore;
 
     @Override
     public String getScreenName() {
@@ -62,10 +60,10 @@ public class MyChatsFragment extends BaseFragment {
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-        PuPApplication.getInstance().getComponent().inject(this);
-        pageIndex = 0;
+        m_lobbyService = PuPApplication.getInstance().getModule().provideLobbyService();
+
         m_myChatAdapter = new MyChatAdapter(this.getActivity());
-        m_loadMore = new Action() {
+        m_loadMore = new Action<Object>() {
             @Override
             public void call(Object value) {
                 Log.d("MyChats", "Load More");
@@ -90,10 +88,6 @@ public class MyChatsFragment extends BaseFragment {
                     }
                 }
         );
-
-        if (savedInstanceState == null) {
-            fetchMoreData();
-        }
     }
 
     @Override
@@ -101,7 +95,7 @@ public class MyChatsFragment extends BaseFragment {
         super.onResume();
         EventBus.getBus().register(this);
 
-        if (Config.getBool(Consts.KEY_NEED_UPDATE_MY)) {
+        if (pageIndex == -1 || Config.getBool(Consts.KEY_NEED_UPDATE_MY)) {
             Config.setBool(Consts.KEY_NEED_UPDATE_MY, false);
             reloadData();
         }
@@ -149,7 +143,7 @@ public class MyChatsFragment extends BaseFragment {
                         if (value.size() == 0) {
                             m_noResultView.setText(R.string.message_no_lobbies);
                             com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(getActivity(), m_emptyResults);
-                        } else {
+                        } else if(m_emptyResults.getVisibility() == View.VISIBLE) {
                             com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(getActivity(), m_emptyResults);
                         }
                     }

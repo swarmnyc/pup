@@ -26,12 +26,10 @@ import com.swarmnyc.pup.fragments.LobbyFragment;
 import com.swarmnyc.pup.fragments.MemberFragment;
 import com.swarmnyc.pup.models.Lobby;
 
-import javax.inject.Inject;
-
 public class LobbyActivity extends AppCompatActivity {
     public static final String TAG_LOBBY = "LOBBY";
     public static final String LOBBY_MEMBERS = "LOBBY_MEMBERS";
-    @Inject
+
     LobbyService m_lobbyService;
 
     @Bind(R.id.drawer_layout)
@@ -51,7 +49,7 @@ public class LobbyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lobby);
         ButterKnife.bind(this);
 
-        PuPApplication.getInstance().getComponent().inject(this);
+        m_lobbyService =  PuPApplication.getInstance().getModule().provideLobbyService();
 
         setSupportActionBar(m_toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

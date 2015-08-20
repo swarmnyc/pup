@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-        PuPApplication.getInstance().getComponent().inject(this);
         m_toolbar.setTitle("");
         setSupportActionBar(m_toolbar);
 
@@ -100,8 +99,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        showTabsByUser(null);
-
         //Update Facebook token;
         long fbExpiredAt = Config.getLong(Consts.KEY_FACEBOOK_EXPIRED_DATE);
         if (fbExpiredAt != 0 && System.currentTimeMillis() > fbExpiredAt) {
@@ -109,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
             FacebookHelper.startLoginRequire(this, null);
         }
     }
-
 
     @Override
     protected void onResume() {
@@ -130,40 +126,47 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        m_tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
-        m_tabPagerAdapter.addFragment(m_currentFragment = new LobbyListFragment(), "ALL GAMES");
+    private void setupViewPager() {
+        if (m_tabPagerAdapter == null) {
+            m_tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
+            m_tabPagerAdapter.addFragment(m_currentFragment = new LobbyListFragment(), "ALL GAMES");
+        }
+
         if (User.isLoggedIn()) {
             m_tabPagerAdapter.addFragment(new MyChatsFragment(), "JOINED GAMES");
             m_tabPagerAdapter.addFragment(new SettingsFragment(), "PROFILE");
+            m_tabPagerAdapter.notifyDataSetChanged();
         }
 
-        viewPager.setAdapter(m_tabPagerAdapter);
+        if (m_viewPager.getAdapter() == null) {
+            m_viewPager.setAdapter(m_tabPagerAdapter);
 
-        ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(final int position) {
-                Consts.currentPage = position;
-                m_currentFragment = m_tabPagerAdapter.getItem(position);
-                if (m_currentFragment instanceof BaseFragment) {
-                    BaseFragment bf = (BaseFragment) m_currentFragment;
-                    bf.updateTitle();
-
-                    PuPApplication.getInstance().sendScreenToTracker(bf.getScreenName());
+            ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
                 }
-            }
 
-            @Override
-            public void onPageScrollStateChanged(final int state) {
+                @Override
+                public void onPageSelected(final int position) {
+                    Consts.currentPage = position;
+                    m_currentFragment = m_tabPagerAdapter.getItem(position);
+                    if (m_currentFragment instanceof BaseFragment) {
+                        BaseFragment bf = (BaseFragment) m_currentFragment;
+                        bf.updateTitle();
 
-            }
-        };
+                        PuPApplication.getInstance().sendScreenToTracker(bf.getScreenName());
+                    }
+                }
 
-        m_viewPager.addOnPageChangeListener(listener);
+                @Override
+                public void onPageScrollStateChanged(final int state) {
+
+                }
+            };
+
+            m_viewPager.addOnPageChangeListener(listener);
+            m_tabLayout.setupWithViewPager(m_viewPager);
+        }
     }
 
     @OnClick(R.id.fab_create_lobby)
@@ -202,17 +205,26 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe
     public void showTabsByUser(UserChangedEvent event) {
         if (isLoggedIn == null || isLoggedIn != User.isLoggedIn()) {
-            isLoggedIn = User.isLoggedIn();
-
-            setupViewPager(m_viewPager);
-
-            m_tabLayout.setupWithViewPager(m_viewPager);
-
             if (User.isLoggedIn()) {
                 m_tabLayout.setVisibility(View.VISIBLE);
             } else {
                 m_tabLayout.setVisibility(View.GONE);
             }
+
+            setupViewPager();
+
+            if (isLoggedIn != null) {
+                // TabLayout has a bug, adapter update, but tablayout doesn't
+                m_tabLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        m_tabLayout.removeAllTabs();
+                        m_tabLayout.setTabsFromPagerAdapter(m_tabPagerAdapter);
+                    }
+                }, 100);
+            }
+
+            isLoggedIn = User.isLoggedIn();
         }
     }
 
@@ -243,6 +255,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitles.get(position);
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            for (int i = 0; i < mFragments.size(); i++) {
+                if (mFragments.get(i) == object) {
+                    return i;
+                }
+            }
+
+            return super.getItemPosition(object);
         }
     }
 

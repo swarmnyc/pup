@@ -26,11 +26,9 @@ import com.swarmnyc.pup.helpers.FacebookHelper;
 import com.swarmnyc.pup.helpers.PhotoHelper;
 import com.uservoice.uservoicesdk.UserVoice;
 
-import javax.inject.Inject;
 
 public class SettingsFragment extends BaseFragment
 {
-	@Inject
 	UserService m_userService;
 
 	@Bind( R.id.text_name )
@@ -80,7 +78,7 @@ public class SettingsFragment extends BaseFragment
 	{
 		super.onViewCreated( view, savedInstanceState );
 		ButterKnife.bind( this, view );
-		PuPApplication.getInstance().getComponent().inject( this );
+		m_userService = PuPApplication.getInstance().getModule().provideUserService();
 
 		if ( StringUtils.isNotEmpty( User.current.getPortraitUrl() ) )
 		{
@@ -200,10 +198,10 @@ public class SettingsFragment extends BaseFragment
 		else
 		{
 			m_userService.deleteMedium(
-				Consts.KEY_FACEBOOK, new ServiceCallback()
+				Consts.KEY_FACEBOOK, new ServiceCallback<String>()
 				{
 					@Override
-					public void success( final Object value )
+					public void success( final String value )
 					{
 						User.removeSocialMedium(Consts.KEY_FACEBOOK);
 						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
@@ -239,10 +237,10 @@ public class SettingsFragment extends BaseFragment
 		else
 		{
 			m_userService.deleteMedium(
-				Consts.KEY_TWITTER, new ServiceCallback()
+				Consts.KEY_TWITTER, new ServiceCallback<String>()
 				{
 					@Override
-					public void success( final Object value )
+					public void success( final String value )
 					{
 						User.removeSocialMedium(Consts.KEY_TWITTER);
 						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
@@ -278,10 +276,10 @@ public class SettingsFragment extends BaseFragment
 		else
 		{
 			m_userService.deleteMedium(
-				Consts.KEY_TUMBLR, new ServiceCallback()
+				Consts.KEY_TUMBLR, new ServiceCallback<String>()
 				{
 					@Override
-					public void success( final Object value )
+					public void success( final String value )
 					{
 						User.removeSocialMedium(Consts.KEY_TUMBLR);
 						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();
@@ -317,10 +315,10 @@ public class SettingsFragment extends BaseFragment
 		else
 		{
 			m_userService.deleteMedium(
-				Consts.KEY_REDDIT, new ServiceCallback()
+				Consts.KEY_REDDIT, new ServiceCallback<String>()
 				{
 					@Override
-					public void success( final Object value )
+					public void success( final String value )
 					{
 						User.removeSocialMedium(Consts.KEY_REDDIT);
 						Toast.makeText( getActivity(), R.string.message_disconnect_success, Toast.LENGTH_LONG ).show();

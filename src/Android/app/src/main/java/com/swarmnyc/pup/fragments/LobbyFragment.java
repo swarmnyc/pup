@@ -45,17 +45,15 @@ import com.swarmnyc.pup.models.UserInfo;
 import com.swarmnyc.pup.view.DividerItemDecoration;
 import com.swarmnyc.pup.view.ShareView;
 
-import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 public class LobbyFragment extends BaseFragment {
     private static final String TAG = LobbyFragment.class.getSimpleName();
 
-    @Inject
     LobbyService m_lobbyService;
 
     @Bind(R.id.backdrop)
@@ -122,7 +120,7 @@ public class LobbyFragment extends BaseFragment {
             final Bundle savedInstanceState
     ) {
         super.onViewCreated(view, savedInstanceState);
-        PuPApplication.getInstance().getComponent().inject(this);
+        m_lobbyService = PuPApplication.getInstance().getModule().provideLobbyService();
         ButterKnife.bind(this, view);
 
 
@@ -177,7 +175,7 @@ public class LobbyFragment extends BaseFragment {
         m_chatListLayoutManager = new LinearLayoutManager(getActivity());
         m_lobbyChatAdapter = new LobbyChatAdapter(getActivity());
         m_lobbyChatAdapter.setReachBeginAction(
-                new Action() {
+                new Action<Object>() {
                     @Override
                     public void call(final Object value) {
                         loadChatHistoryRequire();
@@ -342,25 +340,23 @@ public class LobbyFragment extends BaseFragment {
     @OnClick(R.id.btn_join)
     void joinLobby() {
         if (User.isLoggedIn()) {
+            DialogHelper.showProgressDialog(getActivity(), R.string.message_processing);
             if (m_lobby.isAliveUser(User.current.getId())) {
                 initChatRoom();
             } else {
-                DialogHelper.showProgressDialog(getActivity(), R.string.message_processing);
                 m_lobbyService.join(
-                        m_lobby.getId(), new ServiceCallback() {
+                        m_lobby.getId(), new ServiceCallback<String>() {
                             @Override
-                            public void success(final Object value) {
+                            public void success(final String value) {
                                 addUserIntoLobby(User.current);
                                 EventBus.getBus().post(new LobbyUserChangeEvent());
                                 initChatRoom();
-                                DialogHelper.hide();
                             }
                         }
                 );
             }
         } else {
             RegisterDialogFragment registerDialogFragment = new RegisterDialogFragment();
-            registerDialogFragment.setGoHomeAfterLogin(false);
             registerDialogFragment.show(this.getFragmentManager(), null);
         }
     }
@@ -380,6 +376,7 @@ public class LobbyFragment extends BaseFragment {
             if (m_first) {
                 m_lobbyChatAdapter.isLoading(false);
                 switchButton();
+                DialogHelper.hide();
             }
 
             ArrayList<ChatMessage> messages = processSystemMessages(event);

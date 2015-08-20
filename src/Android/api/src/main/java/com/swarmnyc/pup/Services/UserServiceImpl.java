@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
             final String email, final ServiceCallback<CurrentUserInfo> callback
     ) {
         m_userApi.login(
-                email, PASSWORD, new RestApiCallback<UserRequestResult>(callback) {
+                email, PASSWORD, new RestApiCallback<UserRequestResult>(null) {
                     @Override
                     public void success(final UserRequestResult userRequestResult, final Response response) {
                         if (userRequestResult.isSuccess()) {
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         }
 
         m_userApi.register(
-                email, PASSWORD, username, tf, new RestApiCallback<UserRequestResult>(callback) {
+                email, PASSWORD, username, tf, new RestApiCallback<UserRequestResult>(null) {
                     @Override
                     public void success(final UserRequestResult userRequestResult, final Response response) {
                         if (userRequestResult.isSuccess()) {
@@ -70,18 +70,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePortrait(final String file, final ServiceCallback callback) {
+    public void updatePortrait(final String file, final ServiceCallback<String> callback) {
         TypedFile tf = null;
         if (StringUtils.isNotEmpty(file)) {
             tf = new TypedFile("multipart/form-data", new File(file));
         }
 
-        m_userApi.updatePortrait(tf, new RestApiCallback(callback));
+        m_userApi.updatePortrait(tf, new RestApiCallback<>(callback));
     }
 
     @Override
-    public void deleteMedium(final String type, final ServiceCallback callback) {
-        m_userApi.deleteMedium(type, new RestApiCallback(callback));
+    public void deleteMedium(final String type, final ServiceCallback<String> callback) {
+        m_userApi.deleteMedium(type, new RestApiCallback<>(callback));
     }
 
     @Override
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
             final String token,
             final String secret,
             final Date expireAt,
-            final ServiceCallback callback
+            final ServiceCallback<String> callback
     ) {
         SocialMedium ot = new SocialMedium();
         ot.setType(type);
@@ -100,6 +100,6 @@ public class UserServiceImpl implements UserService {
         ot.setSecret(secret);
         ot.setExpireAt(expireAt);
 
-        m_userApi.addMedium(ot, new RestApiCallback(callback));
+        m_userApi.addMedium(ot, new RestApiCallback<>(callback));
     }
 }

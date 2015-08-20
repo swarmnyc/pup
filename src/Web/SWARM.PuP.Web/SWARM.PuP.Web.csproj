@@ -153,6 +153,7 @@
   <ItemGroup>
     <Compile Include="Code\ApiControllers\ErrorCode.cs" />
     <Compile Include="Code\Consts.cs" />
+    <Compile Include="Code\Controllers\PluginController.cs" />
     <Compile Include="Code\Controllers\UserController.cs" />
     <Compile Include="Code\ViewModels\LobbySearchResult.cs" />
     <Compile Include="Code\Components\ShareHelper.cs" />
@@ -284,6 +285,7 @@
     <Content Include="img\Flag.png" />
     <Content Include="img\flag0.png" />
     <Content Include="img\flag1.png" />
+    <Content Include="img\googleplay-1.png" />
     <Content Include="img\hot.png" />
     <Content Include="img\hotCall.png" />
     <Content Include="img\hotCall_.png" />
@@ -379,6 +381,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\Plugin\JoinedGames.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images\assets\" />

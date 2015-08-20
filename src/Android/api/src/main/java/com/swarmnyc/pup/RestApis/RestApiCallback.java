@@ -11,9 +11,9 @@ import retrofit.client.Response;
 
 public class RestApiCallback<T> implements Callback<T>
 {
-	private ServiceCallback callback;
+	private ServiceCallback<T> callback;
 
-	public RestApiCallback(ServiceCallback callback) {
+	public RestApiCallback(ServiceCallback<T> callback) {
 		this.callback = callback;
 	}
 

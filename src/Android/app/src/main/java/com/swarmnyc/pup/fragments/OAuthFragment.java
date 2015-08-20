@@ -3,15 +3,17 @@ package com.swarmnyc.pup.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.TempFragmentDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
+
 import butterknife.ButterKnife;
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -20,10 +22,12 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.components.Utility;
 
-public class OAuthFragment extends TempFragmentDialog
+public class OAuthFragment extends DialogFragment
 {
 	@Bind( R.id.webview )
 	WebView m_webview;
+
+	ProgressBar m_progressBar;
 
 	private String        m_type;
 	private AsyncCallback m_callback;
@@ -37,13 +41,15 @@ public class OAuthFragment extends TempFragmentDialog
 
 		AlertDialog alertDialog = new AlertDialog.Builder( this.getActivity() ).setView( view ).setCustomTitle( title ).create();
 
-		ButterKnife.bind( this, view );
+		ButterKnife.bind(this, view);
+		m_progressBar =(ProgressBar)title.findViewById(R.id.progress_bar);
 
-		m_webview.loadUrl( Utility.urlContent( "~/oauth/" + m_type + "?user_token=" + User.current.getAccessToken() ));
+		m_webview.loadUrl(Utility.urlContent("~/oauth/" + m_type + "?user_token=" + User.current.getAccessToken()));
 
 		WebSettings settings = m_webview.getSettings();
-		settings.setJavaScriptEnabled( true );
+		settings.setJavaScriptEnabled(true);
 		m_webview.setWebChromeClient( new WebChromeClient() );
+
 		m_webview.setWebViewClient(
 			new WebViewClient()
 			{
@@ -59,6 +65,18 @@ public class OAuthFragment extends TempFragmentDialog
 					}
 
 					return super.shouldOverrideUrlLoading( view, url );
+				}
+
+				@Override
+				public void onPageStarted(WebView view, String url, Bitmap favicon) {
+					super.onPageStarted(view, url, favicon);
+					m_progressBar.setVisibility(View.VISIBLE);
+				}
+
+				@Override
+				public void onPageFinished(WebView view, String url) {
+					super.onPageFinished(view, url);
+					m_progressBar.setVisibility(View.GONE);
 				}
 			}
 		);

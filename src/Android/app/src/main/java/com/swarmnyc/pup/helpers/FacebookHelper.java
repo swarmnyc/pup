@@ -32,7 +32,7 @@ public class FacebookHelper
 					public void onSuccess( final LoginResult loginResult )
 					{
 						AccessToken at = loginResult.getAccessToken();
-						UserService userService = PuPApplication.getInstance().getComponent().getUserService();
+						UserService userService = PuPApplication.getInstance().getModule().provideUserService();
 
 						userService.addMedium(
 							Consts.KEY_FACEBOOK,
@@ -40,10 +40,10 @@ public class FacebookHelper
 							at.getToken(),
 							null,
 							at.getExpires(),
-							new ServiceCallback()
+							new ServiceCallback<String>()
 							{
 								@Override
-								public void success( final Object value )
+								public void success( final String value )
 								{
 									User.addSocialMedium( Consts.KEY_FACEBOOK );
 

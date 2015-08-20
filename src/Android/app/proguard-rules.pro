@@ -28,8 +28,8 @@
 
 -keep class com.swarmnyc.pup.** { *; }
 -keep class org.apache.http.** { *; }
--dontwarn org.apache.http.*
-
+-dontwarn org.apache.**
+-dontwarn android.net.http.AndroidHttpClient
 -keepattributes *Annotation*
 
 -libraryjars  <java.home>/lib/rt.jar
@@ -171,23 +171,8 @@
 # *****************************************
 # *** Google Play Services
 # *****************************************
-# http://developer.android.com/google/play-services/setup.html#Proguard
--keep class * extends java.util.ListResourceBundle {
-    protected Object[][] getContents();
-}
-
--keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
-    public static final *** NULL;
-}
-
--keepnames @com.google.android.gms.common.annotation.KeepName class *
--keepclassmembernames class * {
-    @com.google.android.gms.common.annotation.KeepName *;
-}
-
--keepnames class * implements android.os.Parcelable {
-    public static final ** CREATOR;
-}
+-keep public class com.google.android.gms.**
+-dontwarn com.google.android.gms.**
 
 # *****************************************
 # *** Comscore

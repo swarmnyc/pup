@@ -20,9 +20,9 @@ public interface LobbyService
 
 	void create( Lobby lobby, ServiceCallback<Lobby> callback );
 
-	void join( String id, ServiceCallback callback );
+	void join( String id, ServiceCallback<String> callback );
 
-	void leave( String id, ServiceCallback callback );
+	void leave( String id, ServiceCallback<String> callback );
 
-	void invite( Lobby lobby, List<String> types, ServiceCallback callback );
+	void invite( Lobby lobby, List<String> types, ServiceCallback<String> callback );
 }

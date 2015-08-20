@@ -36,7 +36,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
     private final Activity m_activity;
     private final List<Lobby> m_lobbies;
 
-    private Action m_reachEndAction;
+    private Action<Object> m_reachEndAction;
 
     public MyChatAdapter(final Activity activity) {
         m_activity = activity;
@@ -65,7 +65,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
         notifyDataSetChanged();
     }
 
-    public void setReachEndAction(Action action) {
+    public void setReachEndAction(Action<Object> action) {
         m_reachEndAction = action;
     }
 

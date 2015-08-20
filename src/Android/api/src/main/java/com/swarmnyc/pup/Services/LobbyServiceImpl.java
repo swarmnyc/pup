@@ -26,7 +26,7 @@ public class LobbyServiceImpl implements LobbyService {
         assert lobbyId != null;
         assert callback != null;
 
-        lobbyRestApi.get(lobbyId, new RestApiCallback<Lobby>(callback));
+        lobbyRestApi.get(lobbyId, new RestApiCallback<>(callback));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class LobbyServiceImpl implements LobbyService {
                 filter.getPlatforms(),
                 filter.getLevels(),
                 filter.getStyles(),
-                new RestApiCallback<LobbySearchResult>(callback)
+                new RestApiCallback<>(callback)
         );
     }
 
@@ -57,7 +57,7 @@ public class LobbyServiceImpl implements LobbyService {
                 filter.getPlatforms(),
                 filter.getLevels(),
                 filter.getStyles(),
-                new RestApiCallback<List<Lobby>>(callback)
+                new RestApiCallback<>(callback)
         );
     }
 
@@ -65,28 +65,28 @@ public class LobbyServiceImpl implements LobbyService {
     public void getMessages(
             final String id, final ServiceCallback<List<QBChatMessage2>> callback
     ) {
-        this.lobbyRestApi.message(id, new RestApiCallback<List<QBChatMessage2>>(callback));
+        this.lobbyRestApi.message(id, new RestApiCallback<>(callback));
     }
 
     @Override
     public void create(
             final Lobby lobby, final ServiceCallback<Lobby> callback
     ) {
-        this.lobbyRestApi.create(lobby, new RestApiCallback<Lobby>(callback));
+        this.lobbyRestApi.create(lobby, new RestApiCallback<>(callback));
     }
 
     @Override
-    public void join(String id, final ServiceCallback callback) {
+    public void join(String id, final ServiceCallback<String> callback) {
         this.lobbyRestApi.join(id, new EmptyRestApiCallback(callback));
     }
 
     @Override
-    public void leave(String id, final ServiceCallback callback) {
+    public void leave(String id, final ServiceCallback<String> callback) {
         this.lobbyRestApi.leave(id, new EmptyRestApiCallback(callback));
     }
 
     @Override
-    public void invite(final Lobby lobby, final List<String> types, final ServiceCallback callback) {
+    public void invite(final Lobby lobby, final List<String> types, final ServiceCallback<String> callback) {
         String localTime = new SimpleDateFormat("MMM dd h:mm a '('zzz')'").format(lobby.getStartTime());
 
         this.lobbyRestApi.invite(lobby.getId(), localTime, types, new EmptyRestApiCallback(callback));

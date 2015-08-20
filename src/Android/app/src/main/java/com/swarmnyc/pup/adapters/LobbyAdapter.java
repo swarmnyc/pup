@@ -21,7 +21,7 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 	private boolean m_isLoading = false;
 	private Context        m_context;
 	private LayoutInflater m_layoutInflater;
-	private Action         m_reachEndAction;
+	private Action<Object>         m_reachEndAction;
 	private long m_tomorrowTime;
 	private long m_thisWeekTime;
 	private long m_nextWeekTime;
@@ -83,7 +83,7 @@ public class LobbyAdapter extends SectionedRecyclerViewAdapter<LobbyAdapter.Base
 		return lobby;
 	}
 
-	public void setReachEndAction( Action action )
+	public void setReachEndAction( Action<Object> action )
 	{
 		m_reachEndAction = action;
 	}
