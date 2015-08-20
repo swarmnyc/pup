@@ -68,6 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/text_panel"
+            android:background="@color/pup_white"
             android:visibility="gone"/>
 
         <RelativeLayout
