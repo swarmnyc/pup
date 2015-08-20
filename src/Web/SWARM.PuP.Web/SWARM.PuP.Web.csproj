@@ -216,6 +216,9 @@
     <Compile Include="Code\ViewModels\RequestResult.cs" />
     <Compile Include="Code\ViewModels\UserViewModels.cs" />
     <Compile Include="Code\Models\PuPUser.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Code\Services\IChatService.cs" />
     <Compile Include="Code\Services\Quickblox\QuickbloxChatService.cs" />
@@ -227,6 +230,7 @@
     <Content Include="Content\pup.png" />
     <Content Include="Content\User.css" />
     <Content Include="Content\User\Cool.txt" />
+    <Content Include="Global.asax" />
     <Content Include="js\userApp.js" />
     <Content Include="Views\Lobby\Index.cshtml" />
     <Content Include="Views\Reddit\Share.cshtml" />
