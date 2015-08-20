@@ -143,7 +143,7 @@ public class MyChatsFragment extends BaseFragment {
                         if (value.size() == 0) {
                             m_noResultView.setText(R.string.message_no_lobbies);
                             com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(getActivity(), m_emptyResults);
-                        } else {
+                        } else if(m_emptyResults.getVisibility() == View.VISIBLE) {
                             com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(getActivity(), m_emptyResults);
                         }
                     }

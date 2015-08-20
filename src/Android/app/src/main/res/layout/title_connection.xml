@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-          android:layout_width="match_parent"
-          android:layout_height="58dp"
-          android:background="@color/pup_teal"
-          android:textColor="@color/pup_white"
-          android:textSize="@dimen/text20"
-          android:text="Connection"
-          android:padding="@dimen/padding_half"
-          android:gravity="center"
-          android:textStyle="bold">
-</TextView>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_height="46dp"
+     android:layout_width="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="@color/pup_teal"
+        android:textColor="@color/pup_white"
+        android:textSize="@dimen/text20"
+        android:text="@string/title_connection"
+        android:padding="@dimen/padding_half"
+        android:gravity="center"
+        android:textStyle="bold">
+    </TextView>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_margin="@dimen/margin_small"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignParentRight="true" />
+</RelativeLayout>

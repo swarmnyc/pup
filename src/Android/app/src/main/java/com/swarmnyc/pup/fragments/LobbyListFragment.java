@@ -387,7 +387,7 @@ public class LobbyListFragment extends BaseFragment {
                         if (restart && result.getResult().size() == 0) {
                             m_noResultView.setText(R.string.message_no_lobbies);
                             com.swarmnyc.pup.components.ViewAnimationUtils.showWithAnimation(getActivity(), m_emptyResults);
-                        } else {
+                        } else if(m_emptyResults.getVisibility() == View.VISIBLE) {
                             com.swarmnyc.pup.components.ViewAnimationUtils.hideWithAnimation(getActivity(), m_emptyResults);
                         }
                     }
