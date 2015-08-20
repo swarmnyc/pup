@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using SWARM.PuP.Web.Code;
 using SWARM.PuP.Web.Models;
 
 namespace SWARM.PuP.Web.Services.Quickblox
@@ -43,10 +44,12 @@ namespace SWARM.PuP.Web.Services.Quickblox
             {
                 type = ChatRoomType.Group,
                 name = string.Format(QuickbloxHttpHelper.LobbyNameFormat, lobby.Name),
+                last_message_date_sent = (DateTime.UtcNow - Consts.JavaDateTime).TotalSeconds,
                 occupants_ids = string.Join(",", chatUserIds)
             });
 
             lobby.UpdateTag(QuickbloxHttpHelper.Const_ChatRoomId, charRoom._id);
+            SendSystemMessage(lobby, SystemMessageCode.Create, null);
         }
 
         public void JoinRoom(Lobby lobby, IEnumerable<PuPUser> users)
@@ -97,7 +100,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
             var roomId = lobby.GetTagValue(QuickbloxHttpHelper.Const_ChatRoomId);
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.Message, HttpMethod.Post);
             string message;
-            string codeBody;
+            string codeBody = null;
             switch (code)
             {
                 case SystemMessageCode.Join:
@@ -106,24 +109,35 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     break;
                 case SystemMessageCode.Leave:
                     message = string.Format("{0} left this lobby", string.Join(", ", users.Select(x => x.UserName).ToArray()));
-                    codeBody = users.Select(x =>  new { x.Id }).ToJson();
+                    codeBody = users.Select(x => new { x.Id }).ToJson();
+                    break;
+                case SystemMessageCode.Create:
+                    message = "Lobby created";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("code", code, null);
             }
 
-            request.GetJson<QuickbloxMessage>(new QuickbloxMessage
+            var qbMessage = request.GetJson<QuickbloxMessage>(new 
             {
                 chat_dialog_id = roomId,
                 code = code.ToString(),
                 codeBody = codeBody,
                 message = message
             });
+
+            // Because a new lobby's last_message_time is null, it would be the last in the list
+            // So send a message and delete it to update its last_message_time.
+            if (code == SystemMessageCode.Create) {
+                request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.MessageDelete(qbMessage._id), HttpMethod.Delete);
+                request.ReadAll();
+            }
         }
     }
 
     public enum SystemMessageCode
     {
+        Create,
         Join,
         Leave
     }
