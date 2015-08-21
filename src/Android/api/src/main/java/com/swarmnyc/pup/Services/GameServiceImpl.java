@@ -25,13 +25,7 @@ public class GameServiceImpl implements GameService {
             assert callback != null;
 
             gameRestApi.get(
-                    gameId, new RestApiCallback<Game>(isRunning, callback) {
-                        @Override
-                        public void success(Game game, Response response) {
-                            callback.success(game);
-                        }
-                    }
-            );
+                    gameId, new RestApiCallback<>(isRunning, callback));
         }
     }
 
@@ -42,16 +36,7 @@ public class GameServiceImpl implements GameService {
                 filter = new GameFilter();
             }
 
-            this.gameRestApi.getGames(
-                    filter.toMap(), filter.getPlatforms(), new RestApiCallback<List<Game>>(isRunning, callback) {
-                        @Override
-                        public void success(List<Game> games, Response response) {
-                            if (callback != null) {
-                                callback.success(games);
-                            }
-                        }
-                    }
-            );
+            this.gameRestApi.getGames(filter.toMap(), filter.getPlatforms(), new RestApiCallback<>(isRunning, callback));
         }
     }
 }

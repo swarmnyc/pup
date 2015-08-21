@@ -156,7 +156,6 @@
                 android:id="@+id/btn_submit"
                 android:layout_below="@+id/text_description"
                 android:text="@string/text_create_lobby"
-                android:enabled="false"
                 style="@style/button_teal"/>
     </RelativeLayout>
 </ScrollView>

@@ -6,6 +6,12 @@
             <corners android:radius="0dp"/>
         </shape>
     </item>
+    <item android:state_activated="true">
+        <shape>
+            <solid android:color="@color/pup_teal_light"/>
+            <corners android:radius="0dp"/>
+        </shape>
+    </item>
     <item android:state_enabled="true" android:state_pressed="true">
         <shape>
             <solid android:color="@color/pup_teal_dark"/>

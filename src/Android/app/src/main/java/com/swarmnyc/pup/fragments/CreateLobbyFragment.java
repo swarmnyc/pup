@@ -109,11 +109,6 @@ public class CreateLobbyFragment extends Fragment
     int m_timeOffset;
 
     @Override
-    public void onAttach(final Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
     public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
         m_customDateTime = true;
         m_selectedDate.set(year, monthOfYear, dayOfMonth);
@@ -143,11 +138,9 @@ public class CreateLobbyFragment extends Fragment
 
     @OnClick(R.id.btn_submit)
     public void createLobby() {
-        if (!valid()) {
-            Toast.makeText(getActivity(), "Please select the game and platform.", Toast.LENGTH_LONG).show();
+        if (!valid(true)) {
             return;
         }
-
 
         if (!User.isLoggedIn()) {
             RegisterDialogFragment registerDialogFragment = new RegisterDialogFragment();
@@ -268,7 +261,7 @@ public class CreateLobbyFragment extends Fragment
                 new GamePlatformSelectView.OnPlatformSelectionChangedListener() {
                     @Override
                     public void onPlatformSelectionChanged(final View v) {
-                        valid();
+                        valid(false);
                     }
                 }
         );
@@ -327,7 +320,7 @@ public class CreateLobbyFragment extends Fragment
         SoftKeyboardHelper.setSoftKeyboardCallback(m_rootView, new Action<Boolean>() {
             @Override
             public void call(Boolean value) {
-                if (value && m_descriptionText.hasFocus()){
+                if (value && m_descriptionText.hasFocus()) {
 
                     m_rootView.fullScroll(View.FOCUS_DOWN);
                 }
@@ -338,6 +331,8 @@ public class CreateLobbyFragment extends Fragment
 
         m_selectedDate = Calendar.getInstance();
         setTime(m_selectedDate.get(Calendar.HOUR_OF_DAY), m_selectedDate.get(Calendar.MINUTE) + 20);
+
+        valid(false);
     }
 
     private void selectGame(int position) {
@@ -361,7 +356,7 @@ public class CreateLobbyFragment extends Fragment
             }
 
             m_gamePlatformSelectView.setAvailablePlatforms(m_selectedGame.getPlatforms());
-            valid();
+            valid(false);
         }
     }
 
@@ -392,17 +387,19 @@ public class CreateLobbyFragment extends Fragment
         }
     }
 
-    private boolean valid() {
+    private boolean valid(boolean showMessage) {
         boolean isValid = true;
         if (m_selectedGame == null) {
             isValid = false;
-        }
-
-        if (m_gamePlatformSelectView.getSelectedGamePlatforms().size() == 0) {
+            if (showMessage)
+                Toast.makeText(this.getActivity(),"Please select a game", Toast.LENGTH_SHORT).show();
+        } else if (m_gamePlatformSelectView.getSelectedGamePlatforms().size() == 0) {
             isValid = false;
+            if (showMessage)
+                Toast.makeText(this.getActivity(),"Please select a platform of the game", Toast.LENGTH_SHORT).show();
         }
 
-        this.m_submitButton.setEnabled(isValid);
+        this.m_submitButton.setActivated(!isValid);
 
         return isValid;
     }

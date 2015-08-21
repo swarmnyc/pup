@@ -478,7 +478,9 @@ public class LobbyFragment extends BaseFragment {
     private void loadChatHistoryRequire() {
         if (m_hasMoreMessage) {
             Log.d(TAG, "Load another History");
-            m_chatRoomService.loadChatHistory(m_lobbyChatAdapter.getFirstChatMessage().getSentAt());
+            if (m_lobbyChatAdapter.getMessageCount()!=0){
+                m_chatRoomService.loadChatHistory(m_lobbyChatAdapter.getFirstChatMessage().getSentAt());
+            }
         }
     }
 
