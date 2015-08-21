@@ -1,16 +1,164 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <fragment
-        android:id="@+id/fragment_lobby_create"
-        android:name="com.swarmnyc.pup.fragments.CreateLobbyFragment"
+    <ScrollView
+        android:id="@+id/layout_lobby_create"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        android:tag="fragment_tag_lobby_create"
-        tools:context="com.swarmnyc.pup.activities.LobbyCreateActivity"
-        tools:layout="@layout/fragment_lobby_create" />
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!--name-->
+            <ImageView
+                android:id="@+id/img_game"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_header_img"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bg_lobby_create" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_header_img"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/gradient_dark_70" />
+
+            <com.swarmnyc.pup.view.ClearableAutoCompleteView
+                android:id="@+id/text_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/img_game"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:layout_marginRight="@dimen/margin_normal"
+                android:hint="@string/hint_game_name"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                android:textColor="@color/pup_white"
+                android:textColorHint="@color/pup_white"
+                android:textSize="@dimen/text20" />
+
+            <!--platform-->
+            <TextView
+                android:id="@+id/label_pick_a_platform"
+                style="@style/text_label"
+                android:layout_below="@+id/img_game"
+                android:text="@string/label_pick_a_platform" />
+
+            <com.swarmnyc.pup.view.GamePlatformSelectView
+                android:id="@+id/platform_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/label_pick_a_platform"
+                android:layout_marginTop="@dimen/margin_normal"></com.swarmnyc.pup.view.GamePlatformSelectView>
+
+            <!--date-->
+            <TextView
+                android:id="@+id/label_when"
+                style="@style/text_label"
+                android:layout_below="@+id/platform_select"
+                android:text="@string/label_date" />
+
+            <com.swarmnyc.pup.view.FontableTextView
+                android:id="@+id/text_date"
+                style="@style/text_option_button"
+                android:layout_below="@+id/label_when"
+                tools:text="Today" />
+
+            <View
+                android:layout_width="200dp"
+                android:layout_height="1dp"
+                android:layout_alignWithParentIfMissing="false"
+                android:layout_below="@+id/text_date"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/black" />
+
+            <!--time-->
+            <TextView
+                android:id="@+id/label_time"
+                style="@style/text_label"
+                android:layout_below="@+id/text_date"
+                android:text="@string/label_time" />
+
+
+            <com.swarmnyc.pup.view.FontableTextView
+                android:id="@+id/text_time"
+                style="@style/text_option_button"
+                android:layout_below="@+id/label_time"
+                tools:text="In 20 minutes" />
+
+            <View
+                style="@style/horizontal_line"
+                android:layout_below="@+id/text_time" />
+
+            <!--style-->
+            <TextView
+                android:id="@+id/label_play_style"
+                style="@style/text_label"
+                android:layout_below="@+id/text_time"
+                android:text="@string/label_play_style" />
+
+            <com.swarmnyc.pup.view.HorizontalSpinner
+                android:id="@+id/spinner_play_style"
+                style="@style/HorizontalSpinnerStyleForLobbyCreate"
+                android:layout_below="@+id/label_play_style"
+                app:itemHeight="32dp"
+                app:itemWidth="150dp" />
+
+            <View
+                style="@style/horizontal_line"
+                android:layout_below="@+id/spinner_play_style" />
+
+            <!--Skill-->
+            <TextView
+                android:id="@+id/label_gamer_skill"
+                style="@style/text_label"
+                android:layout_below="@+id/spinner_play_style"
+                android:text="@string/label_gamer_skill" />
+
+            <com.swarmnyc.pup.view.HorizontalSpinner
+                android:id="@+id/spinner_gamer_skill"
+                style="@style/HorizontalSpinnerStyleForLobbyCreate"
+                android:layout_below="@+id/label_gamer_skill" />
+
+            <View
+                style="@style/horizontal_line"
+                android:layout_below="@+id/spinner_gamer_skill" />
+
+            <!--description-->
+            <TextView
+                android:id="@+id/label_description"
+                style="@style/text_label"
+                android:layout_below="@+id/spinner_gamer_skill"
+                android:text="@string/label_description" />
+
+            <EditText
+                android:id="@+id/text_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/label_description"
+                android:layout_margin="@dimen/margin_normal"
+                android:background="@drawable/bg_edit_text"
+                android:gravity="top"
+                android:hint="@string/hint_description"
+                android:inputType="textCapSentences|textMultiLine"
+                android:lines="5"
+                android:textColorHint="@color/pup_light"
+                android:textSize="@dimen/text13" />
+
+            <Button
+                android:id="@+id/btn_submit"
+                style="@style/button_teal"
+                android:layout_below="@+id/text_description"
+                android:text="@string/text_create_lobby" />
+        </RelativeLayout>
+    </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

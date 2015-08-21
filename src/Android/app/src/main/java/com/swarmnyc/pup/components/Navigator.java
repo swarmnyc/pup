@@ -4,25 +4,12 @@ package com.swarmnyc.pup.components;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+
 import com.swarmnyc.pup.Consts;
-import com.swarmnyc.pup.PuPApplication;
-import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.activities.LobbyActivity;
 import com.swarmnyc.pup.activities.LobbyCreateActivity;
 import com.swarmnyc.pup.activities.MainActivity;
-import com.swarmnyc.pup.fragments.CreateLobbyFragment;
-import com.swarmnyc.pup.fragments.LobbyFragment;
-import com.swarmnyc.pup.fragments.LobbyListFragment;
 import com.swarmnyc.pup.models.Lobby;
-
-import java.util.List;
 
 public class Navigator
 {
