@@ -138,11 +138,10 @@ public class LobbyFragment extends BaseFragment {
                     }
             );
 
-		}
+        }
 
-		if ( StringUtils.isNotEmpty( m_lobbyName ) )
-		{
-			m_collapsingToolbarLayout.setTitle( m_lobbyName );
+        if (StringUtils.isNotEmpty(m_lobbyName)) {
+            m_collapsingToolbarLayout.setTitle(m_lobbyName);
         }
 
         getAppCompatActivity().setSupportActionBar(m_toolbar);
@@ -276,6 +275,7 @@ public class LobbyFragment extends BaseFragment {
     private void initChatRoom() {
         m_first = true;
         m_lobbyChatAdapter.clear();
+        m_lobbyChatAdapter.setReachBeginAction(null);
         m_lobbyChatAdapter.setLobby(m_lobby);
         m_lobbyChatAdapter.isLoading(true);
         m_lobbyChatAdapter.notifyDataSetChanged();
@@ -349,6 +349,7 @@ public class LobbyFragment extends BaseFragment {
                         m_lobby.getId(), new ServiceCallback<String>() {
                             @Override
                             public void success(final String value) {
+                                m_joinButton.setVisibility(View.GONE); // GONE First
                                 addUserIntoLobby(User.current);
                                 EventBus.getBus().post(new LobbyUserChangeEvent());
                                 initChatRoom();
@@ -420,18 +421,17 @@ public class LobbyFragment extends BaseFragment {
                 }
             }
 
-            if (!m_first && !m_chatListLayoutManager.getStackFromEnd()){
+            if (!m_first && !m_chatListLayoutManager.getStackFromEnd()) {
                 m_chatList.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         int height = computeHeight();
-
                         if (height < 0) {
-                            Log.e(TAG, "Change to StackFromEnd");
+                            Log.d(TAG, "Change to StackFromEnd");
                             m_chatListLayoutManager.setStackFromEnd(true);
                         }
                     }
-                }, 500);
+                }, 100);
             }
 
             m_first = false;
@@ -444,21 +444,24 @@ public class LobbyFragment extends BaseFragment {
                     @Override
                     public void run() {
                         int height = computeHeight();
-
+                        //Log.d(TAG, "Height:" + height);
                         if (height < 0) {
                             collapseAppBar();
                             m_chatListLayoutManager.setStackFromEnd(true);
                         }
                     }
-                }, 500
+                }, 100
         );
     }
 
     private int computeHeight() {
         int height = m_chatList.getHeight();
+        height -= m_collapsingToolbarLayout.getHeight();
+        Log.d(TAG, "Height:" + height);
 
         for (int i = 0; i < m_chatList.getChildCount(); i++) {
             height -= m_chatList.getChildAt(i).getHeight();
+            Log.d(TAG, "Height:" + height);
         }
         return height;
     }
@@ -478,7 +481,7 @@ public class LobbyFragment extends BaseFragment {
     private void loadChatHistoryRequire() {
         if (m_hasMoreMessage) {
             Log.d(TAG, "Load another History");
-            if (m_lobbyChatAdapter.getMessageCount()!=0){
+            if (m_lobbyChatAdapter.getMessageCount() != 0) {
                 m_chatRoomService.loadChatHistory(m_lobbyChatAdapter.getFirstChatMessage().getSentAt());
             }
         }
