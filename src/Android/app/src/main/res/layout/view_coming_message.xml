@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<view xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coming_message"
+    class="com.swarmnyc.pup.helpers.ComingMessageHelper$ComingMessageLayout"
+    android:background="#333333"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_game"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="@dimen/margin_half"
+        android:src="@drawable/test"
+        android:scaleType="center"
+        app:border_width="1dp" />
+
+    <TextView
+        android:id="@+id/text_name"
+        style="@style/text_title"
+        android:layout_marginLeft="64dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Wade's Diablo III" />
+
+    <TextView
+        style="@style/text_title"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="64dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="New Message"
+        android:textColor="@color/pup_orange_dark" />
+
+    <TextView
+        android:id="@+id/text_message"
+        style="@style/text_message"
+        android:layout_below="@+id/text_name"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginRight="8dp"
+        android:ellipsize="end"
+        android:minHeight="32dp"
+        android:singleLine="true"
+        android:text="Hi!" />
+</view>

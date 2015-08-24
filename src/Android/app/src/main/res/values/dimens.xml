@@ -10,6 +10,7 @@
     <dimen name="padding_small">4dp</dimen>
 
     <dimen name="height_header_img">171dp</dimen>
+    <dimen name="height_coming_message">56dp</dimen>
 
     <dimen name="text11">11sp</dimen>
     <dimen name="text12">12sp</dimen>

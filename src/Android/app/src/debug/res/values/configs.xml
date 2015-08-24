@@ -7,4 +7,5 @@
     <string name="QB_APP_SECRET">QUBVCLgUjFY97cV</string>
     <string name="QB_APP_DEFAULT_USER">553be08dcbf5a81a70567b13</string>
     <string name="QB_APP_PW">swarmnyc</string>
+    <string name="google_tracker_key">UA-43683040-11</string>
 </resources>

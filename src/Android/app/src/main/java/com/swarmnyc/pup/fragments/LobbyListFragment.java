@@ -2,9 +2,6 @@ package com.swarmnyc.pup.fragments;
 
 
 import android.app.Activity;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -36,6 +33,7 @@ import com.swarmnyc.pup.adapters.AutoCompleteForPicturedModelAdapter;
 import com.swarmnyc.pup.adapters.LobbyAdapter;
 import com.swarmnyc.pup.components.Action;
 import com.swarmnyc.pup.components.GamePlatformUtils;
+import com.swarmnyc.pup.helpers.ComingMessageHelper;
 import com.swarmnyc.pup.helpers.SoftKeyboardHelper;
 import com.swarmnyc.pup.components.Utility;
 import com.swarmnyc.pup.models.Game;
@@ -310,6 +308,16 @@ public class LobbyListFragment extends BaseFragment {
             Config.setBool(Consts.KEY_NEED_UPDATE_LIST, false);
             reloadData(true);
         }
+
+
+        m_slidingPanel.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //ChatMessage chatMessage = new ChatMessage();
+                ComingMessageHelper.show(getActivity(), null);
+            }
+        },3000);
+
     }
 
     @Override

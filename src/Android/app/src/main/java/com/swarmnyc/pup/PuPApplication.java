@@ -41,10 +41,13 @@ public class PuPApplication extends Application
 
 		//Google
 		GoogleAnalytics m_googleAnalytics = GoogleAnalytics.getInstance( this );
-		m_googleAnalytics.setLocalDispatchPeriod( 1800 );
+		m_googleAnalytics.setLocalDispatchPeriod( 15 );
 
 		m_tracker = m_googleAnalytics.newTracker( getString( R.string.google_tracker_key ) );
-		m_tracker.enableExceptionReporting( true );
+		m_tracker.enableExceptionReporting(true);
+		if (User.isLoggedIn()){
+			m_tracker.set("&uid", User.current.getEmail() );
+		}
 
 		//User Voice
 		com.uservoice.uservoicesdk.Config config = new com.uservoice.uservoicesdk.Config(
