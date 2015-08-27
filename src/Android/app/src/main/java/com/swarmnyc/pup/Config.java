@@ -9,11 +9,13 @@ public class Config {
     private static SharedPreferences data;
     private static Context context;
     private static Hashtable<Object, Object> resources;
+    public static String PuPServerPath;
 
     public static void init(Context context) {
         Config.context = context;
         Config.data = context.getSharedPreferences("Config", Context.MODE_MULTI_PROCESS);
         Config.resources = new Hashtable<>();
+        PuPServerPath = getConfigString( R.string.PuP_Url );
     }
 
     public static String getString(String key) {

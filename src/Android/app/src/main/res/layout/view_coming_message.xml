@@ -2,7 +2,7 @@
 <view xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coming_message"
-    class="com.swarmnyc.pup.helpers.ComingMessageHelper$ComingMessageLayout"
+    class="com.swarmnyc.pup.ui.helpers.ComingMessageHelper$ComingMessageLayout"
     android:background="#333333"
     android:layout_width="match_parent"
     android:layout_height="match_parent">

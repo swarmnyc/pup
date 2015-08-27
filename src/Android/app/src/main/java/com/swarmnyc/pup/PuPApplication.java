@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.swarmnyc.pup.chat.MessageService;
+import com.swarmnyc.pup.module.chat.MessageService;
 import com.uservoice.uservoicesdk.UserVoice;
 
 public class PuPApplication extends Application
@@ -36,8 +36,6 @@ public class PuPApplication extends Application
 		User.init();
 
 		this.module = new PuPModule();
-
-		ApiSettings.PuPServerPath = Config.getConfigString( R.string.PuP_Url );
 
 		//Google
 		GoogleAnalytics m_googleAnalytics = GoogleAnalytics.getInstance( this );

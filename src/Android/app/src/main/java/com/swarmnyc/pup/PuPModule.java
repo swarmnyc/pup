@@ -2,11 +2,11 @@ package com.swarmnyc.pup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.swarmnyc.pup.RestApis.GameRestApi;
-import com.swarmnyc.pup.RestApis.IsoDateTypeAdapter;
-import com.swarmnyc.pup.RestApis.LobbyRestApi;
-import com.swarmnyc.pup.RestApis.UserRestApi;
-import com.swarmnyc.pup.Services.*;
+import com.swarmnyc.pup.module.restapi.GameRestApi;
+import com.swarmnyc.pup.module.restapi.IsoDateTypeAdapter;
+import com.swarmnyc.pup.module.restapi.LobbyRestApi;
+import com.swarmnyc.pup.module.restapi.UserRestApi;
+import com.swarmnyc.pup.module.service.*;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;

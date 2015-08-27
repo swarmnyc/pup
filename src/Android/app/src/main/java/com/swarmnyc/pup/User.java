@@ -1,11 +1,11 @@
 package com.swarmnyc.pup;
 
 import android.os.Handler;
-import android.preference.PreferenceActivity;
+
 import com.google.gson.Gson;
 import com.quickblox.core.helper.StringUtils;
-import com.swarmnyc.pup.events.UserChangedEvent;
-import com.swarmnyc.pup.models.CurrentUserInfo;
+import com.swarmnyc.pup.ui.events.UserChangedEvent;
+import com.swarmnyc.pup.module.models.CurrentUserInfo;
 
 public class User
 {

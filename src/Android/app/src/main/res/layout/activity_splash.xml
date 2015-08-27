@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/container"
-    tools:context="com.swarmnyc.pup.activities.SplashActivity">
+    tools:context="com.swarmnyc.pup.ui.activities.SplashActivity">
 
-    <com.swarmnyc.pup.view.AnimatedImageView
+    <com.swarmnyc.pup.ui.view.AnimatedImageView
         android:id="@+id/pup_logo"
         android:layout_width="250dp"
         android:layout_height="250dp"

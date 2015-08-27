@@ -49,7 +49,7 @@
                 android:background="@android:color/white"
                 android:orientation="vertical">
 
-                <com.swarmnyc.pup.view.ClearableAutoCompleteView
+                <com.swarmnyc.pup.ui.view.ClearableAutoCompleteView
                     android:id="@+id/txt_game_serach"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -58,13 +58,13 @@
                     android:imeOptions="actionDone"
                     android:singleLine="true"/>
 
-                <com.swarmnyc.pup.view.GamePlatformSelectView
+                <com.swarmnyc.pup.ui.view.GamePlatformSelectView
                     android:id="@+id/platform_select"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:allowMultiSelect="true">
 
-                </com.swarmnyc.pup.view.GamePlatformSelectView>
+                </com.swarmnyc.pup.ui.view.GamePlatformSelectView>
             </LinearLayout>
 
             <ImageView

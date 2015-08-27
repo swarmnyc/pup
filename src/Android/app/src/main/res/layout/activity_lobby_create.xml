@@ -32,7 +32,7 @@
                 android:layout_alignParentTop="true"
                 android:background="@drawable/gradient_dark_70" />
 
-            <com.swarmnyc.pup.view.ClearableAutoCompleteView
+            <com.swarmnyc.pup.ui.view.ClearableAutoCompleteView
                 android:id="@+id/text_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,12 +53,12 @@
                 android:layout_below="@+id/img_game"
                 android:text="@string/label_pick_a_platform" />
 
-            <com.swarmnyc.pup.view.GamePlatformSelectView
+            <com.swarmnyc.pup.ui.view.GamePlatformSelectView
                 android:id="@+id/platform_select"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/label_pick_a_platform"
-                android:layout_marginTop="@dimen/margin_normal"></com.swarmnyc.pup.view.GamePlatformSelectView>
+                android:layout_marginTop="@dimen/margin_normal"></com.swarmnyc.pup.ui.view.GamePlatformSelectView>
 
             <!--date-->
             <TextView
@@ -67,7 +67,7 @@
                 android:layout_below="@+id/platform_select"
                 android:text="@string/label_date" />
 
-            <com.swarmnyc.pup.view.FontableTextView
+            <com.swarmnyc.pup.ui.view.FontableTextView
                 android:id="@+id/text_date"
                 style="@style/text_option_button"
                 android:layout_below="@+id/label_when"
@@ -89,7 +89,7 @@
                 android:text="@string/label_time" />
 
 
-            <com.swarmnyc.pup.view.FontableTextView
+            <com.swarmnyc.pup.ui.view.FontableTextView
                 android:id="@+id/text_time"
                 style="@style/text_option_button"
                 android:layout_below="@+id/label_time"
@@ -106,7 +106,7 @@
                 android:layout_below="@+id/text_time"
                 android:text="@string/label_play_style" />
 
-            <com.swarmnyc.pup.view.HorizontalSpinner
+            <com.swarmnyc.pup.ui.view.HorizontalSpinner
                 android:id="@+id/spinner_play_style"
                 style="@style/HorizontalSpinnerStyleForLobbyCreate"
                 android:layout_below="@+id/label_play_style"
@@ -124,7 +124,7 @@
                 android:layout_below="@+id/spinner_play_style"
                 android:text="@string/label_gamer_skill" />
 
-            <com.swarmnyc.pup.view.HorizontalSpinner
+            <com.swarmnyc.pup.ui.view.HorizontalSpinner
                 android:id="@+id/spinner_gamer_skill"
                 style="@style/HorizontalSpinnerStyleForLobbyCreate"
                 android:layout_below="@+id/label_gamer_skill" />

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.swarmnyc.pup.view.FontableTextView
+<com.swarmnyc.pup.ui.view.FontableTextView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/text_name"

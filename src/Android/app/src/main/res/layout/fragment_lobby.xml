@@ -63,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-        <com.swarmnyc.pup.view.ShareView
+        <com.swarmnyc.pup.ui.view.ShareView
             android:id="@+id/share_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

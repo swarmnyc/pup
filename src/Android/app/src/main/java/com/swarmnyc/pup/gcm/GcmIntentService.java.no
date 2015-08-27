@@ -12,7 +12,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.R;
-import com.swarmnyc.pup.activities.MainActivity;
+import com.swarmnyc.pup.ui.activities.MainActivity;
 
 public class GcmIntentService extends IntentService {
     private static final String TAG = GcmIntentService.class.getSimpleName();

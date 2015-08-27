@@ -1,0 +1,229 @@
+package com.swarmnyc.pup.module.models;
+
+import com.google.gson.annotations.SerializedName;
+import com.swarmnyc.pup.Config;
+
+import java.util.Date;
+import java.util.List;
+
+public class Lobby extends Taggable implements PicturedModel
+{
+	private String       name;
+	private String       pictureUrl;
+	private String       thumbnailPictureUrl;
+	private GamePlatform platform;
+	private String       gameId;
+	private String       description;
+	private String       lastMessage;
+	private Date         lastMessageAt;
+	private int          unreadMessageCount;
+
+	@SerializedName( "startTimeUtc" ) private Date                startTime;
+	private                                   PlayStyle           playStyle;
+	private                                   SkillLevel          skillLevel;
+	private                                   List<LobbyUserInfo> users;
+
+	public Lobby()
+	{
+
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName( String name )
+	{
+		this.name = name;
+	}
+
+	public String getGameId()
+	{
+		return gameId;
+	}
+
+	public void setGameId( String gameId )
+	{
+		this.gameId = gameId;
+	}
+
+	public String getDescription()
+	{
+		return description;
+	}
+
+	public void setDescription( String description )
+	{
+		this.description = description;
+	}
+
+	public Date getStartTime()
+	{
+		return startTime;
+	}
+
+	public void setStartTime( Date startTime )
+	{
+		this.startTime = startTime;
+	}
+
+	public PlayStyle getPlayStyle()
+	{
+		return playStyle;
+	}
+
+	public void setPlayStyle( PlayStyle playStyle )
+	{
+		this.playStyle = playStyle;
+	}
+
+	public SkillLevel getSkillLevel()
+	{
+		return skillLevel;
+	}
+
+	public void setSkillLevel( SkillLevel skillLevel )
+	{
+		this.skillLevel = skillLevel;
+	}
+
+	public GamePlatform getPlatform()
+	{
+		return platform;
+	}
+
+	public void setPlatform( GamePlatform platform )
+	{
+		this.platform = platform;
+	}
+
+	public String getPictureUrl()
+	{
+		if ( pictureUrl != null && pictureUrl.startsWith( "~/" ) )
+		{ pictureUrl = pictureUrl.replace( "~/", Config.PuPServerPath ); }
+
+		return pictureUrl;
+	}
+
+	public void setPictureUrl( String pictureUrl )
+	{
+		this.pictureUrl = pictureUrl;
+	}
+
+	public List<LobbyUserInfo> getUsers()
+	{
+		return users;
+	}
+
+	public void setUsers( List<LobbyUserInfo> users )
+	{
+		this.users = users;
+	}
+
+	public LobbyUserInfo getUser( String userId )
+	{
+		for ( LobbyUserInfo user : users )
+		{
+			if ( user.id.equals( userId ) )
+			{ return user; }
+		}
+
+		return null;
+	}
+
+	public LobbyUserInfo getAliveUser( String userId )
+	{
+		for ( LobbyUserInfo user : users )
+		{
+			if ( user.id.equals( userId ) && !user.isLeave )
+			{ return user; }
+		}
+
+		return null;
+	}
+
+	public String getThumbnailPictureUrl()
+	{
+		if ( thumbnailPictureUrl != null && thumbnailPictureUrl.startsWith( "~/" ) )
+		{ thumbnailPictureUrl = thumbnailPictureUrl.replace( "~/", Config.PuPServerPath ); }
+
+		return thumbnailPictureUrl;
+	}
+
+	public void setThumbnailPictureUrl( String thumbnailPictureUrl )
+	{
+		this.thumbnailPictureUrl = thumbnailPictureUrl;
+	}
+
+	public String getLastMessage()
+	{
+		return lastMessage;
+	}
+
+	public void setLastMessage( String lastMessage )
+	{
+		this.lastMessage = lastMessage;
+	}
+
+	public Date getLastMessageAt()
+	{
+		return lastMessageAt;
+	}
+
+	public void setLastMessageAt( Date lastMessageAt )
+	{
+		this.lastMessageAt = lastMessageAt;
+	}
+
+	public int getUnreadMessageCount()
+	{
+		return unreadMessageCount;
+	}
+
+	public void setUnreadMessageCount( int unreadMessageCount )
+	{
+		this.unreadMessageCount = unreadMessageCount;
+	}
+
+	public LobbyUserInfo getOwner()
+	{
+		for ( LobbyUserInfo user : users )
+		{
+			if ( user.isOwner )
+			{ return user; }
+		}
+
+		return null;
+	}
+
+	public boolean isAliveUser( final String userId )
+	{
+		for ( LobbyUserInfo user : users )
+		{
+			if ( user.id.equals( userId ) && !user.isLeave )
+			{ return true; }
+		}
+
+		return false;
+	}
+
+	public String getRoomId()
+	{
+		return getTagValue( "QBChatRoomId" );
+	}
+
+	public boolean isOwner( final String id )
+	{
+		if ( id == null )
+		{ return false; }
+
+		for ( LobbyUserInfo user : users )
+		{
+			if ( user.getId().equals( id ))
+				return user.isOwner;
+		}
+
+		return false;
+	}
+}
