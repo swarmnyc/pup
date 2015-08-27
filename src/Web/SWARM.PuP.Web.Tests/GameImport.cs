@@ -15,6 +15,7 @@ using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
 using SWARM.PuP.Web.Models;
 using SWARM.PuP.Web.Services;
+using SWARM.PuP.Web.Services.Quickblox;
 
 namespace SWARM.PuP.Web.Tests.Services
 {
@@ -73,6 +74,23 @@ namespace SWARM.PuP.Web.Tests.Services
         }
 
         [TestMethod]
+        public void Real_Clone_And_UpdateId()
+        {
+            var lobbyCollection = MongoHelper.GetCollection<Lobby>("Lobbies");
+
+            foreach (var lobby in lobbyCollection.FindAll())
+            {
+                if (lobby.Id != lobby.GetTagValue(QuickbloxHttpHelper.Const_ChatRoomId))
+                {
+                    Debug.WriteLine(lobbyCollection.Remove(Query.EQ("_id", new BsonObjectId(new ObjectId(lobby.Id)))).DocumentsAffected);
+
+                    lobby.Id = lobby.GetTagValue(QuickbloxHttpHelper.Const_ChatRoomId);
+                    lobbyCollection.Insert(lobby);
+                }
+            }
+        }
+
+        [TestMethod]
         public void Real_GameImport_SubReddit()
         {
             var gameCollection = MongoHelper.GetCollection<Game>("Games");
@@ -93,7 +111,7 @@ namespace SWARM.PuP.Web.Tests.Services
                     sr = sr.Substring(0, sr.Length - 1);
                 }
 
-                sr = sr.Substring(sr.LastIndexOf("/")+1);
+                sr = sr.Substring(sr.LastIndexOf("/") + 1);
 
                 Trace.TraceInformation("{0}:{1}", gameId, sr);
                 var game = gameCollection.FindOneById(new ObjectId(gameId));

@@ -48,6 +48,9 @@ namespace SWARM.PuP.Web.Services.Quickblox
                 occupants_ids = string.Join(",", chatUserIds)
             });
 
+            // Make Chat room Id is the same as LobbyId;
+            lobby.Id = charRoom._id;
+            //TODO: this tag is useless now, delete it when all client update. 8/27
             lobby.UpdateTag(QuickbloxHttpHelper.Const_ChatRoomId, charRoom._id);
             SendSystemMessage(lobby, SystemMessageCode.Create, null);
         }
@@ -123,7 +126,8 @@ namespace SWARM.PuP.Web.Services.Quickblox
                 chat_dialog_id = roomId,
                 code = code.ToString(),
                 codeBody = codeBody,
-                message = message
+                message = message,
+                send_to_chat = 1,
             });
 
             // Because a new lobby's last_message_time is null, it would be the last in the list

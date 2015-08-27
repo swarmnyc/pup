@@ -46,7 +46,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
     public void AddLobbies(List<Lobby> newLobbies) {
         int start = m_lobbies.size();
         for (Lobby newLobby : newLobbies) {
-            UnreadCounter.reset(newLobby.getRoomId(), newLobby.getUnreadMessageCount());
+            UnreadCounter.reset(newLobby.getId(), newLobby.getUnreadMessageCount());
         }
 
         m_lobbies.addAll(newLobbies);
@@ -89,7 +89,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
     public void updateLastMessage(final ChatMessageReceiveEvent event) {
         for (int i = 0; i < m_lobbies.size(); i++) {
             Lobby lobby = m_lobbies.get(i);
-            if (event.getRoomId().equals(lobby.getRoomId())) {
+            if (event.getLobbyId().equals(lobby.getId())) {
                 ChatMessage message = event.getMessages().get(event.getMessages().size() - 1);
                 lobby.setLastMessage(message.getBody());
                 lobby.setLastMessageAt(new Date(message.getSentAt() * 1000));
@@ -154,7 +154,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
                 m_gameTime.setText("Game Expired");
             }
 
-            if (UnreadCounter.get(m_lobby.getRoomId()) == 0) {
+            if (UnreadCounter.get(m_lobby.getId()) == 0) {
                 m_gameImageBorder.setVisibility(View.GONE);
             } else {
                 m_gameImageBorder.setVisibility(View.VISIBLE);

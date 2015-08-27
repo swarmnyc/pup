@@ -35,7 +35,7 @@ public class ChatRoomService
 		m_activity = activity;
 		m_lobby = lobby;
 
-		m_jid = MessageService.generateJId( lobby.getRoomId() );
+		m_jid = MessageService.generateJId( lobby.getId() );
 	}
 
 	public void SendMessage( String message )
@@ -60,7 +60,7 @@ public class ChatRoomService
 	{
 		EventBus.getBus().post(
 			new EnsureChatConnectRequest(
-				m_lobby.getRoomId(), new Runnable()
+				m_lobby.getId(), new Runnable()
 			{
 				@Override
 				public void run()
@@ -73,7 +73,7 @@ public class ChatRoomService
 						customObjectRequestBuilder.lte( "date_sent", date );
 					}
 
-					QBDialog dialog = new QBDialog( m_lobby.getRoomId() );
+					QBDialog dialog = new QBDialog( m_lobby.getId() );
 					dialog.setRoomJid( m_jid );
 
 					QBChatService.getDialogMessages(
@@ -102,7 +102,7 @@ public class ChatRoomService
 
 											EventBus.getBus().post(
 												new ChatMessageReceiveEvent(
-													m_lobby.getRoomId(), false, cms
+													m_lobby.getId(), false, cms
 												)
 											);
 										}

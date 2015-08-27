@@ -243,6 +243,15 @@
     <methods>;
 }
 
+# *****************************************
+# *** Paper
+# *****************************************
+
+-keep class io.paperdb.** { *; }
+-keep class com.esotericsoftware.** { *; }
+-dontwarn com.esotericsoftware.**
+-keep class de.javakaffee.kryoserializers.** { *; }
+-dontwarn de.javakaffee.kryoserializers.**
 
 
 

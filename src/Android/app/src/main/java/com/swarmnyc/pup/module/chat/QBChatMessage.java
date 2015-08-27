@@ -1,6 +1,6 @@
-package com.swarmnyc.pup.module.models;
+package com.swarmnyc.pup.module.chat;
 
-public class QBChatMessage2
+public class QBChatMessage
 {
 	String _id;
 	String chat_dialog_id;

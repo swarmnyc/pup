@@ -23,11 +23,6 @@ public class Lobby extends Taggable implements PicturedModel
 	private                                   SkillLevel          skillLevel;
 	private                                   List<LobbyUserInfo> users;
 
-	public Lobby()
-	{
-
-	}
-
 	public String getName()
 	{
 		return name;
@@ -206,11 +201,6 @@ public class Lobby extends Taggable implements PicturedModel
 		}
 
 		return false;
-	}
-
-	public String getRoomId()
-	{
-		return getTagValue( "QBChatRoomId" );
 	}
 
 	public boolean isOwner( final String id )

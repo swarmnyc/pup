@@ -1,5 +1,6 @@
 package com.swarmnyc.pup.module.restapi;
 
+import com.swarmnyc.pup.module.chat.QBChatMessage;
 import com.swarmnyc.pup.module.models.*;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public interface LobbyRestApi {
     void get(@Path("LobbyId") String lobbyId, Callback<Lobby> Lobby);
 
     @GET("/Lobby/Message/{LobbyId}")
-    void message(@Path("LobbyId") String lobbyId, Callback<List<QBChatMessage2>> Lobby);
+    void message(@Path("LobbyId") String lobbyId, Callback<List<QBChatMessage>> Lobby);
 
     @POST("/Lobby")
     void create(@Body Lobby lobby, Callback<Lobby> callback);

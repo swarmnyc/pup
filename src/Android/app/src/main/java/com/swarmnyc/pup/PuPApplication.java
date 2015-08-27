@@ -10,6 +10,8 @@ import com.google.android.gms.analytics.Tracker;
 import com.swarmnyc.pup.module.chat.MessageService;
 import com.uservoice.uservoicesdk.UserVoice;
 
+import io.paperdb.Paper;
+
 public class PuPApplication extends Application
 {
 	private static PuPApplication instance;
@@ -54,7 +56,9 @@ public class PuPApplication extends Application
 			)
 		);
 		config.setForumId( 272754 );
-		UserVoice.init( config, this );
+		UserVoice.init(config, this);
+
+		Paper.init(this);
 	}
 
 

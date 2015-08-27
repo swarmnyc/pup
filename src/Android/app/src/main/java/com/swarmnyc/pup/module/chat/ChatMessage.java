@@ -22,19 +22,6 @@ public class ChatMessage
 		m_sentAt = sentAt;
 	}
 
-
-	public ChatMessage(
-		UserInfo user, String id , String body, long sentAt, String code, String codeBody
-	)
-	{
-		m_id = id;
-		m_user = user;
-		m_body = body;
-		m_sentAt = sentAt;
-		m_code = code;
-		m_codeBody = codeBody;
-	}
-
 	public String getBody()
 	{
 		return m_body;
@@ -57,16 +44,6 @@ public class ChatMessage
 	public boolean isSystemMessage()
 	{
 		return  m_user == null || m_user.getId().equals(Config.getConfigString( R.string.QB_APP_DEFAULT_USER  )) ;
-	}
-
-	public String getCode()
-	{
-		return m_code;
-	}
-
-	public String getCodeBody()
-	{
-		return m_codeBody;
 	}
 
 	public long getSentAt()

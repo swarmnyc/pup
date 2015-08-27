@@ -5,6 +5,10 @@ public class LobbyUserInfo extends UserInfo
 	boolean isOwner;
 	boolean isLeave;
 
+	public LobbyUserInfo( ) {
+		super();
+	}
+
 	public LobbyUserInfo( final String userId ) {
 		super(userId);
 	}
