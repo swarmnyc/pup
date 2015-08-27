@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <view xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:id="@+id/coming_message"
     class="com.swarmnyc.pup.ui.helpers.ComingMessageHelper$ComingMessageLayout"
-    android:background="#333333"
+    android:background="@color/pup_white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,12 +13,10 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="@dimen/margin_half"
-        android:src="@drawable/test"
-        android:scaleType="center"
-        app:border_width="1dp" />
+        tool:src="@drawable/default_portrait"/>
 
     <TextView
-        android:id="@+id/text_name"
+        android:id="@+id/text_title"
         style="@style/text_title"
         android:layout_marginLeft="64dp"
         android:layout_marginRight="8dp"
@@ -36,12 +35,13 @@
     <TextView
         android:id="@+id/text_message"
         style="@style/text_message"
-        android:layout_below="@+id/text_name"
+        android:layout_below="@+id/text_title"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="64dp"
         android:layout_marginRight="8dp"
         android:ellipsize="end"
         android:minHeight="32dp"
         android:singleLine="true"
-        android:text="Hi!" />
+        tool:text="Hi!" />
+    <View style="@style/horizontal_line" android:layout_marginTop="63dp"/>
 </view>

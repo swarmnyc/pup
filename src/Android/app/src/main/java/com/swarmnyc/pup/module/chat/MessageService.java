@@ -24,6 +24,7 @@ import com.swarmnyc.pup.module.models.Lobby;
 import com.swarmnyc.pup.module.models.UserInfo;
 import com.swarmnyc.pup.module.service.LobbyService;
 import com.swarmnyc.pup.ui.events.LobbyUserChangeEvent;
+import com.swarmnyc.pup.ui.events.UnhandledChatMessageReceiveEvent;
 import com.swarmnyc.pup.utils.TimeUtils;
 import com.swarmnyc.pup.module.viewmodels.UnreadCounter;
 import com.swarmnyc.pup.ui.events.AfterLeaveLobbyEvent;
@@ -291,7 +292,12 @@ public class MessageService extends Service {
                         @Override
                         public void run() {
                             processSystemMessages(message);
-                            EventBus.getBus().post(new ChatMessageReceiveEvent(message.getDialogId(), true, messages));
+                            ChatMessageReceiveEvent event = new ChatMessageReceiveEvent(message.getDialogId(), true, messages);
+                            EventBus.getBus().post(event);
+
+                            if (!event.handled){
+                                EventBus.getBus().post(new UnhandledChatMessageReceiveEvent(message.getDialogId(), true, messages));
+                            }
                         }
                     }
             );

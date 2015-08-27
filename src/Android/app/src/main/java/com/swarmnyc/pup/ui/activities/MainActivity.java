@@ -30,12 +30,17 @@ import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
+import com.swarmnyc.pup.module.models.Lobby;
+import com.swarmnyc.pup.module.service.LobbyService;
+import com.swarmnyc.pup.module.service.ServiceCallback;
 import com.swarmnyc.pup.ui.Navigator;
+import com.swarmnyc.pup.ui.events.UnhandledChatMessageReceiveEvent;
 import com.swarmnyc.pup.ui.events.UserChangedEvent;
 import com.swarmnyc.pup.ui.fragments.BaseFragment;
 import com.swarmnyc.pup.ui.fragments.LobbyListFragment;
 import com.swarmnyc.pup.ui.fragments.MyChatsFragment;
 import com.swarmnyc.pup.ui.fragments.SettingsFragment;
+import com.swarmnyc.pup.ui.helpers.ComingMessageHelper;
 import com.swarmnyc.pup.ui.helpers.DialogHelper;
 import com.swarmnyc.pup.ui.helpers.FacebookHelper;
 
@@ -64,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private TabPagerAdapter m_tabPagerAdapter;
     private Boolean isLoggedIn = null;
     private Fragment m_currentFragment;
+    private LobbyService m_lobbyService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d("PuP", "Refresh Facebook token");
             FacebookHelper.startLoginRequire(this, null);
         }
+
+        m_lobbyService = PuPApplication.getInstance().getModule().provideLobbyService();
     }
 
     @Override
@@ -226,6 +234,17 @@ public class MainActivity extends AppCompatActivity {
 
             isLoggedIn = User.isLoggedIn();
         }
+    }
+
+    @Subscribe
+    public void receiveMessage(final UnhandledChatMessageReceiveEvent event) {
+        m_lobbyService.getLobby(event.getLobbyId(), new ServiceCallback<Lobby>() {
+            @Override
+            public void success(Lobby lobby) {
+
+                ComingMessageHelper.show(MainActivity.this, lobby, event.getMessages().get(event.getMessages().size() - 1));
+            }
+        });
     }
 
 

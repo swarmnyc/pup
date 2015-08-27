@@ -309,16 +309,6 @@ public class LobbyListFragment extends BaseFragment {
             Config.setBool(Consts.KEY_NEED_UPDATE_LIST, false);
             reloadData(true);
         }
-
-
-        m_slidingPanel.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //ChatMessage chatMessage = new ChatMessage();
-                ComingMessageHelper.show(getActivity(), null);
-            }
-        },3000);
-
     }
 
     @Override
