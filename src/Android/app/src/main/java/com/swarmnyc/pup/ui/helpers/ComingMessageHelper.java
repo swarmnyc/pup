@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.module.chat.ChatMessage;
 import com.swarmnyc.pup.module.models.Lobby;
+import com.swarmnyc.pup.module.models.UserInfo;
 
 public class ComingMessageHelper {
 
@@ -72,7 +73,8 @@ public class ComingMessageHelper {
             if (message.isSystemMessage()){
                 ((TextView) findViewById(R.id.text_message)).setText(message.getBody());
             }else {
-                ((TextView) findViewById(R.id.text_message)).setText(message.getUser().getUserName() + " : " + message.getBody());
+                UserInfo user = lobby.getUser(message.getUser().getId());
+                ((TextView) findViewById(R.id.text_message)).setText(user.getUserName() + " : " + message.getBody());
             }
         }
 
@@ -84,12 +86,12 @@ public class ComingMessageHelper {
             isShowing = true;
 
             handler.removeMessages(0);
-            handler.sendEmptyMessageAtTime(0, 3000);
+            handler.sendEmptyMessageDelayed(0, 3000);
         }
 
         public void hide() {
             isShowing = false;
-            this.animate().translationY(this.getLayoutParams().height).alpha(0).start();
+            this.animate().translationY(-this.getLayoutParams().height).alpha(0).start();
         }
     }
 }

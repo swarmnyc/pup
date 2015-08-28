@@ -30,6 +30,8 @@ import com.swarmnyc.pup.module.service.Filter.GameFilter;
 import com.swarmnyc.pup.module.service.GameService;
 import com.swarmnyc.pup.module.service.LobbyService;
 import com.swarmnyc.pup.module.service.ServiceCallback;
+import com.swarmnyc.pup.ui.events.UnhandledChatMessageReceiveEvent;
+import com.swarmnyc.pup.ui.helpers.ComingMessageHelper;
 import com.swarmnyc.pup.utils.StringUtils;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.ui.adapters.AutoCompleteForPicturedModelAdapter;
@@ -276,6 +278,16 @@ public class LobbyCreateActivity extends AppCompatActivity
                     }
                 }
         );
+    }
+
+    @Subscribe
+    public void receiveMessage(final UnhandledChatMessageReceiveEvent event) {
+        m_lobbyService.getLobby(event.getLobbyId(), new ServiceCallback<Lobby>() {
+            @Override
+            public void success(Lobby lobby) {
+                ComingMessageHelper.show(LobbyCreateActivity.this, lobby, event.getMessages().get(event.getMessages().size() - 1));
+            }
+        });
     }
 
     @Override

@@ -5,14 +5,12 @@
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         tools:context=".LobbyActivity">
 
     <fragment
             android:id="@+id/fragment_lobby"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
             android:name="com.swarmnyc.pup.ui.fragments.LobbyFragment"
             android:tag="fragment_tag_lobby"
             tools:layout="@layout/fragment_lobby"/>
@@ -23,7 +21,6 @@
             android:layout_gravity="end"
             android:layout_width="300dp"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
             android:name="com.swarmnyc.pup.ui.fragments.MemberFragment"
             android:tag="fragment_tag_lobby_member"
 

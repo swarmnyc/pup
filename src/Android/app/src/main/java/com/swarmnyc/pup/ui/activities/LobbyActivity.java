@@ -19,6 +19,8 @@ import com.squareup.otto.Subscribe;
 import com.swarmnyc.pup.*;
 import com.swarmnyc.pup.module.service.LobbyService;
 import com.swarmnyc.pup.module.service.ServiceCallback;
+import com.swarmnyc.pup.ui.events.UnhandledChatMessageReceiveEvent;
+import com.swarmnyc.pup.ui.helpers.ComingMessageHelper;
 import com.swarmnyc.pup.ui.helpers.DialogHelper;
 import com.swarmnyc.pup.ui.helpers.FacebookHelper;
 import com.swarmnyc.pup.ui.events.AfterLeaveLobbyEvent;
@@ -127,6 +129,16 @@ public class LobbyActivity extends AppCompatActivity {
     public void handleLeaveLobby(AfterLeaveLobbyEvent event) {
         m_drawerLayout.closeDrawers();
         init();
+    }
+
+    @Subscribe
+    public void receiveMessage(final UnhandledChatMessageReceiveEvent event) {
+        m_lobbyService.getLobby(event.getLobbyId(), new ServiceCallback<Lobby>() {
+            @Override
+            public void success(Lobby lobby) {
+                ComingMessageHelper.show(LobbyActivity.this, lobby, event.getMessages().get(event.getMessages().size() - 1));
+            }
+        });
     }
 
     @Subscribe
