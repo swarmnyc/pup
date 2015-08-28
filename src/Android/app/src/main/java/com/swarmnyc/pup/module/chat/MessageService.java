@@ -16,6 +16,8 @@ import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.chat.model.QBDialogType;
 import com.quickblox.core.QBSettings;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.model.QBUser;
 import com.squareup.otto.Subscribe;
@@ -51,6 +53,7 @@ public class MessageService extends Service {
     private Queue<EnsureChatConnectRequest> m_ensureRequests = new ArrayBlockingQueue<>(10);
     private long m_expiredAt = 0;
     private Handler m_handler = new Handler(Looper.getMainLooper());
+
     private LobbyService m_lobbyService;
     @Override
     public void onCreate() {
@@ -195,9 +198,9 @@ public class MessageService extends Service {
         }
 
         m_trying.set(true);
-        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+        new Thread(new Runnable() {
             @Override
-            protected Void doInBackground(final Void[] params) {
+            public void run() {
                 try {
                     if (QBChatService.getInstance().isLoggedIn()) {
                         QBChatService.getInstance().logout();
@@ -231,11 +234,8 @@ public class MessageService extends Service {
                     Log.e(TAG, "GetChatDialogs failed", e);
                 }
                 m_trying.set(false);
-                return null;
             }
-        };
-
-        task.execute(null, null, null);
+        }).start();
     }
 
     private QBGroupChat getQbGroupChat(final String jId) {
@@ -295,12 +295,33 @@ public class MessageService extends Service {
                             ChatMessageReceiveEvent event = new ChatMessageReceiveEvent(message.getDialogId(), true, messages);
                             EventBus.getBus().post(event);
 
-                            if (!event.handled){
+                            if (event.handled) {
+                                //Make Read for new message
+                                makeRead(message);
+                            } else {
+                                //In App Notifications
                                 EventBus.getBus().post(new UnhandledChatMessageReceiveEvent(message.getDialogId(), true, messages));
                             }
                         }
                     }
             );
+        }
+
+        private void makeRead(final QBChatMessage message) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!message.isRead()){
+                        StringifyArrayList<String> ms = new StringifyArrayList<String>();
+                        ms.add(message.getId());
+                        try {
+                            QBChatService.markMessagesAsRead(message.getDialogId(), ms);
+                        } catch (QBResponseException e) {
+                            Log.e(TAG, "markMessagesAsRead", e);
+                        }
+                    }
+                }
+            }).start();
         }
 
         private void processSystemMessages(QBChatMessage message) {
@@ -314,7 +335,7 @@ public class MessageService extends Service {
             } else if ("Leave".equals(message.getProperty("code"))) {
                 UserInfo[] users = Utility.fromJson((String) message.getProperty("codeBody"), UserInfo[].class);
                 for (UserInfo u : users) {
-                   m_lobbyService.removeUser(message.getDialogId(), u);
+                    m_lobbyService.removeUser(message.getDialogId(), u);
                 }
             }
         }

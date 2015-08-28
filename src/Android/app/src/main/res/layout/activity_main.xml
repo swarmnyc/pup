@@ -29,6 +29,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text18"
+                    android:text="@string/title_all_games"
                     app:font="@string/font_roboto_slab"/>
                 <com.swarmnyc.pup.ui.view.FontableTextView
                     android:id="@+id/toolbar_subtitle"

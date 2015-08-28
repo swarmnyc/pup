@@ -375,7 +375,6 @@ public class LobbyFragment extends BaseFragment {
         }
     }
 
-
     @Subscribe
     public void receiveMessage(final ChatMessageReceiveEvent event) {
         if (event.getLobbyId().equals(m_lobby.getId()) && !this.isDetached()) {

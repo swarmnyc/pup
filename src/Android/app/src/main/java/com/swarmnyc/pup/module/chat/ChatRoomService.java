@@ -9,6 +9,8 @@ import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.QBEntityCallbackImpl;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.core.request.QBRequestGetBuilder;
 import com.swarmnyc.pup.Consts;
 import com.swarmnyc.pup.EventBus;
@@ -22,133 +24,120 @@ import com.swarmnyc.pup.module.models.LobbyUserInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatRoomService
-{
-	private final String   m_jid;
-	private       Lobby    m_lobby;
-	private       Activity m_activity;
+public class ChatRoomService implements Runnable {
+    private final String m_jid;
+    private Lobby m_lobby;
+    private Activity m_activity;
+    private long date;
 
-	public ChatRoomService(
-		final Activity activity, final Lobby lobby
-	)
-	{
-		m_activity = activity;
-		m_lobby = lobby;
+    public ChatRoomService(
+            final Activity activity, final Lobby lobby
+    ) {
+        m_activity = activity;
+        m_lobby = lobby;
 
-		m_jid = MessageService.generateJId( lobby.getId() );
-	}
+        m_jid = MessageService.generateJId(lobby.getId());
+    }
 
-	public void SendMessage( String message )
-	{
-		try
-		{
-			QBChatMessage chatMessage = new QBChatMessage();
-			chatMessage.setBody( message );
-			chatMessage.setProperty( "userId", User.current.getId() );
-			//chatMessage.setDateSent( new Date().getTime() / 1000 );
-			chatMessage.setSaveToHistory( true );
-			QBChatService.getInstance().getGroupChatManager().getGroupChat( m_jid ).sendMessage( chatMessage );
-		}
-		catch ( Exception e )
-		{
-			Log.e( "QuickbloxChat", "SendMessage Failed", e );
-			Toast.makeText(m_activity, m_activity.getString(R.string.message_operation_failed), Toast.LENGTH_LONG).show();
-		}
-	}
+    public void SendMessage(String message) {
+        try {
+            QBChatMessage chatMessage = new QBChatMessage();
+            chatMessage.setBody(message);
+            chatMessage.setProperty("userId", User.current.getId());
+            //chatMessage.setDateSent( new Date().getTime() / 1000 );
+            chatMessage.setSaveToHistory(true);
+            QBChatService.getInstance().getGroupChatManager().getGroupChat(m_jid).sendMessage(chatMessage);
+        } catch (Exception e) {
+            Log.e("QuickbloxChat", "SendMessage Failed", e);
+            Toast.makeText(m_activity, m_activity.getString(R.string.message_operation_failed), Toast.LENGTH_LONG).show();
+        }
+    }
 
-	public void loadChatHistory( final long date )
-	{
-		EventBus.getBus().post(
-			new EnsureChatConnectRequest(
-				m_lobby.getId(), new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					QBRequestGetBuilder customObjectRequestBuilder = new QBRequestGetBuilder();
-					customObjectRequestBuilder.setPagesLimit( Consts.PAGE_SIZE );
-					customObjectRequestBuilder.sortDesc( "date_sent" );
-					if ( date > 0 )
-					{
-						customObjectRequestBuilder.lte( "date_sent", date );
-					}
-
-					QBDialog dialog = new QBDialog( m_lobby.getId() );
-					dialog.setRoomJid( m_jid );
-
-					QBChatService.getDialogMessages(
-						dialog, customObjectRequestBuilder, new QBEntityCallbackImpl<ArrayList<QBChatMessage>>()
-						{
-							@Override
-							public void onSuccess( final ArrayList<QBChatMessage> messages, Bundle args )
-							{
-								m_activity.runOnUiThread(
-									new Runnable()
-									{
-										@Override
-										public void run()
-										{
-											List<ChatMessage> cms = new ArrayList<>();
-											for ( QBChatMessage message : messages )
-											{
-												LobbyUserInfo user = getLobbyUserInfo( message );
-
-												cms.add(
-													new ChatMessage(
-														user, message.getId(), message.getBody(), message.getDateSent()
-													)
-												);
-											}
-
-											EventBus.getBus().post(
-												new ChatMessageReceiveEvent(
-													m_lobby.getId(), false, cms
-												)
-											);
-										}
-									}
-								);
-							}
-
-							@Override
-							public void onError( final List<String> errors )
-							{
-								m_activity.runOnUiThread(
-									new Runnable()
-									{
-										@Override
-										public void run()
-										{
-											DialogHelper.showError(
-												m_activity, m_activity.getString(R.string.message_operation_failed)
-											);
-
-										}
-									}
-								);
-							}
-						}
-					);
-				}
-			}
-			)
-		);
+    public void loadChatHistory(long date) {
+        this.date = date;
+        EventBus.getBus().post(new EnsureChatConnectRequest(m_lobby.getId(), this));
+    }
 
 
-	}
+    private LobbyUserInfo getLobbyUserInfo(final QBChatMessage chatMessage) {
+        String userId = (String) chatMessage.getProperty("userId");
+        if (userId == null) {
+            return null;
+        } else {
+            LobbyUserInfo user = new LobbyUserInfo(userId);
 
-	private LobbyUserInfo getLobbyUserInfo( final QBChatMessage chatMessage )
-	{
-		String userId = (String) chatMessage.getProperty( "userId" );
-		if ( userId == null )
-		{
-			return null;
-		}
-		else
-		{
-			LobbyUserInfo user = new LobbyUserInfo( userId );
+            return user;
+        }
+    }
 
-			return user;
-		}
-	}
+    @Override
+    public void run() {
+        //after loadChatHistory;
+        QBRequestGetBuilder customObjectRequestBuilder = new QBRequestGetBuilder();
+        customObjectRequestBuilder.setPagesLimit(Consts.PAGE_SIZE);
+        customObjectRequestBuilder.sortDesc("date_sent");
+        if (date > 0) {
+            customObjectRequestBuilder.lte("date_sent", date);
+        }
+
+        QBDialog dialog = new QBDialog(m_lobby.getId());
+        dialog.setRoomJid(m_jid);
+
+        QBChatService.getDialogMessages(
+                dialog, customObjectRequestBuilder, new QBEntityCallbackImpl<ArrayList<QBChatMessage>>() {
+                    @Override
+                    public void onSuccess(final ArrayList<QBChatMessage> messages, Bundle args) {
+                        Boolean hasUnread = false;
+                        //dispatch message
+                        List<ChatMessage> cms = new ArrayList<>();
+                        for (QBChatMessage message : messages) {
+                            LobbyUserInfo user = getLobbyUserInfo(message);
+
+                            cms.add(
+                                    new ChatMessage(
+                                            user, message.getId(), message.getBody(), message.getDateSent()
+                                    )
+                            );
+
+                            hasUnread |= !message.isRead();
+                        }
+
+                        EventBus.getBus().post(
+                                new ChatMessageReceiveEvent(
+                                        m_lobby.getId(), false, cms
+                                )
+                        );
+
+                        if (hasUnread) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //Make Read
+                                    try {
+                                        QBChatService.markMessagesAsRead(m_lobby.getId(), null);
+                                    } catch (QBResponseException e) {
+                                        Log.e("ChatRoomService", "markMessagesAsRead", e);
+                                    }
+                                }
+                            }).start();
+                        }
+                    }
+
+                    @Override
+                    public void onError(final List<String> errors) {
+                        m_activity.runOnUiThread(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        DialogHelper.showError(
+                                                m_activity, m_activity.getString(R.string.message_operation_failed)
+                                        );
+
+                                    }
+                                }
+                        );
+                    }
+                }
+        );
+    }
 }

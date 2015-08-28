@@ -97,5 +97,8 @@
     <string name="time_pm">PM</string>
     <string name="time_am">AM</string>
     <string name="text_join">Join</string>
+    <string name="title_all_games">ALL GAMES</string>
+    <string name="title_joined_game">JOINED GAMES</string>
+    <string name="title_profile">PROFILE</string>
 
 </resources>

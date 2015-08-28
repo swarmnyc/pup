@@ -137,12 +137,12 @@ public class MainActivity extends AppCompatActivity {
     private void setupViewPager() {
         if (m_tabPagerAdapter == null) {
             m_tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
-            m_tabPagerAdapter.addFragment(m_currentFragment = new LobbyListFragment(), "ALL GAMES");
+            m_tabPagerAdapter.addFragment(m_currentFragment = new LobbyListFragment(), getString(R.string.title_all_games));
         }
 
         if (User.isLoggedIn()) {
-            m_tabPagerAdapter.addFragment(new MyChatsFragment(), "JOINED GAMES");
-            m_tabPagerAdapter.addFragment(new SettingsFragment(), "PROFILE");
+            m_tabPagerAdapter.addFragment(new MyChatsFragment(), getString(R.string.title_joined_game));
+            m_tabPagerAdapter.addFragment(new SettingsFragment(), getString(R.string.title_profile));
             m_tabPagerAdapter.notifyDataSetChanged();
         }
 
@@ -241,7 +241,6 @@ public class MainActivity extends AppCompatActivity {
         m_lobbyService.getLobby(event.getLobbyId(), new ServiceCallback<Lobby>() {
             @Override
             public void success(Lobby lobby) {
-
                 ComingMessageHelper.show(MainActivity.this, lobby, event.getMessages().get(event.getMessages().size() - 1));
             }
         });

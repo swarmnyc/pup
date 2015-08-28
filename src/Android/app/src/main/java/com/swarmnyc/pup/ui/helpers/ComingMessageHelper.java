@@ -16,6 +16,7 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.module.chat.ChatMessage;
 import com.swarmnyc.pup.module.models.Lobby;
 import com.swarmnyc.pup.module.models.UserInfo;
+import com.swarmnyc.pup.ui.Navigator;
 
 public class ComingMessageHelper {
 
@@ -27,6 +28,7 @@ public class ComingMessageHelper {
         } else {
             layout = (ComingMessageLayout) activity.getLayoutInflater().inflate(R.layout.view_coming_message, null);
             root.addView(layout);
+            layout.setClickable(true);
             layout.getLayoutParams().height = (int) activity.getResources().getDimension(R.dimen.height_coming_message);
             layout.setTranslationY(-layout.getLayoutParams().height);
             layout.setAlpha(0);
@@ -39,6 +41,7 @@ public class ComingMessageHelper {
 
     public static class ComingMessageLayout extends RelativeLayout {
         private boolean isShowing;
+        private Lobby lobby;
         private ChatMessage message;
         private Handler handler = new Handler() {
             @Override
@@ -59,7 +62,14 @@ public class ComingMessageHelper {
             super(context, attrs, defStyleAttr);
         }
 
+        @Override
+        public boolean performClick() {
+            Navigator.ToLobby(this.getContext(), lobby);
+            return true;
+        }
+
         public void setMessage(Lobby lobby, ChatMessage message) {
+            this.lobby = lobby;
             this.message = message;
             Picasso.with(getContext())
                     .load(lobby.getThumbnailPictureUrl())
