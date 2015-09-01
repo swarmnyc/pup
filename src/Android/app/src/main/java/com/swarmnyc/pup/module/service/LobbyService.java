@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface LobbyService
 {
-	void getLobby( String gameId, ServiceCallback<Lobby> callback );
+	void getLobby( String lobbyId, ServiceCallback<Lobby> callback );
 
 	void getLobbies( LobbyFilter filter, ServiceCallback<LobbySearchResult> callback );
 

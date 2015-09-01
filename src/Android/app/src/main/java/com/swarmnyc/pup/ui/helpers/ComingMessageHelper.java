@@ -32,6 +32,7 @@ public class ComingMessageHelper {
             layout.getLayoutParams().height = (int) activity.getResources().getDimension(R.dimen.height_coming_message);
             layout.setTranslationY(-layout.getLayoutParams().height);
             layout.setAlpha(0);
+
         }
 
         layout.bringToFront();

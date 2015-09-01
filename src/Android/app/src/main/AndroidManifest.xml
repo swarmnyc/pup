@@ -13,15 +13,13 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!--
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-
+`
     <permission
-        android:name="com.swarmnyc.pup.permission.C2D_MESSAGE"
+        android:name="${applicationId}.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.swarmnyc.pup.permission.C2D_MESSAGE" />
-    -->
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
     <application
         android:name=".PuPApplication"
         android:allowBackup="true"
@@ -127,19 +125,17 @@
                 android:value=".ui.activities.MainActivity" />
         </activity>
 
-        <!--
         <receiver
             android:name=".gcm.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
-                <category android:name="com.swarmnyc.pup" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
 
         <service android:name=".gcm.GcmIntentService" />
-        -->
 
         <service
             android:name=".module.chat.MessageService"

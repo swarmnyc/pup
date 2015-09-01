@@ -96,6 +96,8 @@ public class RegisterDialogFragment extends DialogFragment {
                 m_emailText.getText().toString(),
                 m_nameText.getText().toString(),
                 path,
+                "Android",
+                Config.getString("GCMID"),
                 new ServiceCallback<CurrentUserInfo>() {
                     @Override
                     public void success(final CurrentUserInfo value) {

@@ -5,10 +5,12 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Filters;
 using System.Web.Http.Results;
+using Microsoft.Azure.NotificationHubs;
 using MongoDB.Bson;
 using MultipartDataMediaFormatter.Infrastructure;
 using SWARM.PuP.Web.Models;
@@ -189,6 +191,65 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
+        public class UserDevice
+        {
+            public DevicePlatform Platform { get; set; }
+            public string Token { get; set; }
+        }
+
+        [Authorize, HttpPost, Route("Device"), ModelValidate]
+        public async Task<IHttpActionResult> AddDevice([FromBody]UserDevice device)
+        {
+            PuPUser user = User.Identity.GetPuPUser();
+
+            string tag = $"NH-{device.Platform}-{device.Token}";
+            string rid = user.GetTagValue(tag);
+            if (string.IsNullOrEmpty(rid)) {
+                NotificationHubClient client = NotificationHubClient.CreateClientFromConnectionString("Endpoint=sb://ns-pup.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=Fwcbge8ii/iQSt82luPFw1mrK+8FWT/3DLWIFfcI6ak=", "pup-notification");
+                string[] tags = { user.Id };
+                RegistrationDescription result = null;
+                switch (device.Platform)
+                {
+                    case DevicePlatform.iOS:
+                        result = await client.CreateAppleNativeRegistrationAsync(device.Token, tags);
+                        break;
+                    case DevicePlatform.Android:
+                        result = await client.CreateGcmNativeRegistrationAsync(device.Token, tags);
+                        break;
+                    case DevicePlatform.Windows:
+                        result = await client.CreateWindowsNativeRegistrationAsync(device.Token, tags);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(device.Platform), device.Platform, null);
+                }
+
+                user.AddTag(tag, result.RegistrationId);
+                _userService.Update(user);
+            }
+
+            return Ok();
+        }
+
+        [Authorize, HttpDelete, Route("Device"), ModelValidate]
+        public async Task<OkResult> DeleteMedium([FromBody]UserDevice device)
+        {
+
+            PuPUser user = User.Identity.GetPuPUser();
+            string tag = $"NH-{device.Platform}-{device.Token}";
+            string rid = user.GetTagValue(tag);
+            if (string.IsNullOrWhiteSpace(rid))
+            {
+                NotificationHubClient client = NotificationHubClient.CreateClientFromConnectionString("pup-notification", "Endpoint=sb://ns-pup.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=Fwcbge8ii/iQSt82luPFw1mrK+8FWT/3DLWIFfcI6ak=");
+
+                await client.DeleteRegistrationAsync(rid);
+
+                _userService.Update(user);
+            }
+
+
+            return Ok();
+        }
+
         [Authorize, HttpPost, Route("SocialMedia"), ModelValidate]
         public IHttpActionResult AddMedium([FromBody] SocialMedium medium)
         {
@@ -214,7 +275,6 @@ namespace SWARM.PuP.Web.ApiControllers
                 user.SocialMedia.Remove(medium);
                 _userService.Update(user);
             }
-
 
             return Ok();
         }

@@ -100,5 +100,6 @@
     <string name="title_all_games">ALL GAMES</string>
     <string name="title_joined_game">JOINED GAMES</string>
     <string name="title_profile">PROFILE</string>
+    <string name="title_notification">PuP Reminder</string>
 
 </resources>

@@ -40,6 +40,10 @@ public interface UserRestApi
 		String username,
 		@Part( "portrait" )
 		TypedFile portrait,
+		@Part( "platform" )
+		String platform ,
+		@Part( "deviceToken" )
+		String token,
 		RestApiCallback<UserRequestResult> callback
 	);
 

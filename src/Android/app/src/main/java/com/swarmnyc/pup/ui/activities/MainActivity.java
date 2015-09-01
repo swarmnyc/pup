@@ -30,6 +30,7 @@ import com.swarmnyc.pup.EventBus;
 import com.swarmnyc.pup.PuPApplication;
 import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
+import com.swarmnyc.pup.gcm.GcmHelper;
 import com.swarmnyc.pup.module.models.Lobby;
 import com.swarmnyc.pup.module.service.LobbyService;
 import com.swarmnyc.pup.module.service.ServiceCallback;
@@ -43,6 +44,7 @@ import com.swarmnyc.pup.ui.fragments.SettingsFragment;
 import com.swarmnyc.pup.ui.helpers.ComingMessageHelper;
 import com.swarmnyc.pup.ui.helpers.DialogHelper;
 import com.swarmnyc.pup.ui.helpers.FacebookHelper;
+import com.swarmnyc.pup.utils.Action;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,6 +115,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         m_lobbyService = PuPApplication.getInstance().getModule().provideLobbyService();
+
+        GcmHelper.getRegisterId(this, null);
+
     }
 
     @Override

@@ -17,6 +17,9 @@ import java.util.Date;
 public class PuPModule
 {
 	private final RestAdapter restAdapter;
+	private LobbyServiceImpl lobbyService;
+	private GameServiceImpl gameService;
+	private UserServiceImpl userService;
 
 	public PuPModule()
 	{
@@ -47,20 +50,26 @@ public class PuPModule
 		                                       )
 		                                       .setConverter( new GsonConverter( gson ) )
 		                                       .build();
+
+		lobbyService = new LobbyServiceImpl(restAdapter.create(LobbyRestApi.class));
+
+		gameService = new GameServiceImpl(restAdapter.create(GameRestApi.class));
+
+		userService = new UserServiceImpl(restAdapter.create(UserRestApi.class));
 	}
 
 	public LobbyService provideLobbyService()
 	{
-		return new LobbyServiceImpl( restAdapter.create( LobbyRestApi.class ) );
+		return lobbyService;
 	}
 
 	public GameService provideGameService()
 	{
-		return new GameServiceImpl( restAdapter.create( GameRestApi.class ) );
+		return gameService;
 	}
 
 	public UserService provideUserService()
 	{
-		return new UserServiceImpl( restAdapter.create( UserRestApi.class ) );
+		return userService;
 	}
 }

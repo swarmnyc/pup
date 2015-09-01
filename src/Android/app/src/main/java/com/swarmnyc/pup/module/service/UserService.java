@@ -8,7 +8,7 @@ public interface UserService
 {
     void login( String email, ServiceCallback<CurrentUserInfo> callback );
 
-    void register( String email, String username, String file , ServiceCallback<CurrentUserInfo> callback );
+    void register( String email, String username, String file ,String platform ,String cid, ServiceCallback<CurrentUserInfo> callback );
 
     void updatePortrait(String file , ServiceCallback<String> callback );
 

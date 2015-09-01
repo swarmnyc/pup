@@ -17,6 +17,7 @@
 
     <string name="uservoice_id">swarmnyc.uservoice.com</string>
     <string name="google_tracker_key">UA-43683040-6</string>
+    <string name="google_gcm_key">901334961979</string>
 
     <integer name="menu_item_default">0</integer>
     <integer name="menu_item_default_for_user">1</integer>

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.swarmnyc.pup.gcm.GcmHelper;
 import com.swarmnyc.pup.module.chat.MessageService;
 import com.uservoice.uservoicesdk.UserVoice;
 
