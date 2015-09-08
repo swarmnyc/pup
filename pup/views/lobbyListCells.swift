@@ -388,7 +388,7 @@ class headerCell: UITableViewHeaderFooterView {
         self.title.layer.masksToBounds = false;
         self.title.clipsToBounds = false;
         self.title.layer.shadowRadius = 0;
-        self.title.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).CGColor
+        self.title.layer.shadowColor = UIColor(red: 0.7, green: 0.7, blue: 0.7, alpha: 1).CGColor
         self.title.layer.shadowOpacity = 1;
         self.title.layer.shadowOffset = CGSizeMake(0, 2);
         self.title.frame = CGRectMake(0,0,containerView.frame.width, containerView.frame.height - 2);
@@ -431,4 +431,43 @@ class headerCell: UITableViewHeaderFooterView {
 
 }
 
+
+class NoLobbiesCell: UITableViewCell {
+
+    var label = UITextView();
+
+    func setUpCell() {
+
+        contentView.addSubview(label)
+        if (Reachability.isConnectedToNetwork() == false) {
+            label.text = "\n \nSeems like you've travelled back \nin time! There is no internet!\n Please return to the modern era \nor turn on data to use PUP";
+
+        } else {
+            label.text = "\n \nUncharted Territory!\nNo games are scheduled. To continue press the + button.";
+        }
+        label.font = UIFont(name: "AvenirNext-Regular", size: 16.0);
+
+        label.textAlignment = NSTextAlignment.Center
+        label.editable = false;
+        label.snp_makeConstraints {
+            (make) -> Void in
+            make.left.equalTo(self)
+            make.top.equalTo(self)
+            make.right.equalTo(self)
+            make.height.equalTo(UIScreen.mainScreen().bounds.height - 90)
+        }
+
+        self.clipsToBounds = false;
+        self.layer.masksToBounds = false;
+
+    }
+
+    func updateSize() {
+        frame.size = CGSize(width: UIScreen.mainScreen().bounds.width, height: UIScreen.mainScreen().bounds.height - 80)
+    }
+
+    
+
+
+}
 

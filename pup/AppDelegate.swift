@@ -53,8 +53,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().tintColor = UIColor(rgba: colors.tealMain);
         
         UINavigationBar.appearance().titleTextAttributes = [
-            NSFontAttributeName: UIFont(name: "Georgia-Bold", size: 18)!,
-            NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 0, alpha: 0.75)
+            NSFontAttributeName: UIFont(name: "AvenirNext-Bold", size: 18)!,
+            NSForegroundColorAttributeName: UIColor(red: 0, green: 0, blue: 0, alpha: 0.65)
         ]
         
         //create the tab bar

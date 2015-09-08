@@ -116,6 +116,7 @@ class SearchResultsModel {
                     } else {
                     println("alamofire games.swift");
                         SNYError(alertTitle: "Could not find games", alertText: "Please try again", networkRequest: true);
+                        failure();
                     }
 
                 };

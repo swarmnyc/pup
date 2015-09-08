@@ -20,14 +20,26 @@ class MessageCell: UITableViewCell {
     var firstTime = true;
     var delay: Double = 0;
     var isSystemMessage = false;
+    var longPress: UILongPressGestureRecognizer?
+    
+    var showPopUp: ((String, String) -> Void)?
+
+//    init(alertTitle: String, alertText: String, alertStyle: UIAlertViewStyle) {
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        longPress = UILongPressGestureRecognizer(target: self, action: "longPressed");
+        self.addGestureRecognizer(longPress!);
+
     }
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String!) {
         // println(style);
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        longPress = UILongPressGestureRecognizer(target: self, action: "longPressed");
+        self.addGestureRecognizer(longPress!);
+
+
     }
 
     override func awakeFromNib() {
@@ -36,6 +48,12 @@ class MessageCell: UITableViewCell {
     }
 
 
+    func longPressed() {
+        if (self.userName.text != nil) {
+        showPopUp?(self.userName.text!, self.message.text);
+        }
+    }
+    
     func isCurrentUser() -> Bool {
         if let theUserName = self.userName.text {
             if (theUserName == currentUser.data.name) {
@@ -63,15 +81,27 @@ class MessageCell: UITableViewCell {
         });
     }
 
-    func setUpCell(item: Message) {
-
+    func setUpCell(item: Message, flagCallBack: ((String, String) -> Void)) {
+        if (currentUser.loggedIn()) {
+        self.showPopUp = flagCallBack
+        } else {
+            self.showPopUp = nil;
+        }
+        
         self.profilePicture.clipsToBounds = true;
         self.profilePicture.image = nil;
         self.profilePicture.layer.cornerRadius = 20;
         if (item.picture != "") {
             var url = NSURL(string: item.picture.getPUPUrl())
             self.profilePicture.frame = CGRectMake(0,0,50,50);
-            self.profilePicture.sd_setImageWithURL(url!, placeholderImage: nil, options: SDWebImageOptions.RefreshCached);
+            if (url != nil) {
+
+                self.profilePicture.sd_setImageWithURL(url!, placeholderImage: nil, options: SDWebImageOptions.RefreshCached);
+            } else  {
+                var image = UIImage(named: "iconWithText");
+                self.profilePicture.image = image;
+
+            }
 
         } else {
             var image = UIImage(named: "iconWithText");
@@ -81,8 +111,8 @@ class MessageCell: UITableViewCell {
 
         self.backgroundColor = UIColor.clearColor();
         whiteBackground.backgroundColor = UIColor.whiteColor();
-
-
+        
+        
         message.text = item.message;
         message.font = UIConstants.paragraphType;
         message.userInteractionEnabled = false;

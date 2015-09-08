@@ -7,5 +7,5 @@ import Foundation
 
 protocol MainScreenAnimationDelegate: class {
     func bringLobbiesBack();
-    func animateLobbyCellsAway((() -> Void)?, animateNavBar: Bool);
+    func animateLobbyCellsAway((() -> Void)?, animateNavBar: Bool) -> Double;
 }

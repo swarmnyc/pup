@@ -83,7 +83,9 @@ class singleLobby {
     }
 
     func addSelfToMembers() {
-        data.users.append(currentUser.getSelfAsSingleLobbyUser());
+        var lobbyUser = currentUser.getSelfAsSingleLobbyUser();
+        data.users.append(lobbyUser);
+        data.proPicDict[lobbyUser.name] = lobbyUser.portraitUrl;
     }
 
     func joinLobby(success: () -> Void, failure: () -> Void) {

@@ -21,6 +21,9 @@ class CreateLobbyView: UIView {
     var searchBarBackground = UIView();
     var scrollViewFrame = CGRectMake(0,0,0,0)
     var scrollViewBounds = CGRectMake(0,0,0,0)
+    
+    
+    var createButtonActive = false;
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -191,6 +194,91 @@ class CreateLobbyView: UIView {
 
     }
 
+
+    func highlightMissed(gameId: String?, platform: String?) {
+
+
+        if ((gameId == nil) || (platform == nil)) {
+            scrollToTop({
+                
+                UIView.animateWithDuration(0.1, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                    if (gameId == nil) {
+                        let bounceAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
+                        bounceAnimation.values = [1.0, 1.25, 0.94, 1.15, 0.95, 1.02, 1.0]
+                        bounceAnimation.duration = NSTimeInterval(0.8)
+                        bounceAnimation.calculationMode = kCAAnimationCubic
+
+                        self.searchBar.layer.addAnimation(bounceAnimation, forKey: "bounceAnimation")
+
+
+
+                    }
+
+                    if (platform == nil) {
+                        let bounceAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
+                        bounceAnimation.values = [1.0, 1.25, 0.94, 1.15, 0.95, 1.02, 1.0]
+                        bounceAnimation.duration = NSTimeInterval(1)
+                        bounceAnimation.calculationMode = kCAAnimationCubic
+
+                        self.pickSystemText.layer.addAnimation(bounceAnimation, forKey: "bounceAnimation")
+
+
+                    }
+
+                }, completion: nil);
+            
+            }); //end of scroll to top
+        }
+
+    }
+
+
+    func scrollToTop(success: (() -> Void)) {
+        UIView.animateWithDuration(0.35, animations: {
+            self.scrollView.contentOffset = CGPoint(x: 0,y: 0);
+        }, completion: {
+            (done) in
+            success();
+
+        })
+    }
+
+    func resetView() {
+        headerImage.backgroundColor = UIColor.blackColor();
+        headerImage.image = UIImage(named: "createLobbyBackground");
+        self.headerImage.contentMode = UIViewContentMode.ScaleAspectFill;
+        self.headerImage.clipsToBounds = true;
+
+        searchBar.searchBarStyle = UISearchBarStyle.Minimal;
+        searchBar.placeholder = "Select a Game...";
+
+        self.uncheckAllPlatforms()
+        self.makeAllPlatformsActive()
+
+        self.searchBar.text = "";
+        self.searchBar.backgroundColor = nil;
+        self.searchBar.searchBarStyle = UISearchBarStyle.Minimal;
+        searchBar.layer.shadowColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1).CGColor;
+
+        self.descriptionEditor.descriptionField.text = "";
+
+        pickSystemText.textColor = UIColor(rgba: colors.mainGrey)
+        pickSystemText.layer.shadowOpacity = 0;
+
+
+    }
+
+    func makeCreateButtonActive() {
+        createLobbyButton.backgroundColor = UIColor(rgba: colors.tealMain);
+        createLobbyButton.alpha = 1;
+
+    }
+
+    func makeCreateButtonInactive() {
+        createLobbyButton.alpha = 0.5;
+
+    }
+
     func pressIt() {
         self.createLobbyButton.addIndicator();
 
@@ -282,10 +370,13 @@ class CreateLobbyView: UIView {
         self.searchBar.snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.containerView).offset(UIConstants.horizontalPadding)
             make.right.equalTo(self.containerView).offset(-UIConstants.horizontalPadding)
-            make.bottom.equalTo(self.pickSystemText.snp_top).offset(-UIConstants.verticalPadding)
-            make.height.equalTo(30)
+            make.bottom.equalTo(self.pickSystemText.snp_top).offset(-UIConstants.halfVerticalPadding)
+            make.height.equalTo(50)
         }
-
+        
+        println("search bar background image");
+        println(self.searchBar.backgroundImage);
+        
         self.platforms[0].snp_remakeConstraints { (make) -> Void in
             make.left.equalTo(self.containerView).offset(0)
             make.top.equalTo(self.pickSystemText.snp_bottom).offset(0)
@@ -367,9 +458,20 @@ class CreateLobbyView: UIView {
     }
 
 
+    func makeAllPlatformsActive() {
+        for i in 0...appData.platforms.count-1 {
+            platforms[i].makeActive()
+        }
+    }
 
 
 
+
+    func scrollDownBelowSearchBar() {
+        UIView.animateWithDuration(0.3, animations: {
+            self.scrollView.contentOffset = CGPointMake(0,125);
+        })
+    }
 
 
 

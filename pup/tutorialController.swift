@@ -114,7 +114,7 @@ class PageController: UIViewController {
     override func viewDidLoad() {
 
         self.view.addSubview(pageImage!);
-        
+        var width = self.pageImage!.contentMode = UIViewContentMode.ScaleAspectFit;
         self.pageImage?.snp_remakeConstraints({
             (make) -> Void in
             make.top.equalTo(self.view);

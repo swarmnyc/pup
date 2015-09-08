@@ -23,7 +23,7 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     var tutorial: TutorialController?;
 
     var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
-
+    
 
    // var transitionManager = TransitionManager()
 
@@ -92,6 +92,8 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
 
         model.getLobbies("", platforms: [], applyChange: true, success: self.updateData, failure: {
             println("failed...")
+            self.model.justStarted = false;
+            self.listView?.table.reloadData();
             self.activityIndicator.stopAnimating();
 
         })
@@ -245,7 +247,11 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 5;
+        if (lobbyCount() > 0 || self.model.justStarted == true) {
+            return 5;
+        } else {
+            return 1;
+        }
     }
 
 
@@ -268,14 +274,18 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
-        return self.model.gamesOrganized[self.model.gamesKey[section]]!.count;
+        if (self.lobbyCount() > 0 || self.model.justStarted == true) {
+            return self.model.gamesOrganized[self.model.gamesKey[section]]!.count;
+        } else {
+            return 1;
+        }
 
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
+        if (self.lobbyCount() > 0 || self.model.justStarted == true) {
 
-            let cell = tableView.dequeueReusableCellWithIdentifier("gamecell", forIndexPath:indexPath) as! gameCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("gamecell", forIndexPath: indexPath) as! gameCell
             if (cell.isNew) {
 
                 cell.setCell(self.model.gamesOrganized[self.model.gamesKey[indexPath.section]]![indexPath.item])
@@ -285,6 +295,13 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
             cell.setUpViews(self.model.gamesOrganized[self.model.gamesKey[indexPath.section]]![indexPath.item])
             cell.removeOffset(0);
             return cell
+        } else {
+
+            let cell = NoLobbiesCell();
+            cell.setUpCell();
+            return cell;
+
+        }
 
 
 
@@ -298,6 +315,11 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
             self.model.removeAnimate();
             self.activityIndicator.stopAnimating();
         }
+        else if (indexPath.row == (visibleRowsIndexPath[0] as! NSIndexPath).row) {
+            println("first one!!!!");
+            
+            self.model.setAnimationDelayOrder(self.model.gamesOrganized[self.model.gamesKey[indexPath.section]]![indexPath.item].index - 1);
+        }
 
     }
 
@@ -306,11 +328,15 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
  
 
   func tableView(tlableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-            if (self.model.gamesOrganized[self.model.gamesKey[section]]!.count == 0) {
-                return 0;
-            } else {
-                return 35;
-            }
+      if (self.lobbyCount() > 0 || self.model.justStarted == true) {
+          if (self.model.gamesOrganized[self.model.gamesKey[section]]!.count == 0) {
+              return 0;
+          } else {
+              return 35;
+          }
+      } else {
+          return 0;
+      }
 
     }
 
@@ -330,8 +356,11 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
                 indexCount++;
             }
             
-            allCells.append(self.listView!.table.cellForRowAtIndexPath(row) as! gameCell);
-            indexCount++;
+            var cell = self.listView!.table.cellForRowAtIndexPath(row) as? gameCell
+            if (cell != nil) {
+                allCells.append(cell!);
+                indexCount++;
+            }
         }
         
         return allCells;
@@ -347,19 +376,19 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
         });
         var cells = self.listView?.table.visibleCells();
         var allCells = getAllCellsAndHeaders();
-        var speed  = 0.7;
+        var speed  = Double(allCells.count) * 0.08 + 0.15;
         for (var i = 0; i<allCells.count; i++) {
             if ((allCells[i] as? gameCell) != nil) {
                 var theCell = allCells[i] as! gameCell;
-                theCell.removeOffset(speed - 0.15 * Double(i));
+                theCell.removeOffset(speed - 0.08 * Double(i));
             } else {
                 var theCell = allCells[i] as! headerCell;
-                theCell.removeOffset(speed - 0.15*Double(i));
+                theCell.removeOffset(speed - 0.08*Double(i));
             }
         }
     }
 
-    func animateLobbyCellsAway(success: (() -> Void)?, animateNavBar: Bool) {
+    func animateLobbyCellsAway(success: (() -> Void)?, animateNavBar: Bool) -> Double {
         var cells = self.listView?.table.visibleCells();
 
         if (animateNavBar) {
@@ -398,17 +427,16 @@ class LobbyListController: UIViewController, UITableViewDelegate, UITableViewDat
             }
         }
 
+        return speed;
+
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         println("You selected cell #\(indexPath.row)!")
         var selectedCell = tableView.cellForRowAtIndexPath(indexPath) as? gameCell;
-        //self.hidesBottomBarWhenPushed = true;
+
         let lobbyView = SingleLobbyController(info: self.model.gamesOrganized[self.model.gamesKey[indexPath.section]]![indexPath.row])
         lobbyView.setAnimationDelegate(self as! MainScreenAnimationDelegate);
-//        var timer = NSTimer.scheduledTimerWithTimeInterval(0.02, target: self, selector: Selector("pushLobby:"), userInfo: lobbyView, repeats: false);
-
-
 
         self.definesPresentationContext = true;
         self.definesPresentationContext = true;

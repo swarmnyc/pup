@@ -33,6 +33,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
 
     var viewWasPopped: Bool = false;
 
+    var flagPopUp = SNYError(alertTitle: "Flag This Comment", alertText: "Why is it so offensive?", alertStyle: UIAlertViewStyle.PlainTextInput);
 
     var animationDelegate: MainScreenAnimationDelegate?
 
@@ -44,7 +45,8 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         //lets set those modal styles so that the animation can be smooth (to get rid of the drop shadow on the view)
         self.modalPresentationStyle = UIModalPresentationStyle.OverCurrentContext;
         self.hidesBottomBarWhenPushed = true;
-
+        
+        self.flagPopUp.lobbyID = info.id;
 
         //connect the delegate methods from quickblox
         data.passMessagesToController = recievedMessages;
@@ -75,6 +77,10 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
     }
 
 
+    func startFlagging(userName: String, messageString: String) {
+        flagPopUp.showIt(messageString, user: userName);
+    }
+    
 
     func setAnimationDelegate(delegate: MainScreenAnimationDelegate) {
         self.animationDelegate = delegate;
@@ -101,23 +107,27 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
         var transform = CGAffineTransformMakeTranslation(UIScreen.mainScreen().bounds.width, 0);
         self.lobbyView?.transform = transform;
 
+
+
+        //send the command back to the previvous screen to start the animation on that end and get rid of those cells
+        var finalDelay = self.animationDelegate?.animateLobbyCellsAway(nil, animateNavBar: true);
+        self.animateAwayTabBar(finalDelay!);
+
+
+
+    }
+
+
+    func animateAwayTabBar(speed: Double) {
         UIView.animateWithDuration(0.5, animations: {
-            transform = CGAffineTransformMakeTranslation(0,0);
+            var transform = CGAffineTransformMakeTranslation(0,0);
             self.lobbyView?.transform = transform;
             transform = CGAffineTransformMakeTranslation(-UIScreen.mainScreen().bounds.width,0);
 
             nav!.tabBar.transform = transform;
 
         })
-
-        //send the command back to the previvous screen to start the animation on that end and get rid of those cells
-        self.animationDelegate?.animateLobbyCellsAway(nil, animateNavBar: true);
-
-
-
-
     }
-
 
     func showNavBar() {
         //(if we don't hide the images when the
@@ -721,7 +731,7 @@ class SingleLobbyController: UIViewController, UITableViewDelegate, UITableViewD
                     cell.setTheAnimationDelay(0.0)
                 }
 
-                cell.setUpCell(self.data.data.messages[indexPath.row])
+                cell.setUpCell(self.data.data.messages[indexPath.row], flagCallBack: self.startFlagging)
                 cell.selectionStyle = UITableViewCellSelectionStyle.None;
                 return cell;
             } else {

@@ -37,7 +37,7 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
 //
 //        data.delegate = self;
 
-
+        registerForKeyboardNotifications()
 
     }
 
@@ -266,6 +266,32 @@ class RegistrationController: UIViewController, UITextFieldDelegate, ImageButton
         }
 
 
+    }
+
+
+    func keyboardWillShow(notification: NSNotification)
+    {
+        self.registrationView.moveViewUp(notification);
+
+    }
+
+    func keyboardWillBeHidden(notification: NSNotification)
+    {
+        self.registrationView.bringViewDown();
+    }
+
+    func registerForKeyboardNotifications() {
+        NSNotificationCenter.defaultCenter().addObserver(
+        self,
+                selector: "keyboardWillShow:",
+                name: UIKeyboardWillShowNotification,
+                object: nil)
+
+        NSNotificationCenter.defaultCenter().addObserver(
+        self,
+                selector: "keyboardWillBeHidden:",
+                name: UIKeyboardWillHideNotification,
+                object: nil)
     }
 
    func textFieldShouldReturn(textField: UITextField) -> Bool {

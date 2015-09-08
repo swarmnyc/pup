@@ -67,6 +67,8 @@ class RegistrationView: UIView {
         registrationDescription.text = "You'll need to create a username, but you'll only have to do this once."
         registrationDescription.font = UIConstants.tagType!.fontWithSize(11);
         registrationDescription.textContainer.lineFragmentPadding = 0;
+        registrationDescription.editable = false;
+        registrationDescription.userInteractionEnabled = false;
 
         username.placeholder = UIConstants.usernamePlaceholder;
         username.font = UIConstants.paragraphType
@@ -161,7 +163,7 @@ class RegistrationView: UIView {
         self.whiteView.snp_remakeConstraints {
             (make) -> Void in
             make.centerX.equalTo(self)
-            make.top.equalTo(self).offset(UIConstants.verticalPadding * 8.5)
+            make.top.equalTo(self).offset(UIConstants.verticalPadding * 7.5)
             make.left.equalTo(self).offset(UIConstants.horizontalPadding)
             make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
             make.height.equalTo(220)
@@ -185,6 +187,43 @@ class RegistrationView: UIView {
         })
     }
 
+
+    func moveViewUp(notification: NSNotification) {
+        println("moveUp");
+        var keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue()
+        var keyboardHeight = keyboardSize!.height;
+        UIView.animateWithDuration(0.3, animations: {
+        self.whiteView.snp_remakeConstraints {
+            (make) -> Void in
+            make.centerX.equalTo(self)
+            make.top.lessThanOrEqualTo(self).offset(150)
+            make.bottom.equalTo(self).offset(-keyboardHeight - CGFloat(UIConstants.verticalPadding));
+            make.left.equalTo(self).offset(UIConstants.horizontalPadding)
+            make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
+            make.height.equalTo(220)
+        }
+
+        
+
+        });
+       
+
+    }
+
+
+    func bringViewDown() {
+        UIView.animateWithDuration(0.3, animations: {
+
+        self.whiteView.snp_remakeConstraints {
+            (make) -> Void in
+            make.centerX.equalTo(self)
+            make.top.equalTo(self).offset(UIConstants.verticalPadding * 7.5)
+            make.left.equalTo(self).offset(UIConstants.horizontalPadding)
+            make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
+            make.height.equalTo(220)
+        }
+        })
+    }
 
     func getData() -> (image: UIImage?, username: String, email: String) {
 

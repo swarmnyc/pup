@@ -97,7 +97,7 @@ class SettingsView: UIView {
             integrationDisclaimer.text = "We'll be adding integrations for additional systems..."
             integrationDisclaimer.font = UIConstants.paragraphType;
             integrationDisclaimer.userInteractionEnabled = false;
-
+            integrationDisclaimer.editable = false;
 
             self.socialButtons.append(SocialSharingSwitch())
             self.socialButtons.append(SocialSharingSwitch())
@@ -151,12 +151,12 @@ class SettingsView: UIView {
 
 
     func setDelegates(delegate: UIViewController) {
-        logout.addTarget(delegate as! SettingsController, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
-        logout.setTitle("Logout", forState: .Normal);
-        logout.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        logout.setTitleColor(UIColor.whiteColor(), forState: .Selected)
-        logout.backgroundColor = UIColor(rgba: colors.tealMain);
-        logout.titleLabel?.font = UIFont(name: "AvenirNext-Medium", size: 11.0);
+//        logout.addTarget(delegate as! SettingsController, action: "buttonAction:", forControlEvents: UIControlEvents.TouchUpInside)
+//        logout.setTitle("Logout", forState: .Normal);
+//        logout.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+//        logout.setTitleColor(UIColor.whiteColor(), forState: .Selected)
+//        logout.backgroundColor = UIColor(rgba: colors.tealMain);
+//        logout.titleLabel?.font = UIFont(name: "AvenirNext-Medium", size: 11.0);
         var imageTapper = UITapGestureRecognizer(target: delegate as! SettingsController, action: "imageTapped");
         self.profilePicImg.addGestureRecognizer(imageTapper);
 
@@ -208,7 +208,6 @@ class SettingsView: UIView {
             self.containerView.addSubview(socialButtons[3])
             self.containerView.addSubview(TOSLink)
 
-        self.containerView.addSubview(logout)
         self.scrollView.addSubview(containerView)
         self.addSubview(self.scrollView)
     }
@@ -245,14 +244,7 @@ class SettingsView: UIView {
         }
 
 
-            logout.snp_makeConstraints {
-                (make) -> Void in
-                make.top.equalTo(self.containerView).offset(UIScreen.mainScreen().bounds.height - 58 - self.parentViewController!.navigationController!.navigationBar.bounds.height * 3)
-                make.left.equalTo(self.containerView).offset(0)
-                make.right.equalTo(self.containerView).offset(0)
-                make.height.equalTo(68)
-            }
-
+        
 
             socialButtons[0].snp_makeConstraints {
                 (make) -> Void in

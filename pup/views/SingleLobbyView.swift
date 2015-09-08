@@ -764,10 +764,10 @@ func clearText() {
 
         self.send.snp_remakeConstraints {
             (make) -> Void in
-            make.right.equalTo(self).offset(-UIConstants.horizontalPadding)
+            make.right.equalTo(self).offset(0)
             make.bottom.equalTo(self).offset(-UIConstants.verticalPadding)
             make.height.equalTo(35)
-            make.width.equalTo(UIConstants.horizontalPadding * 7)
+            make.left.equalTo(self.newMessage.snp_right).offset(0)
         }
 
         if (!isMember) {

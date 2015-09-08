@@ -245,7 +245,12 @@ class MembersListCell: UICollectionViewCell {
             memberPhoto.frame.size = CGSizeMake(34, 34);
             memberPhoto.layer.cornerRadius = 17.0;
 //            self.memberPhoto.hnk_setImageFromURL(url!)
+            if (url != nil) {
             self.memberPhoto.sd_setImageWithURL(url!, placeholderImage: nil, options: SDWebImageOptions.RefreshCached);
+            } else {
+                var img = UIImage(named: "iconWithText");
+                self.memberPhoto.image = img;
+            }
         }
 
 

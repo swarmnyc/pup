@@ -81,7 +81,12 @@ class EmptyCell: UICollectionViewCell {
         super.init(frame: frame)
 
         contentView.addSubview(label)
-        label.text = "\n \nYou haven't joined any games\nyet, and all the cake is gone.";
+        if (Reachability.isConnectedToNetwork() == false) {
+            label.text = "\n \nSeems like you've travelled back \nin time! There is no internet!\n Please return to the modern era \nor turn on data to use PUP";
+
+        } else {
+            label.text = "\n \nYou haven't joined any games\nyet, and the cake is a lie.";
+        }
         label.font = UIFont(name: "AvenirNext-Regular", size: 16.0);
 
         label.textAlignment = NSTextAlignment.Center

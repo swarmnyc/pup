@@ -42,6 +42,7 @@ var dateDisplay: DateDisplayView = DateDisplayView();
 
         createView.setUpView(self, dateDisplay: dateDisplay);
        self.view = self.createView
+        newLobbyModel.controller = self;
     }
 
     override func viewDidLoad() {
@@ -55,8 +56,11 @@ var dateDisplay: DateDisplayView = DateDisplayView();
 
         //set up scrolling selectors
         playStyle = HorizontalSelectController(parent: self, options: ["CASUAL", "SOCIAL", "HARDCORE"], title: "PLAY STYLE", defaultSelection: 1)
-        gamerSkill = HorizontalSelectController(parent: self, options: ["NEWBIE", "EASY", "MEDIUM", "HARD", "NIGHTMARE"], title: "GAMER SKILL", defaultSelection: 2)
+        playStyle!.onChange = self.setThePlayStyle;
 
+        gamerSkill = HorizontalSelectController(parent: self, options: ["NEWBIE", "EASY", "MEDIUM", "HARD", "NIGHTMARE"], title: "GAMER SKILL", defaultSelection: 2)
+        gamerSkill!.onChange = self.setTheGamerSkill;
+        
         createView.containerView.addSubview(playStyle!.view)
         createView.containerView.addSubview(gamerSkill!.view)
         setUpDateCallbacks(updateDate, newTime: updateTime)
@@ -72,7 +76,8 @@ var dateDisplay: DateDisplayView = DateDisplayView();
             if (logInButton == nil) {
                 logInButton = JoinPupButton(aboveTabBar: true)
             }
-            logInButton?.onSuccessJoin = createLobby;
+            logInButton?.onSuccessJoin = self.createLobby;
+            logInButton?.onInactivePush = self.inactiveRegisterPress;
             logInButton?.setUpView(self.createView.scrollView)
         }
 
@@ -118,6 +123,34 @@ var dateDisplay: DateDisplayView = DateDisplayView();
     }
 
 
+
+    func modifiedInputFields(highlightMissedFields: Bool) {
+        if (newLobbyModel.checkData()) {
+            //lets allow user to click it
+
+            createView.makeCreateButtonActive();
+            logInButton?.setActive();
+        } else {
+            //nope fill out some more forms
+            createView.makeCreateButtonInactive();
+            logInButton?.setInactive();
+
+            if (highlightMissedFields) {
+
+                createView.highlightMissed(newLobbyModel.gameId, platform: newLobbyModel.selectedPlatform);
+            }
+
+        }
+    }
+
+    func setThePlayStyle(currentSelection: String) {
+        newLobbyModel.PlayStyle = currentSelection;
+    }
+
+    func setTheGamerSkill(currentSelection: String) {
+        newLobbyModel.GamerSkill = currentSelection;
+    }
+
     func createLobby() {
 
         newLobbyModel.PlayStyle = playStyle?.getCurrentSelection();
@@ -134,12 +167,15 @@ var dateDisplay: DateDisplayView = DateDisplayView();
             })
 
         } else {
-            var alert = SNYError(alertTitle: "Could Not Create Lobby", alertText: "Make sure to fill out all of the fields")
-            createView.releaseIt();
-
+           // var alert = SNYError(alertTitle: "Could Not Create Lobby", alertText: "Make sure to fill out all of the fields")
+            modifiedInputFields(true)
 
         }
         println("createLobby")
+    }
+
+    func inactiveRegisterPress() {
+        modifiedInputFields(true)
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -158,6 +194,8 @@ var dateDisplay: DateDisplayView = DateDisplayView();
 
             }
             //logInButton?.addToAppView()
+        } else {
+            logInButton?.removeRegistrationView();
         }
         self.createView.scrollView.setContentOffset(CGPointMake(0,0), animated: false);
 
@@ -168,7 +206,8 @@ var dateDisplay: DateDisplayView = DateDisplayView();
         self.createView.setTextSize();
 
         self.title = "Create A Game"
-
+        
+        self.modifiedInputFields(false)
 
         //clear create lobby data
 
@@ -176,27 +215,17 @@ var dateDisplay: DateDisplayView = DateDisplayView();
 
     func moveToLobby(newLobby: LobbyData) {
         self.createView.releaseIt()
-
         var lobbyController = SingleLobbyController(info: newLobby);
 
 
         nav!.selectedIndex = 1;
-        //nav!.selectedViewController!.viewDidAppear(true)
-
-       // SwiftLoader.hide()
-
 
 
 
         ((nav!.viewControllers![1] as! UINavigationController).topViewController as! MyChatsController).pushLobby(lobbyController)
+        self.createView.resetView();
+        self.newLobbyModel.resetData();
 
-
-//        var viewControllerArray = NSMutableArray();
-//        viewControllerArray.setArray(self.navigationController?.viewControllers as! [AnyObject]!)
-//
-//        viewControllerArray.replaceObjectAtIndex(viewControllerArray.count - 1,withObject: lobbyView)
-//        SwiftLoader.hide()
-//        self.navigationController?.setViewControllers(viewControllerArray as [AnyObject], animated: true)
     }
 
     //Get text from the description editor
@@ -351,6 +380,7 @@ var dateDisplay: DateDisplayView = DateDisplayView();
         searchController?.resultsView?.maxHeight = 165;
         searchController?.resultsView?.maxHeightResults = 120;
         searchController?.resultsView?.setUpConstraints();
+        createView.scrollDownBelowSearchBar();
 
         println("beginEditing")
     }
@@ -384,6 +414,7 @@ var dateDisplay: DateDisplayView = DateDisplayView();
             self.activityIndicator.startAnimating();
             data.search(searchText, success: handOffResults, failure: {
                 println("failure with search")
+                self.activityIndicator.stopAnimating();
             });
         }
 

@@ -13,6 +13,9 @@ class JoinPupButton: UIViewController, SimpleButtonDelegate {
     var registrationController: RegistrationController?;
     var onSuccessJoin: (() -> Void)?
     var aboveTabBar: Bool = false;
+    var isActive = true;
+    var onInactivePush: (() -> Void)?
+
     convenience init(aboveTabBar: Bool) {
         self.init()
         self.aboveTabBar = aboveTabBar;
@@ -56,13 +59,27 @@ class JoinPupButton: UIViewController, SimpleButtonDelegate {
        // parent?.view.addSubview(registrationController.view)
 
         println(self.parentViewController?.navigationController);
-
-        registrationController?.addParentConstraints();
-        registrationController?.onSuccessJoin = onSuccessJoin;
-
+        if (isActive) {
+            registrationController?.addParentConstraints();
+            registrationController?.onSuccessJoin = onSuccessJoin;
+        } else {
+            println(onInactivePush)
+            println("inactive Push")
+            onInactivePush?();
+        }
 
     }
 
+
+    func setActive() {
+        self.isActive = true;
+        self.joinButtonView.setButtonActive();
+    }
+
+    func setInactive() {
+        self.isActive = false;
+        self.joinButtonView.setButtonInactive();
+    }
 
 
 

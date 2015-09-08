@@ -345,16 +345,23 @@ class LobbyData: QuickBloxDelegate {
 
     func addNewMessage(message: QBChatMessage) {
 
-        self.addSingleMessage(message);
-        self.messageSkip++; //make it so that when autoloading older messages there aren't repeats, we know to skip some more
 
         var codeBody = message.customParameters?["codeBody"] as? String
+        println(codeBody);
         if (codeBody != nil) {
+
+            println("adding member");
+
            var memberData: (String, String, String?)? = prepareMember(codeBody!);
+            println("memberData");
             if (memberData != nil) {
                 addMember(memberData!.0, id: memberData!.1, portrait: memberData!.2);
             }
         }
+
+        self.addSingleMessage(message);
+        self.messageSkip++; //make it so that when autoloading older messages there aren't repeats, we know to skip some more
+
 
 
     }
@@ -411,19 +418,22 @@ class Message {
         if ((messages.customParameters! != nil) && (messages.customParameters?["userId"] != nil)) {
             var id = messages.customParameters?["userId"] as! String;
             self.username = getUserName(id, users: users, owner: owner);
-            var pic = propics[self.username] as? String?;
-            if (pic != nil) {
-
-                self.picture = propics[self.username] as! String!
+            var pic = propics[self.username] as? String!;
+            println(pic);
+            if let propicstring = pic {
+                println(propicstring);
+                if (propicstring != nil) {
+                    self.picture = propicstring
+                } else {
+                    self.picture = "";
+                }
             } else {
-            self.picture = "";
+                self.picture = "";
             }
         } else {
             self.username = "system message"
             self.picture = ""
 
-            //var newMemberInfo = messages.customParameters?["codeBody"] as! NSDictionary;
-            //println(newMemberInfo);
 
         }
 
@@ -512,7 +522,7 @@ class LobbyList {  //collection of all the current games
     var lastSearchSuffix: String = ""
     var headers: [headerCell] = [];
     var justStarted = true;
-
+    var delay = 0.2;
     init(parentView: LobbyListController) {
         
         for (var i = 0; i<gamesKey.count; i++) {
@@ -597,6 +607,15 @@ class LobbyList {  //collection of all the current games
         }
 
     }
+    
+    func setAnimationDelayOrder(start: Int) {
+        for (var i = 0; i < gamesKey.count; i++) {
+            for (var p = 0; p < gamesOrganized[gamesKey[i]]!.count; p++) {
+                gamesOrganized[gamesKey[i]]![p].index -= start;
+            }
+        }
+
+    }
 
 
 
@@ -621,7 +640,7 @@ class LobbyList {  //collection of all the current games
 
            self.sendRequest(url,onlyAddNewData: false, clearData: true, success: success, failure: {
                failure();
-            SNYError(alertTitle: "Oops, no available games.", alertText: "Try Again soon, or create a game", networkRequest: true)
+            SNYError(alertTitle: "Uncharted Territory!", alertText: "No games are scheduled with those filters. How about making one?", networkRequest: true)
 
            })
 
@@ -652,6 +671,7 @@ class LobbyList {  //collection of all the current games
                         success();
                         self.updated = false;
                     } else {
+                        self.justStarted = false;
                         self.loadMore = false;
                         failure();
                     }

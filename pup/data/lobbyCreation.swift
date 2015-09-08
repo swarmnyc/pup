@@ -21,32 +21,87 @@ class LobbyCreationModel {
 //
 //Alamofire.request(mutableURLRequest)
 
-    var gameId: String?
-    var selectedPlatform: String?
+    var gameId: String? {
+        get {
+            return _gameId;
+        }
+        set (value) {
+            _gameId = value;
+            selectedPlatform = nil;
+            controller?.modifiedInputFields(false);
+        }
+    }
+    var _gameId: String?
+    var selectedPlatform: String? {
+        get {
+            return _selectedPlatform;
+        }
+        set (value) {
+            _selectedPlatform = value;
+            controller?.modifiedInputFields(false);
+        }
+    }
+    var _selectedPlatform: String?
 
-    var startTime: NSDate = NSDate().dateByAddingMinutes(20)
+    var startTime: NSDate {
+        get {
+            return _startTime!;
+        }
+        set (value) {
+            _startTime = value;
+            controller?.modifiedInputFields(false);
+        }
+    }
+    var _startTime: NSDate?
     var startTimeString: String?
 
-    var possiblePlatforms = [""]
+    var possiblePlatforms: [String] {
+        get {
+            return _possiblePlatforms!;
+        }
+        set (value) {
+            _possiblePlatforms = value;
+            controller?.modifiedInputFields(false);
+        }
+    }
+    var _possiblePlatforms: [String]?
 
     var PlayStyle: String?
+
     var GamerSkill: String?
 
-    var description: String?
+    var description: String? {
+        get {
+            return _description;
+        }
+        set (value) {
+            _description = value;
+            controller?.modifiedInputFields(false);
+        }
+    }
+    var _description: String?
 
+    var controller: CreateLobbyController?
 
     init() {
 
+        self.startTime = NSDate().dateByAddingMinutes(20);
+        self.possiblePlatforms = [""];
     }
 
 
 
     func clearData() {
         selectedPlatform = nil;
-
+        possiblePlatforms = [""];
 
     }
 
+    func resetData() {
+        self.possiblePlatforms = [""];
+        self.selectedPlatform = nil;
+        self.gameId = nil;
+    }
 
 
     func changeDateDay(newDate: NSDate) -> NSDate {
@@ -89,9 +144,10 @@ class LobbyCreationModel {
 
     func checkData() -> Bool {
 
-        if (gameId != nil && selectedPlatform != nil && PlayStyle != nil && GamerSkill != nil) {
+        if (_gameId != nil && _selectedPlatform != nil && PlayStyle != nil && GamerSkill != nil) {
             return true
         }
+        
 
         makeSureTimeIsInFuture()
 
@@ -100,8 +156,8 @@ class LobbyCreationModel {
     }
 
     func makeSureTimeIsInFuture() {
-        if (startTime.minutesAfterDate(NSDate())<20) {
-            startTime = NSDate().dateByAddingMinutes(20);
+        if (_startTime!.minutesAfterDate(NSDate())<20) {
+            _startTime = NSDate().dateByAddingMinutes(20);
         }
     }
 

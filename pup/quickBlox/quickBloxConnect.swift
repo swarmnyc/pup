@@ -183,7 +183,8 @@ class QuickBlox: NSObject, QBChatDelegate {
             }
 
         } else {  //if you aren't logged in call a timer to recall this function
-
+            println("rejoin timer rejoin timer")
+            createSession();
             NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "joinRoomTimer:", userInfo: roomid, repeats: false);
 
         }
@@ -233,11 +234,14 @@ class QuickBlox: NSObject, QBChatDelegate {
                     dispatch_async(dispatch_get_main_queue()) {
                         SwiftLoader.hide();
                         SNYError(alertTitle: "Couldn't Send Message", alertText: "Please, try again!", networkRequest: true)
+                        self.joinRoom(roomid);
                     }
                 }
             } else {  //if the room doesn't exist
                 dispatch_async(dispatch_get_main_queue()) {
                     SNYError(alertTitle: "Couldn't Send Message", alertText: "Please, try again!", networkRequest: true)
+                    self.joinRoom(roomid);
+
                 }
 
             }

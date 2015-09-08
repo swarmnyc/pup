@@ -47,8 +47,8 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
 
         var config: UVConfig = UVConfig(site: "swarmnyc.uservoice.com")
         config.forumId = 272754;
-        config.showKnowledgeBase = true;
-        config.showForum = true;
+        config.showKnowledgeBase = false;
+        config.showForum = false;
         UserVoice.initialize(config);
 
         var feedBack = UserVoice.getUserVoiceContactUsFormForModalDisplay();

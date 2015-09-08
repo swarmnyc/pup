@@ -42,7 +42,15 @@ class JoinPupButtonView: PlatformButtonToggle {
 
     }
 
+    func setButtonActive() {
+        self.backgroundColor = UIColor(rgba: colors.orange)
 
+    }
+
+    func setButtonInactive() {
+        self.backgroundColor = UIColor(rgba: colors.orange).lighterColor(0.75);
+
+    }
 
     func bounce(amount: CGFloat) {
             var transAmount = amount

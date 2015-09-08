@@ -277,7 +277,7 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
 
 
 
-    func animateLobbyCellsAway(success: (() -> Void)?, animateNavBar: Bool) {
+    func animateLobbyCellsAway(success: (() -> Void)?, animateNavBar: Bool) -> Double {
         if (animateNavBar) {
             var trans = CGAffineTransformMakeTranslation(-UIScreen.mainScreen().bounds.width, 0);
             UIView.animateWithDuration(0.2, animations: {
@@ -301,6 +301,8 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
             }
         }
 
+        return speed;
+
     }
 
     func bringLobbiesBack() {
@@ -313,14 +315,14 @@ class MyChatsController: UIViewController, UICollectionViewDelegate, UICollectio
         var cells = self.myChatsView!.chatsCollection!.indexPathsForVisibleItems() as! [NSIndexPath];
         cells = cells.sorted {$0.row < $1.row};
         var collection = self.myChatsView!.chatsCollection!;
-        var speed  = 0.7;
+        var speed  = Double(cells.count) * 0.08 + 0.15;
         for (var i = 0; i<cells.count; i++) {
             if ((collection.cellForItemAtIndexPath(cells[i] as! NSIndexPath) as? MyChatsCell) != nil) {
                 var theCell = collection.cellForItemAtIndexPath(cells[i] as! NSIndexPath) as! MyChatsCell;
 
                 theCell.moveRight(speed, success: nil);
 
-                speed -= 0.15;
+                speed -= 0.08;
                 println(theCell);
             }
         }

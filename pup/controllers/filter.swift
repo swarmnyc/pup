@@ -174,6 +174,7 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
     func pullToRefresh() {
         data.search(searchText, success: handOffResults, failure: {
             println("failure in search");
+            self.parent?.activityIndicator.stopAnimating();
         })
     }
 
@@ -188,6 +189,8 @@ class FilterViewController: UIViewController, UISearchBarDelegate, SimpleButtonD
             parent?.activityIndicator.startAnimating();
             data.search(searchText, success: handOffResults, failure: {
                 println("failure in search")
+                self.parent?.activityIndicator.stopAnimating();
+
             });
         }
 
