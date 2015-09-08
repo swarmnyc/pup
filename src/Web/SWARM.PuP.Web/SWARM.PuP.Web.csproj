@@ -160,6 +160,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\Components\NotificationHubHelper.cs" />
+    <Compile Include="Code\Models\UserDevice.cs" />
     <Compile Include="Code\Models\DevicePlatform.cs" />
     <Compile Include="Code\ApiControllers\ErrorCode.cs" />
     <Compile Include="Code\Consts.cs" />

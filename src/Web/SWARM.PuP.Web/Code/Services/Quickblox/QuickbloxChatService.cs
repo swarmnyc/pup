@@ -104,6 +104,8 @@ namespace SWARM.PuP.Web.Services.Quickblox
             var request = QuickbloxHttpHelper.Create(QuickbloxApiTypes.Message, HttpMethod.Post);
             string message;
             string codeBody = null;
+            int send_to_chat = 1;
+
             switch (code)
             {
                 case SystemMessageCode.Join:
@@ -116,6 +118,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                     break;
                 case SystemMessageCode.Create:
                     message = "Lobby created";
+                    send_to_chat = 0;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("code", code, null);
@@ -127,7 +130,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
                 code = code.ToString(),
                 codeBody = codeBody,
                 message = message,
-                send_to_chat = 1,
+                send_to_chat = send_to_chat,
             });
 
             // Because a new lobby's last_message_time is null, it would be the last in the list

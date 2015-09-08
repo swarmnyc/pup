@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(
-            final String email, final String username, String file, final ServiceCallback<CurrentUserInfo> callback
+            final String email, final String username, String file, String platform ,String cid, final ServiceCallback<CurrentUserInfo> callback
     ) {
         if (!isRunning.getAndSet(true)) {
             TypedFile tf = null;
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
             }
 
             m_userApi.register(
-                    email, PASSWORD, username, tf, new RestApiCallback<UserRequestResult>(null) {
+                    email, PASSWORD, username, tf, platform, cid, new RestApiCallback<UserRequestResult>(null) {
                         @Override
                         public void success(final UserRequestResult userRequestResult, final Response response) {
                             isRunning.set(false);
@@ -72,6 +72,12 @@ public class UserServiceImpl implements UserService {
                                     callback.failure(userRequestResult.getErrorMessage());
                                 }
                             }
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            super.failure(error);
+                            isRunning.set(false);
                         }
                     }
             );
@@ -86,16 +92,10 @@ public class UserServiceImpl implements UserService {
                 tf = new TypedFile("multipart/form-data", new File(file));
             }
 
-            m_userApi.updatePortrait(tf, new RestApiCallback<String>(callback){
+            m_userApi.updatePortrait(tf, new RestApiCallback<String>(isRunning, callback){
                 @Override
                 public void success(String o, Response response) {
                     super.success(o, response);
-                    isRunning.set(false);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    super.failure(error);
                     isRunning.set(false);
                 }
             });

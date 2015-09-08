@@ -10,7 +10,6 @@
         internal static string Message = "chat/Message.json";
         internal static string DeleteMessageTemplate = "chat/Message/{0}.json?force=1";
 
-
         internal static string UserDelete(string userId)
         {
             return string.Format(UserDeleteTemplate, userId);

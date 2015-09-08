@@ -44,6 +44,13 @@ namespace SWARM.PuP.Web.ViewModels
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+        
+        public DevicePlatform Platform { get; set; }
+        
+        /// <summary>
+        /// This token is for Push Notification 
+        /// </summary>
+        public string DeviceToken { get; set; }
     }
 
     public class ExternalLoginViewModel

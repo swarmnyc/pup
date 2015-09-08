@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -96,7 +97,7 @@ namespace SWARM.PuP.Web.ApiControllers
 
         [HttpPost]
         [Route("~/api/Register"), ModelValidate]
-        public IHttpActionResult Register(RegisterViewModel model)
+        public async Task<IHttpActionResult> Register(RegisterViewModel model)
         {
             string errorMessage = null;
             PuPUser user = _userService.FindByNameOrEmail(model.Email, model.UserName);
@@ -119,6 +120,15 @@ namespace SWARM.PuP.Web.ApiControllers
                     Email = model.Email,
                     PasswordHash = DataProtector.Hash(model.Password)
                 };
+
+                if (!string.IsNullOrWhiteSpace(model.DeviceToken))
+                {
+                    await NotificationHubHelper.AddDeviceAsync(user, new UserDevice()
+                    {
+                        Platform = model.Platform,
+                        Token = model.DeviceToken
+                    });
+                }
 
                 RequestContext.Principal = new ClaimsPrincipal(new PuPClaimsIdentity(user));
                 if (model.Portrait != null)
@@ -191,57 +201,25 @@ namespace SWARM.PuP.Web.ApiControllers
             return Ok();
         }
 
-        public class UserDevice
-        {
-            public DevicePlatform Platform { get; set; }
-            public string Token { get; set; }
-        }
-
         [Authorize, HttpPost, Route("Device"), ModelValidate]
         public async Task<IHttpActionResult> AddDevice([FromBody]UserDevice device)
         {
             PuPUser user = User.Identity.GetPuPUser();
-
-            string tag = $"NH-{device.Platform}-{device.Token}";
-            string rid = user.GetTagValue(tag);
-            if (string.IsNullOrEmpty(rid)) {
-                NotificationHubClient client = NotificationHubClient.CreateClientFromConnectionString("Endpoint=sb://ns-pup.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=Fwcbge8ii/iQSt82luPFw1mrK+8FWT/3DLWIFfcI6ak=", "pup-notification");
-                string[] tags = { user.Id };
-                RegistrationDescription result = null;
-                switch (device.Platform)
-                {
-                    case DevicePlatform.iOS:
-                        result = await client.CreateAppleNativeRegistrationAsync(device.Token, tags);
-                        break;
-                    case DevicePlatform.Android:
-                        result = await client.CreateGcmNativeRegistrationAsync(device.Token, tags);
-                        break;
-                    case DevicePlatform.Windows:
-                        result = await client.CreateWindowsNativeRegistrationAsync(device.Token, tags);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(device.Platform), device.Platform, null);
-                }
-
-                user.AddTag(tag, result.RegistrationId);
-                _userService.Update(user);
-            }
+            await NotificationHubHelper.AddDeviceAsync(user, device);
+            _userService.Update(user);
 
             return Ok();
         }
 
         [Authorize, HttpDelete, Route("Device"), ModelValidate]
-        public async Task<OkResult> DeleteMedium([FromBody]UserDevice device)
+        public async Task<OkResult> DeleteDevice([FromBody]UserDevice device)
         {
-
             PuPUser user = User.Identity.GetPuPUser();
             string tag = $"NH-{device.Platform}-{device.Token}";
             string rid = user.GetTagValue(tag);
             if (string.IsNullOrWhiteSpace(rid))
             {
-                NotificationHubClient client = NotificationHubClient.CreateClientFromConnectionString("pup-notification", "Endpoint=sb://ns-pup.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=Fwcbge8ii/iQSt82luPFw1mrK+8FWT/3DLWIFfcI6ak=");
-
-                await client.DeleteRegistrationAsync(rid);
+                await NotificationHubHelper.DeleteDeviceAsync(user, device);
 
                 _userService.Update(user);
             }
