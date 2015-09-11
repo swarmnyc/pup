@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.JsonReader;
+import android.util.JsonToken;
 import android.util.Log;
 
 import com.swarmnyc.pup.Consts;
@@ -18,6 +20,9 @@ import com.swarmnyc.pup.module.models.Lobby;
 import com.swarmnyc.pup.module.service.ServiceCallback;
 import com.swarmnyc.pup.ui.activities.LobbyActivity;
 import com.swarmnyc.pup.ui.activities.MainActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class GcmIntentService extends IntentService {
     private static final String TAG = GcmIntentService.class.getSimpleName();
@@ -30,18 +35,22 @@ public class GcmIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Bundle extras = intent.getExtras();
-        String type = extras.getString("type");
-        String message = extras.getString("message");
-        Log.d(TAG, "type=" + type + ", Message=" + message);
-        switch (type) {
-            case "LobbyStart":
-                processLobbyStartNotification(extras.getString("lobbyId"), message);
-                break;
+        try {
+            JSONObject obj = new JSONObject(intent.getExtras().getString("message"));
+            String type = obj.getString("type");
+            String message = obj.getString("message");
+            Log.d(TAG, "type=" + type + ", Message=" + message);
+            switch (type) {
+                case "LobbyStart":
+                    processLobbyStartNotification(obj.getString("lobbyId"), message);
+                    break;
+            }
+
+
+            GcmBroadcastReceiver.completeWakefulIntent(intent);
+        } catch (JSONException e) {
+            Log.e(TAG,"Receive Message",e);
         }
-
-
-        GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
     private void processLobbyStartNotification(String lobbyId, final String message) {

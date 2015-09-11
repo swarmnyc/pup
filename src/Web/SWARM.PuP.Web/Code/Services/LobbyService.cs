@@ -36,7 +36,7 @@ namespace SWARM.PuP.Web.Services
 
             _chatService.CreateRoomForLobby(owner, lobby);
 
-            NotificationHubHelper.SendLobbyStart(lobby, owner);
+            NotificationHelper.SendLobbyStart(lobby, owner);
 
             return base.Add(lobby);
         }
@@ -137,7 +137,7 @@ namespace SWARM.PuP.Web.Services
                     UserName = user.GetUserName(lobby.Platform)
                 });
 
-                NotificationHubHelper.SendLobbyStart(lobby, user);
+                NotificationHelper.SendLobbyStart(lobby, user);
             }
             else
             {

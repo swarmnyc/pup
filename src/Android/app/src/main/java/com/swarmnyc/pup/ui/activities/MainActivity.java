@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -32,6 +33,7 @@ import com.swarmnyc.pup.R;
 import com.swarmnyc.pup.User;
 import com.swarmnyc.pup.gcm.GcmHelper;
 import com.swarmnyc.pup.module.models.Lobby;
+import com.swarmnyc.pup.module.models.UserDevice;
 import com.swarmnyc.pup.module.service.LobbyService;
 import com.swarmnyc.pup.module.service.ServiceCallback;
 import com.swarmnyc.pup.ui.Navigator;
@@ -116,7 +118,16 @@ public class MainActivity extends AppCompatActivity {
 
         m_lobbyService = PuPApplication.getInstance().getModule().provideLobbyService();
 
-        GcmHelper.getRegisterId(this, null);
+        GcmHelper.RegisterOrGetId(this, new Action<String>() {
+            @Override
+            public void call(String token) {
+                if (User.isLoggedIn() && User.current.getTagValue("Notification_Android_" + token) == null) {
+                    Log.d("GcmHelper", "Update Device Token:" + token);
+                    UserDevice device = new UserDevice(token);
+                    PuPApplication.getInstance().getModule().provideUserService().addDevice(device, null);
+                }
+            }
+        });
 
     }
 

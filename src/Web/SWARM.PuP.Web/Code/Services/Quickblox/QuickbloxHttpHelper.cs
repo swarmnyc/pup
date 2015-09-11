@@ -37,7 +37,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
             BaseUri = new Uri(ConfigurationManager.AppSettings["Quickblox_ApiUrl"]);
         }
 
-        internal static WebRequest Create(string api, HttpMethod method)
+        public static WebRequest Create(string api, HttpMethod method)
         {
             if (IsNoSession())
             {
@@ -47,7 +47,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
             return Create(api, method, _defaultSession);
         }
 
-        internal static WebRequest Create(string api, HttpMethod method, Session session)
+        public static WebRequest Create(string api, HttpMethod method, Session session)
         {
             WebRequest request = WebRequest.CreateHttp(new Uri(BaseUri, api));
             request.Headers.Add("QB-Token", session.token);
@@ -57,17 +57,17 @@ namespace SWARM.PuP.Web.Services.Quickblox
             return request;
         }
 
-        internal static string GetChatId(this PuPUser user)
+        public static string GetChatId(this PuPUser user)
         {
             return user.GetTagValue(Const_ChatId);
         }
 
-        internal static void SetChatId(this PuPUser user, string chatId)
+        public static void SetChatId(this PuPUser user, string chatId)
         {
             user.UpdateTag(Const_ChatId, chatId);
         }
 
-        internal static void InitSession()
+        public static void InitSession()
         {
             if (!IsNoSession())
             {
@@ -77,7 +77,7 @@ namespace SWARM.PuP.Web.Services.Quickblox
             _defaultSession = InitSession(AdminUserId);
         }
 
-        internal static Session InitSession(string userId)
+        public static Session InitSession(string userId)
         {
             lock (LockObj)
             {

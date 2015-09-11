@@ -1,6 +1,9 @@
 package com.swarmnyc.pup.module.service;
 
 import com.swarmnyc.pup.EventBus;
+import com.swarmnyc.pup.User;
+import com.swarmnyc.pup.module.models.PuPTag;
+import com.swarmnyc.pup.module.models.UserDevice;
 import com.swarmnyc.pup.module.restapi.RestApiCallback;
 import com.swarmnyc.pup.module.restapi.UserRestApi;
 import com.swarmnyc.pup.utils.StringUtils;
@@ -14,6 +17,7 @@ import retrofit.mime.TypedFile;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class UserServiceImpl implements UserService {
@@ -128,5 +132,43 @@ public class UserServiceImpl implements UserService {
 
             m_userApi.addMedium(ot, new RestApiCallback<>(isRunning, callback));
         }
+    }
+
+    @Override
+    public void addTag(PuPTag tag, ServiceCallback<String> callback) {
+        List<PuPTag> tags = User.current.getTags();
+        for (PuPTag t : tags) {
+            if (tag.getKey().equals(t.getKey())){
+                tags.remove(t);
+                break;
+            }
+        }
+
+        tags.add(tag);
+        User.update();
+
+        m_userApi.addTag(tag, new RestApiCallback<>(isRunning, callback));
+    }
+
+    @Override
+    public void deleteTag(String tagId, ServiceCallback<String> callback) {
+        List<PuPTag> tags = User.current.getTags();
+        for (PuPTag t : tags) {
+            if (tagId.equals(t.getKey())){
+                tags.remove(t);
+                break;
+            }
+        }
+        User.update();
+
+        m_userApi.deleteTag(tagId, new RestApiCallback<>(isRunning, callback));
+    }
+
+    @Override
+    public void addDevice(UserDevice device, ServiceCallback<String> callback) {
+        User.current.getTags().add(new PuPTag("Notification_Android_" + device.token, device.token));
+        User.update();
+
+        m_userApi.addDevice(device, new RestApiCallback<>(isRunning, callback));
     }
 }

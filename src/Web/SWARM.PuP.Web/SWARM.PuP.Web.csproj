@@ -160,13 +160,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Code\Components\NotificationHubHelper.cs" />
+    <Compile Include="Code\Components\NotificationHelper.cs" />
     <Compile Include="Code\Models\UserDevice.cs" />
     <Compile Include="Code\Models\DevicePlatform.cs" />
     <Compile Include="Code\ApiControllers\ErrorCode.cs" />
     <Compile Include="Code\Consts.cs" />
     <Compile Include="Code\Controllers\PluginController.cs" />
     <Compile Include="Code\Controllers\UserController.cs" />
+    <Compile Include="Code\Services\Quickblox\QuickbloxPushTokenRoot.cs" />
     <Compile Include="Code\ViewModels\LobbySearchResult.cs" />
     <Compile Include="Code\Components\ShareHelper.cs" />
     <Compile Include="Code\Components\QueryString.cs" />

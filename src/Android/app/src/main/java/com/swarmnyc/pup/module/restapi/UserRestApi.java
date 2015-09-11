@@ -1,6 +1,8 @@
 package com.swarmnyc.pup.module.restapi;
 
+import com.swarmnyc.pup.module.models.PuPTag;
 import com.swarmnyc.pup.module.models.SocialMedium;
+import com.swarmnyc.pup.module.models.UserDevice;
 import com.swarmnyc.pup.module.viewmodels.UserRequestResult;
 
 import retrofit.http.*;
@@ -68,4 +70,26 @@ public interface UserRestApi
 		String type,
 		RestApiCallback callback
 	);
+
+	@POST( "/User/UserTag" )
+	void addTag(
+			@Body
+			PuPTag tag,
+			RestApiCallback callback
+	);
+
+	@DELETE( "/User/UserTag/{tagId}" )
+	void deleteTag(
+			@Path( "tagId" )
+			String tagId,
+			RestApiCallback callback
+	);
+
+	@POST( "/User/Device" )
+	void addDevice(
+			@Body
+			UserDevice device,
+			RestApiCallback callback
+	);
 }
+

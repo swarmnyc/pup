@@ -19,6 +19,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import com.squareup.picasso.Picasso;
 import com.swarmnyc.pup.*;
+import com.swarmnyc.pup.module.models.PuPTag;
 import com.swarmnyc.pup.module.service.ServiceCallback;
 import com.swarmnyc.pup.module.service.UserService;
 import com.swarmnyc.pup.utils.AsyncCallback;
@@ -30,6 +31,8 @@ import com.uservoice.uservoicesdk.UserVoice;
 
 public class SettingsFragment extends BaseFragment
 {
+	public static final String NOTIFICATION_ALL = "Notification_All";
+	public static final String NOTIFICATION_GAME_START = "Notification_GameStart";
 	UserService m_userService;
 
 	@Bind( R.id.text_name )
@@ -49,6 +52,12 @@ public class SettingsFragment extends BaseFragment
 
 	@Bind( R.id.switch_tumblr )
 	Switch m_tumblrSwitch;
+
+	@Bind( R.id.switch_notification_all)
+	Switch m_nAllSwitch;
+
+	@Bind( R.id.switch_notification_game_start)
+	Switch m_nGameStartSwitch;
 
 	@Bind(R.id.text_tos)
 	TextView m_tosText;
@@ -77,8 +86,8 @@ public class SettingsFragment extends BaseFragment
 	@Override
 	public void onViewCreated( View view, Bundle savedInstanceState )
 	{
-		super.onViewCreated( view, savedInstanceState );
-		ButterKnife.bind( this, view );
+		super.onViewCreated(view, savedInstanceState);
+		ButterKnife.bind(this, view);
 		m_userService = PuPApplication.getInstance().getModule().provideUserService();
 
 		if ( StringUtils.isNotEmpty(User.current.getPortraitUrl()) )
@@ -86,14 +95,21 @@ public class SettingsFragment extends BaseFragment
 			Picasso.with( this.getActivity() ).load( User.current.getPortraitUrl() ).into( m_portrait );
 		}
 
-		m_nameText.setText( User.current.getUserName() );
+		m_nameText.setText(User.current.getUserName());
 
-		m_fbSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_FACEBOOK) );
-		m_twitterSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_TWITTER) );
-		m_redditSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_REDDIT) );
-		m_tumblrSwitch.setChecked( User.current.hasSocialMedium(Consts.KEY_TUMBLR) );
+		m_fbSwitch.setChecked(User.current.hasSocialMedium(Consts.KEY_FACEBOOK));
+		m_twitterSwitch.setChecked(User.current.hasSocialMedium(Consts.KEY_TWITTER));
+		m_redditSwitch.setChecked(User.current.hasSocialMedium(Consts.KEY_REDDIT));
+		m_tumblrSwitch.setChecked(User.current.hasSocialMedium(Consts.KEY_TUMBLR));
 
 		m_tosText.setMovementMethod(LinkMovementMethod.getInstance());
+
+		boolean allNotification = User.current.getTagValue(NOTIFICATION_ALL, "true").equals("true");
+
+		m_nAllSwitch.setChecked(allNotification);
+		m_nGameStartSwitch.setChecked(User.current.getTagValue(NOTIFICATION_GAME_START, "true").equals("true"));
+
+		enable_sub_swatchs(m_nAllSwitch.isChecked());
 	}
 
 	@Override
@@ -101,7 +117,6 @@ public class SettingsFragment extends BaseFragment
 	{
 		super.onResume();
 	}
-
 
 	@Override
 	public void updateTitle()
@@ -126,50 +141,42 @@ public class SettingsFragment extends BaseFragment
 	void choosePortrait()
 	{
 		PhotoHelper.startPhotoIntent(
-			this, new AsyncCallback<Uri>()
-			{
-				@Override
-				public void success( final Uri uri )
-				{
-					String path;
+				this, new AsyncCallback<Uri>() {
+					@Override
+					public void success(final Uri uri) {
+						String path;
 
-					m_portrait.setImageURI( uri );
+						m_portrait.setImageURI(uri);
 
-					if ( StringUtils.isNotEmpty( User.current.getPortraitUrl() ) )
-					{
-						Picasso.with( getActivity() ).invalidate( User.current.getPortraitUrl() );
-					}
-
-					Cursor cursor = getActivity().getContentResolver().query(
-						uri, null, null, null, null
-					);
-
-					if ( cursor == null )
-					{
-						path = uri.getPath();
-					}
-					else
-					{
-						cursor.moveToFirst();
-						int idx = cursor.getColumnIndex( MediaStore.Images.ImageColumns.DATA );
-						path = cursor.getString( idx );
-					}
-
-					Toast.makeText( getActivity(), "Updating", Toast.LENGTH_LONG ).show();
-					m_userService.updatePortrait(
-						path, new ServiceCallback<String>()
-						{
-							@Override
-							public void success( final String value )
-							{
-								Toast.makeText( getActivity(), "Updated", Toast.LENGTH_LONG ).show();
-								User.current.setPortraitUrl( value );
-								User.update();
-							}
+						if (StringUtils.isNotEmpty(User.current.getPortraitUrl())) {
+							Picasso.with(getActivity()).invalidate(User.current.getPortraitUrl());
 						}
-					);
+
+						Cursor cursor = getActivity().getContentResolver().query(
+								uri, null, null, null, null
+						);
+
+						if (cursor == null) {
+							path = uri.getPath();
+						} else {
+							cursor.moveToFirst();
+							int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+							path = cursor.getString(idx);
+						}
+
+						Toast.makeText(getActivity(), "Updating", Toast.LENGTH_LONG).show();
+						m_userService.updatePortrait(
+								path, new ServiceCallback<String>() {
+									@Override
+									public void success(final String value) {
+										Toast.makeText(getActivity(), "Updated", Toast.LENGTH_LONG).show();
+										User.current.setPortraitUrl(value);
+										User.update();
+									}
+								}
+						);
+					}
 				}
-			}
 		);
 	}
 
@@ -233,7 +240,7 @@ public class SettingsFragment extends BaseFragment
 				}
 			);
 
-			oAuthFragment.show( this.getFragmentManager(), null );
+			oAuthFragment.show(this.getFragmentManager(), null);
 		}
 		else
 		{
@@ -327,5 +334,24 @@ public class SettingsFragment extends BaseFragment
 				}
 			);
 		}
+	}
+
+	@OnClick( R.id.switch_notification_all )
+	void enableNotificationAll()
+	{
+		PuPTag tag = new PuPTag(NOTIFICATION_ALL, String.valueOf(m_nAllSwitch.isChecked()) );
+		m_userService.addTag(tag, null);
+		enable_sub_swatchs(m_nAllSwitch.isChecked());
+	}
+
+	@OnClick( R.id.switch_notification_game_start )
+	void enableNotificationGameStart()
+	{
+		PuPTag tag = new PuPTag(NOTIFICATION_GAME_START, String.valueOf(m_nGameStartSwitch.isChecked()) );
+		m_userService.addTag(tag, null);
+	}
+
+	void enable_sub_swatchs(boolean enable){
+		m_nGameStartSwitch.setEnabled(enable);
 	}
 }

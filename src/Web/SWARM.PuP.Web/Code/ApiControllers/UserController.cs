@@ -97,7 +97,7 @@ namespace SWARM.PuP.Web.ApiControllers
 
         [HttpPost]
         [Route("~/api/Register"), ModelValidate]
-        public async Task<IHttpActionResult> Register(RegisterViewModel model)
+        public IHttpActionResult Register(RegisterViewModel model)
         {
             string errorMessage = null;
             PuPUser user = _userService.FindByNameOrEmail(model.Email, model.UserName);
@@ -123,7 +123,7 @@ namespace SWARM.PuP.Web.ApiControllers
 
                 if (!string.IsNullOrWhiteSpace(model.DeviceToken))
                 {
-                    await NotificationHubHelper.AddDeviceAsync(user, new UserDevice()
+                    NotificationHelper.AddDeviceAsync(user, new UserDevice()
                     {
                         Platform = model.Platform,
                         Token = model.DeviceToken
@@ -185,7 +185,8 @@ namespace SWARM.PuP.Web.ApiControllers
             }
 
             var user = User.Identity.GetPuPUser();
-            user.Tags.Add(tag);
+            user.UpdateTag(tag.Key, tag.Value);
+
             _userService.Update(user);
 
             return Ok(tag.Id);
@@ -195,17 +196,17 @@ namespace SWARM.PuP.Web.ApiControllers
         public IHttpActionResult DeleteUserTag(string tagId)
         {
             var user = User.Identity.GetPuPUser();
-            user.Tags.Remove(user.Tags.First(x => x.Id == tagId));
+            user.Tags.Remove(user.Tags.First(x => x.Id == tagId || x.Key == tagId));
             _userService.Update(user);
 
             return Ok();
         }
 
         [Authorize, HttpPost, Route("Device"), ModelValidate]
-        public async Task<IHttpActionResult> AddDevice([FromBody]UserDevice device)
+        public IHttpActionResult AddDevice([FromBody]UserDevice device)
         {
             PuPUser user = User.Identity.GetPuPUser();
-            await NotificationHubHelper.AddDeviceAsync(user, device);
+            NotificationHelper.AddDeviceAsync(user, device);
             _userService.Update(user);
 
             return Ok();
@@ -219,7 +220,7 @@ namespace SWARM.PuP.Web.ApiControllers
             string rid = user.GetTagValue(tag);
             if (string.IsNullOrWhiteSpace(rid))
             {
-                await NotificationHubHelper.DeleteDeviceAsync(user, device);
+                await NotificationHelper.DeleteDeviceAsync(user, device);
 
                 _userService.Update(user);
             }

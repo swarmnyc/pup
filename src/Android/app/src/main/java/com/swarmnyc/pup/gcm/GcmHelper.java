@@ -16,6 +16,7 @@ import java.io.IOException;
 public class GcmHelper {
     private static final String TAG = "GcmHelper";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    public static final String GCMID = "GCMID";
 
     private GoogleCloudMessaging googleCloudMessaging;
     private Activity activity;
@@ -30,7 +31,7 @@ public class GcmHelper {
                     GoogleCloudMessaging googleCloudMessaging = GoogleCloudMessaging.getInstance(activity);
                     try {
                         String gcmId = googleCloudMessaging.register(Config.getConfigString(R.string.google_gcm_key));
-                        Config.setString("GCMID", gcmId);
+                        Config.setString(GCMID, gcmId);
                         if (callback != null)
                             callback.call(gcmId);
 
@@ -44,8 +45,12 @@ public class GcmHelper {
 
     }
 
-    public static void getRegisterId(Activity activity, Action<String> callback) {
-        String gcmId = Config.getString("GCMID");
+    public static String GetId() {
+        return Config.getString(GCMID);
+    }
+
+    public static void RegisterOrGetId(Activity activity, Action<String> callback) {
+        String gcmId = Config.getString(GCMID);
 
         if (StringUtils.isEmpty(gcmId)) {
             register(activity, callback);

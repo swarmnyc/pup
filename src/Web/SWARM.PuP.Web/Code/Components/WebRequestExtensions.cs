@@ -38,33 +38,42 @@ namespace System.Net
 
         public static T Read<T>(this WebRequest request)
         {
-            using (var writer = new StreamReader(request.GetResponse().GetResponseStream()))
+            using (var reader = new StreamReader(request.GetResponse().GetResponseStream()))
             {
-                return JsonConvert.DeserializeObject<T>(writer.ReadToEnd());
+                return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
             }
         }
 
         public static string ReadAll(this WebRequest request)
         {
-            using (var writer = new StreamReader(request.GetResponse().GetResponseStream()))
+            using (var reader = new StreamReader(request.GetResponse().GetResponseStream()))
             {
-                return writer.ReadToEnd();
+                return reader.ReadToEnd();
+            }
+        }
+
+        public static string ReadAll(this WebRequest request, object obj)
+        {
+            request.Write(obj);
+            using (var reader = new StreamReader(request.GetResponse().GetResponseStream()))
+            {
+                return reader.ReadToEnd();
             }
         }
 
         public static T Read<T>(this WebResponse response)
         {
-            using (var writer = new StreamReader(response.GetResponseStream()))
+            using (var reader = new StreamReader(response.GetResponseStream()))
             {
-                return JsonConvert.DeserializeObject<T>(writer.ReadToEnd());
+                return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
             }
         }
 
         public static string ReadAll(this WebResponse response)
         {
-            using (var writer = new StreamReader(response.GetResponseStream()))
+            using (var reader = new StreamReader(response.GetResponseStream()))
             {
-                return writer.ReadToEnd();
+                return reader.ReadToEnd();
             }
         }
 

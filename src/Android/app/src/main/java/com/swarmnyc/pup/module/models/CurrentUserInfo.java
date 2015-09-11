@@ -66,6 +66,11 @@ public class CurrentUserInfo extends UserInfo
 
 	public String getTagValue( String key )
 	{
+		return getTagValue(key, null);
+	}
+
+	public String getTagValue( String key, String defaultValue )
+	{
 		for ( PuPTag tag : tags )
 		{
 			if ( tag.key.equals( key ) )
@@ -74,7 +79,7 @@ public class CurrentUserInfo extends UserInfo
 			}
 		}
 
-		return null;
+		return defaultValue;
 	}
 
 	public Set<String> getSocialMedia()

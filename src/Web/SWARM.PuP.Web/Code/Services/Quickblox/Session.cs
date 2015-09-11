@@ -2,7 +2,7 @@ using System;
 
 namespace SWARM.PuP.Web.Services.Quickblox
 {
-    internal class Session
+    public class Session
     {
         public string _id { get; set; }
         public int application_id { get; set; }
