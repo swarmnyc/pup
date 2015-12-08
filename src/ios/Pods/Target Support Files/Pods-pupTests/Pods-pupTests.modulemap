@@ -1,0 +1,6 @@
+framework module Pods_pupTests {
+  umbrella header "Pods-pupTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,59 @@
+PODS:
+  - Alamofire (1.2.3)
+  - Bolts (1.2.0):
+    - Bolts/AppLinks (= 1.2.0)
+    - Bolts/Tasks (= 1.2.0)
+  - Bolts/AppLinks (1.2.0):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.2.0)
+  - DZNPhotoPickerController/Editor (1.6.1)
+  - FBSDKCoreKit (4.2.0):
+    - Bolts (~> 1.1)
+    - FBSDKCoreKit/arc (= 4.2.0)
+    - FBSDKCoreKit/no-arc (= 4.2.0)
+  - FBSDKCoreKit/arc (4.2.0):
+    - Bolts (~> 1.1)
+  - FBSDKCoreKit/no-arc (4.2.0):
+    - Bolts (~> 1.1)
+    - FBSDKCoreKit/arc
+  - FBSDKLoginKit (4.2.0):
+    - FBSDKCoreKit
+  - FBSDKShareKit (4.2.0):
+    - FBSDKCoreKit
+  - JLToast (1.2.3)
+  - QuickBlox (2.2.5)
+  - SDWebImage (3.7.3):
+    - SDWebImage/Core (= 3.7.3)
+  - SDWebImage/Core (3.7.3)
+  - SnapKit (0.10.0)
+  - SwiftLoader (0.2.2)
+  - uservoice-iphone-sdk (3.2.3)
+
+DEPENDENCIES:
+  - Alamofire (~> 1.2)
+  - DZNPhotoPickerController/Editor
+  - FBSDKCoreKit
+  - FBSDKLoginKit
+  - FBSDKShareKit
+  - JLToast
+  - QuickBlox (~> 2.2.3)
+  - SDWebImage (~> 3.7)
+  - SnapKit (~> 0.10.0)
+  - SwiftLoader
+  - uservoice-iphone-sdk
+
+SPEC CHECKSUMS:
+  Alamofire: 5550bf0b575ed1a4bf9be572f9463e1015cc169e
+  Bolts: d176cb1e0012175589e389a9db49b85e27787576
+  DZNPhotoPickerController: 1fcd18f2767b9c713865f0c09b32e1ba24f1516c
+  FBSDKCoreKit: 84b3616a361801f190e43a9909caead7bb6087c7
+  FBSDKLoginKit: 57e37106af12c9e264e473dcb75d7decdbb07fe4
+  FBSDKShareKit: 931746fdf8fb95efd6e12310ec14b2b3295e2aec
+  JLToast: fc26885fae255e31ba9bebc0f82ae2ab1140f503
+  QuickBlox: f13fb448a32d3c09efc71a9fd19d7f44092d9dbd
+  SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
+  SnapKit: 53696873f2cf84a15e8d7d0d9729ed4381196b16
+  SwiftLoader: 9c5e547ae8e00b1c1079139492d6a273c7f73171
+  uservoice-iphone-sdk: 349d9ef36d3c43939d28390b9e86bb32b65fe983
+
+COCOAPODS: 0.37.2

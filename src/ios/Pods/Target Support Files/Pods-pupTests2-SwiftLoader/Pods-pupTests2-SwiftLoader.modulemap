@@ -1,0 +1,6 @@
+framework module SwiftLoader {
+  umbrella header "Pods-pupTests2-SwiftLoader-umbrella.h"
+
+  export *
+  module * { export * }
+}
